@@ -80,6 +80,9 @@ public class ExampleMod {
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
+        if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
+            modEventBus.addListener(SnifferHeadDropTests::register);
+        }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
         BLOCKS.register(modEventBus);

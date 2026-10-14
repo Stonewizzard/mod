@@ -28,3 +28,7 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Verify sniffer head death drops in Minecraft
+        timeout-minutes: 10
+        run: ./gradlew runGameTestServer
