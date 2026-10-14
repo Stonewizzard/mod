@@ -17,3 +17,14 @@ remains `examplemod:example_block`. The model references the vanilla sniffer
 texture, so no copy of Minecraft's texture is bundled in this repository.
 
 The template's example food item, configuration, and logging remain in place.
+
+## Sniffing ancient debris
+
+Adult sniffers can dig exposed, reachable ancient debris on a walkable surface.
+When their normal digging animation reaches its reward moment, the debris
+breaks and drops **one Netherite Scrap** and **one Ancient Artifact** instead of
+seeds or an ancient debris block. Buried debris is untouched. Mob griefing must
+be enabled. Normal sniffer restrictions and digging cooldowns still apply.
+
+Ancient Artifact is a placeholder item using a vanilla pottery-sherd icon. Find
+it in Ingredients or Example Mod Tab, or use `/give @s examplemod:ancient_artifact`.
