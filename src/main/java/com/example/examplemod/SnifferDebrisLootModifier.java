@@ -30,18 +30,14 @@ public class SnifferDebrisLootModifier extends LootModifier {
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         if (!(context.getOptional(LootContextParams.THIS_ENTITY) instanceof Sniffer sniffer)
-                || sniffer.isBaby()
-                || !(context.getOptional(LootContextParams.ORIGIN) instanceof Vec3 origin)) {
+                || sniffer.isBaby()) {
             return generatedLoot;
         }
         var level = context.getLevel();
-        if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
-            ExampleMod.LOGGER.info("Debris test: reward origin={} sniffer position={} yaw={} tick={}", origin, sniffer.position(), sniffer.getYRot(), sniffer.tickCount);
-        }
-        BlockPos target = BlockPos.containing(origin.x(), sniffer.getY() + 0.2, origin.z()).below();
-        if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
-            ExampleMod.LOGGER.info("Debris test: target={} block={} above={}", target, level.getBlockState(target), level.getBlockState(target.above()));
-        }
+        // Sniffer digging loot uses the feet as ORIGIN in 26.3. Its digging snout
+        // is 2.25 blocks forward, matching the vanilla sniffer's head position.
+        Vec3 snout = sniffer.position().add(sniffer.getForward().scale(2.25));
+        BlockPos target = BlockPos.containing(snout.x(), sniffer.getY() + 0.2, snout.z()).below();
         if (!level.getBlockState(target).is(Blocks.ANCIENT_DEBRIS)
                 || !level.getBlockState(target.above()).isAir()) {
             return generatedLoot;
