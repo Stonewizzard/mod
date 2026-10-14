@@ -1,0 +1,8 @@
+{
+  "type": "examplemod:sniffer_head",
+  "condition": {
+    "condition": "neoforge:loot_table_id",
+    "loot_table_id": "minecraft:entities/sniffer"
+  },
+  "priority": 1000
+}
