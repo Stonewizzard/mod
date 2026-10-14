@@ -15,6 +15,12 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -80,6 +86,9 @@ public class ExampleMod {
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
+        if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
+            modEventBus.addListener(SnifferHeadDropTests::register);
+        }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
         BLOCKS.register(modEventBus);
@@ -119,6 +128,24 @@ public class ExampleMod {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(SNIFFER_SKULL_ITEM);
         }
+    }
+
+
+    // Vanilla skips normal death-loot generation for baby mobs.
+    @SubscribeEvent
+    public void onBabySnifferDrops(LivingDropsEvent event) {
+        var entity = event.getEntity();
+        if (entity.getType() != EntityTypes.SNIFFER || !entity.isBaby()
+                || !(entity.level() instanceof ServerLevel level)
+                || !level.getGameRules().get(GameRules.MOB_DROPS)) {
+            return;
+        }
+        // Avoid duplicates if another mod enables normal loot for this baby.
+        if (event.getDrops().stream().anyMatch(drop -> drop.getItem().is(SNIFFER_SKULL_ITEM.get()))) {
+            return;
+        }
+        event.getDrops().add(new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(),
+                new ItemStack(SNIFFER_SKULL_ITEM.get())));
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
