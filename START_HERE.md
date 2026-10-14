@@ -16,7 +16,8 @@ This project uses Minecraft 26.3, NeoForge 26.3.0.77, and Java 25.
 5. Create a Creative world. Open the inventory and search for **Sniffer Skull**.
    It also appears in **Building Blocks** and **Example Mod Tab**.
 6. Click a block's side to place the skull facing outward from that side, even
-   when you approach at an angle. On top of a block, it faces toward you.
+   when you approach at an angle. Its back sits flush against that surface.
+   On top of a block, it faces toward you.
    It has a head-shaped outline and collision rather than filling a whole cube.
 
 With commands enabled, you can also use:
@@ -61,11 +62,15 @@ The constructor connects the registrations and creative-tab event to NeoForge.
 - It extends `HorizontalDirectionalBlock`, which already supports rotating and
   mirroring its north/east/south/west direction.
 - `FACING` is a block-state property. It stores the direction of the snout.
+- `WALL_MOUNTED` records whether the clicked surface was a side. It selects a
+  wall model and collision shape whose back touches the block boundary.
 - `getStateForPlacement` uses the clicked face for side placements. Clicking an
   east face gives an east-facing skull regardless of your viewing angle. For
   top/bottom faces, it uses the direction opposite the player's direction.
 - `getShape` returns a union of smaller boxes matching the head's model. Those
   boxes are rotated to match each direction and also supply its collision shape.
+  Wall placements shift the model and shape back by half a model pixel to remove
+  the small gap between the head and the supporting block.
 
 ## JSON: what the block looks like
 
@@ -75,6 +80,7 @@ All paths below are inside `src/main/resources/`.
 | --- | --- |
 | `assets/examplemod/blockstates/example_block.json` | Chooses the model and rotation for each facing direction. |
 | `assets/examplemod/models/block/sniffer_skull.json` | Six model pieces: head, mouth plane, ears, nose, and lower beak. Uses explicit UV coordinates to select the right parts of the sniffer's texture. |
+| `assets/examplemod/models/block/sniffer_skull_wall.json` | Wall version of the head, shifted half a pixel toward its supporting block. |
 | `assets/examplemod/models/block/example_block.json` | A model alias for the original resource name. |
 | `assets/examplemod/models/item/example_block.json` | Uses the sniffer head model for the inventory item. |
 | `assets/examplemod/items/example_block.json` | Connects the modern item renderer to the item model. |
@@ -92,6 +98,7 @@ crafting recipe, mob drop, or wearable helmet behavior yet.
 1. Search for Sniffer Skull and confirm the inventory icon is a head.
 2. Place it against each of a block's four sides, approaching both straight on
    and diagonally. The snout should always face outward from the clicked side.
+   Check from the side that its back touches the wall without a gap.
    Place it on top too and check that it still faces toward you.
 3. Summon a vanilla sniffer nearby to compare: `/summon minecraft:sniffer`.
 4. Walk around it and check that the selection outline follows its shape.

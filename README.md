@@ -2,7 +2,7 @@
 
 A NeoForge mod for Minecraft 26.3 using Java 25. **Sniffer Skull** is a placeable
 sniffer head with a red head, floppy ears, and yellow snout. Find it in the
-Building Blocks creative tab or Example Mod Tab. Side placements face outward from the clicked block face;
+Building Blocks creative tab or Example Mod Tab. Side placements sit flush against the wall and face outward from the clicked block face;
 top placements face the player.
 
 Start with [the beginner guide](START_HERE.md) for setup, run commands, and an

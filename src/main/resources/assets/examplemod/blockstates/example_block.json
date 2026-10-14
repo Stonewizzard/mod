@@ -1,18 +1,33 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,wall_mounted=false": {
       "model": "examplemod:block/sniffer_skull"
     },
-    "facing=east": {
+    "facing=north,wall_mounted=true": {
+      "model": "examplemod:block/sniffer_skull_wall"
+    },
+    "facing=east,wall_mounted=false": {
       "model": "examplemod:block/sniffer_skull",
       "y": 90
     },
-    "facing=south": {
+    "facing=east,wall_mounted=true": {
+      "model": "examplemod:block/sniffer_skull_wall",
+      "y": 90
+    },
+    "facing=south,wall_mounted=false": {
       "model": "examplemod:block/sniffer_skull",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,wall_mounted=true": {
+      "model": "examplemod:block/sniffer_skull_wall",
+      "y": 180
+    },
+    "facing=west,wall_mounted=false": {
       "model": "examplemod:block/sniffer_skull",
+      "y": 270
+    },
+    "facing=west,wall_mounted=true": {
+      "model": "examplemod:block/sniffer_skull_wall",
       "y": 270
     }
   }
