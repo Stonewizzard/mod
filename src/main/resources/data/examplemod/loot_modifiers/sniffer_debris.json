@@ -1,0 +1,7 @@
+{
+  "type": "examplemod:sniffer_debris",
+  "condition": {
+    "type": "neoforge:loot_table_id",
+    "loot_table_id": "minecraft:gameplay/sniffer_digging"
+  }
+}

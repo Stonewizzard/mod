@@ -60,6 +60,12 @@ public class ExampleMod {
     public static final DeferredHolder<MapCodec<? extends IGlobalLootModifier>, MapCodec<SnifferHeadLootModifier>> SNIFFER_HEAD_LOOT =
             LOOT_MODIFIERS.register("sniffer_head", () -> SnifferHeadLootModifier.CODEC);
 
+    public static final DeferredHolder<MapCodec<? extends IGlobalLootModifier>, MapCodec<SnifferDebrisLootModifier>> SNIFFER_DEBRIS_LOOT =
+            LOOT_MODIFIERS.register("sniffer_debris", () -> SnifferDebrisLootModifier.CODEC);
+
+    // Placeholder reward; future artifact components can be selected by the debris loot modifier.
+    public static final DeferredItem<Item> ANCIENT_ARTIFACT = ITEMS.registerSimpleItem("ancient_artifact");
+
     // Keep the original saved ID so existing Example Blocks become Sniffer Heads.
     public static final DeferredBlock<SnifferSkullBlock> SNIFFER_SKULL = BLOCKS.registerBlock(
             "example_block", SnifferSkullBlock::new,
@@ -79,6 +85,7 @@ public class ExampleMod {
             .displayItems((parameters, output) -> {
                 output.accept(SNIFFER_SKULL_ITEM.get()); // Our placeable block also appears in this mod tab.
                 output.accept(EXAMPLE_ITEM.get());
+                output.accept(ANCIENT_ARTIFACT.get());
             }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -88,6 +95,7 @@ public class ExampleMod {
         modEventBus.addListener(this::commonSetup);
         if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
             modEventBus.addListener(SnifferHeadDropTests::register);
+            modEventBus.addListener(SnifferDebrisTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
@@ -127,6 +135,8 @@ public class ExampleMod {
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(SNIFFER_SKULL_ITEM);
+        } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            event.accept(ANCIENT_ARTIFACT);
         }
     }
 

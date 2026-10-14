@@ -160,3 +160,39 @@ which a Java compilation check alone cannot catch.
 Adult sniffers use the loot modifier. Minecraft skips normal loot generation
 for baby mobs, so a death-drop event adds the head for baby sniffers only. It
 checks the mob-loot rule and avoids adding a duplicate head if one is present.
+
+## Sniffing exposed ancient debris
+
+Give an adult sniffer a large, flat, open area with ancient debris exposed as
+part of the floor. It needs space to walk and put its snout over the block.
+Its existing AI can now choose that block as a digging target. Vanilla wandering,
+sniffing, cooldowns, and restrictions still apply, so it may take a while to dig.
+
+At the digging reward moment, it breaks the exposed debris and drops:
+
+- One Netherite Scrap.
+- One Ancient Artifact, a placeholder for the future component rewards.
+
+The original ancient debris block and normal seed reward are not dropped for
+this excavation. Ordinary dirt digging still yields vanilla seeds. Debris under
+another block is not consumed. Disabling mob griefing protects the debris and
+prevents excavation rewards.
+
+The artifact is registered as `examplemod:ancient_artifact` and uses an existing
+pottery-sherd texture for now. It has no recipe or other function yet. It appears
+in Ingredients and Example Mod Tab, and can be obtained with:
+
+```text
+/give @s examplemod:ancient_artifact
+```
+
+`data/minecraft/tags/block/sniffer_diggable_block.json` extends the vanilla tag
+without replacing its other entries. `SnifferDebrisLootModifier.java` changes the
+loaded `minecraft:gameplay/sniffer_digging` loot only when the digging snout is
+over exposed ancient debris. It consumes the block before adding the two rewards,
+so another sniffer cannot harvest the same block twice. Future component choices
+can be added at the artifact reward step.
+
+The headless `runGameTestServer` check now also drives a sniffer's real digging
+timer and tests exposed debris, normal seed digging, buried debris, and disabled
+mob griefing, alongside the existing head death-drop regression.
