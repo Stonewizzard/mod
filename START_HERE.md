@@ -156,3 +156,7 @@ The modifier has an outer `condition` setting, but the predicate inside it
 uses `"type": "neoforge:loot_table_id"` in Minecraft 26.3. Using the older
 inner `"condition"` discriminator makes the modifier fail to load at runtime,
 which a Java compilation check alone cannot catch.
+
+Adult sniffers use the loot modifier. Minecraft skips normal loot generation
+for baby mobs, so a death-drop event adds the head for baby sniffers only. It
+checks the mob-loot rule and avoids adding a duplicate head if one is present.
