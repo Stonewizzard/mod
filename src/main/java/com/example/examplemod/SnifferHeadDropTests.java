@@ -74,6 +74,10 @@ public final class SnifferHeadDropTests {
                 var disabled = helper.spawn(EntityTypes.SNIFFER, new BlockPos(2, 2, 2));
                 kill(level, disabled);
                 requireHeads(helper, 0, "Disabled mob loot must prevent the head drop");
+                var disabledBaby = helper.spawn(EntityTypes.SNIFFER, new BlockPos(2, 2, 2));
+                disabledBaby.setBaby(true);
+                kill(level, disabledBaby);
+                requireHeads(helper, 0, "Disabled mob loot must also prevent baby head drops");
                 helper.succeed();
             } finally {
                 level.getGameRules().set(GameRules.MOB_DROPS, originalMobDrops, level.getServer());
