@@ -1,6 +1,5 @@
 package com.example.examplemod;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -16,8 +15,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** A decorative sniffer head with four placement directions and a matching outline. */
 public class SnifferSkullBlock extends HorizontalDirectionalBlock {
-    public static final MapCodec<SnifferSkullBlock> CODEC = simpleCodec(SnifferSkullBlock::new);
-
     // Same bounds as the JSON model: head, nose, lower beak, and both floppy ears.
     private static final VoxelShape NORTH_SHAPE = Shapes.or(
             Block.box(3.125, 0.75, 7.25, 12.875, 14.25, 15.5),
@@ -32,11 +29,6 @@ public class SnifferSkullBlock extends HorizontalDirectionalBlock {
     public SnifferSkullBlock(BlockBehaviour.Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     @Override

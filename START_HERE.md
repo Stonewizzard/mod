@@ -63,7 +63,6 @@ The constructor connects the registrations and creative-tab event to NeoForge.
 - `getStateForPlacement` selects the direction opposite the player's direction.
 - `getShape` returns a union of smaller boxes matching the head's model. Those
   boxes are rotated to match each direction and also supply its collision shape.
-- `CODEC` describes how Minecraft can serialize the custom block type.
 
 ## JSON: what the block looks like
 
