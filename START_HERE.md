@@ -144,3 +144,15 @@ To verify it in the development game:
    the loot table directly; this should give one head.
 4. Kill a different mob and confirm it does not acquire a Sniffer Head drop.
 5. Test with mob loot disabled: sniffer deaths should produce no head.
+
+## Automated drop regression
+
+Run `.\\gradlew.bat runGameTestServer` on Windows or
+`./gradlew runGameTestServer` on macOS/Linux. This launches a separate headless
+Minecraft test world and checks adult/baby sniffer death drops, other mobs, and
+mob loot disabled. GitHub Actions also runs this after compiling the mod.
+
+The modifier has an outer `condition` setting, but the predicate inside it
+uses `"type": "neoforge:loot_table_id"` in Minecraft 26.3. Using the older
+inner `"condition"` discriminator makes the modifier fail to load at runtime,
+which a Java compilation check alone cannot catch.
