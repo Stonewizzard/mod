@@ -1,6 +1,9 @@
 package com.example.examplemod;
 
 import org.slf4j.Logger;
+import com.mojang.serialization.MapCodec;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import com.mojang.logging.LogUtils;
 
@@ -45,7 +48,13 @@ public class ExampleMod {
     // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "examplemod" namespace
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    // Keep the original saved ID so existing Example Blocks become Sniffer Skulls.
+    // Register the codec used by our sniffer death-loot JSON.
+    public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS =
+            DeferredRegister.create(NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, MODID);
+    public static final DeferredHolder<MapCodec<? extends IGlobalLootModifier>, MapCodec<SnifferHeadLootModifier>> SNIFFER_HEAD_LOOT =
+            LOOT_MODIFIERS.register("sniffer_head", () -> SnifferHeadLootModifier.CODEC);
+
+    // Keep the original saved ID so existing Example Blocks become Sniffer Heads.
     public static final DeferredBlock<SnifferSkullBlock> SNIFFER_SKULL = BLOCKS.registerBlock(
             "example_block", SnifferSkullBlock::new,
             p -> p.mapColor(MapColor.COLOR_RED).strength(1.5f, 6.0f).noOcclusion());
@@ -78,6 +87,7 @@ public class ExampleMod {
         ITEMS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+        LOOT_MODIFIERS.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (ExampleMod) to respond directly to events.
@@ -104,7 +114,7 @@ public class ExampleMod {
         Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
     }
 
-    // Add the Sniffer Skull item to the building blocks tab
+    // Add the Sniffer Head item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(SNIFFER_SKULL_ITEM);

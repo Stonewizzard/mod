@@ -1,6 +1,6 @@
 {
   "itemGroup.examplemod": "Example Mod Tab",
-  "block.examplemod.example_block": "Sniffer Skull",
+  "block.examplemod.example_block": "Sniffer Head",
   "item.examplemod.example_item": "Example Item",
   "examplemod.configuration.title": "Example Mod Configs",
   "examplemod.configuration.section.examplemod.common.toml": "Example Mod Configs",
