@@ -15,7 +15,9 @@ This project uses Minecraft 26.3, NeoForge 26.3.0.77, and Java 25.
    - macOS/Linux: `chmod +x gradlew`, then `./gradlew runClient`
 5. Create a Creative world. Open the inventory and search for **Sniffer Skull**.
    It also appears in **Building Blocks** and **Example Mod Tab**.
-6. Place it from different sides. The snout points toward you when you place it.
+6. Click a block's side to place the skull facing outward from that side, even
+   when you approach at an angle. Its back sits flush against that surface.
+   On top of a block, it faces toward you in 16 steps of 22.5 degrees, including diagonals.
    It has a head-shaped outline and collision rather than filling a whole cube.
 
 With commands enabled, you can also use:
@@ -59,10 +61,18 @@ The constructor connects the registrations and creative-tab event to NeoForge.
 
 - It extends `HorizontalDirectionalBlock`, which already supports rotating and
   mirroring its north/east/south/west direction.
-- `FACING` is a block-state property. It stores the direction of the snout.
-- `getStateForPlacement` selects the direction opposite the player's direction.
+- `FACING` stores the cardinal quadrant. `ROTATION_OFFSET` adds one of four
+  22.5-degree steps within that quadrant, giving 16 standing directions.
+  Its default of zero preserves the direction of older saved placements.
+- `WALL_MOUNTED` records whether the clicked surface was a side. It selects a
+  wall model and collision shape whose back touches the block boundary.
+- `getStateForPlacement` uses the clicked face for side placements. Clicking an
+  east face gives an east-facing skull regardless of your viewing angle. For
+  top/bottom faces, it rounds the player's yaw to the nearest 22.5-degree step.
 - `getShape` returns a union of smaller boxes matching the head's model. Those
   boxes are rotated to match each direction and also supply its collision shape.
+  Wall placements shift the model and shape back by half a model pixel to remove
+  the small gap between the head and the supporting block.
 
 ## JSON: what the block looks like
 
@@ -72,6 +82,7 @@ All paths below are inside `src/main/resources/`.
 | --- | --- |
 | `assets/examplemod/blockstates/example_block.json` | Chooses the model and rotation for each facing direction. |
 | `assets/examplemod/models/block/sniffer_skull.json` | Six model pieces: head, mouth plane, ears, nose, and lower beak. Uses explicit UV coordinates to select the right parts of the sniffer's texture. |
+| `assets/examplemod/models/block/sniffer_skull_wall.json` | Wall version of the head, shifted half a pixel toward its supporting block. |
 | `assets/examplemod/models/block/example_block.json` | A model alias for the original resource name. |
 | `assets/examplemod/models/item/example_block.json` | Uses the sniffer head model for the inventory item. |
 | `assets/examplemod/items/example_block.json` | Connects the modern item renderer to the item model. |
@@ -87,7 +98,11 @@ crafting recipe, mob drop, or wearable helmet behavior yet.
 ## Check the update in game
 
 1. Search for Sniffer Skull and confirm the inventory icon is a head.
-2. Place it facing all four directions and check the snout and floppy ears.
+2. Place it against each of a block's four sides, approaching both straight on
+   and diagonally. The snout should always face outward from the clicked side.
+   Check from the side that its back touches the wall without a gap.
+   Place it on top while turning through a full circle: there should be 16
+   rotation steps, including diagonals. Save/reload and verify those angles persist.
 3. Summon a vanilla sniffer nearby to compare: `/summon minecraft:sniffer`.
 4. Walk around it and check that the selection outline follows its shape.
 5. Switch to Survival and break it; it should drop a Sniffer Skull item.
@@ -98,3 +113,8 @@ preview was rendered with the vanilla texture. Local Java compilation is blocked
 by this cloud environment's Java 21 installation and restricted automatic JDK 25
 download. GitHub Actions runs the Java 25 build; graphical Minecraft testing is
 still done using the steps above.
+
+Standing rotation models use NeoForge's root `transform` around the block center,
+so the head, ears, and snout rotate together. Wall models remain flush and cardinal.
+Diagonal collision/selection boxes enclose the rotated model parts; voxel boxes
+are axis-aligned. Structure rotation and mirroring also preserve the finer angles.

@@ -1,0 +1,11 @@
+{
+  "parent": "examplemod:block/sniffer_skull",
+  "transform": {
+    "rotation": [
+      0,
+      -45,
+      0
+    ],
+    "origin": "center"
+  }
+}

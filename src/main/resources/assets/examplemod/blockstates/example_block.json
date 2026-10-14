@@ -1,18 +1,78 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,wall_mounted=true": {
+      "model": "examplemod:block/sniffer_skull_wall"
+    },
+    "facing=north,rotation_offset=0,wall_mounted=false": {
       "model": "examplemod:block/sniffer_skull"
     },
-    "facing=east": {
+    "facing=north,rotation_offset=1,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_1"
+    },
+    "facing=north,rotation_offset=2,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_2"
+    },
+    "facing=north,rotation_offset=3,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_3"
+    },
+    "facing=east,wall_mounted=true": {
+      "model": "examplemod:block/sniffer_skull_wall",
+      "y": 90
+    },
+    "facing=east,rotation_offset=0,wall_mounted=false": {
       "model": "examplemod:block/sniffer_skull",
       "y": 90
     },
-    "facing=south": {
+    "facing=east,rotation_offset=1,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_1",
+      "y": 90
+    },
+    "facing=east,rotation_offset=2,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_2",
+      "y": 90
+    },
+    "facing=east,rotation_offset=3,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_3",
+      "y": 90
+    },
+    "facing=south,wall_mounted=true": {
+      "model": "examplemod:block/sniffer_skull_wall",
+      "y": 180
+    },
+    "facing=south,rotation_offset=0,wall_mounted=false": {
       "model": "examplemod:block/sniffer_skull",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,rotation_offset=1,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_1",
+      "y": 180
+    },
+    "facing=south,rotation_offset=2,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_2",
+      "y": 180
+    },
+    "facing=south,rotation_offset=3,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_3",
+      "y": 180
+    },
+    "facing=west,wall_mounted=true": {
+      "model": "examplemod:block/sniffer_skull_wall",
+      "y": 270
+    },
+    "facing=west,rotation_offset=0,wall_mounted=false": {
       "model": "examplemod:block/sniffer_skull",
+      "y": 270
+    },
+    "facing=west,rotation_offset=1,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_1",
+      "y": 270
+    },
+    "facing=west,rotation_offset=2,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_2",
+      "y": 270
+    },
+    "facing=west,rotation_offset=3,wall_mounted=false": {
+      "model": "examplemod:block/sniffer_skull_rotation_3",
       "y": 270
     }
   }
