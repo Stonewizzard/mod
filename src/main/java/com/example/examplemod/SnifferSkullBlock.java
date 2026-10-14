@@ -33,8 +33,13 @@ public class SnifferSkullBlock extends HorizontalDirectionalBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        // The face of the skull points toward the player placing it.
-        return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        // Side placements face outward from the clicked surface, like wall heads.
+        // Top/bottom placements use the player's horizontal direction.
+        Direction clickedFace = context.getClickedFace();
+        Direction facing = clickedFace.getAxis().isHorizontal()
+                ? clickedFace
+                : context.getHorizontalDirection().getOpposite();
+        return defaultBlockState().setValue(FACING, facing);
     }
 
     @Override

@@ -15,7 +15,8 @@ This project uses Minecraft 26.3, NeoForge 26.3.0.77, and Java 25.
    - macOS/Linux: `chmod +x gradlew`, then `./gradlew runClient`
 5. Create a Creative world. Open the inventory and search for **Sniffer Skull**.
    It also appears in **Building Blocks** and **Example Mod Tab**.
-6. Place it from different sides. The snout points toward you when you place it.
+6. Click a block's side to place the skull facing outward from that side, even
+   when you approach at an angle. On top of a block, it faces toward you.
    It has a head-shaped outline and collision rather than filling a whole cube.
 
 With commands enabled, you can also use:
@@ -60,7 +61,9 @@ The constructor connects the registrations and creative-tab event to NeoForge.
 - It extends `HorizontalDirectionalBlock`, which already supports rotating and
   mirroring its north/east/south/west direction.
 - `FACING` is a block-state property. It stores the direction of the snout.
-- `getStateForPlacement` selects the direction opposite the player's direction.
+- `getStateForPlacement` uses the clicked face for side placements. Clicking an
+  east face gives an east-facing skull regardless of your viewing angle. For
+  top/bottom faces, it uses the direction opposite the player's direction.
 - `getShape` returns a union of smaller boxes matching the head's model. Those
   boxes are rotated to match each direction and also supply its collision shape.
 
@@ -87,7 +90,9 @@ crafting recipe, mob drop, or wearable helmet behavior yet.
 ## Check the update in game
 
 1. Search for Sniffer Skull and confirm the inventory icon is a head.
-2. Place it facing all four directions and check the snout and floppy ears.
+2. Place it against each of a block's four sides, approaching both straight on
+   and diagonally. The snout should always face outward from the clicked side.
+   Place it on top too and check that it still faces toward you.
 3. Summon a vanilla sniffer nearby to compare: `/summon minecraft:sniffer`.
 4. Walk around it and check that the selection outline follows its shape.
 5. Switch to Survival and break it; it should drop a Sniffer Skull item.
