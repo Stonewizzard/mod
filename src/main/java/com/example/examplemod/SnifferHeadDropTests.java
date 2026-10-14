@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
@@ -54,24 +54,24 @@ public final class SnifferHeadDropTests {
             boolean originalMobDrops = level.getGameRules().get(GameRules.MOB_DROPS);
             try {
                 level.getGameRules().set(GameRules.MOB_DROPS, true, level.getServer());
-                var sniffer = helper.spawn(EntityType.SNIFFER, new BlockPos(2, 2, 2));
+                var sniffer = helper.spawn(EntityTypes.SNIFFER, new BlockPos(2, 2, 2));
                 kill(level, sniffer);
                 requireHeads(helper, 1, "Adult sniffer must drop exactly one head");
                 clearItems(helper);
 
-                var baby = helper.spawn(EntityType.SNIFFER, new BlockPos(2, 2, 2));
+                var baby = helper.spawn(EntityTypes.SNIFFER, new BlockPos(2, 2, 2));
                 baby.setBaby(true);
                 kill(level, baby);
                 requireHeads(helper, 1, "Baby sniffer must drop exactly one head");
                 clearItems(helper);
 
-                var pig = helper.spawn(EntityType.PIG, new BlockPos(2, 2, 2));
+                var pig = helper.spawn(EntityTypes.PIG, new BlockPos(2, 2, 2));
                 kill(level, pig);
                 requireHeads(helper, 0, "Other mobs must not gain sniffer head drops");
                 clearItems(helper);
 
                 level.getGameRules().set(GameRules.MOB_DROPS, false, level.getServer());
-                var disabled = helper.spawn(EntityType.SNIFFER, new BlockPos(2, 2, 2));
+                var disabled = helper.spawn(EntityTypes.SNIFFER, new BlockPos(2, 2, 2));
                 kill(level, disabled);
                 requireHeads(helper, 0, "Disabled mob loot must prevent the head drop");
                 helper.succeed();
