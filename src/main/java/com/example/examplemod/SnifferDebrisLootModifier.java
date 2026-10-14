@@ -35,7 +35,13 @@ public class SnifferDebrisLootModifier extends LootModifier {
             return generatedLoot;
         }
         var level = context.getLevel();
+        if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
+            ExampleMod.LOGGER.info("Debris test: reward origin={} sniffer position={} yaw={} tick={}", origin, sniffer.position(), sniffer.getYRot(), sniffer.tickCount);
+        }
         BlockPos target = BlockPos.containing(origin.x(), sniffer.getY() + 0.2, origin.z()).below();
+        if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
+            ExampleMod.LOGGER.info("Debris test: target={} block={} above={}", target, level.getBlockState(target), level.getBlockState(target.above()));
+        }
         if (!level.getBlockState(target).is(Blocks.ANCIENT_DEBRIS)
                 || !level.getBlockState(target.above()).isAir()) {
             return generatedLoot;

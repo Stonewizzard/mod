@@ -82,7 +82,7 @@ public final class SnifferDebrisTests {
             try {
                 boolean targetIsAir = helper.getLevel().getBlockState(helper.absolutePos(TARGET)).isAir();
                 if (index == 0) {
-                    require(helper, targetIsAir, "Digging must consume exposed ancient debris");
+                    require(helper, targetIsAir, "Digging must consume exposed ancient debris; items=" + items(helper).stream().map(e -> e.getItem().toString()).toList() + " sniffer=" + sniffer.position() + " tick=" + sniffer.tickCount);
                     require(helper, count(helper, Items.NETHERITE_SCRAP) == 1, "Must drop exactly one netherite scrap");
                     require(helper, count(helper, ExampleMod.ANCIENT_ARTIFACT.get()) == 1, "Must drop exactly one artifact");
                     require(helper, count(helper, Items.ANCIENT_DEBRIS) == 0, "Must not also drop the debris block");
