@@ -53,9 +53,7 @@ jobs:
 
       - name: Verify sculk client rendering
         timeout-minutes: 10
-        env:
-          LIBGL_ALWAYS_SOFTWARE: 'true'
         run: |
           rm -f run/sculk-render-check-passed.txt
-          xvfb-run -a ./gradlew runSculkRenderCheck
+          ./gradlew runSculkRenderCheck
           test -f run/sculk-render-check-passed.txt

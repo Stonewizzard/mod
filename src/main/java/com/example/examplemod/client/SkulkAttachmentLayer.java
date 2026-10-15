@@ -2,6 +2,7 @@ package com.example.examplemod.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -19,14 +20,18 @@ public class SkulkAttachmentLayer<S extends LivingEntityRenderState, M extends E
     private final Identifier babyGrowthTexture;
 
     public SkulkAttachmentLayer(RenderLayerParent<S, M> parent, EntityRendererProvider.Context context, boolean cow) {
+        this(parent, context.bakeLayer(cow
+                ? SkulkAttachmentModel.COW_LAYER : SkulkAttachmentModel.ZOMBIE_LAYER), cow);
+    }
+
+    SkulkAttachmentLayer(RenderLayerParent<S, M> parent, ModelPart attachmentRoot, boolean cow) {
         super(parent);
         String species = cow ? "cow" : "zombie";
         adultGrowthTexture = Identifier.fromNamespaceAndPath("examplemod",
                 "textures/entity/skulk_" + species + "_growth.png");
         babyGrowthTexture = Identifier.fromNamespaceAndPath("examplemod",
                 "textures/entity/skulk_" + species + "_baby_growth.png");
-        attachment = new SkulkAttachmentModel(context.bakeLayer(cow
-                ? SkulkAttachmentModel.COW_LAYER : SkulkAttachmentModel.ZOMBIE_LAYER), cow);
+        attachment = new SkulkAttachmentModel(attachmentRoot, cow);
     }
 
     @Override

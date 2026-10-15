@@ -47,9 +47,10 @@ public class ExampleModClient {
     }
 
     @SubscribeEvent
-    static void checkSculkRendering(EntityRenderersEvent.AddLayers event) {
+    static void checkSculkRendering(net.neoforged.neoforge.data.event.GatherDataEvent.Client event) {
         if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
-            Minecraft.getInstance().execute(() -> com.example.examplemod.client.SculkRenderRegression.run(event.getContext()));
+            com.example.examplemod.client.SculkRenderRegression.run(
+                    event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
         }
     }
 

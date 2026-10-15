@@ -4,78 +4,94 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.animal.cow.CowModel;
+import net.minecraft.client.model.animal.cow.BabyCowModel;
+import net.minecraft.client.model.monster.zombie.ZombieModel;
+import net.minecraft.client.model.monster.zombie.BabyZombieModel;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.entity.state.ZombieRenderState;
+import net.minecraft.client.renderer.entity.state.CowRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.ResourceManager;
 
-/** Opt-in checks run inside the Minecraft client, after native entity models load. */
+/** Native render-submission checks run in opt-in client-data mode without a game window. */
 public final class SculkRenderRegression {
-    private static boolean started;
-
     private SculkRenderRegression() {}
 
-    public static void run(EntityRendererProvider.Context context) {
-        if (started) return;
-        started = true;
+    public static void run(ResourceManager resources) {
         try {
-            var zombie = new SkulkZombieRenderer(context);
-            var cow = new SkulkCowRenderer(context);
-            verify(zombie, zombie.createRenderState(), context, false);
-            verify(cow, cow.createRenderState(), context, true);
-            Files.writeString(Minecraft.getInstance().gameDirectory.toPath().resolve("sculk-render-check-passed.txt"), "PASS\n");
-            System.out.println("SCULK_RENDER_CHECK: PASS: both host types, adult/baby masks, cutout draw order, tint, outline state, invisibility, and packaged textures");
-            Minecraft.getInstance().stop();
-        } catch (Throwable failure) {
-            failure.printStackTrace();
-            System.err.println("SCULK_RENDER_CHECK: FAIL: " + failure);
-            System.exit(1);
+            verify(new ZombieModel<ZombieRenderState>(LayerDefinition.create(
+                    HumanoidModel.createMesh(CubeDeformation.NONE, 0), 64, 64).bakeRoot()),
+                    new ZombieRenderState(), false, false, resources);
+            verify(new BabyZombieModel<ZombieRenderState>(BabyZombieModel.createBodyLayer(CubeDeformation.NONE).bakeRoot()),
+                    new ZombieRenderState(), false, true, resources);
+            verify(new CowModel(CowModel.createBodyLayer().bakeRoot()),
+                    new CowRenderState(), true, false, resources);
+            verify(new BabyCowModel(BabyCowModel.createBodyLayer().bakeRoot()),
+                    new CowRenderState(), true, true, resources);
+            Files.writeString(Path.of("sculk-render-check-passed.txt"), "PASS\n");
+            System.out.println("SCULK_RENDER_CHECK: PASS: native adult/baby models, packaged textures, cutout order, tint, outline state, invisibility, and legacy negative control");
+        } catch (Exception failure) {
+            throw new IllegalStateException("Sculk render regression failed", failure);
         }
     }
 
     private static <S extends LivingEntityRenderState, M extends EntityModel<? super S>> void verify(
-            RenderLayerParent<S, M> parent, S state, EntityRendererProvider.Context context, boolean cow) throws Exception {
-        var layer = new SkulkAttachmentLayer<>(parent, context, cow);
-        for (boolean baby : new boolean[]{false, true}) {
-            state.isBaby = baby;
-            Identifier growth = Identifier.fromNamespaceAndPath("examplemod", "textures/entity/skulk_"
-                    + (cow ? "cow" : "zombie") + (baby ? "_baby" : "") + "_growth.png");
-            checkTexture(growth);
-            for (int outline : new int[]{0, 0xFF37A7D4}) {
-                state.outlineColor = outline;
-                var draws = new ArrayList<Draw>();
-                var collector = collector(draws, 0);
-                layer.submit(new PoseStack(), collector, 15728880, state, 0, 0);
-                require(draws.size() == 2, "Expected growth and parasite submissions");
-                Draw skin = draws.get(0);
-                require(skin.order() > 0, "Growth must render after the host's base skin");
-                require(skin.type() == RenderTypes.entityCutoutZOffset(growth), "Growth must use an offset cutout pass, not the host's opaque render type");
-                for (Draw draw : draws) {
-                    require(draw.tint() == -1, "Textures must retain their original colors");
-                    require(draw.outline() == outline, "Layer must preserve the actual glowing state; it must not force a white outline");
-                }
-                require(draws.get(1).order() > 0, "Attachment must follow the base skin");
+            M model, S state, boolean cow, boolean baby, ResourceManager resources) throws Exception {
+        RenderLayerParent<S, M> parent = new RenderLayerParent<>() {
+            public M getModel() { return model; }
+        };
+        var layer = new SkulkAttachmentLayer<>(parent, SkulkAttachmentModel.createLayer(cow).bakeRoot(), cow);
+        state.isBaby = baby;
+        Identifier growth = Identifier.fromNamespaceAndPath("examplemod", "textures/entity/skulk_"
+                + (cow ? "cow" : "zombie") + (baby ? "_baby" : "") + "_growth.png");
+        checkTexture(resources, growth);
+
+        // Reproduce the old seven-argument call: -1 means an always-white outline.
+        var legacy = new ArrayList<Draw>();
+        collector(legacy, 0).submitModel(model, state, new PoseStack(), model.renderType(growth), 15728880, 0, -1);
+        require(legacy.size() == 1 && legacy.get(0).outline() == -1,
+                "The legacy overload must reproduce the reported white outline");
+
+        for (int outline : new int[]{0, 0xFF37A7D4}) {
+            state.outlineColor = outline;
+            var draws = new ArrayList<Draw>();
+            layer.submit(new PoseStack(), collector(draws, 0), 15728880, state, 0, 0);
+            require(draws.size() == 2, "Expected growth and parasite submissions");
+            Draw skin = draws.get(0);
+            require(skin.order() > 0, "Growth must render after the host's base skin");
+            require(skin.type() == RenderTypes.entityCutoutZOffset(growth),
+                    "Growth must use an offset cutout pass, not the host's opaque render type");
+            for (Draw draw : draws) {
+                require(draw.tint() == -1, "Textures must retain their original colors");
+                require(draw.outline() == outline,
+                        "Layer must preserve the actual glowing state; it must not force a white outline");
             }
-            state.isInvisible = true;
-            var hidden = new ArrayList<Draw>();
-            layer.submit(new PoseStack(), collector(hidden, 0), 15728880, state, 0, 0);
-            require(hidden.isEmpty(), "Invisible hosts must hide the growth and attachment");
-            state.isInvisible = false;
+            require(draws.get(1).order() > 0, "Attachment must follow the base skin");
         }
+        state.isInvisible = true;
+        var hidden = new ArrayList<Draw>();
+        layer.submit(new PoseStack(), collector(hidden, 0), 15728880, state, 0, 0);
+        require(hidden.isEmpty(), "Invisible hosts must hide the growth and attachment");
     }
 
-    private static void checkTexture(Identifier texture) throws Exception {
-        try (var input = Minecraft.getInstance().getResourceManager().getResourceOrThrow(texture).open()) {
+    private static void checkTexture(ResourceManager resources, Identifier texture) throws Exception {
+        try (var input = resources.getResourceOrThrow(texture).open()) {
             var image = ImageIO.read(input);
-            require(image != null && image.getWidth() == 64 && image.getHeight() == 64, "Missing or invalid host growth texture: " + texture);
+            require(image != null && image.getWidth() == 64 && image.getHeight() == 64,
+                    "Missing or invalid host growth texture: " + texture);
             int opaque = 0, transparent = 0;
             for (int y = 0; y < 64; y++) for (int x = 0; x < 64; x++) {
                 int alpha = image.getRGB(x, y) >>> 24;
@@ -83,7 +99,8 @@ public final class SculkRenderRegression {
                 else if (alpha == 255) opaque++;
                 else throw new AssertionError("Growth masks must have crisp cutout alpha");
             }
-            require(opaque > 100 && transparent > 100, "Growth must contain both infected and exposed skin regions");
+            require(opaque > 100 && transparent > 100,
+                    "Growth must contain both infected and exposed skin regions");
         }
     }
 

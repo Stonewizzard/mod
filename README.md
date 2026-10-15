@@ -135,9 +135,9 @@ This is a software preview using the model UVs; Minecraft lighting can differ.
 
 
 
-For the client rendering regression check, run `./gradlew runSculkRenderCheck`
-(or `.\\gradlew.bat runSculkRenderCheck` in Windows PowerShell). It opens the
-Minecraft client, checks loaded host models and packaged growth textures,
-verifies the cutout pass, drawing order, tint, invisibility, and glowing state,
-and closes automatically. CI runs this under a virtual display. This checks
-renderer submissions; the previews and in-game appearance still need visual review.
+Run `./gradlew runSculkRenderCheck` (Windows: `.\\gradlew.bat runSculkRenderCheck`)
+for the headless client render-submission regression. It bakes the native adult
+and baby host models, loads the packaged growth textures, reproduces the old
+outline bug as a negative control, and checks the cutout pass, draw order, tint,
+invisibility, and outline handling. It uses client-data mode without opening a
+game window. This checks native submissions; in-game pixels still need visual review.
