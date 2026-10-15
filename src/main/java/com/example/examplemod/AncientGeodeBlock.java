@@ -2,6 +2,9 @@ package com.example.examplemod;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,6 +21,16 @@ public class AncientGeodeBlock extends Block {
 
     public AncientGeodeBlock(BlockBehaviour.Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType type) {
+        return false;
+    }
+
+    @Override
+    public PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, Mob mob) {
+        return mob instanceof Cruncher ? PathType.BLOCKED : null;
     }
 
     @Override

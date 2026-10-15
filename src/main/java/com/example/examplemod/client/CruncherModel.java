@@ -55,7 +55,7 @@ public class CruncherModel extends EntityModel<CruncherRenderState> {
         head.addOrReplaceChild("right_ear", CubeListBuilder.create().texOffs(48, 0)
                 .addBox(-1, 0, -3, 1, 12, 7), PartPose.offset(-6.51F, -7.5F, -3));
         var upper = head.addOrReplaceChild("upper_jaw", CubeListBuilder.create().texOffs(10, 45)
-                .addBox(-8, 0, -13, 16, 4, 13), PartPose.offset(0, -3, -8));
+                .addBox(-6.5F, 1, -11, 13, 2, 9, new CubeDeformation(1.5F, 1, 2)), PartPose.offset(0, -3, -8));
         var lower = head.addOrReplaceChild("lower_jaw", CubeListBuilder.create().texOffs(10, 57)
                 .addBox(-8, 0, -13, 16, 4, 13), PartPose.offset(0, 4, -8));
         CubeListBuilder topTeeth = CubeListBuilder.create();

@@ -68,6 +68,11 @@ public class Cruncher extends Sniffer {
     }
 
     @Override
+    public boolean canMate(Animal partner) {
+        return partner instanceof Cruncher && super.canMate(partner);
+    }
+
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
         return ExampleMod.CRUNCHER.get().create(level, net.minecraft.world.entity.EntitySpawnReason.BREEDING);
     }
@@ -104,7 +109,13 @@ public class Cruncher extends Sniffer {
             }
             candidates.sort(Comparator.comparingDouble(pos -> position().distanceToSqr(Vec3.atCenterOf(pos))));
             for (BlockPos geode : candidates) {
-                for (Direction face : Direction.Plane.HORIZONTAL) {
+                ArrayList<Direction> faces = new ArrayList<>();
+                for (Direction direction : Direction.Plane.HORIZONTAL) {
+                    faces.add(direction);
+                }
+                faces.sort(Comparator.comparingDouble(direction -> position().distanceToSqr(
+                        Vec3.atBottomCenterOf(geode.relative(direction, 2)))));
+                for (Direction face : faces) {
                     BlockPos approach = geode.relative(face, 2);
                     if (!level.getBlockState(geode.relative(face)).isAir()
                             || !level.getBlockState(approach).isAir()
@@ -113,7 +124,17 @@ public class Cruncher extends Sniffer {
                         continue;
                     }
                     var path = getNavigation().createPath(approach, 0);
-                    if (path != null && path.canReach()) {
+                    boolean crossesGeode = false;
+                    if (path != null) {
+                        for (int nodeIndex = 0; nodeIndex < path.getNodeCount(); nodeIndex++) {
+                            var node = path.getNode(nodeIndex);
+                            if (node.x == geode.getX() && node.z == geode.getZ()) {
+                                crossesGeode = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (path != null && path.canReach() && !crossesGeode) {
                         target = geode;
                         stand = approach;
                         return true;
