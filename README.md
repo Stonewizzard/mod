@@ -134,3 +134,10 @@ sculk patches. Armor may cover parts of the growth.
 This is a software preview using the model UVs; Minecraft lighting can differ.
 
 
+
+Run `./gradlew runSculkRenderCheck` (Windows: `.\\gradlew.bat runSculkRenderCheck`)
+for the headless client render-submission regression. It bakes the native adult
+and baby host models, loads the packaged growth textures, reproduces the old
+outline bug as a negative control, and checks the cutout pass, draw order, tint,
+invisibility, and outline handling. It uses client-data mode without opening a
+game window. This checks native submissions; in-game pixels still need visual review.

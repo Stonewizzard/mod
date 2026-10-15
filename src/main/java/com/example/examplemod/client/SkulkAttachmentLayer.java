@@ -2,12 +2,14 @@ package com.example.examplemod.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 
 /** Blend localized sculk growth and an embedded parasite into the native host model. */
@@ -18,14 +20,18 @@ public class SkulkAttachmentLayer<S extends LivingEntityRenderState, M extends E
     private final Identifier babyGrowthTexture;
 
     public SkulkAttachmentLayer(RenderLayerParent<S, M> parent, EntityRendererProvider.Context context, boolean cow) {
+        this(parent, context.bakeLayer(cow
+                ? SkulkAttachmentModel.COW_LAYER : SkulkAttachmentModel.ZOMBIE_LAYER), cow);
+    }
+
+    SkulkAttachmentLayer(RenderLayerParent<S, M> parent, ModelPart attachmentRoot, boolean cow) {
         super(parent);
         String species = cow ? "cow" : "zombie";
         adultGrowthTexture = Identifier.fromNamespaceAndPath("examplemod",
                 "textures/entity/skulk_" + species + "_growth.png");
         babyGrowthTexture = Identifier.fromNamespaceAndPath("examplemod",
                 "textures/entity/skulk_" + species + "_baby_growth.png");
-        attachment = new SkulkAttachmentModel(context.bakeLayer(cow
-                ? SkulkAttachmentModel.COW_LAYER : SkulkAttachmentModel.ZOMBIE_LAYER), cow);
+        attachment = new SkulkAttachmentModel(attachmentRoot, cow);
     }
 
     @Override
@@ -35,16 +41,22 @@ public class SkulkAttachmentLayer<S extends LivingEntityRenderState, M extends E
         M host = getParentModel();
         host.setupAnim(state);
         Identifier growth = state.isBaby ? babyGrowthTexture : adultGrowthTexture;
-        collector.submitModel(host, state, poseStack, host.renderType(growth),
-                light, LivingEntityRenderer.getOverlayCoords(state, 0), -1);
+        int overlay = LivingEntityRenderer.getOverlayCoords(state, 0);
+        var layers = collector.order(1);
+        // Native host models may use an opaque pass. Growth needs cutout alpha and a
+        // slight depth offset so it stays visible on the same surface as the base skin.
+        layers.submitModel(host, state, poseStack, RenderTypes.entityCutoutZOffset(growth),
+                light, overlay, -1, null, state.outlineColor);
         var pose = new SkulkAttachmentState();
         pose.hostRoot = host.root().storePose();
         pose.hostBody = host.root().getChild("body").storePose();
         pose.hostHead = host.root().getChild("head").storePose();
         pose.ageInTicks = state.ageInTicks;
         pose.isBaby = state.isBaby;
-        collector.submitModel(attachment, pose, poseStack, attachment.renderType(TEXTURE),
-                light, LivingEntityRenderer.getOverlayCoords(state, 0), -1);
+        // In the full submission signature, -1 is the white tint; the final argument
+        // is the outline color and must come from the entity's actual glowing state.
+        layers.submitModel(attachment, pose, poseStack, attachment.renderType(TEXTURE),
+                light, overlay, -1, null, state.outlineColor);
     }
 }
 

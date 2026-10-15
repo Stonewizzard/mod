@@ -53,6 +53,12 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        sculkRenderCheck {
+            clientData()
+            systemProperty 'examplemod.sculkRenderCheck', 'true'
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('build/sculk-render-check-data').getAbsolutePath(), '--existing', file('src/main/resources').getAbsolutePath()
+        }
+
         server {
             server()
             programArgument '--nogui'
@@ -182,4 +188,9 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
+}
+
+// Keep client regression output readable while preserving normal development logging.
+neoForge.runs.named('sculkRenderCheck') {
+    logLevel = org.slf4j.event.Level.INFO
 }

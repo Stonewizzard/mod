@@ -47,6 +47,14 @@ public class ExampleModClient {
     }
 
     @SubscribeEvent
+    static void checkSculkRendering(net.neoforged.neoforge.data.event.GatherDataEvent.Client event) {
+        if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
+            com.example.examplemod.client.SculkRenderRegression.run(
+                    event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
+        }
+    }
+
+    @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         // Some client setup code
         ExampleMod.LOGGER.info("HELLO FROM CLIENT SETUP");
