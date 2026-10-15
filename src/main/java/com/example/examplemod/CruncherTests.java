@@ -72,9 +72,22 @@ public final class CruncherTests {
             verifySpawnEgg(helper);
             verifyVaultLoot(helper, "reward_ominous", true);
             verifyVaultLoot(helper, "reward", false);
+            verifyHatchTiming(helper);
             helper.setBlock(EGG, ExampleMod.CRUNCHER_EGG.get());
             helper.runAfterDelay(620, () -> {
-                require(helper, helper.getLevel().getBlockState(helper.absolutePos(EGG)).isAir(), "Placed egg must hatch");
+                var eggPos = helper.absolutePos(EGG);
+                var eggBlock = ExampleMod.CRUNCHER_EGG.get();
+                require(helper, helper.getLevel().getBlockState(eggPos).is(eggBlock)
+                                && helper.getLevel().getBlockState(eggPos).getValue(CruncherEggBlock.HATCH) == 0,
+                        "Egg must not progress at the former 30-second testing hatch time");
+                // Advance the three scheduled stages directly; do not wait 20 real minutes in CI.
+                for (int stage = 0; stage < 3; stage++) {
+                    var state = helper.getLevel().getBlockState(eggPos);
+                    require(helper, state.getValue(CruncherEggBlock.HATCH) == stage,
+                            "Egg must progress through all three hatch stages in order");
+                    eggBlock.tick(state, helper.getLevel(), eggPos, RandomSource.create(stage));
+                }
+                require(helper, helper.getLevel().getBlockState(eggPos).isAir(), "Placed egg must hatch");
                 var babies = helper.getLevel().getEntitiesOfClass(Cruncher.class, bounds(helper));
                 require(helper, babies.size() == 1 && babies.getFirst().isBaby(), "Egg must hatch exactly one baby Cruncher");
                 var cruncher = babies.getFirst();
@@ -122,6 +135,22 @@ public final class CruncherTests {
                 });
             });
         }
+    }
+
+    private static void verifyHatchTiming(GameTestHelper helper) {
+        var pos = helper.absolutePos(EGG);
+        var random = RandomSource.create(0x454747L);
+        for (var substrate : new net.minecraft.world.level.block.Block[]{
+                Blocks.STONE, Blocks.MOSS_BLOCK, Blocks.CRIMSON_NYLIUM, Blocks.WARPED_NYLIUM}) {
+            helper.setBlock(EGG.below(), substrate);
+            int minimum = substrate == Blocks.WARPED_NYLIUM ? 4000 : 8000;
+            for (int i = 0; i < 100; i++) {
+                int delay = CruncherEggBlock.hatchDelay(helper.getLevel(), pos, random);
+                require(helper, delay >= minimum && delay < minimum + 300,
+                        "Only warped nylium should boost hatching; substrate=" + substrate + ", delay=" + delay);
+            }
+        }
+        helper.setBlock(EGG.below(), Blocks.STONE);
     }
 
     /** Reproduces extra goal ticks after consumption without relying on random AI timing. */

@@ -34,7 +34,9 @@ it in Ingredients or Example Mod Tab, or use `/give @s examplemod:ancient_artifa
 A successful ancient-debris excavation has a **1-in-15 chance (about 6.7%)** to
 also drop **one Cruncher Egg**, matching the vanilla Sniffer Egg chance from
 warm-ocean-ruin suspicious sand. Scrap and the ordinary artifact remain guaranteed.
-Place the egg with room above it: it hatches after about **30 seconds** into a baby Cruncher.
+Place the egg with room above it: it hatches into a baby Cruncher on the vanilla
+Sniffer Egg timing: about **20 minutes**, or **10 minutes on warped nylium**, plus a small
+random delay for each of its three stages.
 The baby grows up after about **one minute** in this testing build.
 
 The Cruncher is a passive, fire-immune Nether relative of the sniffer with six
@@ -58,6 +60,7 @@ spawn naturally yet; eggs are their survival acquisition route.
 
 ## Cruncher and egg visuals
 
+The hatchable Cruncher Egg has a custom flat obsidian-and-magma inventory icon.
 All three egg stages keep their netherrack, basalt, and crying-obsidian transition,
 with animated magma veins across every face. The Cruncher keeps the sniffer's
 moss fringe and six-legged silhouette, with a Nether recolor, crying-obsidian
