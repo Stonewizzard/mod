@@ -79,7 +79,7 @@ public final class CruncherTests {
                 var player = helper.makeMockPlayer(GameType.SURVIVAL);
                 int age = cruncher.getAge();
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE));
-                cruncher.interact(player, InteractionHand.MAIN_HAND, cruncher.getBoundingBox().getCenter());
+                cruncher.interact(player, InteractionHand.MAIN_HAND, null);
                 require(helper, cruncher.getAge() > age, "Feeding a baby a Wither Rose must accelerate growth");
                 cruncher.setAge(0);
                 cruncher.setPos(helper.absoluteVec(new Vec3(1.5, 1, 4.5)));
@@ -135,10 +135,10 @@ public final class CruncherTests {
         var cruncher = spawned.getFirst();
         var player = helper.makeMockPlayer(GameType.SURVIVAL);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.TORCHFLOWER_SEEDS));
-        cruncher.interact(player, InteractionHand.MAIN_HAND, cruncher.getBoundingBox().getCenter());
+        cruncher.interact(player, InteractionHand.MAIN_HAND, null);
         require(helper, !cruncher.isInLove(), "Old sniffer food must no longer feed a Cruncher");
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE));
-        cruncher.interact(player, InteractionHand.MAIN_HAND, cruncher.getBoundingBox().getCenter());
+        cruncher.interact(player, InteractionHand.MAIN_HAND, null);
         require(helper, cruncher.isInLove(), "Feeding a Wither Rose must enable breeding; age=" + cruncher.getAge()
                 + " acceptsFood=" + cruncher.isFood(new ItemStack(Items.WITHER_ROSE)) + " held=" + player.getMainHandItem());
         spawned.forEach(Cruncher::discard);
@@ -150,8 +150,8 @@ public final class CruncherTests {
         var second = helper.spawn(ExampleMod.CRUNCHER.get(), new BlockPos(4, 1, 2));
         var player = helper.makeMockPlayer(GameType.SURVIVAL);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE, 2));
-        first.interact(player, InteractionHand.MAIN_HAND, first.getBoundingBox().getCenter());
-        second.interact(player, InteractionHand.MAIN_HAND, second.getBoundingBox().getCenter());
+        first.interact(player, InteractionHand.MAIN_HAND, null);
+        second.interact(player, InteractionHand.MAIN_HAND, null);
         helper.runAfterDelay(100, () -> {
             require(helper, first.getAge() > 0 && second.getAge() > 0,
                     "Rose-fed Crunchers must finish breeding and enter their cooldown");

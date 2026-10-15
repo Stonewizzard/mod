@@ -31,7 +31,14 @@ jobs:
 
       - name: Inspect Minecraft interaction API
         run: |
-          task_mc_jar=$(rg --files --hidden /home/runner/.gradle /home/runner/work/mod/mod/.gradle | rg '(minecraft|neoforge|merged).*\.jar$' | while IFS= read -r task_jar; do if jar tf "$task_jar" | rg -q '^net/minecraft/world/entity/animal/Animal.class$'; then printf '%s\n' "$task_jar"; break; fi; done)
+          task_mc_jar=$(python3 -c 'import pathlib,zipfile
+          for root in ("/home/runner/.gradle", "/home/runner/work/mod/mod/.gradle"):
+            for path in pathlib.Path(root).rglob("*.jar"):
+              try:
+                with zipfile.ZipFile(path) as archive:
+                  if "net/minecraft/world/entity/animal/Animal.class" in archive.namelist():
+                    print(path); raise SystemExit
+              except (OSError,zipfile.BadZipFile): pass')
           test -n "$task_mc_jar"
           javap -classpath "$task_mc_jar" -c -p net.minecraft.world.entity.animal.Animal
           javap -classpath "$task_mc_jar" -c -p net.minecraft.world.entity.Mob | python3 -c 'import sys,re; active=False
