@@ -190,13 +190,6 @@ public class Cruncher extends Animal {
 
         @Override
         public void tick() {
-            // Goal continuation is checked less often than this per-tick animation.
-            // After a successful crunch, one more tick can run before the goal stops.
-            if (target == null || stand == null) {
-                getNavigation().stop();
-                entityData.set(CRUNCHING, false);
-                return;
-            }
             timeout++;
             Vec3 approach = Vec3.atBottomCenterOf(stand);
             Vec3 center = Vec3.atCenterOf(target);
