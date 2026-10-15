@@ -127,8 +127,9 @@ public final class CruncherTests {
     /** Reproduces extra goal ticks after consumption without relying on random AI timing. */
     private static void verifyCompletionTicks(GameTestHelper helper) {
         boolean original = helper.getLevel().getGameRules().get(GameRules.MOB_GRIEFING);
-        var cruncher = helper.spawn(ExampleMod.CRUNCHER.get(), new BlockPos(3, 1, 4));
-        cruncher.setPos(helper.absoluteVec(new Vec3(3.5, 1, 4.5)));
+        var cruncher = helper.spawn(ExampleMod.CRUNCHER.get(), new BlockPos(1, 1, 4));
+        cruncher.setPos(helper.absoluteVec(new Vec3(1.5, 1, 4.5)));
+        cruncher.setOnGround(true);
         cruncher.setNoAi(true);
         helper.setBlock(GEODE, ExampleMod.ANCIENT_GEODE.get());
         helper.getLevel().getGameRules().set(GameRules.MOB_GRIEFING, true, helper.getLevel().getServer());
@@ -142,6 +143,7 @@ public final class CruncherTests {
                     .findFirst().orElseThrow();
             require(helper, goal.canUse(), "A nearby exposed geode must be a valid crunch target");
             goal.start();
+            cruncher.setPos(helper.absoluteVec(new Vec3(3.5, 1, 4.5)));
             for (int i = 0; i < Cruncher.CRUNCH_TICKS; i++) {
                 goal.tick();
             }
