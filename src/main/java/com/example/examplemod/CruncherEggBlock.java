@@ -43,7 +43,7 @@ public class CruncherEggBlock extends Block {
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean moving) {
         if (!oldState.is(this) && !level.isClientSide()) {
-            level.scheduleTick(pos, this, hatchDelay(level, pos, level.random));
+            level.scheduleTick(pos, this, hatchDelay(level, pos, level.getRandom()));
         }
     }
 
