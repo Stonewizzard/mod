@@ -123,6 +123,8 @@ follow the host's body and head poses; separate growth masks fit baby skins.
 
 [Watch the tentacle animation preview](docs/visuals/skulk-parasite-tentacles.gif)
 
+[Inspect the baby host skins and fitted attachments](docs/visuals/skulk-baby-hosts-preview.png)
+
 For an in-game visual check, infect an adult zombie and cow, walk around to see
 the fused parasite and growth from the front and back, and compare against uninfected
 mobs. Check a baby host and an armored zombie as well. The original skins come

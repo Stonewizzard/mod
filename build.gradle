@@ -183,22 +183,3 @@ idea {
         downloadJavadoc = true
     }
 }
-
-// Temporary native model dimension inspection.
-tasks.register('inspectParasiteModels', Exec) {
-    doFirst {
-        def runtime = project.sourceSets.main.runtimeClasspath
-        def modelClasses = []
-        runtime.files.findAll { it.name.endsWith('.jar') }.each { file ->
-            def archive = new java.util.zip.ZipFile(file)
-            archive.entries().each { entry ->
-                if (entry.name.endsWith('/CowModel.class') || entry.name.endsWith('/BabyCowModel.class') || entry.name.endsWith('/ZombieModel.class') || (entry.name.contains('Baby') && (entry.name.contains('Zombie') || entry.name.contains('Humanoid')) && entry.name.endsWith('Model.class'))) {
-                    modelClasses.add(entry.name.replace('/', '.').replace('.class', ''))
-                }
-            }
-            archive.close()
-        }
-        commandLine project.javaToolchains.launcherFor(project.java.toolchain).get().metadata.installationPath.file('bin/javap').asFile,
-                '-c', '-p', '-classpath', runtime.asPath, *modelClasses
-    }
-}

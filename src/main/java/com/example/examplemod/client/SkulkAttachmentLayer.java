@@ -14,11 +14,16 @@ import net.minecraft.resources.Identifier;
 public class SkulkAttachmentLayer<S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends RenderLayer<S, M> {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("examplemod", "textures/entity/skulk_parasite.png");
     private final SkulkAttachmentModel attachment;
-    private final boolean cow;
+    private final Identifier adultGrowthTexture;
+    private final Identifier babyGrowthTexture;
 
     public SkulkAttachmentLayer(RenderLayerParent<S, M> parent, EntityRendererProvider.Context context, boolean cow) {
         super(parent);
-        this.cow = cow;
+        String species = cow ? "cow" : "zombie";
+        adultGrowthTexture = Identifier.fromNamespaceAndPath("examplemod",
+                "textures/entity/skulk_" + species + "_growth.png");
+        babyGrowthTexture = Identifier.fromNamespaceAndPath("examplemod",
+                "textures/entity/skulk_" + species + "_baby_growth.png");
         attachment = new SkulkAttachmentModel(context.bakeLayer(cow
                 ? SkulkAttachmentModel.COW_LAYER : SkulkAttachmentModel.ZOMBIE_LAYER), cow);
     }
@@ -29,9 +34,7 @@ public class SkulkAttachmentLayer<S extends LivingEntityRenderState, M extends E
         if (state.isInvisible) return;
         M host = getParentModel();
         host.setupAnim(state);
-        String species = cow ? "cow" : "zombie";
-        Identifier growth = Identifier.fromNamespaceAndPath("examplemod", "textures/entity/skulk_"
-                + species + (state.isBaby ? "_baby" : "") + "_growth.png");
+        Identifier growth = state.isBaby ? babyGrowthTexture : adultGrowthTexture;
         collector.submitModel(host, state, poseStack, host.renderType(growth),
                 light, LivingEntityRenderer.getOverlayCoords(state, 0), -1);
         var pose = new SkulkAttachmentState();

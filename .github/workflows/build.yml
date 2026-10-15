@@ -29,9 +29,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Inspect native model poses
-        run: ./gradlew inspectParasiteModels --no-configuration-cache
-
       - name: Verify sniffer head death drops in Minecraft
         timeout-minutes: 10
         run: ./gradlew runGameTestServer

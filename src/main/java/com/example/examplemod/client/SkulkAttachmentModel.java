@@ -94,6 +94,11 @@ public class SkulkAttachmentModel extends EntityModel<SkulkAttachmentState> {
             headGrowth.y = -1.569F;
             headGrowth.z = 0.1667F;
             headGrowth.zScale = 5.0F / 6.0F;
+        } else if (state.isBaby) {
+            // Baby zombies center their shorter torso around the body pivot.
+            bodyGrowth.y = -2.5F;
+            bodyGrowth.yScale = 5.0F / 12.0F;
+            headGrowth.y = -0.25F;
         }
         parasite.xScale = parasite.yScale = parasite.zScale = cow ? 0.7F : 0.65F;
         SkulkParasiteGeometry.animate(parasite, state.ageInTicks * 0.09F, 0.06F);
