@@ -113,6 +113,7 @@ public class Cruncher extends Animal {
         private int progress;
         private int nextSearch;
         private int timeout;
+        private boolean finished;
 
         CrunchGeodeGoal() {
             setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
@@ -170,13 +171,14 @@ public class Cruncher extends Animal {
 
         @Override
         public boolean canContinueToUse() {
-            return target != null && !isBaby() && isAlive() && timeout < 240
+            return !finished && target != null && !isBaby() && isAlive() && timeout < 240
                     && level().getBlockState(target).is(ExampleMod.ANCIENT_GEODE.get())
                     && level() instanceof ServerLevel level && EventHooks.canEntityGrief(level, Cruncher.this);
         }
 
         @Override
         public void start() {
+            finished = false;
             progress = 0;
             timeout = 0;
             Vec3 approach = Vec3.atBottomCenterOf(stand);
@@ -190,6 +192,11 @@ public class Cruncher extends Animal {
 
         @Override
         public void tick() {
+            // The selector may tick a finished goal before it calls stop().
+            // Keep the positions intact until stop() and never crunch twice.
+            if (finished) {
+                return;
+            }
             timeout++;
             Vec3 approach = Vec3.atBottomCenterOf(stand);
             Vec3 center = Vec3.atCenterOf(target);
@@ -227,7 +234,8 @@ public class Cruncher extends Animal {
                     && EventHooks.canEntityGrief(level, Cruncher.this)
                     && level.destroyBlock(target, false, Cruncher.this)) {
                 Block.popResource(level, target, new ItemStack(ExampleMod.RARE_ANCIENT_ARTIFACT.get()));
-                target = null;
+                finished = true;
+                entityData.set(CRUNCHING, false);
             }
         }
 

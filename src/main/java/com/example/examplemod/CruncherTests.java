@@ -15,6 +15,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
@@ -66,6 +68,7 @@ public final class CruncherTests {
                     helper.setBlock(new BlockPos(x, 0, z), Blocks.STONE);
                 }
             }
+            verifyCompletionTicks(helper);
             verifySpawnEgg(helper);
             verifyVaultLoot(helper, "reward_ominous", true);
             verifyVaultLoot(helper, "reward", false);
@@ -118,6 +121,51 @@ public final class CruncherTests {
                     }
                 });
             });
+        }
+    }
+
+    /** Reproduces extra goal ticks after consumption without relying on random AI timing. */
+    private static void verifyCompletionTicks(GameTestHelper helper) {
+        boolean original = helper.getLevel().getGameRules().get(GameRules.MOB_GRIEFING);
+        var cruncher = helper.spawn(ExampleMod.CRUNCHER.get(), new BlockPos(3, 1, 4));
+        cruncher.setPos(helper.absoluteVec(new Vec3(3.5, 1, 4.5)));
+        cruncher.setNoAi(true);
+        helper.setBlock(GEODE, ExampleMod.ANCIENT_GEODE.get());
+        helper.getLevel().getGameRules().set(GameRules.MOB_GRIEFING, true, helper.getLevel().getServer());
+        try {
+            // Drive the same goal registered on the real mob, including its path and ray checks.
+            var field = Mob.class.getDeclaredField("goalSelector");
+            field.setAccessible(true);
+            var selector = (GoalSelector) field.get(cruncher);
+            var goal = selector.getAvailableGoals().stream().map(wrapped -> wrapped.getGoal())
+                    .filter(candidate -> candidate.getClass().getSimpleName().equals("CrunchGeodeGoal"))
+                    .findFirst().orElseThrow();
+            require(helper, goal.canUse(), "A nearby exposed geode must be a valid crunch target");
+            goal.start();
+            for (int i = 0; i < Cruncher.CRUNCH_TICKS; i++) {
+                goal.tick();
+            }
+            require(helper, helper.getLevel().getBlockState(helper.absolutePos(GEODE)).isAir(),
+                    "A complete crunch must consume the geode");
+            require(helper, countRare(helper) == 1, "The crunch must drop exactly one artifact");
+            require(helper, !goal.canContinueToUse(), "The completed goal must request stopping");
+            // The scheduler can issue these before it evaluates canContinueToUse again.
+            // The original implementation crashes here with a null target.
+            helper.setBlock(GEODE, ExampleMod.ANCIENT_GEODE.get());
+            goal.tick();
+            goal.tick();
+            require(helper, helper.getLevel().getBlockState(helper.absolutePos(GEODE)).is(ExampleMod.ANCIENT_GEODE.get()),
+                    "Extra completion ticks must not consume a newly placed geode");
+            require(helper, countRare(helper) == 1 && !cruncher.isCrunching(),
+                    "Extra completion ticks must not duplicate rewards or restart the animation");
+            goal.stop();
+        } catch (ReflectiveOperationException failure) {
+            throw helper.assertionException(Component.literal("Cannot access the registered AI goal: " + failure));
+        } finally {
+            cruncher.discard();
+            helper.setBlock(GEODE, Blocks.AIR);
+            items(helper).forEach(ItemEntity::discard);
+            helper.getLevel().getGameRules().set(GameRules.MOB_GRIEFING, original, helper.getLevel().getServer());
         }
     }
 
