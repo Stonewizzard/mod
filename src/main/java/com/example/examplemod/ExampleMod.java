@@ -62,6 +62,18 @@ public class ExampleMod {
     public static final DeferredHolder<EntityType<?>, EntityType<Cruncher>> CRUNCHER =
             ENTITIES.registerEntityType("cruncher", Cruncher::new, MobCategory.CREATURE,
                     builder -> builder.sized(1.9F, 1.75F).fireImmune().clientTrackingRange(10));
+    public static final DeferredHolder<EntityType<?>, EntityType<SkulkParasite>> SKULK_PARASITE =
+            ENTITIES.registerEntityType("skulk_parasite", SkulkParasite::new, MobCategory.MONSTER,
+                    builder -> builder.sized(0.75F, 0.4F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<SkulkZombie>> SKULK_ZOMBIE =
+            ENTITIES.registerEntityType("skulk_zombie", SkulkZombie::new, MobCategory.MONSTER,
+                    builder -> builder.sized(0.6F, 1.95F).clientTrackingRange(8));
+    public static final DeferredHolder<EntityType<?>, EntityType<SkulkCow>> SKULK_COW =
+            ENTITIES.registerEntityType("skulk_cow", SkulkCow::new, MobCategory.MONSTER,
+                    builder -> builder.sized(0.9F, 1.4F).clientTrackingRange(8));
+    public static final DeferredItem<SpawnEggItem> SKULK_PARASITE_SPAWN_EGG = ITEMS.registerItem(
+            "skulk_parasite_spawn_egg", p -> new SpawnEggItem(p.spawnEgg(SKULK_PARASITE.get())));
+
     // This creative spawn egg creates a Cruncher immediately; the block egg still hatches.
     public static final DeferredItem<SpawnEggItem> CRUNCHER_SPAWN_EGG = ITEMS.registerItem(
             "cruncher_spawn_egg", p -> new SpawnEggItem(p.spawnEgg(CRUNCHER.get())));
@@ -110,6 +122,7 @@ public class ExampleMod {
                 output.accept(ANCIENT_ARTIFACT.get());
                 output.accept(CRUNCHER_EGG_ITEM.get());
                 output.accept(CRUNCHER_SPAWN_EGG.get());
+                output.accept(SKULK_PARASITE_SPAWN_EGG.get());
                 output.accept(ANCIENT_GEODE_ITEM.get());
                 output.accept(RARE_ANCIENT_ARTIFACT.get());
             }).build());
@@ -117,7 +130,17 @@ public class ExampleMod {
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
-        modEventBus.addListener((EntityAttributeCreationEvent event) -> event.put(CRUNCHER.get(), Cruncher.createAttributes().build()));
+        modEventBus.addListener((EntityAttributeCreationEvent event) -> {
+            event.put(CRUNCHER.get(), Cruncher.createAttributes().build());
+            event.put(SKULK_PARASITE.get(), SkulkParasite.createAttributes().build());
+            event.put(SKULK_ZOMBIE.get(), SkulkZombie.createAttributes().build());
+            event.put(SKULK_COW.get(), SkulkCow.createAttributes().build());
+        });
+        modEventBus.addListener((net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent event) ->
+                event.register(SKULK_PARASITE.get(), net.minecraft.world.entity.SpawnPlacementTypes.ON_GROUND,
+                        net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                        SkulkParasite::checkSpawnRules,
+                        net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent.Operation.REPLACE));
         ENTITIES.register(modEventBus);
 
         // Register the commonSetup method for modloading
@@ -126,6 +149,7 @@ public class ExampleMod {
             modEventBus.addListener(SnifferHeadDropTests::register);
             modEventBus.addListener(SnifferDebrisTests::register);
             modEventBus.addListener(CruncherTests::register);
+            modEventBus.addListener(SkulkParasiteTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
@@ -170,6 +194,7 @@ public class ExampleMod {
             event.accept(RARE_ANCIENT_ARTIFACT);
         } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
             event.accept(CRUNCHER_SPAWN_EGG);
+            event.accept(SKULK_PARASITE_SPAWN_EGG);
         } else if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
             event.accept(CRUNCHER_EGG_ITEM);
             event.accept(ANCIENT_GEODE_ITEM);
@@ -201,3 +226,4 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
+

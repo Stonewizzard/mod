@@ -72,3 +72,36 @@ This preview is rendered from the actual model UVs and texture frames; in-game
 lighting can differ. Texture animation is handled by the client renderer and
 block texture metadata. Feeding, hatching, AI, drops, loot chances, collision,
 and combat behavior are unchanged by this visual update.
+
+
+## Skulk Parasite
+
+A small six-legged sculk creature seeks a nearby **vanilla zombie or cow**, leaps
+onto it, and merges into that host. One successful infection consumes the parasite.
+Players and other mob types cannot be infected, and infected hosts cannot be
+infected again. A host does not spread infection by attacking.
+
+- **Skulk Zombie:** keeps zombie behavior, with 30% faster base movement, 50%
+  stronger base attacks, and 10 base XP instead of 5. Equipment and difficulty
+  still affect combat and XP under the normal rules.
+- **Skulk Cow:** keeps the cow body and ordinary cow loot, but chases and attacks
+  Survival/Adventure players. Creative and Spectator players are not targets.
+- Infection survives saving/loading. Names, equipment, age, health and other
+  standard conversion data are carried over; infection is not a host death.
+
+Parasites naturally spawn **only in the Deep Dark or Ancient Cities**,
+in packs of one or two. Normal monster darkness, difficulty, space and mob-cap
+rules apply. Spawn eggs and commands can place them anywhere for testing.
+Only the parasite has a creative spawn egg; the two infected host types are
+created by infection. Find **Skulk Parasite Spawn Egg** in Spawn Eggs or Example
+Mod Tab, or use `/give @s examplemod:skulk_parasite_spawn_egg`.
+
+For a quick test, put a zombie or cow and a parasite in a small enclosure.
+Use `/summon examplemod:skulk_parasite`, `/summon minecraft:zombie`, or
+`/summon minecraft:cow`. Keep zombies shaded. Switch to Survival to see an
+infected cow attack. `/locate biome minecraft:deep_dark` and
+`/locate structure minecraft:ancient_city` help find natural habitat.
+
+![Skulk Parasite and infected host skin preview](docs/visuals/skulk-parasite-preview.png)
+
+This is a software preview using the model UVs; Minecraft lighting can differ.
