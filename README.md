@@ -28,3 +28,23 @@ be enabled. Normal sniffer restrictions and digging cooldowns still apply.
 
 Ancient Artifact is a placeholder item using a vanilla pottery-sherd icon. Find
 it in Ingredients or Example Mod Tab, or use `/give @s examplemod:ancient_artifact`.
+
+## Cruncher progression (testing values)
+
+A successful ancient-debris excavation now also drops **one Cruncher Egg**.
+Its chance is currently **100%**, as requested for testing. Place the egg with
+room above it: it hatches after about **30 seconds** into a baby Cruncher.
+The baby grows up after about **one minute** in this testing build.
+
+The Cruncher is a passive, fire-immune Nether relative of the sniffer with six
+legs, a charcoal/magma hide, and oversized animated jaws. Adult Crunchers search
+within eight blocks for reachable Ancient Geodes, walk beside them, and crunch
+them into **one Rare Ancient Artifact**. Geodes come from ominous-vault rewards
+(one per reward in the initial implementation). Normal vaults do not gain them.
+The geode has a stepped dragon-egg shape with a dark shell and purple crystal.
+
+Cruncher Egg and Ancient Geode are in Natural Blocks and Example Mod Tab.
+Rare Ancient Artifact is in Ingredients and Example Mod Tab. All three can be
+obtained with `/give`; the mob can be spawned with `/summon examplemod:cruncher`.
+Both artifacts remain placeholders for future components. Crunchers do not
+spawn naturally yet; eggs are their survival acquisition route.
