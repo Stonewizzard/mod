@@ -16,6 +16,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -61,6 +62,9 @@ public class ExampleMod {
     public static final DeferredHolder<EntityType<?>, EntityType<Cruncher>> CRUNCHER =
             ENTITIES.registerEntityType("cruncher", Cruncher::new, MobCategory.CREATURE,
                     builder -> builder.sized(1.9F, 1.75F).fireImmune().clientTrackingRange(10));
+    // This creative spawn egg creates a Cruncher immediately; the block egg still hatches.
+    public static final DeferredItem<SpawnEggItem> CRUNCHER_SPAWN_EGG = ITEMS.registerItem(
+            "cruncher_spawn_egg", p -> new SpawnEggItem(p.spawnEgg(CRUNCHER.get())));
     public static final DeferredBlock<CruncherEggBlock> CRUNCHER_EGG = BLOCKS.registerBlock(
             "cruncher_egg", CruncherEggBlock::new, p -> p.strength(0.5F).noOcclusion());
     public static final DeferredItem<BlockItem> CRUNCHER_EGG_ITEM = ITEMS.registerSimpleBlockItem("cruncher_egg", CRUNCHER_EGG);
@@ -105,6 +109,7 @@ public class ExampleMod {
                 output.accept(EXAMPLE_ITEM.get());
                 output.accept(ANCIENT_ARTIFACT.get());
                 output.accept(CRUNCHER_EGG_ITEM.get());
+                output.accept(CRUNCHER_SPAWN_EGG.get());
                 output.accept(ANCIENT_GEODE_ITEM.get());
                 output.accept(RARE_ANCIENT_ARTIFACT.get());
             }).build());
@@ -163,6 +168,8 @@ public class ExampleMod {
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(ANCIENT_ARTIFACT);
             event.accept(RARE_ANCIENT_ARTIFACT);
+        } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
+            event.accept(CRUNCHER_SPAWN_EGG);
         } else if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
             event.accept(CRUNCHER_EGG_ITEM);
             event.accept(ANCIENT_GEODE_ITEM);

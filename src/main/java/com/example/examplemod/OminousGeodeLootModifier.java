@@ -11,8 +11,10 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
 
-/** Adds a geode to the ominous vault reward without replacing vanilla rewards. */
+/** Has a chance to add a geode to the ominous vault reward without replacing vanilla rewards. */
 public class OminousGeodeLootModifier extends LootModifier {
+    // One in five ominous vault rewards, in addition to the normal vault loot.
+    public static final float ANCIENT_GEODE_CHANCE = 0.2F;
     public static final MapCodec<OminousGeodeLootModifier> CODEC = RecordCodecBuilder.mapCodec(
             instance -> codecStart(instance).apply(instance, OminousGeodeLootModifier::new));
 
@@ -22,7 +24,9 @@ public class OminousGeodeLootModifier extends LootModifier {
 
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        generatedLoot.add(new ItemStack(ExampleMod.ANCIENT_GEODE_ITEM.get()));
+        if (context.getRandom().nextFloat() < ANCIENT_GEODE_CHANCE) {
+            generatedLoot.add(new ItemStack(ExampleMod.ANCIENT_GEODE_ITEM.get()));
+        }
         return generatedLoot;
     }
 

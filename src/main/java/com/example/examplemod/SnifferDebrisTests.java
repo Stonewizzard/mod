@@ -3,6 +3,11 @@ package com.example.examplemod;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestInstance;
 import net.minecraft.gametest.framework.TestData;
@@ -85,10 +90,12 @@ public final class SnifferDebrisTests {
                     require(helper, targetIsAir, "Digging must consume exposed ancient debris; items=" + items(helper).stream().map(e -> e.getItem().toString()).toList() + " sniffer=" + sniffer.position() + " tick=" + sniffer.tickCount);
                     require(helper, count(helper, Items.NETHERITE_SCRAP) == 1, "Must drop exactly one netherite scrap");
                     require(helper, count(helper, ExampleMod.ANCIENT_ARTIFACT.get()) == 1, "Must drop exactly one artifact");
-                    require(helper, count(helper, ExampleMod.CRUNCHER_EGG_ITEM.get()) == 1, "Testing egg chance must be 100 percent");
+                    int eggs = count(helper, ExampleMod.CRUNCHER_EGG_ITEM.get());
+                    require(helper, eggs >= 0 && eggs <= 1, "A dig can award at most one Cruncher Egg");
                     require(helper, count(helper, Items.ANCIENT_DEBRIS) == 0, "Must not also drop the debris block");
-                    require(helper, items(helper).stream().mapToInt(e -> e.getItem().getCount()).sum() == 3,
-                            "Debris rewards must replace ordinary seeds and include the test egg");
+                    require(helper, items(helper).stream().mapToInt(e -> e.getItem().getCount()).sum() == 2 + eggs,
+                            "Debris rewards must replace ordinary seeds, with an optional egg");
+                    verifyEggChance(helper, sniffer);
                 } else if (index == 1 || index == 2) {
                     require(helper, !targetIsAir, "Ordinary digging must leave dirt in place");
                     require(helper, count(helper, Items.TORCHFLOWER_SEEDS) + count(helper, Items.PITCHER_POD) == 1,
@@ -116,6 +123,37 @@ public final class SnifferDebrisTests {
                 throw failure;
             }
         });
+    }
+
+    /** Fixed random stream exercises both outcomes through the real loaded digging table. */
+    private static void verifyEggChance(GameTestHelper helper, Sniffer sniffer) {
+        var key = ResourceKey.create(Registries.LOOT_TABLE,
+                Identifier.parse("minecraft:gameplay/sniffer_digging"));
+        var table = helper.getLevel().getServer().reloadableRegistries().getLootTable(key);
+        var params = new LootParams.Builder(helper.getLevel())
+                .withParameter(LootContextParams.ORIGIN, sniffer.position())
+                .withParameter(LootContextParams.THIS_ENTITY, sniffer)
+                .create(table.getParamSet());
+        var random = RandomSource.create(0x4352554E43484552L);
+        int eggs = 0;
+        for (int i = 0; i < 600; i++) {
+            helper.setBlock(TARGET, Blocks.ANCIENT_DEBRIS);
+            var loot = table.getRandomItems(params, random);
+            int count = loot.stream().filter(s -> s.is(ExampleMod.CRUNCHER_EGG_ITEM.get()))
+                    .mapToInt(s -> s.getCount()).sum();
+            require(helper, count <= 1, "A debris dig must not generate duplicate eggs");
+            require(helper, helper.getLevel().getBlockState(helper.absolutePos(TARGET)).isAir(),
+                    "Each successful debris loot roll must consume its block");
+            require(helper, loot.stream().filter(s -> s.is(Items.NETHERITE_SCRAP)).mapToInt(s -> s.getCount()).sum() == 1
+                            && loot.stream().filter(s -> s.is(ExampleMod.ANCIENT_ARTIFACT.get())).mapToInt(s -> s.getCount()).sum() == 1,
+                    "Reducing egg odds must preserve the guaranteed scrap and artifact");
+            require(helper, loot.stream().mapToInt(s -> s.getCount()).sum() == 2 + count,
+                    "Excavation must not add ordinary seeds or a creative spawn egg");
+            eggs += count;
+        }
+        require(helper, eggs >= 20 && eggs <= 60,
+                "Expected approximately 1-in-15 eggs over 600 seeded digs, got " + eggs);
+        ExampleMod.LOGGER.info("Loot balance regression: {} Cruncher Eggs from 600 seeded debris digs", eggs);
     }
 
     private static java.util.List<ItemEntity> items(GameTestHelper helper) {

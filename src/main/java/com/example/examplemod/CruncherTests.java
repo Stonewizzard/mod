@@ -3,6 +3,8 @@ package com.example.examplemod;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestInstance;
@@ -14,6 +16,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
@@ -60,14 +64,20 @@ public final class CruncherTests {
                     helper.setBlock(new BlockPos(x, 0, z), Blocks.STONE);
                 }
             }
-            verifyVaultLoot(helper, "reward_ominous", 1);
-            verifyVaultLoot(helper, "reward", 0);
+            verifySpawnEgg(helper);
+            verifyVaultLoot(helper, "reward_ominous", true);
+            verifyVaultLoot(helper, "reward", false);
             helper.setBlock(EGG, ExampleMod.CRUNCHER_EGG.get());
             helper.runAfterDelay(620, () -> {
                 require(helper, helper.getLevel().getBlockState(helper.absolutePos(EGG)).isAir(), "Placed egg must hatch");
                 var babies = helper.getLevel().getEntitiesOfClass(Cruncher.class, bounds(helper));
                 require(helper, babies.size() == 1 && babies.getFirst().isBaby(), "Egg must hatch exactly one baby Cruncher");
                 var cruncher = babies.getFirst();
+                var player = helper.makeMockPlayer();
+                int age = cruncher.getAge();
+                player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE));
+                cruncher.interact(player, InteractionHand.MAIN_HAND);
+                require(helper, cruncher.getAge() > age, "Feeding a baby a Wither Rose must accelerate growth");
                 cruncher.setAge(0);
                 cruncher.setPos(helper.absoluteVec(new Vec3(1.5, 1, 4.5)));
                 helper.setBlock(GEODE, ExampleMod.ANCIENT_GEODE.get());
@@ -95,7 +105,7 @@ public final class CruncherTests {
                                         "Disabled mob griefing must protect geodes");
                                 require(helper, countRare(helper) == 0, "Protected geodes must not generate rewards");
                                 protectedCruncher.discard();
-                                helper.succeed();
+                                verifyBreeding(helper);
                             } finally {
                                 helper.getLevel().getGameRules().set(GameRules.MOB_GRIEFING, original, helper.getLevel().getServer());
                             }
@@ -109,17 +119,66 @@ public final class CruncherTests {
         }
     }
 
-    private static void verifyVaultLoot(GameTestHelper helper, String name, int expected) {
+    private static void verifySpawnEgg(GameTestHelper helper) {
+        helper.useBlock(new BlockPos(2, 0, 2), helper.makeMockPlayer(),
+                ExampleMod.CRUNCHER_SPAWN_EGG.get().getDefaultInstance(), Direction.UP);
+        var spawned = helper.getLevel().getEntitiesOfClass(Cruncher.class, bounds(helper));
+        require(helper, spawned.size() == 1 && !spawned.getFirst().isBaby(),
+                "Using the creative spawn egg must immediately spawn exactly one adult Cruncher");
+        var cruncher = spawned.getFirst();
+        var player = helper.makeMockPlayer();
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.TORCHFLOWER_SEEDS));
+        cruncher.interact(player, InteractionHand.MAIN_HAND);
+        require(helper, !cruncher.isInLove(), "Old sniffer food must no longer feed a Cruncher");
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE));
+        cruncher.interact(player, InteractionHand.MAIN_HAND);
+        require(helper, cruncher.isInLove(), "Feeding a Wither Rose must enable breeding");
+        spawned.forEach(Cruncher::discard);
+    }
+
+    private static void verifyBreeding(GameTestHelper helper) {
+        helper.setBlock(GEODE, Blocks.AIR);
+        var first = helper.spawn(ExampleMod.CRUNCHER.get(), new BlockPos(2, 1, 2));
+        var second = helper.spawn(ExampleMod.CRUNCHER.get(), new BlockPos(4, 1, 2));
+        var player = helper.makeMockPlayer();
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE, 2));
+        first.interact(player, InteractionHand.MAIN_HAND);
+        second.interact(player, InteractionHand.MAIN_HAND);
+        helper.runAfterDelay(100, () -> {
+            require(helper, first.getAge() > 0 && second.getAge() > 0,
+                    "Rose-fed Crunchers must finish breeding and enter their cooldown");
+            int eggs = items(helper).stream().filter(e -> e.getItem().is(ExampleMod.CRUNCHER_EGG_ITEM.get()))
+                    .mapToInt(e -> e.getItem().getCount()).sum();
+            require(helper, eggs == 1, "Two rose-fed Crunchers must lay exactly one hatchable egg");
+            first.discard();
+            second.discard();
+            helper.succeed();
+        });
+    }
+
+    private static void verifyVaultLoot(GameTestHelper helper, String name, boolean ominous) {
         var key = ResourceKey.create(Registries.LOOT_TABLE,
                 Identifier.parse("minecraft:chests/trial_chambers/" + name));
         var table = helper.getLevel().getServer().reloadableRegistries().getLootTable(key);
-        var loot = table.getRandomItems(new LootParams.Builder(helper.getLevel())
+        var params = new LootParams.Builder(helper.getLevel())
                 .withParameter(LootContextParams.ORIGIN, helper.absoluteVec(new Vec3(1, 1, 1)))
-                .create(LootContextParamSets.CHEST));
-        long geodes = loot.stream().filter(s -> s.is(ExampleMod.ANCIENT_GEODE_ITEM.get())).mapToInt(ItemStack::getCount).sum();
-        require(helper, geodes == expected, "Wrong geode count for vault table " + name);
-        require(helper, loot.stream().anyMatch(s -> !s.is(ExampleMod.ANCIENT_GEODE_ITEM.get())),
-                "Vanilla vault rewards must remain present");
+                .create(LootContextParamSets.CHEST);
+        var random = RandomSource.create(0x47454F444553L);
+        int total = 0;
+        for (int i = 0; i < 600; i++) {
+            var loot = table.getRandomItems(params, random);
+            int geodes = loot.stream().filter(s -> s.is(ExampleMod.ANCIENT_GEODE_ITEM.get()))
+                    .mapToInt(ItemStack::getCount).sum();
+            require(helper, geodes <= (ominous ? 1 : 0), "Wrong geode count for vault table " + name);
+            require(helper, loot.stream().anyMatch(s -> !s.is(ExampleMod.ANCIENT_GEODE_ITEM.get())),
+                    "Vanilla vault rewards must remain present");
+            total += geodes;
+        }
+        if (ominous) {
+            require(helper, total >= 85 && total <= 155,
+                    "Expected approximately 20 percent geodes over 600 seeded vault rewards, got " + total);
+        }
+        ExampleMod.LOGGER.info("Loot balance regression: {} Ancient Geodes from 600 seeded {} rewards", total, name);
     }
 
     private static java.util.List<ItemEntity> items(GameTestHelper helper) {

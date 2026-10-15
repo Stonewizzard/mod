@@ -29,22 +29,29 @@ be enabled. Normal sniffer restrictions and digging cooldowns still apply.
 Ancient Artifact is a placeholder item using a vanilla pottery-sherd icon. Find
 it in Ingredients or Example Mod Tab, or use `/give @s examplemod:ancient_artifact`.
 
-## Cruncher progression (testing values)
+## Cruncher progression
 
-A successful ancient-debris excavation now also drops **one Cruncher Egg**.
-Its chance is currently **100%**, as requested for testing. Place the egg with
-room above it: it hatches after about **30 seconds** into a baby Cruncher.
+A successful ancient-debris excavation has a **1-in-15 chance (about 6.7%)** to
+also drop **one Cruncher Egg**, matching the vanilla Sniffer Egg chance from
+warm-ocean-ruin suspicious sand. Scrap and the ordinary artifact remain guaranteed.
+Place the egg with room above it: it hatches after about **30 seconds** into a baby Cruncher.
 The baby grows up after about **one minute** in this testing build.
 
 The Cruncher is a passive, fire-immune Nether relative of the sniffer with six
 legs, a charcoal/magma hide, and oversized animated jaws. Adult Crunchers search
 within eight blocks for reachable Ancient Geodes, walk beside them, and crunch
 them into **one Rare Ancient Artifact**. Geodes come from ominous-vault rewards
-(one per reward in the initial implementation). Normal vaults do not gain them.
+with a **20% chance (1 in 5)** per reward. Normal vaults do not gain them.
 The geode has a stepped dragon-egg shape with a dark shell and purple crystal.
 
+Feed Crunchers **Wither Roses** to breed them; they lay a hatchable Cruncher Egg.
+Wither Roses also speed up baby growth, and Crunchers follow players holding them.
+
 Cruncher Egg and Ancient Geode are in Natural Blocks and Example Mod Tab.
-Rare Ancient Artifact is in Ingredients and Example Mod Tab. All three can be
+**Cruncher Spawn Egg** is in Spawn Eggs and Example Mod Tab; using it immediately
+spawns an adult Cruncher. Its Nether-colored icon uses the vanilla magma-cube
+spawn-egg texture. Give it with `/give @s examplemod:cruncher_spawn_egg`.
+Rare Ancient Artifact is in Ingredients and Example Mod Tab. These items can be
 obtained with `/give`; the mob can be spawned with `/summon examplemod:cruncher`.
 Both artifacts remain placeholders for future components. Crunchers do not
 spawn naturally yet; eggs are their survival acquisition route.

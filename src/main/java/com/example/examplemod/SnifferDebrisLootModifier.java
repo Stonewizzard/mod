@@ -20,8 +20,8 @@ import net.neoforged.neoforge.event.EventHooks;
 
 /** Consumes exposed debris at the actual digging spot and substitutes its rewards. */
 public class SnifferDebrisLootModifier extends LootModifier {
-    // 100% for testing; lower this when the rare egg progression is balanced.
-    public static final float CRUNCHER_EGG_CHANCE = 1.0F;
+    // Matches the Sniffer Egg's 1-in-15 weight in warm-ocean-ruin archaeology loot.
+    public static final float CRUNCHER_EGG_CHANCE = 1.0F / 15.0F;
     public static final MapCodec<SnifferDebrisLootModifier> CODEC = RecordCodecBuilder.mapCodec(
             instance -> codecStart(instance).apply(instance, SnifferDebrisLootModifier::new));
 
