@@ -80,8 +80,16 @@ public final class SkulkParasiteTests {
                 hostile.setNoAi(false);
                 float health = player.getHealth();
                 helper.runAfterDelay(80, () -> {
-                    require(helper, player.getHealth() < health,
-                            "Infected cow must chase and damage a player; cow=" + hostile.position()
+                    boolean aiDamaged = player.getHealth() < health;
+                    boolean directAttack = false;
+                    boolean directDamage = false;
+                    if (!aiDamaged) {
+                        directAttack = hostile.doHurtTarget(helper.getLevel(), player);
+                        directDamage = player.hurtServer(helper.getLevel(), helper.getLevel().damageSources().mobAttack(hostile), 3);
+                    }
+                    require(helper, aiDamaged,
+                            "Infected cow must chase and damage a player; directAttack=" + directAttack
+                                    + " directDamage=" + directDamage + " cow=" + hostile.position()
                                     + " player=" + player.position() + " target=" + hostile.getTarget()
                                     + " NoAI=" + hostile.isNoAi() + " health=" + player.getHealth()
                                     + " creative=" + player.isCreative() + " spectator=" + player.isSpectator());
