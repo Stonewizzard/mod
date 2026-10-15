@@ -14,5 +14,9 @@
   "block.examplemod.cruncher_egg": "Cruncher Egg",
   "block.examplemod.ancient_geode": "Ancient Geode",
   "item.examplemod.rare_ancient_artifact": "Rare Ancient Artifact",
-  "item.examplemod.cruncher_spawn_egg": "Cruncher Spawn Egg"
+  "item.examplemod.cruncher_spawn_egg": "Cruncher Spawn Egg",
+  "entity.examplemod.skulk_parasite": "Skulk Parasite",
+  "entity.examplemod.skulk_zombie": "Skulk Zombie",
+  "entity.examplemod.skulk_cow": "Skulk Cow",
+  "item.examplemod.skulk_parasite_spawn_egg": "Skulk Parasite Spawn Egg"
 }
