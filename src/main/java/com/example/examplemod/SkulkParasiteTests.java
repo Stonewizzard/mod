@@ -153,7 +153,7 @@ public final class SkulkParasiteTests {
                 "Saving/loading must retain the infected type, age, health and equipment");
         restored.discard();
         for (String tag : new String[]{"zombies", "undead", "burn_in_daylight"}) {
-            require(helper, infected.getType().is(net.minecraft.tags.TagKey.create(Registries.ENTITY_TYPE,
+            require(helper, net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(infected.getType()).is(net.minecraft.tags.TagKey.create(Registries.ENTITY_TYPE,
                             Identifier.fromNamespaceAndPath("minecraft", tag))),
                     "Infected zombie must keep vanilla zombie classification: " + tag);
         }
