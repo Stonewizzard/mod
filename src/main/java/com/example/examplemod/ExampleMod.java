@@ -17,6 +17,9 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.gamerules.GameRules;
@@ -54,6 +57,18 @@ public class ExampleMod {
     // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "examplemod" namespace
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
+    public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(MODID);
+    public static final DeferredHolder<EntityType<?>, EntityType<Cruncher>> CRUNCHER =
+            ENTITIES.registerEntityType("cruncher", Cruncher::new, MobCategory.CREATURE,
+                    builder -> builder.sized(1.9F, 1.75F).fireImmune().clientTrackingRange(10));
+    public static final DeferredBlock<CruncherEggBlock> CRUNCHER_EGG = BLOCKS.registerBlock(
+            "cruncher_egg", CruncherEggBlock::new, p -> p.strength(0.5F).noOcclusion());
+    public static final DeferredItem<BlockItem> CRUNCHER_EGG_ITEM = ITEMS.registerSimpleBlockItem("cruncher_egg", CRUNCHER_EGG);
+    public static final DeferredBlock<AncientGeodeBlock> ANCIENT_GEODE = BLOCKS.registerBlock(
+            "ancient_geode", AncientGeodeBlock::new, p -> p.strength(3.0F, 9.0F).noOcclusion());
+    public static final DeferredItem<BlockItem> ANCIENT_GEODE_ITEM = ITEMS.registerSimpleBlockItem("ancient_geode", ANCIENT_GEODE);
+    public static final DeferredItem<Item> RARE_ANCIENT_ARTIFACT = ITEMS.registerSimpleItem("rare_ancient_artifact");
+
     // Register the codec used by our sniffer death-loot JSON.
     public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS =
             DeferredRegister.create(NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, MODID);
@@ -62,6 +77,9 @@ public class ExampleMod {
 
     public static final DeferredHolder<MapCodec<? extends IGlobalLootModifier>, MapCodec<SnifferDebrisLootModifier>> SNIFFER_DEBRIS_LOOT =
             LOOT_MODIFIERS.register("sniffer_debris", () -> SnifferDebrisLootModifier.CODEC);
+
+    public static final DeferredHolder<MapCodec<? extends IGlobalLootModifier>, MapCodec<OminousGeodeLootModifier>> OMINOUS_GEODE_LOOT =
+            LOOT_MODIFIERS.register("ominous_geode", () -> OminousGeodeLootModifier.CODEC);
 
     // Placeholder reward; future artifact components can be selected by the debris loot modifier.
     public static final DeferredItem<Item> ANCIENT_ARTIFACT = ITEMS.registerSimpleItem("ancient_artifact");
@@ -86,16 +104,23 @@ public class ExampleMod {
                 output.accept(SNIFFER_SKULL_ITEM.get()); // Our placeable block also appears in this mod tab.
                 output.accept(EXAMPLE_ITEM.get());
                 output.accept(ANCIENT_ARTIFACT.get());
+                output.accept(CRUNCHER_EGG_ITEM.get());
+                output.accept(ANCIENT_GEODE_ITEM.get());
+                output.accept(RARE_ANCIENT_ARTIFACT.get());
             }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
+        modEventBus.addListener((EntityAttributeCreationEvent event) -> event.put(CRUNCHER.get(), Cruncher.createAttributes().build()));
+        ENTITIES.register(modEventBus);
+
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
         if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
             modEventBus.addListener(SnifferHeadDropTests::register);
             modEventBus.addListener(SnifferDebrisTests::register);
+            modEventBus.addListener(CruncherTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
@@ -137,6 +162,10 @@ public class ExampleMod {
             event.accept(SNIFFER_SKULL_ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(ANCIENT_ARTIFACT);
+            event.accept(RARE_ANCIENT_ARTIFACT);
+        } else if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
+            event.accept(CRUNCHER_EGG_ITEM);
+            event.accept(ANCIENT_GEODE_ITEM);
         }
     }
 

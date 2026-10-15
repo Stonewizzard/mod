@@ -9,5 +9,9 @@
   "examplemod.configuration.logDirtBlock": "Log Dirt Block",
   "examplemod.configuration.magicNumberIntroduction": "Magic Number Text",
   "examplemod.configuration.magicNumber": "Magic Number",
-  "item.examplemod.ancient_artifact": "Ancient Artifact"
+  "item.examplemod.ancient_artifact": "Ancient Artifact",
+  "entity.examplemod.cruncher": "Cruncher",
+  "block.examplemod.cruncher_egg": "Cruncher Egg",
+  "block.examplemod.ancient_geode": "Ancient Geode",
+  "item.examplemod.rare_ancient_artifact": "Rare Ancient Artifact"
 }

@@ -20,6 +20,8 @@ import net.neoforged.neoforge.event.EventHooks;
 
 /** Consumes exposed debris at the actual digging spot and substitutes its rewards. */
 public class SnifferDebrisLootModifier extends LootModifier {
+    // 100% for testing; lower this when the rare egg progression is balanced.
+    public static final float CRUNCHER_EGG_CHANCE = 1.0F;
     public static final MapCodec<SnifferDebrisLootModifier> CODEC = RecordCodecBuilder.mapCodec(
             instance -> codecStart(instance).apply(instance, SnifferDebrisLootModifier::new));
 
@@ -49,6 +51,9 @@ public class SnifferDebrisLootModifier extends LootModifier {
         }
         generatedLoot.add(new ItemStack(Items.NETHERITE_SCRAP));
         generatedLoot.add(new ItemStack(ExampleMod.ANCIENT_ARTIFACT.get()));
+        if (context.getRandom().nextFloat() < CRUNCHER_EGG_CHANCE) {
+            generatedLoot.add(new ItemStack(ExampleMod.CRUNCHER_EGG_ITEM.get()));
+        }
         return generatedLoot;
     }
 
