@@ -62,10 +62,14 @@ public final class SkulkParasiteTests {
             cow.setNoAi(true);
             var parasite = helper.spawn(ExampleMod.SKULK_PARASITE.get(), new BlockPos(1, 1, 4));
             var start = parasite.position();
-            var player = helper.makeMockServerPlayerInLevel();
+            // GameTestHelper's legacy mock always reports Creative, even after setGameMode.
+            var player = new net.neoforged.neoforge.common.util.FakePlayer(helper.getLevel(),
+                    new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "ParasiteTarget"));
             player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+            player.setPermanentlyInvulnerable(false);
             player.getAbilities().invulnerable = false;
             player.setPos(helper.absoluteVec(new Vec3(6.5, 1, 4.5)));
+            helper.getLevel().addNewPlayer(player);
             helper.runAfterDelay(120, () -> {
                 var infected = helper.getLevel().getEntitiesOfClass(SkulkCow.class, bounds(helper));
                 require(helper, cow.isRemoved() && parasite.isRemoved() && infected.size() == 1,
@@ -74,7 +78,6 @@ public final class SkulkParasiteTests {
                         "Infection must occur at the host, not remotely");
                 var hostile = infected.getFirst();
                 hostile.setNoAi(false);
-                hostile.setTarget(player);
                 float health = player.getHealth();
                 helper.runAfterDelay(80, () -> {
                     require(helper, player.getHealth() < health,
