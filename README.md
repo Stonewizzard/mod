@@ -55,3 +55,17 @@ Rare Ancient Artifact is in Ingredients and Example Mod Tab. These items can be
 obtained with `/give`; the mob can be spawned with `/summon examplemod:cruncher`.
 Both artifacts remain placeholders for future components. Crunchers do not
 spawn naturally yet; eggs are their survival acquisition route.
+
+## Cruncher and egg visuals
+
+All three egg stages keep their netherrack, basalt, and crying-obsidian transition,
+with animated magma veins across every face. The Cruncher keeps the sniffer's
+moss fringe and six-legged silhouette, with a Nether recolor, crying-obsidian
+body, animated shell veins, armored jaw hinges, and individual crushing fangs.
+
+![Cruncher and egg texture animation](docs/visuals/cruncher-redesign.gif)
+
+This preview is rendered from the actual model UVs and texture frames; in-game
+lighting can differ. Texture animation is handled by the client renderer and
+block texture metadata. Feeding, hatching, AI, drops, loot chances, collision,
+and combat behavior are unchanged by this visual update.

@@ -2,8 +2,8 @@
   "parent": "minecraft:block/block",
   "textures": {
     "shell": "minecraft:block/crying_obsidian",
-    "top": "minecraft:block/magma",
-    "particle": "minecraft:block/netherrack"
+    "veins": "examplemod:block/cruncher_egg_veins",
+    "particle": "minecraft:block/crying_obsidian"
   },
   "elements": [
     {
@@ -22,7 +22,7 @@
           "texture": "#shell"
         },
         "up": {
-          "texture": "#top"
+          "texture": "#shell"
         },
         "north": {
           "texture": "#shell"
@@ -54,7 +54,7 @@
           "texture": "#shell"
         },
         "up": {
-          "texture": "#top"
+          "texture": "#shell"
         },
         "north": {
           "texture": "#shell"
@@ -86,7 +86,7 @@
           "texture": "#shell"
         },
         "up": {
-          "texture": "#top"
+          "texture": "#shell"
         },
         "north": {
           "texture": "#shell"
@@ -118,7 +118,7 @@
           "texture": "#shell"
         },
         "up": {
-          "texture": "#top"
+          "texture": "#shell"
         },
         "north": {
           "texture": "#shell"
@@ -133,6 +133,283 @@
           "texture": "#shell"
         }
       }
+    },
+    {
+      "from": [
+        3.98,
+        -0.02,
+        3.98
+      ],
+      "to": [
+        12.02,
+        2.02,
+        12.02
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            14,
+            12,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            14,
+            12,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            14,
+            12,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            14,
+            12,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ]
+        },
+        "down": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2.98,
+        1.98,
+        2.98
+      ],
+      "to": [
+        13.02,
+        10.02,
+        13.02
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "texture": "#veins",
+          "uv": [
+            3,
+            6,
+            13,
+            14
+          ]
+        },
+        "south": {
+          "texture": "#veins",
+          "uv": [
+            3,
+            6,
+            13,
+            14
+          ]
+        },
+        "east": {
+          "texture": "#veins",
+          "uv": [
+            3,
+            6,
+            13,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#veins",
+          "uv": [
+            3,
+            6,
+            13,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#veins",
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ]
+        },
+        "down": {
+          "texture": "#veins",
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3.98,
+        9.98,
+        3.98
+      ],
+      "to": [
+        12.02,
+        13.02,
+        12.02
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            3,
+            12,
+            6
+          ]
+        },
+        "south": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            3,
+            12,
+            6
+          ]
+        },
+        "east": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            3,
+            12,
+            6
+          ]
+        },
+        "west": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            3,
+            12,
+            6
+          ]
+        },
+        "up": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ]
+        },
+        "down": {
+          "texture": "#veins",
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5.98,
+        12.98,
+        5.98
+      ],
+      "to": [
+        10.02,
+        14.02,
+        10.02
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "texture": "#veins",
+          "uv": [
+            6,
+            2,
+            10,
+            3
+          ]
+        },
+        "south": {
+          "texture": "#veins",
+          "uv": [
+            6,
+            2,
+            10,
+            3
+          ]
+        },
+        "east": {
+          "texture": "#veins",
+          "uv": [
+            6,
+            2,
+            10,
+            3
+          ]
+        },
+        "west": {
+          "texture": "#veins",
+          "uv": [
+            6,
+            2,
+            10,
+            3
+          ]
+        },
+        "up": {
+          "texture": "#veins",
+          "uv": [
+            6,
+            6,
+            10,
+            10
+          ]
+        },
+        "down": {
+          "texture": "#veins",
+          "uv": [
+            6,
+            6,
+            10,
+            10
+          ]
+        }
+      }
     }
-  ]
+  ],
+  "render_type": "minecraft:cutout"
 }

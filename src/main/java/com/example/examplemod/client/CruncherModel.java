@@ -54,23 +54,35 @@ public class CruncherModel extends EntityModel<CruncherRenderState> {
                 .addBox(0, 0, -3, 1, 12, 7), PartPose.offset(6.51F, -7.5F, -3));
         head.addOrReplaceChild("right_ear", CubeListBuilder.create().texOffs(48, 0)
                 .addBox(-1, 0, -3, 1, 12, 7), PartPose.offset(-6.51F, -7.5F, -3));
-        head.addOrReplaceChild("left_eye", CubeListBuilder.create().texOffs(19, 49)
+        head.addOrReplaceChild("left_eye", CubeListBuilder.create().texOffs(176, 160)
                 .addBox(0, 0, 0, 0.5F, 1, 3), PartPose.offset(6.51F, -4, -7.5F));
-        head.addOrReplaceChild("right_eye", CubeListBuilder.create().texOffs(19, 49)
+        head.addOrReplaceChild("right_eye", CubeListBuilder.create().texOffs(176, 160)
                 .addBox(-0.5F, 0, 0, 0.5F, 1, 3), PartPose.offset(-6.51F, -4, -7.5F));
-        var upper = head.addOrReplaceChild("upper_jaw", CubeListBuilder.create().texOffs(10, 45)
-                .addBox(-6.5F, 1, -11, 13, 2, 9, new CubeDeformation(1.5F, 1, 2)), PartPose.offset(0, -3, -8));
-        var lower = head.addOrReplaceChild("lower_jaw", CubeListBuilder.create().texOffs(10, 45)
+        // Dedicated UV islands keep the armored jaws separate from their teeth.
+        var upper = head.addOrReplaceChild("upper_jaw", CubeListBuilder.create().texOffs(0, 160)
+                .addBox(-8, 0, -13, 16, 4, 13), PartPose.offset(0, -3, -8));
+        var lower = head.addOrReplaceChild("lower_jaw", CubeListBuilder.create().texOffs(64, 160)
                 .addBox(-8, 0, -13, 16, 4, 13), PartPose.offset(0, 4, -8));
-        CubeListBuilder topTeeth = CubeListBuilder.create();
-        CubeListBuilder bottomTeeth = CubeListBuilder.create();
-        for (int i = 0; i < 4; i++) {
-            topTeeth.texOffs(19, 49).addBox(-7 + i * 4, 0, -2, 2, 3, 2);
-            bottomTeeth.texOffs(19, 49).addBox(-7 + i * 4, -2, -2, 2, 2, 2);
+        head.addOrReplaceChild("jaw_hinges", CubeListBuilder.create().texOffs(192, 160)
+                .addBox(-8.5F, -1, -9, 2, 5, 6)
+                .texOffs(192, 160).addBox(6.5F, -1, -9, 2, 5, 6), PartPose.ZERO);
+        var topTeeth = CubeListBuilder.create()
+                .texOffs(128, 160).addBox(-7, 4, -13, 3, 4, 3)
+                .texOffs(128, 160).addBox(4, 4, -13, 3, 4, 3)
+                .texOffs(144, 160).addBox(-3, 4, -13, 2, 2, 3)
+                .texOffs(144, 160).addBox(1, 4, -13, 2, 2, 3);
+        var bottomTeeth = CubeListBuilder.create()
+                .texOffs(144, 160).addBox(-5, -2, -13, 2, 2, 3)
+                .texOffs(144, 160).addBox(-1, -2, -13, 2, 2, 3)
+                .texOffs(144, 160).addBox(3, -2, -13, 2, 2, 3);
+        for (int side : new int[] {-1, 1}) {
+            int x = side < 0 ? -7 : 5;
+            topTeeth.texOffs(144, 160).addBox(x, 4, -7, 2, 2, 3);
+            bottomTeeth.texOffs(144, 160).addBox(x, -2, -4, 2, 2, 3);
         }
-        upper.addOrReplaceChild("teeth", topTeeth, PartPose.offset(0, 4, -11));
-        lower.addOrReplaceChild("teeth", bottomTeeth, PartPose.offset(0, 0, -11));
-        return LayerDefinition.create(mesh, 192, 192);
+        upper.addOrReplaceChild("teeth", topTeeth, PartPose.ZERO);
+        lower.addOrReplaceChild("teeth", bottomTeeth, PartPose.ZERO);
+        return LayerDefinition.create(mesh, 256, 256);
     }
 
     @Override
