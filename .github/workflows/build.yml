@@ -29,6 +29,19 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Inspect Minecraft interaction API
+        run: |
+          task_mc_jar=$(rg --files --hidden /home/runner/.gradle /home/runner/work/mod/mod/.gradle | rg '/minecraft-patched-26\.3\.0\.77\.jar
+        timeout-minutes: 10
+        run: ./gradlew runGameTestServer
+ | head -n 1)
+          test -n "$task_mc_jar"
+          javap -classpath "$task_mc_jar" -c -p net.minecraft.world.entity.animal.Animal
+          javap -classpath "$task_mc_jar" -c -p net.minecraft.world.entity.Mob | python3 -c 'import sys,re; active=False
+          for line in sys.stdin:
+            if re.match(r"  (public|protected|private)",line): active="interact" in line.lower()
+            if active: print(line,end="")'
+
       - name: Verify sniffer head death drops in Minecraft
         timeout-minutes: 10
         run: ./gradlew runGameTestServer
