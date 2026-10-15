@@ -40,6 +40,7 @@ jobs:
                     print(path); raise SystemExit
               except (OSError,zipfile.BadZipFile): pass')
           test -n "$task_mc_jar"
+          javap -classpath "$task_mc_jar" -p net.minecraft.gametest.framework.GameTestHelper
           javap -classpath "$task_mc_jar" -c -p net.minecraft.world.entity.animal.Animal
           javap -classpath "$task_mc_jar" -c -p net.minecraft.world.entity.Mob | python3 -c 'import sys,re; active=False
           for line in sys.stdin:
