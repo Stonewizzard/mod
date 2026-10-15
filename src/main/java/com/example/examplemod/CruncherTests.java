@@ -17,6 +17,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.GameType;
@@ -77,7 +79,7 @@ public final class CruncherTests {
                 var player = helper.makeMockPlayer(GameType.SURVIVAL);
                 int age = cruncher.getAge();
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE));
-                cruncher.interact(player, InteractionHand.MAIN_HAND);
+                cruncher.interact(player, InteractionHand.MAIN_HAND, Vec3.ZERO);
                 require(helper, cruncher.getAge() > age, "Feeding a baby a Wither Rose must accelerate growth");
                 cruncher.setAge(0);
                 cruncher.setPos(helper.absoluteVec(new Vec3(1.5, 1, 4.5)));
@@ -121,18 +123,22 @@ public final class CruncherTests {
     }
 
     private static void verifySpawnEgg(GameTestHelper helper) {
-        helper.useBlock(new BlockPos(2, 0, 2), helper.makeMockPlayer(GameType.SURVIVAL),
-                ExampleMod.CRUNCHER_SPAWN_EGG.get().getDefaultInstance(), Direction.UP);
+        var spawningPlayer = helper.makeMockPlayer(GameType.SURVIVAL);
+        var egg = ExampleMod.CRUNCHER_SPAWN_EGG.get().getDefaultInstance();
+        spawningPlayer.setItemInHand(InteractionHand.MAIN_HAND, egg);
+        egg.useOn(new UseOnContext(spawningPlayer, InteractionHand.MAIN_HAND,
+                new BlockHitResult(helper.absoluteVec(new Vec3(2.5, 1, 2.5)), Direction.UP,
+                        helper.absolutePos(new BlockPos(2, 0, 2)), false)));
         var spawned = helper.getLevel().getEntitiesOfClass(Cruncher.class, bounds(helper));
         require(helper, spawned.size() == 1 && !spawned.getFirst().isBaby(),
                 "Using the creative spawn egg must immediately spawn exactly one adult Cruncher");
         var cruncher = spawned.getFirst();
         var player = helper.makeMockPlayer(GameType.SURVIVAL);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.TORCHFLOWER_SEEDS));
-        cruncher.interact(player, InteractionHand.MAIN_HAND);
+        cruncher.interact(player, InteractionHand.MAIN_HAND, Vec3.ZERO);
         require(helper, !cruncher.isInLove(), "Old sniffer food must no longer feed a Cruncher");
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE));
-        cruncher.interact(player, InteractionHand.MAIN_HAND);
+        cruncher.interact(player, InteractionHand.MAIN_HAND, Vec3.ZERO);
         require(helper, cruncher.isInLove(), "Feeding a Wither Rose must enable breeding");
         spawned.forEach(Cruncher::discard);
     }
@@ -143,8 +149,8 @@ public final class CruncherTests {
         var second = helper.spawn(ExampleMod.CRUNCHER.get(), new BlockPos(4, 1, 2));
         var player = helper.makeMockPlayer(GameType.SURVIVAL);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE, 2));
-        first.interact(player, InteractionHand.MAIN_HAND);
-        second.interact(player, InteractionHand.MAIN_HAND);
+        first.interact(player, InteractionHand.MAIN_HAND, Vec3.ZERO);
+        second.interact(player, InteractionHand.MAIN_HAND, Vec3.ZERO);
         helper.runAfterDelay(100, () -> {
             require(helper, first.getAge() > 0 && second.getAge() > 0,
                     "Rose-fed Crunchers must finish breeding and enter their cooldown");
