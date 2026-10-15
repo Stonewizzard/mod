@@ -109,8 +109,8 @@ infected cow attack. `/locate biome minecraft:deep_dark` and
 `/locate structure minecraft:ancient_city` help find natural habitat.
 
 Infected hosts keep their native skins beneath patches of sculk. Growth spreads
-from a zombie's shoulder across part of the face and shirt, or along a cow's
-spine and one flank. One eye turns cyan while the other stays normal. Raised
+from a zombie's shoulder across part of the face, shirt, and upper legs, or along
+a cow's spine, flanks, and temple. One eye turns cyan while the other stays normal. Raised
 roots and small sculk plates join these patches to the parasite embedded in the
 host. Most skin, clothing, coat markings, and legs remain visible.
 
