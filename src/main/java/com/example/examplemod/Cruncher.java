@@ -16,10 +16,12 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -54,12 +56,13 @@ public class Cruncher extends Animal {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 14.0).add(Attributes.MOVEMENT_SPEED, 0.15);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 14.0)
+                .add(Attributes.MOVEMENT_SPEED, 0.15).add(Attributes.TEMPT_RANGE, 10.0);
     }
 
     @Override
     public boolean isFood(ItemStack item) {
-        return item.is(ItemTags.SNIFFER_FOOD);
+        return item.is(Items.WITHER_ROSE);
     }
 
     @Override
@@ -81,6 +84,8 @@ public class Cruncher extends Animal {
     protected void registerGoals() {
         goalSelector.addGoal(0, new FloatGoal(this));
         goalSelector.addGoal(1, new CrunchGeodeGoal());
+        goalSelector.addGoal(2, new BreedGoal(this, 1.0));
+        goalSelector.addGoal(3, new TemptGoal(this, 1.0, this::isFood, false));
         goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0));
         goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
         goalSelector.addGoal(7, new RandomLookAroundGoal(this));
@@ -185,6 +190,13 @@ public class Cruncher extends Animal {
 
         @Override
         public void tick() {
+            // Goal continuation is checked less often than this per-tick animation.
+            // After a successful crunch, one more tick can run before the goal stops.
+            if (target == null || stand == null) {
+                getNavigation().stop();
+                entityData.set(CRUNCHING, false);
+                return;
+            }
             timeout++;
             Vec3 approach = Vec3.atBottomCenterOf(stand);
             Vec3 center = Vec3.atCenterOf(target);

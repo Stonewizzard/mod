@@ -201,16 +201,19 @@ mob griefing, alongside the existing head death-drop regression.
 
 The new survival progression is:
 
-1. Let an adult sniffer excavate exposed ancient debris. It now drops a Cruncher
-   Egg as well as the existing Netherite Scrap and Ancient Artifact. Egg odds
-   are **100% for testing** (`CRUNCHER_EGG_CHANCE` in the debris modifier).
+1. Let an adult sniffer excavate exposed ancient debris. Each successful dig
+   always drops Netherite Scrap and an Ancient Artifact, and has a **1-in-15
+   chance (about 6.7%)** of adding one Cruncher Egg. This matches the vanilla
+   Sniffer Egg chance from warm-ocean-ruin suspicious sand. The value is
+   `CRUNCHER_EGG_CHANCE` in the debris modifier.
 2. Place the Cruncher Egg on a floor with clear space above it. It progresses
    through three hatch stages over about **30 seconds**. If there is no room
    for the baby, it waits rather than spawning inside solid blocks.
 3. Let the baby grow up; its testing growth time is about **one minute**.
-4. Obtain an Ancient Geode from an **ominous vault**. The initial loot modifier
-   adds one to each ominous reward while keeping the normal rewards. Ordinary
-   vault rewards do not gain geodes.
+4. Obtain an Ancient Geode from an **ominous vault**. Each reward has a **20%
+   chance (1 in 5)** to include one geode alongside the normal loot. Ordinary
+   vault rewards do not gain geodes. The value is `ANCIENT_GEODE_CHANCE` in
+   `OminousGeodeLootModifier.java`.
 5. Place the geode on the floor with open space around its sides. An adult
    Cruncher searches within eight blocks, chooses a reachable side, walks
    there, and crunches for about two seconds. The geode breaks and drops one
@@ -221,25 +224,31 @@ magma palette and large toothed jaws. Its jaws animate while crunching. It is
 passive and fire-immune. It uses ordinary walking goals instead of the sniffer's
 seed-digging brain, so it approaches geodes rather than standing on top of them.
 Like excavation, geode consumption respects mob griefing. Crunchers breed only
-with Crunchers, using the inherited sniffer food, and lay Cruncher Eggs.
+with Crunchers, using **Wither Roses**, and lay Cruncher Eggs. Wither Roses
+also accelerate baby growth. Holding a rose attracts nearby Crunchers; the
+old sniffer food (Torchflower Seeds) no longer feeds them.
 
 You can test the new objects directly:
 
 ```text
 /give @s examplemod:cruncher_egg
+/give @s examplemod:cruncher_spawn_egg
 /give @s examplemod:ancient_geode
 /give @s examplemod:rare_ancient_artifact
 /summon examplemod:cruncher
 /loot give @s loot minecraft:chests/trial_chambers/reward_ominous
 ```
 
-The egg and geode are in Natural Blocks; all rewards are also in Example Mod
-Tab. Rare Ancient Artifact uses a placeholder prize pottery-sherd icon. There
-are no natural Cruncher spawns or artifact component recipes yet.
+The hatchable egg and geode are in Natural Blocks. The separate **Cruncher
+Spawn Egg** appears in Spawn Eggs and immediately creates an adult Cruncher.
+It uses a Nether-colored vanilla magma-cube spawn-egg icon. All these items
+also appear in Example Mod Tab. Rare Ancient Artifact uses a placeholder
+prize pottery-sherd icon. There are no natural Cruncher spawns or artifact component recipes yet.
 
 `Cruncher.java` implements the side-approach goal and synced crunching animation
 flag. `CruncherEggBlock.java` schedules hatch stages. The client model/renderer
 and texture under `assets/examplemod/textures/entity/cruncher.png` supply its
 appearance. `OminousGeodeLootModifier.java` adds vault loot. `CruncherTests.java`
-checks the loot tables, egg hatching, actual navigation and consumption, exact
-artifact reward, and mob-griefing protection in the headless Minecraft test run.
+checks seeded loot rolls for the reduced chances, immediate spawn-egg spawning,
+Wither Rose feeding and breeding, egg hatching, actual navigation and consumption,
+exact artifact reward, and mob-griefing protection in the headless Minecraft test run.
