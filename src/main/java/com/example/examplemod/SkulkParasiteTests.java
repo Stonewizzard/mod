@@ -64,7 +64,17 @@ public final class SkulkParasiteTests {
             var start = parasite.position();
             // GameTestHelper's legacy mock always reports Creative, even after setGameMode.
             var player = new net.neoforged.neoforge.common.util.FakePlayer(helper.getLevel(),
-                    new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "ParasiteTarget"));
+                    new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "ParasiteTarget")) {
+                // FakePlayer has no real client and refuses damage. Record successful
+                // cow damage calls, while leaving targeting and melee AI unmodified.
+                @Override
+                public boolean hurtServer(net.minecraft.server.level.ServerLevel level,
+                        net.minecraft.world.damagesource.DamageSource source, float amount) {
+                    if (!(source.getEntity() instanceof SkulkCow)) return false;
+                    setHealth(getHealth() - amount);
+                    return true;
+                }
+            };
             player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
             player.setPermanentlyInvulnerable(false);
             player.getAbilities().invulnerable = false;
@@ -80,19 +90,10 @@ public final class SkulkParasiteTests {
                 hostile.setNoAi(false);
                 float health = player.getHealth();
                 helper.runAfterDelay(80, () -> {
-                    boolean aiDamaged = player.getHealth() < health;
-                    boolean directAttack = false;
-                    boolean directDamage = false;
-                    if (!aiDamaged) {
-                        directAttack = hostile.doHurtTarget(helper.getLevel(), player);
-                        directDamage = player.hurtServer(helper.getLevel(), helper.getLevel().damageSources().mobAttack(hostile), 3);
-                    }
-                    require(helper, aiDamaged,
-                            "Infected cow must chase and damage a player; directAttack=" + directAttack
-                                    + " directDamage=" + directDamage + " cow=" + hostile.position()
+                    require(helper, player.getHealth() < health,
+                            "Infected cow must chase and damage a player; cow=" + hostile.position()
                                     + " player=" + player.position() + " target=" + hostile.getTarget()
-                                    + " NoAI=" + hostile.isNoAi() + " health=" + player.getHealth()
-                                    + " creative=" + player.isCreative() + " spectator=" + player.isSpectator());
+                                    + " NoAI=" + hostile.isNoAi() + " health=" + player.getHealth());
                     require(helper, hostile.getType() == ExampleMod.SKULK_COW.get(), "Infected identity must be persistent");
                     require(helper, helper.getLevel().getEntitiesOfClass(SkulkParasite.class, bounds(helper)).isEmpty(),
                             "Consumed parasite must not remain or infect a second host");
