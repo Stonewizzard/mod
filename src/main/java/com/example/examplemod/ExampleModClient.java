@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import com.example.examplemod.client.CruncherModel;
 import com.example.examplemod.client.CruncherRenderer;
 import com.example.examplemod.client.SkulkParasiteModel;
+import com.example.examplemod.client.SkulkAttachmentModel;
 import com.example.examplemod.client.SkulkParasiteRenderer;
 import com.example.examplemod.client.SkulkZombieRenderer;
 import com.example.examplemod.client.SkulkCowRenderer;
@@ -33,6 +34,8 @@ public class ExampleModClient {
     static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(CruncherModel.LAYER, CruncherModel::createBodyLayer);
         event.registerLayerDefinition(SkulkParasiteModel.LAYER, SkulkParasiteModel::createBodyLayer);
+        event.registerLayerDefinition(SkulkAttachmentModel.ZOMBIE_LAYER, () -> SkulkAttachmentModel.createLayer(false));
+        event.registerLayerDefinition(SkulkAttachmentModel.COW_LAYER, () -> SkulkAttachmentModel.createLayer(true));
     }
 
     @SubscribeEvent
@@ -50,4 +53,5 @@ public class ExampleModClient {
         ExampleMod.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }
 }
+
 
