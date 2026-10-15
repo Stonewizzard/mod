@@ -13,7 +13,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.sniffer.Sniffer;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -28,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.EventHooks;
 
 /** A passive, fire-immune sniffer relative which approaches geodes from the side. */
-public class Cruncher extends Sniffer {
+public class Cruncher extends Animal {
     public static final int CRUNCH_TICKS = 40;
     public static final int TEST_BABY_AGE = -1200;
     private static final EntityDataAccessor<Boolean> CRUNCHING =
@@ -48,14 +53,28 @@ public class Cruncher extends Sniffer {
         return entityData.get(CRUNCHING);
     }
 
-    @Override
-    public boolean canSniff() {
-        return false;
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 14.0).add(Attributes.MOVEMENT_SPEED, 0.15);
     }
 
     @Override
-    protected void customServerAiStep(ServerLevel level) {
-        // Use navigation and goals below instead of the sniffer's seed-digging brain.
+    public boolean isFood(ItemStack item) {
+        return item.is(ItemTags.SNIFFER_FOOD);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.SNIFFER_IDLE;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return SoundEvents.SNIFFER_HURT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.SNIFFER_DEATH;
     }
 
     @Override
@@ -101,17 +120,11 @@ public class Cruncher extends Sniffer {
                 return false;
             }
             nextSearch = tickCount + 40;
-            if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
-                ExampleMod.LOGGER.info("Cruncher search: position={} size={} baby={}", position(), getBoundingBox(), isBaby());
-            }
             ArrayList<BlockPos> candidates = new ArrayList<>();
             for (BlockPos pos : BlockPos.betweenClosed(blockPosition().offset(-8, -2, -8), blockPosition().offset(8, 2, 8))) {
                 if (level.hasChunkAt(pos) && level.getBlockState(pos).is(ExampleMod.ANCIENT_GEODE.get())) {
                     candidates.add(pos.immutable());
                 }
-            }
-            if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
-                ExampleMod.LOGGER.info("Cruncher geode candidates={}", candidates);
             }
             candidates.sort(Comparator.comparingDouble(pos -> position().distanceToSqr(Vec3.atCenterOf(pos))));
             for (BlockPos geode : candidates) {
@@ -139,9 +152,6 @@ public class Cruncher extends Sniffer {
                                 break;
                             }
                         }
-                    }
-                    if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
-                        ExampleMod.LOGGER.info("Cruncher approach={} path={} reachable={} crosses={}", approach, path, path != null && path.canReach(), crossesGeode);
                     }
                     if (path != null && path.canReach() && !crossesGeode) {
                         target = geode;
@@ -176,6 +186,9 @@ public class Cruncher extends Sniffer {
         @Override
         public void tick() {
             timeout++;
+            if (Boolean.getBoolean("examplemod.dropRegressionTests") && timeout % 40 == 0) {
+                ExampleMod.LOGGER.info("Cruncher tick: position={} stand={} navDone={} movement={} progress={}", position(), stand, getNavigation().isDone(), getDeltaMovement(), progress);
+            }
             Vec3 approach = Vec3.atBottomCenterOf(stand);
             Vec3 center = Vec3.atCenterOf(target);
             getLookControl().setLookAt(center.x, center.y, center.z);

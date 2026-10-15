@@ -56,13 +56,13 @@ public class CruncherModel extends EntityModel<CruncherRenderState> {
                 .addBox(-1, 0, -3, 1, 12, 7), PartPose.offset(-6.51F, -7.5F, -3));
         var upper = head.addOrReplaceChild("upper_jaw", CubeListBuilder.create().texOffs(10, 45)
                 .addBox(-6.5F, 1, -11, 13, 2, 9, new CubeDeformation(1.5F, 1, 2)), PartPose.offset(0, -3, -8));
-        var lower = head.addOrReplaceChild("lower_jaw", CubeListBuilder.create().texOffs(10, 57)
+        var lower = head.addOrReplaceChild("lower_jaw", CubeListBuilder.create().texOffs(10, 45)
                 .addBox(-8, 0, -13, 16, 4, 13), PartPose.offset(0, 4, -8));
         CubeListBuilder topTeeth = CubeListBuilder.create();
         CubeListBuilder bottomTeeth = CubeListBuilder.create();
         for (int i = 0; i < 4; i++) {
-            topTeeth.texOffs(19, 46).addBox(-7 + i * 4, 0, -2, 2, 3, 2);
-            bottomTeeth.texOffs(19, 46).addBox(-7 + i * 4, -2, -2, 2, 2, 2);
+            topTeeth.texOffs(19, 49).addBox(-7 + i * 4, 0, -2, 2, 3, 2);
+            bottomTeeth.texOffs(19, 49).addBox(-7 + i * 4, -2, -2, 2, 2, 2);
         }
         upper.addOrReplaceChild("teeth", topTeeth, PartPose.offset(0, 4, -11));
         lower.addOrReplaceChild("teeth", bottomTeeth, PartPose.offset(0, 0, -11));
