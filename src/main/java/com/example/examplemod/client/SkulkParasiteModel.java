@@ -21,7 +21,7 @@ public class SkulkParasiteModel extends EntityModel<LivingEntityRenderState> {
 
     public static LayerDefinition createBodyLayer() {
         var mesh = new MeshDefinition();
-        SkulkParasiteGeometry.addParasite(mesh.getRoot(), "parasite", PartPose.offset(0, 21.8F, 1));
+        SkulkParasiteGeometry.addParasite(mesh.getRoot(), "parasite", PartPose.offset(0, 20.6F, 1));
         return LayerDefinition.create(mesh, 64, 64);
     }
 
@@ -33,3 +33,4 @@ public class SkulkParasiteModel extends EntityModel<LivingEntityRenderState> {
                 0.08F + state.walkAnimationSpeed * 0.45F);
     }
 }
+

@@ -10,13 +10,20 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
 
-/** Draw a parasite over the actual vanilla skin, including the host's baby/variant model. */
+/** Blend localized sculk growth and an embedded parasite into the native host model. */
 public class SkulkAttachmentLayer<S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends RenderLayer<S, M> {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("examplemod", "textures/entity/skulk_parasite.png");
     private final SkulkAttachmentModel attachment;
+    private final Identifier adultGrowthTexture;
+    private final Identifier babyGrowthTexture;
 
     public SkulkAttachmentLayer(RenderLayerParent<S, M> parent, EntityRendererProvider.Context context, boolean cow) {
         super(parent);
+        String species = cow ? "cow" : "zombie";
+        adultGrowthTexture = Identifier.fromNamespaceAndPath("examplemod",
+                "textures/entity/skulk_" + species + "_growth.png");
+        babyGrowthTexture = Identifier.fromNamespaceAndPath("examplemod",
+                "textures/entity/skulk_" + species + "_baby_growth.png");
         attachment = new SkulkAttachmentModel(context.bakeLayer(cow
                 ? SkulkAttachmentModel.COW_LAYER : SkulkAttachmentModel.ZOMBIE_LAYER), cow);
     }
@@ -27,6 +34,9 @@ public class SkulkAttachmentLayer<S extends LivingEntityRenderState, M extends E
         if (state.isInvisible) return;
         M host = getParentModel();
         host.setupAnim(state);
+        Identifier growth = state.isBaby ? babyGrowthTexture : adultGrowthTexture;
+        collector.submitModel(host, state, poseStack, host.renderType(growth),
+                light, LivingEntityRenderer.getOverlayCoords(state, 0), -1);
         var pose = new SkulkAttachmentState();
         pose.hostRoot = host.root().storePose();
         pose.hostBody = host.root().getChild("body").storePose();
@@ -37,3 +47,4 @@ public class SkulkAttachmentLayer<S extends LivingEntityRenderState, M extends E
                 light, LivingEntityRenderer.getOverlayCoords(state, 0), -1);
     }
 }
+

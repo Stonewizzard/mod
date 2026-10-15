@@ -76,7 +76,7 @@ and combat behavior are unchanged by this visual update.
 
 ## Skulk Parasite
 
-A small sculk creature with eight curling tentacles seeks a nearby **vanilla zombie or cow**, leaps
+A small, six-legged sculk creature seeks a nearby **vanilla zombie or cow**, leaps
 onto it, and merges into that host. One successful infection consumes the parasite.
 Players and other mob types cannot be infected, and infected hosts cannot be
 infected again. A host does not spread infection by attacking.
@@ -108,21 +108,29 @@ Use `/summon examplemod:skulk_parasite`, `/summon minecraft:zombie`, or
 infected cow attack. `/locate biome minecraft:deep_dark` and
 `/locate structure minecraft:ancient_city` help find natural habitat.
 
-Infected hosts use their normal vanilla skins. The parasite clings to a zombie's
-upper back/shoulder or a cow's back, with raised tendrils wrapping the host and
-small roots near the head. The host remains recognizable beneath the attachment.
-The free and attached parasite share the same sculk carapace, eight segmented
-animated tentacles, four sensory tendrils, and small bone pincers. Attachments
-follow the host's body and head poses and scale down for babies.
+Infected hosts keep their native skins beneath patches of sculk. Growth spreads
+from a zombie's shoulder across part of the face, shirt, and upper legs, or along
+a cow's spine, both flanks, face, and upper legs. One eye turns cyan while the other stays normal. Raised
+roots and small sculk plates join these patches to the parasite embedded in the
+host. Most skin, clothing, coat markings, and legs remain visible.
+
+The parasite combines a broad, ridged carapace, six bent supporting legs, two
+pale sensory horns, and bone pincers with four fine curling tentacles. The free
+and attached versions share this design and restrained animation. Attachments
+follow the host's body and head poses; separate growth masks fit baby skins.
 
 ![Skulk Parasite and infected host skin preview](docs/visuals/skulk-parasite-preview.png)
 
 [Watch the tentacle animation preview](docs/visuals/skulk-parasite-tentacles.gif)
 
+[Inspect the baby host skins and fitted attachments](docs/visuals/skulk-baby-hosts-preview.png)
+
 For an in-game visual check, infect an adult zombie and cow, walk around to see
-the gripping parasite from the front and back, and compare against uninfected
+the fused parasite and growth from the front and back, and compare against uninfected
 mobs. Check a baby host and an armored zombie as well. The original skins come
-from Minecraft's resources, so matching resource-pack skins remain supported.
+from Minecraft's resources, so resource-pack skins remain visible outside the
+sculk patches. Armor may cover parts of the growth.
 
 This is a software preview using the model UVs; Minecraft lighting can differ.
+
 

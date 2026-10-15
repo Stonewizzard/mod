@@ -39,9 +39,16 @@ public class SkulkAttachmentModel extends EntityModel<SkulkAttachmentState> {
         var growth = body.addOrReplaceChild("growth", CubeListBuilder.create(), PartPose.ZERO);
         var headGrowth = head.addOrReplaceChild("growth", CubeListBuilder.create(), PartPose.ZERO);
         SkulkParasiteGeometry.addParasite(growth, "parasite", cow
-                ? PartPose.offsetAndRotation(3, -5, 4, -Mth.HALF_PI, 0, 0)
-                : PartPose.offsetAndRotation(-2, 3, 3, -Mth.HALF_PI, 0, 0));
+                ? PartPose.offsetAndRotation(3, -5, 3.7F, -Mth.HALF_PI, 0, 0)
+                : PartPose.offsetAndRotation(-2, 3, 2.6F, -Mth.HALF_PI, 0, 0));
         if (cow) {
+            growth.addOrReplaceChild("embedded_spine", CubeListBuilder.create()
+                    .texOffs(4, 16).addBox(-1, -7, 2.8F, 4, 3, 0.65F)
+                    .texOffs(12, 16).addBox(-3.5F, -4, 2.8F, 3, 3, 0.5F)
+                    .texOffs(20, 16).addBox(-4.5F, -1, 2.85F, 2.5F, 2, 0.4F)
+                    .texOffs(0, 18).addBox(5.85F, -6, -0.5F, 0.5F, 3, 2.5F), PartPose.ZERO);
+            headGrowth.addOrReplaceChild("temple_bud", CubeListBuilder.create()
+                    .texOffs(0, 16).addBox(3.85F, -4, -2.5F, 0.5F, 2, 2), PartPose.ZERO);
             SkulkParasiteGeometry.addRoot(growth, "right_flank", new float[][]{
                     {3, -5, 3.5F}, {6.3F, -4.5F, 1.5F}, {6.5F, -3.5F, -1}, {6.3F, -2, -4}});
             SkulkParasiteGeometry.addRoot(growth, "over_spine", new float[][]{
@@ -49,6 +56,13 @@ public class SkulkAttachmentModel extends EntityModel<SkulkAttachmentState> {
             SkulkParasiteGeometry.addRoot(headGrowth, "ear_roots", new float[][]{
                     {4.2F, -1, 0}, {4.3F, -2.5F, -1}, {4.2F, -3.5F, -2.5F}});
         } else {
+            growth.addOrReplaceChild("embedded_shoulder", CubeListBuilder.create()
+                    .texOffs(4, 16).addBox(-4.15F, 0.2F, 1.8F, 3.5F, 3, 0.65F)
+                    .texOffs(12, 16).addBox(-4.2F, 1, -1, 0.6F, 3.5F, 2.5F)
+                    .texOffs(20, 16).addBox(-3.8F, 3, -2.35F, 2.4F, 1.5F, 0.55F)
+                    .texOffs(0, 18).addBox(-2.2F, 5, -2.25F, 1.3F, 1.2F, 0.4F), PartPose.ZERO);
+            headGrowth.addOrReplaceChild("temple_bud", CubeListBuilder.create()
+                    .texOffs(0, 16).addBox(-4.2F, -6, -2.8F, 0.55F, 2.3F, 2.5F), PartPose.ZERO);
             SkulkParasiteGeometry.addRoot(growth, "chest_roots", new float[][]{
                     {-3.5F, 1.5F, 2.6F}, {-4.4F, 2.2F, 0}, {-4.3F, 3, -2.4F},
                     {-2, 4, -2.4F}, {-0.5F, 5.5F, -2.4F}, {1, 6.5F, -2.4F}});
@@ -69,7 +83,25 @@ public class SkulkAttachmentModel extends EntityModel<SkulkAttachmentState> {
         float bodyScale = state.isBaby ? 0.5F : 1.0F;
         bodyGrowth.xScale = bodyGrowth.yScale = bodyGrowth.zScale = bodyScale;
         headGrowth.xScale = headGrowth.yScale = headGrowth.zScale = state.isBaby ? 0.75F : 1.0F;
+        if (cow && state.isBaby) {
+            // The calf uses a horizontal, off-center body rather than the adult's rotated body.
+            bodyGrowth.x = -3;
+            bodyGrowth.y = -5.2F;
+            bodyGrowth.z = 17.0F / 3.0F;
+            bodyGrowth.xRot = Mth.HALF_PI;
+            bodyGrowth.xScale = bodyGrowth.yScale = 2.0F / 3.0F;
+            bodyGrowth.zScale = 0.6F;
+            headGrowth.y = -1.569F;
+            headGrowth.z = 0.1667F;
+            headGrowth.zScale = 5.0F / 6.0F;
+        } else if (state.isBaby) {
+            // Baby zombies center their shorter torso around the body pivot.
+            bodyGrowth.y = -2.5F;
+            bodyGrowth.yScale = 5.0F / 12.0F;
+            headGrowth.y = -0.25F;
+        }
         parasite.xScale = parasite.yScale = parasite.zScale = cow ? 0.7F : 0.65F;
         SkulkParasiteGeometry.animate(parasite, state.ageInTicks * 0.09F, 0.06F);
     }
 }
+
