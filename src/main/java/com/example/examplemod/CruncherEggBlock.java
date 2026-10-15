@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.BlockGetter;
@@ -16,10 +17,12 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-/** Placeable egg: three 10-second stages for the current testing build. */
+/** Placeable egg with vanilla Sniffer Egg hatch timing, including the moss boost. */
 public class CruncherEggBlock extends Block {
     public static final IntegerProperty HATCH = IntegerProperty.create("hatch", 0, 2);
-    public static final int STAGE_TICKS = 200;
+    private static final int REGULAR_STAGE_TICKS = 24000 / 3;
+    private static final int BOOSTED_STAGE_TICKS = 12000 / 3;
+    private static final int RANDOM_HATCH_OFFSET_TICKS = 300;
     private static final VoxelShape SHAPE = Block.box(3, 0, 3, 13, 14, 13);
 
     public CruncherEggBlock(BlockBehaviour.Properties properties) {
@@ -40,15 +43,22 @@ public class CruncherEggBlock extends Block {
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean moving) {
         if (!oldState.is(this) && !level.isClientSide()) {
-            level.scheduleTick(pos, this, STAGE_TICKS);
+            level.scheduleTick(pos, this, hatchDelay(level, pos, level.random));
         }
+    }
+
+    // Vanilla uses 20 minutes total, or 10 on a hatch-boost block, plus jitter per stage.
+    static int hatchDelay(BlockGetter level, BlockPos pos, RandomSource random) {
+        boolean boosted = level.getBlockState(pos.below()).is(BlockTags.SNIFFER_EGG_HATCH_BOOST);
+        return (boosted ? BOOSTED_STAGE_TICKS : REGULAR_STAGE_TICKS)
+                + random.nextInt(RANDOM_HATCH_OFFSET_TICKS);
     }
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (state.getValue(HATCH) < 2) {
             level.setBlock(pos, state.cycle(HATCH), 3);
-            level.scheduleTick(pos, this, STAGE_TICKS);
+            level.scheduleTick(pos, this, hatchDelay(level, pos, random));
             return;
         }
         Cruncher baby = ExampleMod.CRUNCHER.get().create(level, EntitySpawnReason.BREEDING);
