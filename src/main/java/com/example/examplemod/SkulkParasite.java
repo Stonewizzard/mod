@@ -47,10 +47,13 @@ public class SkulkParasite extends Monster {
 
     public static boolean checkSpawnRules(EntityType<SkulkParasite> type, ServerLevelAccessor level,
             EntitySpawnReason reason, BlockPos pos, RandomSource random) {
-        // Ancient Cities generate in the Deep Dark. The predicate also protects against
-        // accidental additions to other biome spawn lists by another data pack.
-        return level.getBiome(pos).is(Biomes.DEEP_DARK)
-                && Monster.checkMonsterSpawnRules(type, level, reason, pos, random);
+        // City bounds can extend beyond the Deep Dark biome. Both habitats are allowed,
+        // while accidental spawn-list additions elsewhere still fail this predicate.
+        var city = level.getLevel().registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.STRUCTURE)
+                .getOrThrow(net.minecraft.world.level.levelgen.structure.BuiltinStructures.ANCIENT_CITY);
+        boolean habitat = level.getBiome(pos).is(Biomes.DEEP_DARK)
+                || level.getLevel().structureManager().getStructureAt(pos, city.value()).isValid();
+        return habitat && Monster.checkMonsterSpawnRules(type, level, reason, pos, random);
     }
 
     private final class InfectHostGoal extends Goal {

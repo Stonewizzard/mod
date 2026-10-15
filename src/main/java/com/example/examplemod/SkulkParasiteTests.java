@@ -63,6 +63,8 @@ public final class SkulkParasiteTests {
             var parasite = helper.spawn(ExampleMod.SKULK_PARASITE.get(), new BlockPos(1, 1, 4));
             var start = parasite.position();
             var player = helper.makeMockServerPlayerInLevel();
+            player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+            player.getAbilities().invulnerable = false;
             player.setPos(helper.absoluteVec(new Vec3(6.5, 1, 4.5)));
             helper.runAfterDelay(120, () -> {
                 var infected = helper.getLevel().getEntitiesOfClass(SkulkCow.class, bounds(helper));
@@ -75,7 +77,11 @@ public final class SkulkParasiteTests {
                 hostile.setTarget(player);
                 float health = player.getHealth();
                 helper.runAfterDelay(80, () -> {
-                    require(helper, player.getHealth() < health, "Infected cow must chase and damage a player");
+                    require(helper, player.getHealth() < health,
+                            "Infected cow must chase and damage a player; cow=" + hostile.position()
+                                    + " player=" + player.position() + " target=" + hostile.getTarget()
+                                    + " NoAI=" + hostile.isNoAi() + " health=" + player.getHealth()
+                                    + " creative=" + player.isCreative() + " spectator=" + player.isSpectator());
                     require(helper, hostile.getType() == ExampleMod.SKULK_COW.get(), "Infected identity must be persistent");
                     require(helper, helper.getLevel().getEntitiesOfClass(SkulkParasite.class, bounds(helper)).isEmpty(),
                             "Consumed parasite must not remain or infect a second host");
@@ -121,6 +127,19 @@ public final class SkulkParasiteTests {
         require(helper, infected.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue() > zombie.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue()
                         && infected.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue() > zombie.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue(),
                 "Infected zombie must be faster and stronger");
+        require(helper, infected.getExperienceReward(helper.getLevel(), null) > zombie.getExperienceReward(helper.getLevel(), null),
+                "Infected zombies must award more experience under the normal XP rules");
+        var saved = net.minecraft.world.level.storage.TagValueOutput.createWithContext(
+                net.minecraft.util.ProblemReporter.DISCARDING, helper.getLevel().registryAccess());
+        infected.saveWithoutId(saved);
+        var restored = ExampleMod.SKULK_ZOMBIE.get().create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+        require(helper, restored != null, "Saved infected entity type must be creatable");
+        restored.load(net.minecraft.world.level.storage.TagValueInput.create(
+                net.minecraft.util.ProblemReporter.DISCARDING, helper.getLevel().registryAccess(), saved.buildResult()));
+        require(helper, restored.getType() == ExampleMod.SKULK_ZOMBIE.get() && restored.isBaby()
+                        && restored.getHealth() == 7 && restored.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET),
+                "Saving/loading must retain the infected type, age, health and equipment");
+        restored.discard();
         require(helper, !SkulkParasite.isSupportedHost(infected), "Infected hosts must not be infected again");
         require(helper, helper.getLevel().getEntitiesOfClass(ItemEntity.class, bounds(helper)).isEmpty(),
                 "Infection must not trigger death loot or duplicate equipment");
@@ -138,6 +157,14 @@ public final class SkulkParasiteTests {
                     .anyMatch(spawn -> spawn.value().type() == ExampleMod.SKULK_PARASITE.get());
             require(helper, contains == biome.is(Biomes.DEEP_DARK),
                     "Natural parasite spawn must be registered only in Deep Dark: " + biome.key().identifier());
+        });
+        var structures = helper.getLevel().registryAccess().lookupOrThrow(Registries.STRUCTURE);
+        structures.listElements().forEach(structure -> {
+            var override = structure.value().spawnOverrides().get(MobCategory.MONSTER);
+            boolean contains = override != null && override.spawns().unwrap().stream()
+                    .anyMatch(spawn -> spawn.value().type() == ExampleMod.SKULK_PARASITE.get());
+            require(helper, contains == structure.is(net.minecraft.world.level.levelgen.structure.BuiltinStructures.ANCIENT_CITY),
+                    "Parasite structure spawning must be limited to Ancient Cities: " + structure.key().identifier());
         });
     }
 

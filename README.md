@@ -89,7 +89,7 @@ infected again. A host does not spread infection by attacking.
 - Infection survives saving/loading. Names, equipment, age, health and other
   standard conversion data are carried over; infection is not a host death.
 
-Parasites naturally spawn **only in the Deep Dark**, including Ancient Cities,
+Parasites naturally spawn **only in the Deep Dark or Ancient Cities**,
 in packs of one or two. Normal monster darkness, difficulty, space and mob-cap
 rules apply. Spawn eggs and commands can place them anywhere for testing.
 Only the parasite has a creative spawn egg; the two infected host types are
