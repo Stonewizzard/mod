@@ -83,6 +83,18 @@ public class SkulkAttachmentModel extends EntityModel<SkulkAttachmentState> {
         float bodyScale = state.isBaby ? 0.5F : 1.0F;
         bodyGrowth.xScale = bodyGrowth.yScale = bodyGrowth.zScale = bodyScale;
         headGrowth.xScale = headGrowth.yScale = headGrowth.zScale = state.isBaby ? 0.75F : 1.0F;
+        if (cow && state.isBaby) {
+            // The calf uses a horizontal, off-center body rather than the adult's rotated body.
+            bodyGrowth.x = -3;
+            bodyGrowth.y = -5.2F;
+            bodyGrowth.z = 17.0F / 3.0F;
+            bodyGrowth.xRot = Mth.HALF_PI;
+            bodyGrowth.xScale = bodyGrowth.yScale = 2.0F / 3.0F;
+            bodyGrowth.zScale = 0.6F;
+            headGrowth.y = -1.569F;
+            headGrowth.z = 0.1667F;
+            headGrowth.zScale = 5.0F / 6.0F;
+        }
         parasite.xScale = parasite.yScale = parasite.zScale = cow ? 0.7F : 0.65F;
         SkulkParasiteGeometry.animate(parasite, state.ageInTicks * 0.09F, 0.06F);
     }

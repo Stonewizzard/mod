@@ -192,7 +192,7 @@ tasks.register('inspectParasiteModels', Exec) {
         runtime.files.findAll { it.name.endsWith('.jar') }.each { file ->
             def archive = new java.util.zip.ZipFile(file)
             archive.entries().each { entry ->
-                if (entry.name.endsWith('/CowModel.class') || entry.name.endsWith('/BabyCowModel.class') || entry.name.endsWith('/ZombieModel.class')) {
+                if (entry.name.endsWith('/CowModel.class') || entry.name.endsWith('/BabyCowModel.class') || entry.name.endsWith('/ZombieModel.class') || (entry.name.contains('Baby') && (entry.name.contains('Zombie') || entry.name.contains('Humanoid')) && entry.name.endsWith('Model.class'))) {
                     modelClasses.add(entry.name.replace('/', '.').replace('.class', ''))
                 }
             }
