@@ -90,8 +90,14 @@ infected again. A host does not spread infection by attacking.
   standard conversion data are carried over; infection is not a host death.
 
 Parasites naturally spawn **only in the Deep Dark or Ancient Cities**,
-in packs of one or two. Normal monster darkness, difficulty, space and mob-cap
-rules apply. Spawn eggs and commands can place them anywhere for testing.
+one at a time. An otherwise-valid natural spawn has a **1-in-10 chance**, and
+new natural spawns are blocked when **two living parasites are within 32 blocks**.
+Normal monster darkness, difficulty, space and mob-cap rules also apply.
+The Ancient City entry is required because cities override biome spawning with
+an empty monster list; it uses the same rarity and population checks.
+Parasites produce no movement vibrations and their own vibrations are ignored
+by sculk sensors and other vibration listeners, like the Warden's. Infected
+zombies and cows still produce their normal vibrations. Spawn eggs and commands can place them anywhere for testing.
 Only the parasite has a creative spawn egg; the two infected host types are
 created by infection. Find **Skulk Parasite Spawn Egg** in Spawn Eggs or Example
 Mod Tab, or use `/give @s examplemod:skulk_parasite_spawn_egg`.
