@@ -1,0 +1,7 @@
+{
+  "type": "examplemod:ominous_geode",
+  "condition": {
+    "type": "neoforge:loot_table_id",
+    "loot_table_id": "minecraft:chests/trial_chambers/reward_ominous"
+  }
+}

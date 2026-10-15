@@ -1,6 +1,9 @@
 package com.example.examplemod;
 
 import net.minecraft.client.Minecraft;
+import com.example.examplemod.client.CruncherModel;
+import com.example.examplemod.client.CruncherRenderer;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -20,6 +23,16 @@ public class ExampleModClient {
         // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
         // Do not forget to add translations for your config options to the en_us.json file.
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
+    @SubscribeEvent
+    static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(CruncherModel.LAYER, CruncherModel::createBodyLayer);
+    }
+
+    @SubscribeEvent
+    static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ExampleMod.CRUNCHER.get(), CruncherRenderer::new);
     }
 
     @SubscribeEvent

@@ -85,9 +85,10 @@ public final class SnifferDebrisTests {
                     require(helper, targetIsAir, "Digging must consume exposed ancient debris; items=" + items(helper).stream().map(e -> e.getItem().toString()).toList() + " sniffer=" + sniffer.position() + " tick=" + sniffer.tickCount);
                     require(helper, count(helper, Items.NETHERITE_SCRAP) == 1, "Must drop exactly one netherite scrap");
                     require(helper, count(helper, ExampleMod.ANCIENT_ARTIFACT.get()) == 1, "Must drop exactly one artifact");
+                    require(helper, count(helper, ExampleMod.CRUNCHER_EGG_ITEM.get()) == 1, "Testing egg chance must be 100 percent");
                     require(helper, count(helper, Items.ANCIENT_DEBRIS) == 0, "Must not also drop the debris block");
-                    require(helper, items(helper).stream().mapToInt(e -> e.getItem().getCount()).sum() == 2,
-                            "Debris rewards must replace ordinary seeds");
+                    require(helper, items(helper).stream().mapToInt(e -> e.getItem().getCount()).sum() == 3,
+                            "Debris rewards must replace ordinary seeds and include the test egg");
                 } else if (index == 1 || index == 2) {
                     require(helper, !targetIsAir, "Ordinary digging must leave dirt in place");
                     require(helper, count(helper, Items.TORCHFLOWER_SEEDS) + count(helper, Items.PITCHER_POD) == 1,
