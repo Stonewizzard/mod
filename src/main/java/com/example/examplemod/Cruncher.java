@@ -189,11 +189,14 @@ public class Cruncher extends Animal {
             Vec3 approach = Vec3.atBottomCenterOf(stand);
             Vec3 center = Vec3.atCenterOf(target);
             getLookControl().setLookAt(center.x, center.y, center.z);
-            // A sniffer-sized body finishes navigation within roughly one block
-            // of its waypoint; use the same tolerance before starting the bite.
-            if (position().distanceToSqr(approach) > 1.21) {
+            // Navigation may finish early for a wide mob. Guide the final short
+            // step toward the side waypoint before beginning the crunch.
+            if (position().distanceToSqr(approach) > 0.8) {
                 entityData.set(CRUNCHING, false);
                 progress = 0;
+                if (getNavigation().isDone()) {
+                    getMoveControl().setWantedPosition(approach.x, approach.y, approach.z, 1.1);
+                }
                 if (timeout % 20 == 0) {
                     getNavigation().moveTo(approach.x, approach.y, approach.z, 1.1);
                 }
