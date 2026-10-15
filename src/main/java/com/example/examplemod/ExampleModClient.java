@@ -47,6 +47,13 @@ public class ExampleModClient {
     }
 
     @SubscribeEvent
+    static void checkSculkRendering(EntityRenderersEvent.AddLayers event) {
+        if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
+            Minecraft.getInstance().execute(() -> com.example.examplemod.client.SculkRenderRegression.run(event.getContext()));
+        }
+    }
+
+    @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         // Some client setup code
         ExampleMod.LOGGER.info("HELLO FROM CLIENT SETUP");

@@ -29,9 +29,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Inspect client rendering API
-        run: ./gradlew inspectSculkRenderApi --no-configuration-cache
-
       - name: Verify sniffer head death drops in Minecraft
         timeout-minutes: 10
         run: ./gradlew runGameTestServer
+
+      - name: Verify sculk client rendering
+        timeout-minutes: 10
+        env:
+          LIBGL_ALWAYS_SOFTWARE: 'true'
+        run: xvfb-run -a ./gradlew runSculkRenderCheck
