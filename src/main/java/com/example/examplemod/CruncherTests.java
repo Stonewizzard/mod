@@ -69,7 +69,7 @@ public final class CruncherTests {
                 require(helper, babies.size() == 1 && babies.getFirst().isBaby(), "Egg must hatch exactly one baby Cruncher");
                 var cruncher = babies.getFirst();
                 cruncher.setAge(0);
-                cruncher.setPos(helper.absoluteVec(new Vec3(2.5, 1, 4.5)));
+                cruncher.setPos(helper.absoluteVec(new Vec3(1.5, 1, 4.5)));
                 helper.setBlock(GEODE, ExampleMod.ANCIENT_GEODE.get());
                 boolean original = helper.getLevel().getGameRules().get(GameRules.MOB_GRIEFING);
                 helper.getLevel().getGameRules().set(GameRules.MOB_GRIEFING, true, helper.getLevel().getServer());
@@ -77,6 +77,8 @@ public final class CruncherTests {
                     try {
                         require(helper, helper.getLevel().getBlockState(helper.absolutePos(GEODE)).isAir(),
                                 "Cruncher must navigate beside and consume the geode; position=" + cruncher.position());
+                        require(helper, cruncher.position().distanceToSqr(helper.absoluteVec(new Vec3(1.5, 1, 4.5))) > 0.25,
+                                "Cruncher must actually walk toward the geode");
                         require(helper, cruncher.getY() < helper.absolutePos(GEODE).getY() + 0.5,
                                 "Cruncher must stay beside the geode rather than climbing on top");
                         require(helper, countRare(helper) == 1, "Crunching must drop exactly one rare artifact");

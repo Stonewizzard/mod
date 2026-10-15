@@ -186,13 +186,12 @@ public class Cruncher extends Animal {
         @Override
         public void tick() {
             timeout++;
-            if (Boolean.getBoolean("examplemod.dropRegressionTests") && timeout % 40 == 0) {
-                ExampleMod.LOGGER.info("Cruncher tick: position={} stand={} navDone={} movement={} progress={}", position(), stand, getNavigation().isDone(), getDeltaMovement(), progress);
-            }
             Vec3 approach = Vec3.atBottomCenterOf(stand);
             Vec3 center = Vec3.atCenterOf(target);
             getLookControl().setLookAt(center.x, center.y, center.z);
-            if (position().distanceToSqr(approach) > 0.8) {
+            // A sniffer-sized body finishes navigation within roughly one block
+            // of its waypoint; use the same tolerance before starting the bite.
+            if (position().distanceToSqr(approach) > 1.21) {
                 entityData.set(CRUNCHING, false);
                 progress = 0;
                 if (timeout % 20 == 0) {
