@@ -188,3 +188,8 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// Keep client regression output readable while preserving normal development logging.
+neoForge.runs.named('sculkRenderCheck') {
+    logLevel = org.slf4j.event.Level.INFO
+}

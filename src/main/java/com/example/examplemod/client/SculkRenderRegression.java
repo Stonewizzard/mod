@@ -3,13 +3,13 @@ package com.example.examplemod.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
@@ -31,6 +31,7 @@ public final class SculkRenderRegression {
             var cow = new SkulkCowRenderer(context);
             verify(zombie, zombie.createRenderState(), context, false);
             verify(cow, cow.createRenderState(), context, true);
+            Files.writeString(Minecraft.getInstance().gameDirectory.toPath().resolve("sculk-render-check-passed.txt"), "PASS\n");
             System.out.println("SCULK_RENDER_CHECK: PASS: both host types, adult/baby masks, cutout draw order, tint, outline state, invisibility, and packaged textures");
             Minecraft.getInstance().stop();
         } catch (Throwable failure) {

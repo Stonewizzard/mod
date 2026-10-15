@@ -134,3 +134,10 @@ sculk patches. Armor may cover parts of the growth.
 This is a software preview using the model UVs; Minecraft lighting can differ.
 
 
+
+For the client rendering regression check, run `./gradlew runSculkRenderCheck`
+(or `.\\gradlew.bat runSculkRenderCheck` in Windows PowerShell). It opens the
+Minecraft client, checks loaded host models and packaged growth textures,
+verifies the cutout pass, drawing order, tint, invisibility, and glowing state,
+and closes automatically. CI runs this under a virtual display. This checks
+renderer submissions; the previews and in-game appearance still need visual review.

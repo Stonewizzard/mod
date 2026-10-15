@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 
 /** Blend localized sculk growth and an embedded parasite into the native host model. */
@@ -35,16 +36,22 @@ public class SkulkAttachmentLayer<S extends LivingEntityRenderState, M extends E
         M host = getParentModel();
         host.setupAnim(state);
         Identifier growth = state.isBaby ? babyGrowthTexture : adultGrowthTexture;
-        collector.submitModel(host, state, poseStack, host.renderType(growth),
-                light, LivingEntityRenderer.getOverlayCoords(state, 0), -1);
+        int overlay = LivingEntityRenderer.getOverlayCoords(state, 0);
+        var layers = collector.order(1);
+        // Native host models may use an opaque pass. Growth needs cutout alpha and a
+        // slight depth offset so it stays visible on the same surface as the base skin.
+        layers.submitModel(host, state, poseStack, RenderTypes.entityCutoutZOffset(growth),
+                light, overlay, -1, null, state.outlineColor);
         var pose = new SkulkAttachmentState();
         pose.hostRoot = host.root().storePose();
         pose.hostBody = host.root().getChild("body").storePose();
         pose.hostHead = host.root().getChild("head").storePose();
         pose.ageInTicks = state.ageInTicks;
         pose.isBaby = state.isBaby;
-        collector.submitModel(attachment, pose, poseStack, attachment.renderType(TEXTURE),
-                light, LivingEntityRenderer.getOverlayCoords(state, 0), -1);
+        // In the full submission signature, -1 is the white tint; the final argument
+        // is the outline color and must come from the entity's actual glowing state.
+        layers.submitModel(attachment, pose, poseStack, attachment.renderType(TEXTURE),
+                light, overlay, -1, null, state.outlineColor);
     }
 }
 
