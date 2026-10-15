@@ -254,3 +254,30 @@ appearance. `OminousGeodeLootModifier.java` adds vault loot. `CruncherTests.java
 checks seeded loot rolls for the reduced chances, immediate spawn-egg spawning,
 Wither Rose feeding and breeding, egg hatching, actual navigation and consumption,
 exact artifact reward, and mob-griefing protection in the headless Minecraft test run.
+
+
+## Test Skulk Parasite infection
+
+1. In Creative, search **Skulk Parasite Spawn Egg**. It has a dark teal egg icon
+   with cyan sculk flecks. Right-click the floor to spawn the small crawling mob.
+2. In a shaded enclosure with room to move, spawn a regular zombie nearby. The
+   parasite approaches, leaps and merges with it. The zombie gets a sculk skin,
+   faster movement, stronger attacks, and higher base XP. Equipment and names
+   remain on the host. No host loot drops during infection.
+3. Repeat with a cow, then switch to Survival. The infected cow should chase
+   and attack you. Regular cows are still passive.
+4. Test a pig or another unsupported mob: the parasite should not infect it.
+   It cannot infect players or an already infected host.
+5. Save and reload with an infected host present: its infection should remain.
+6. For natural encounters, explore the Deep Dark or an Ancient City in
+   non-Peaceful difficulty. Parasites require darkness and normal spawn space.
+   They do not naturally spawn in other biomes; the egg works anywhere.
+
+`SkulkParasite.java` contains the host-seeking and leap goal, plus the Deep Dark
+spawn predicate. The biome modifier supplies the spawn list. `SkulkInfection`
+uses Minecraft's entity-conversion path so infection does not produce death
+loot. `SkulkZombie` and `SkulkCow` retain the host body and ordinary loot while
+providing their changed behavior. Their separate saved entity types preserve
+infection without a temporary potion effect. Custom client renderers and skins
+provide the sculk appearance. The parasite regression runs with
+`.\gradlew.bat runGameTestServer` alongside the existing checks.

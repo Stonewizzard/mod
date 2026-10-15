@@ -94,7 +94,6 @@ public class SkulkParasite extends Monster {
                 getNavigation().stop();
                 Vec3 toward = host.position().subtract(position()).normalize().scale(0.55);
                 setDeltaMovement(toward.x, 0.42, toward.z);
-                hasImpulse = true;
                 leapCooldown = 25;
             } else if (onGround()) {
                 getNavigation().moveTo(host, 1.25);

@@ -53,6 +53,7 @@ public final class SkulkParasiteTests {
                 helper.setBlock(new BlockPos(x, 4, z), Blocks.STONE); // Keep zombie hosts out of sunlight.
             }
             verifyBiomeSpawns(helper);
+            verifySpawnEgg(helper);
             verifyConversion(helper);
             var unsupported = helper.spawn(EntityTypes.PIG, new BlockPos(1, 1, 1));
             require(helper, !SkulkParasite.isSupportedHost(unsupported), "Pigs must not be infected");
@@ -86,6 +87,19 @@ public final class SkulkParasiteTests {
         }
     }
 
+    private static void verifySpawnEgg(GameTestHelper helper) {
+        var player = helper.makeMockServerPlayerInLevel();
+        var egg = ExampleMod.SKULK_PARASITE_SPAWN_EGG.get().getDefaultInstance();
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, egg);
+        egg.useOn(new net.minecraft.world.item.context.UseOnContext(player, net.minecraft.world.InteractionHand.MAIN_HAND,
+                new net.minecraft.world.phys.BlockHitResult(helper.absoluteVec(new Vec3(2.5, 1, 2.5)),
+                        net.minecraft.core.Direction.UP, helper.absolutePos(new BlockPos(2, 0, 2)), false)));
+        var spawned = helper.getLevel().getEntitiesOfClass(SkulkParasite.class, bounds(helper));
+        require(helper, spawned.size() == 1, "Spawn egg must create one parasite even outside Deep Dark");
+        spawned.forEach(SkulkParasite::discard);
+        player.discard();
+    }
+
     private static void verifyConversion(GameTestHelper helper) {
         var pos = new BlockPos(2, 1, 2);
         var zombie = helper.spawn(EntityTypes.ZOMBIE, pos);
@@ -116,8 +130,11 @@ public final class SkulkParasiteTests {
     private static void verifyBiomeSpawns(GameTestHelper helper) {
         var biomes = helper.getLevel().registryAccess().lookupOrThrow(Registries.BIOME);
         biomes.listElements().forEach(biome -> {
-            boolean contains = biome.value().getMobSettings().getMobs(MobCategory.MONSTER).unwrap().stream()
-                    .anyMatch(entry -> entry.value().type() == ExampleMod.SKULK_PARASITE.get());
+            var entry = biome.value().getModifiedEnvironmentAttributes()
+                    .get(net.minecraft.world.attribute.EnvironmentAttributes.NATURAL_MOB_SPAWNS);
+            boolean contains = entry != null && ((net.minecraft.world.level.biome.MobSpawnSettings) entry.argument())
+                    .getMobsInCategory(MobCategory.MONSTER).unwrap().stream()
+                    .anyMatch(spawn -> spawn.value().type() == ExampleMod.SKULK_PARASITE.get());
             require(helper, contains == biome.is(Biomes.DEEP_DARK),
                     "Natural parasite spawn must be registered only in Deep Dark: " + biome.key().identifier());
         });
