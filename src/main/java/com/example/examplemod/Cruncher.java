@@ -101,11 +101,17 @@ public class Cruncher extends Sniffer {
                 return false;
             }
             nextSearch = tickCount + 40;
+            if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
+                ExampleMod.LOGGER.info("Cruncher search: position={} size={} baby={}", position(), getBoundingBox(), isBaby());
+            }
             ArrayList<BlockPos> candidates = new ArrayList<>();
             for (BlockPos pos : BlockPos.betweenClosed(blockPosition().offset(-8, -2, -8), blockPosition().offset(8, 2, 8))) {
                 if (level.hasChunkAt(pos) && level.getBlockState(pos).is(ExampleMod.ANCIENT_GEODE.get())) {
                     candidates.add(pos.immutable());
                 }
+            }
+            if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
+                ExampleMod.LOGGER.info("Cruncher geode candidates={}", candidates);
             }
             candidates.sort(Comparator.comparingDouble(pos -> position().distanceToSqr(Vec3.atCenterOf(pos))));
             for (BlockPos geode : candidates) {
@@ -133,6 +139,9 @@ public class Cruncher extends Sniffer {
                                 break;
                             }
                         }
+                    }
+                    if (Boolean.getBoolean("examplemod.dropRegressionTests")) {
+                        ExampleMod.LOGGER.info("Cruncher approach={} path={} reachable={} crosses={}", approach, path, path != null && path.canReach(), crossesGeode);
                     }
                     if (path != null && path.canReach() && !crossesGeode) {
                         target = geode;
