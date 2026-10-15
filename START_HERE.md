@@ -207,8 +207,8 @@ The new survival progression is:
    Sniffer Egg chance from warm-ocean-ruin suspicious sand. The value is
    `CRUNCHER_EGG_CHANCE` in the debris modifier.
 2. Place the Cruncher Egg on a floor with clear space above it. It progresses
-   through three hatch stages on the vanilla Sniffer Egg schedule: about
-   **20 minutes**, or **10 minutes on moss**, plus a small random delay per stage.
+   through three hatch stages on the vanilla Sniffer Egg timing: about
+   **20 minutes**, or **10 minutes on warped nylium**, plus a small random delay per stage.
    Its inventory icon is a flat obsidian egg with magma veins. If there is no room
    for the baby, it waits rather than spawning inside solid blocks.
 3. Let the baby grow up; its testing growth time is about **one minute**.

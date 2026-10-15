@@ -140,13 +140,14 @@ public final class CruncherTests {
     private static void verifyHatchTiming(GameTestHelper helper) {
         var pos = helper.absolutePos(EGG);
         var random = RandomSource.create(0x454747L);
-        for (boolean boosted : new boolean[]{false, true}) {
-            helper.setBlock(EGG.below(), boosted ? Blocks.MOSS_BLOCK : Blocks.STONE);
-            int minimum = boosted ? 4000 : 8000;
+        for (var substrate : new net.minecraft.world.level.block.Block[]{
+                Blocks.STONE, Blocks.MOSS_BLOCK, Blocks.CRIMSON_NYLIUM, Blocks.WARPED_NYLIUM}) {
+            helper.setBlock(EGG.below(), substrate);
+            int minimum = substrate == Blocks.WARPED_NYLIUM ? 4000 : 8000;
             for (int i = 0; i < 100; i++) {
                 int delay = CruncherEggBlock.hatchDelay(helper.getLevel(), pos, random);
                 require(helper, delay >= minimum && delay < minimum + 300,
-                        "Egg stage delay must match vanilla timing and moss boost; got " + delay);
+                        "Only warped nylium should boost hatching; substrate=" + substrate + ", delay=" + delay);
             }
         }
         helper.setBlock(EGG.below(), Blocks.STONE);

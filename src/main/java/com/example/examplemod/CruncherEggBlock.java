@@ -4,12 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-/** Placeable egg with vanilla Sniffer Egg hatch timing, including the moss boost. */
+/** Placeable egg with vanilla Sniffer Egg hatch timing, with a warped-nylium boost. */
 public class CruncherEggBlock extends Block {
     public static final IntegerProperty HATCH = IntegerProperty.create("hatch", 0, 2);
     private static final int REGULAR_STAGE_TICKS = 24000 / 3;
@@ -47,9 +47,9 @@ public class CruncherEggBlock extends Block {
         }
     }
 
-    // Vanilla uses 20 minutes total, or 10 on a hatch-boost block, plus jitter per stage.
+    // Keep vanilla timing, using warped nylium as this Nether egg's hatch-boost block.
     static int hatchDelay(BlockGetter level, BlockPos pos, RandomSource random) {
-        boolean boosted = level.getBlockState(pos.below()).is(BlockTags.SNIFFER_EGG_HATCH_BOOST);
+        boolean boosted = level.getBlockState(pos.below()).is(Blocks.WARPED_NYLIUM);
         return (boosted ? BOOSTED_STAGE_TICKS : REGULAR_STAGE_TICKS)
                 + random.nextInt(RANDOM_HATCH_OFFSET_TICKS);
     }

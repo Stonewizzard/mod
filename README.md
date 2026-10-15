@@ -35,7 +35,7 @@ A successful ancient-debris excavation has a **1-in-15 chance (about 6.7%)** to
 also drop **one Cruncher Egg**, matching the vanilla Sniffer Egg chance from
 warm-ocean-ruin suspicious sand. Scrap and the ordinary artifact remain guaranteed.
 Place the egg with room above it: it hatches into a baby Cruncher on the vanilla
-Sniffer Egg schedule: about **20 minutes**, or **10 minutes on moss**, plus a small
+Sniffer Egg timing: about **20 minutes**, or **10 minutes on warped nylium**, plus a small
 random delay for each of its three stages.
 The baby grows up after about **one minute** in this testing build.
 
