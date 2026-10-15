@@ -132,8 +132,9 @@ public final class SkulkParasiteTests {
         biomes.listElements().forEach(biome -> {
             var entry = biome.value().getModifiedEnvironmentAttributes()
                     .get(net.minecraft.world.attribute.EnvironmentAttributes.NATURAL_MOB_SPAWNS);
-            boolean contains = entry != null && ((net.minecraft.world.level.biome.MobSpawnSettings) entry.argument())
-                    .getMobsInCategory(MobCategory.MONSTER).unwrap().stream()
+            var spawns = entry == null ? null : ((net.minecraft.world.level.biome.MobSpawnSettings) entry.argument())
+                    .getMobsInCategory(MobCategory.MONSTER);
+            boolean contains = spawns != null && spawns.unwrap().stream()
                     .anyMatch(spawn -> spawn.value().type() == ExampleMod.SKULK_PARASITE.get());
             require(helper, contains == biome.is(Biomes.DEEP_DARK),
                     "Natural parasite spawn must be registered only in Deep Dark: " + biome.key().identifier());

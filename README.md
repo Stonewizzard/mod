@@ -101,3 +101,7 @@ Use `/summon examplemod:skulk_parasite`, `/summon minecraft:zombie`, or
 `/summon minecraft:cow`. Keep zombies shaded. Switch to Survival to see an
 infected cow attack. `/locate biome minecraft:deep_dark` and
 `/locate structure minecraft:ancient_city` help find natural habitat.
+
+![Skulk Parasite and infected host skin preview](docs/visuals/skulk-parasite-preview.png)
+
+This is a software preview using the model UVs; Minecraft lighting can differ.
