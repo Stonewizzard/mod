@@ -152,6 +152,11 @@ public final class SkulkParasiteTests {
                         && restored.getHealth() == 7 && restored.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET),
                 "Saving/loading must retain the infected type, age, health and equipment");
         restored.discard();
+        for (String tag : new String[]{"zombies", "undead", "burn_in_daylight"}) {
+            require(helper, infected.getType().is(net.minecraft.tags.TagKey.create(Registries.ENTITY_TYPE,
+                            Identifier.fromNamespaceAndPath("minecraft", tag))),
+                    "Infected zombie must keep vanilla zombie classification: " + tag);
+        }
         require(helper, !SkulkParasite.isSupportedHost(infected), "Infected hosts must not be infected again");
         require(helper, helper.getLevel().getEntitiesOfClass(ItemEntity.class, bounds(helper)).isEmpty(),
                 "Infection must not trigger death loot or duplicate equipment");
