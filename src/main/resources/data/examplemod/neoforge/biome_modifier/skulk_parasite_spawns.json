@@ -3,11 +3,7 @@
   "biomes": "minecraft:deep_dark",
   "spawners": {
     "type": "examplemod:skulk_parasite",
-    "weight": 8,
-    "count": {
-      "type": "minecraft:uniform",
-      "min_inclusive": 1,
-      "max_inclusive": 2
-    }
+    "weight": 2,
+    "count": 1
   }
 }

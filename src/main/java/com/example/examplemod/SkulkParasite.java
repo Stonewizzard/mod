@@ -21,6 +21,9 @@ import net.minecraft.world.phys.Vec3;
 
 /** A small sculk creature which leaps onto a supported host and merges with it. */
 public class SkulkParasite extends Monster {
+    public static final int NATURAL_SPAWN_ROLL = 10;
+    public static final int MAX_NEARBY_PARASITES = 2;
+    public static final int NATURAL_SPAWN_RADIUS = 32;
     public SkulkParasite(EntityType<? extends SkulkParasite> type, Level level) {
         super(type, level);
         xpReward = 3;
@@ -39,6 +42,22 @@ public class SkulkParasite extends Monster {
         goalSelector.addGoal(6, new RandomLookAroundGoal(this));
     }
 
+    @Override
+    protected net.minecraft.world.entity.Entity.MovementEmission getMovementEmission() {
+        return net.minecraft.world.entity.Entity.MovementEmission.NONE;
+    }
+
+    @Override
+    public boolean dampensVibrations() {
+        return true;
+    }
+
+    static boolean hasNaturalSpawnCapacity(ServerLevelAccessor level, BlockPos pos) {
+        return level.getLevel().getEntitiesOfClass(SkulkParasite.class,
+                new net.minecraft.world.phys.AABB(pos).inflate(NATURAL_SPAWN_RADIUS),
+                SkulkParasite::isAlive).size() < MAX_NEARBY_PARASITES;
+    }
+
     public static boolean isSupportedHost(Mob mob) {
         // Exact types deliberately exclude players, other zombie variants and infected mobs.
         return mob.isAlive() && !mob.isInvulnerable()
@@ -53,7 +72,8 @@ public class SkulkParasite extends Monster {
                 .getOrThrow(net.minecraft.world.level.levelgen.structure.BuiltinStructures.ANCIENT_CITY);
         boolean habitat = level.getBiome(pos).is(Biomes.DEEP_DARK)
                 || level.getLevel().structureManager().getStructureAt(pos, city.value()).isValid();
-        return habitat && Monster.checkMonsterSpawnRules(type, level, reason, pos, random);
+        return habitat && Monster.checkMonsterSpawnRules(type, level, reason, pos, random)
+                && hasNaturalSpawnCapacity(level, pos) && random.nextInt(NATURAL_SPAWN_ROLL) == 0;
     }
 
     private final class InfectHostGoal extends Goal {

@@ -35,6 +35,52 @@ public final class SkulkParasiteTests {
                 new InfectionTest(new TestData<>(environment, Level.OVERWORLD,
                         Identifier.fromNamespaceAndPath(ExampleMod.MODID, "empty_drop_test"),
                         400, 0, true, Rotation.NONE, false, 1, 1, false, 0)));
+        event.registerTest(Identifier.fromNamespaceAndPath(ExampleMod.MODID, "parasite_vibrations"),
+                new QuietTest(new TestData<>(environment, Level.OVERWORLD,
+                        Identifier.fromNamespaceAndPath(ExampleMod.MODID, "empty_drop_test"),
+                        100, 0, true, Rotation.NONE, false, 1, 1, false, 0)));
+    }
+
+    private static final class QuietTest extends GameTestInstance {
+        QuietTest(TestData<Holder<TestEnvironmentDefinition<?>>> data) { super(data); }
+
+        @Override
+        public MapCodec<? extends GameTestInstance> codec() { return MapCodec.unit(this); }
+
+        @Override
+        protected MutableComponent typeDescription() { return Component.literal("Parasite vibration suppression"); }
+
+        @Override
+        public void run(GameTestHelper helper) {
+            for (int x = 0; x < 8; x++) for (int z = 0; z < 8; z++)
+                helper.setBlock(new BlockPos(x, 0, z), Blocks.STONE);
+            var sensor = new BlockPos(4, 1, 4);
+            var source = new BlockPos(2, 1, 4);
+            helper.setBlock(sensor, Blocks.SCULK_SENSOR);
+            var parasite = helper.spawn(ExampleMod.SKULK_PARASITE.get(), source);
+            parasite.setNoAi(true);
+            helper.getLevel().gameEvent(parasite, net.minecraft.world.level.gameevent.GameEvent.STEP,
+                    helper.absolutePos(source));
+            helper.getLevel().gameEvent(parasite, net.minecraft.world.level.gameevent.GameEvent.HIT_GROUND,
+                    helper.absolutePos(source));
+            helper.runAfterDelay(10, () -> {
+                require(helper, helper.getLevel().getBlockState(helper.absolutePos(sensor))
+                                .getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.POWER) == 0,
+                        "Parasite walking and landing must not activate a sculk sensor");
+                parasite.discard();
+                var cow = helper.spawn(EntityTypes.COW, source);
+                cow.setNoAi(true);
+                helper.getLevel().gameEvent(cow, net.minecraft.world.level.gameevent.GameEvent.STEP,
+                        helper.absolutePos(source));
+                helper.runAfterDelay(10, () -> {
+                    require(helper, helper.getLevel().getBlockState(helper.absolutePos(sensor))
+                                    .getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.POWER) > 0,
+                            "The same sensor must still detect a normal cow's footsteps");
+                    cow.discard();
+                    helper.succeed();
+                });
+            });
+        }
     }
 
     private static final class InfectionTest extends GameTestInstance {
@@ -107,13 +153,19 @@ public final class SkulkParasiteTests {
 
     private static void verifySpawnEgg(GameTestHelper helper) {
         var player = helper.makeMockServerPlayerInLevel();
+        var first = helper.spawn(ExampleMod.SKULK_PARASITE.get(), new BlockPos(1, 1, 1));
+        var second = helper.spawn(ExampleMod.SKULK_PARASITE.get(), new BlockPos(3, 1, 1));
+        first.setNoAi(true);
+        second.setNoAi(true);
+        require(helper, !SkulkParasite.hasNaturalSpawnCapacity(helper.getLevel(), helper.absolutePos(new BlockPos(2, 1, 2))),
+                "Two nearby parasites must block additional natural spawns");
         var egg = ExampleMod.SKULK_PARASITE_SPAWN_EGG.get().getDefaultInstance();
         player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, egg);
         egg.useOn(new net.minecraft.world.item.context.UseOnContext(player, net.minecraft.world.InteractionHand.MAIN_HAND,
                 new net.minecraft.world.phys.BlockHitResult(helper.absoluteVec(new Vec3(2.5, 1, 2.5)),
                         net.minecraft.core.Direction.UP, helper.absolutePos(new BlockPos(2, 0, 2)), false)));
         var spawned = helper.getLevel().getEntitiesOfClass(SkulkParasite.class, bounds(helper));
-        require(helper, spawned.size() == 1, "Spawn egg must create one parasite even outside Deep Dark");
+        require(helper, spawned.size() == 3, "Spawn egg must create one parasite outside Deep Dark even at the natural population cap");
         spawned.forEach(SkulkParasite::discard);
         player.discard();
     }
