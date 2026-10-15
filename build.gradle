@@ -184,8 +184,20 @@ idea {
     }
 }
 
-// Temporary visual-development probe; removed after inspecting native model poses.
-tasks.register('inspectParasiteModels', JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'com.example.examplemod.client.VisualModelProbe'
+// Temporary inspection of vanilla model bytecode; removed after fitting the visuals.
+tasks.register('inspectParasiteModels', Exec) {
+    doFirst {
+        def modelClasses = []
+        sourceSets.main.runtimeClasspath.files.findAll { it.name.endsWith('.jar') }.each { file ->
+            def archive = new java.util.zip.ZipFile(file)
+            archive.entries().each { entry ->
+                if (entry.name.endsWith('/CowModel.class') || entry.name.endsWith('/BabyCowModel.class') || entry.name.endsWith('/ZombieModel.class')) {
+                    modelClasses.add(entry.name.replace('/', '.').replace('.class', ''))
+                }
+            }
+            archive.close()
+        }
+        commandLine javaToolchains.launcherFor(java.toolchain).get().metadata.installationPath.file('bin/javap').asFile,
+                '-c', '-p', '-classpath', sourceSets.main.runtimeClasspath.asPath, *modelClasses
+    }
 }
