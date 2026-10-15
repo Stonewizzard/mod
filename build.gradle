@@ -183,3 +183,24 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// Temporary API inspection while diagnosing the client renderer.
+tasks.register('inspectSculkRenderApi', Exec) {
+    doFirst {
+        def runtime = project.sourceSets.main.runtimeClasspath
+        def names = ['SubmitNodeCollector', 'OrderedSubmitNodeCollector', 'RenderLayer', 'LivingEntityRenderer', 'RenderTypes', 'ModelFeatureRenderer', 'Model'] as Set
+        def classes = []
+        runtime.files.findAll { it.name.endsWith('.jar') }.each { file ->
+            def archive = new java.util.zip.ZipFile(file)
+            archive.entries().each { entry ->
+                def simpleName = entry.name.tokenize('/').last().replace('.class', '')
+                if (entry.name.startsWith('net/minecraft/client/') && entry.name.endsWith('.class') && names.contains(simpleName)) {
+                    classes.add(entry.name.replace('/', '.').replace('.class', ''))
+                }
+            }
+            archive.close()
+        }
+        commandLine project.javaToolchains.launcherFor(project.java.toolchain).get().metadata.installationPath.file('bin/javap').asFile,
+                '-c', '-p', '-classpath', runtime.asPath, *classes
+    }
+}
