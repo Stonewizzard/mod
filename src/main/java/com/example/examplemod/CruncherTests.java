@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.gamerules.GameRules;
@@ -73,7 +74,7 @@ public final class CruncherTests {
                 var babies = helper.getLevel().getEntitiesOfClass(Cruncher.class, bounds(helper));
                 require(helper, babies.size() == 1 && babies.getFirst().isBaby(), "Egg must hatch exactly one baby Cruncher");
                 var cruncher = babies.getFirst();
-                var player = helper.makeMockPlayer();
+                var player = helper.makeMockPlayer(GameType.SURVIVAL);
                 int age = cruncher.getAge();
                 player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE));
                 cruncher.interact(player, InteractionHand.MAIN_HAND);
@@ -120,13 +121,13 @@ public final class CruncherTests {
     }
 
     private static void verifySpawnEgg(GameTestHelper helper) {
-        helper.useBlock(new BlockPos(2, 0, 2), helper.makeMockPlayer(),
+        helper.useBlock(new BlockPos(2, 0, 2), helper.makeMockPlayer(GameType.SURVIVAL),
                 ExampleMod.CRUNCHER_SPAWN_EGG.get().getDefaultInstance(), Direction.UP);
         var spawned = helper.getLevel().getEntitiesOfClass(Cruncher.class, bounds(helper));
         require(helper, spawned.size() == 1 && !spawned.getFirst().isBaby(),
                 "Using the creative spawn egg must immediately spawn exactly one adult Cruncher");
         var cruncher = spawned.getFirst();
-        var player = helper.makeMockPlayer();
+        var player = helper.makeMockPlayer(GameType.SURVIVAL);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.TORCHFLOWER_SEEDS));
         cruncher.interact(player, InteractionHand.MAIN_HAND);
         require(helper, !cruncher.isInLove(), "Old sniffer food must no longer feed a Cruncher");
@@ -140,7 +141,7 @@ public final class CruncherTests {
         helper.setBlock(GEODE, Blocks.AIR);
         var first = helper.spawn(ExampleMod.CRUNCHER.get(), new BlockPos(2, 1, 2));
         var second = helper.spawn(ExampleMod.CRUNCHER.get(), new BlockPos(4, 1, 2));
-        var player = helper.makeMockPlayer();
+        var player = helper.makeMockPlayer(GameType.SURVIVAL);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WITHER_ROSE, 2));
         first.interact(player, InteractionHand.MAIN_HAND);
         second.interact(player, InteractionHand.MAIN_HAND);
