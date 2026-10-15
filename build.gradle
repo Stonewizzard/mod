@@ -183,3 +183,9 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// Temporary visual-development probe; removed after inspecting native model poses.
+tasks.register('inspectParasiteModels', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.example.examplemod.client.VisualModelProbe'
+}
