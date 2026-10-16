@@ -57,4 +57,3 @@ jobs:
           rm -f run/sculk-render-check-passed.txt
           ./gradlew runSculkRenderCheck
           test -f run/sculk-render-check-passed.txt
-

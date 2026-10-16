@@ -262,6 +262,7 @@ public final class SkulkParasiteTests {
                 before=hits.get();
                 net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(host));
                 require(helper,hits.get()==before,"Passive host must ignore Creative players: "+type);
+                require(helper,host.getNavigation().isDone(),"Passive pursuit must stop when the player becomes Creative: "+type);
                 target.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
                 host.setNoAi(true);
             }
@@ -279,7 +280,7 @@ public final class SkulkParasiteTests {
         }
         require(helper, checked > 70, "All native mob families must be exercised; tested " + checked);
         target.discard();
-        ExampleMod.LOGGER.info("SCULK ALL-MOBS: {} native mob types preserve their identity and data", checked);
+        ExampleMod.LOGGER.info("SCULK ALL-MOBS: {} supported mob types preserve their identity and data", checked);
     }
 
     private static net.minecraft.nbt.CompoundTag save(GameTestHelper helper, net.minecraft.world.entity.Mob mob) {

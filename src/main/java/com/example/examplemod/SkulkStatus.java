@@ -128,8 +128,17 @@ public final class SkulkStatus {
                     .stream().min(java.util.Comparator.comparingDouble(mob::distanceToSqr)).orElse(null);
             mob.setTarget(target);
         }
-        if (target == null) return;
         var brain = mob.getBrain();
+        if (target == null) {
+            if (brain.checkMemory(MemoryModuleType.ATTACK_TARGET, MemoryStatus.REGISTERED))
+                brain.eraseMemory(MemoryModuleType.ATTACK_TARGET);
+            if (state(mob) == 1) {
+                mob.getNavigation().stop();
+                if (brain.checkMemory(MemoryModuleType.WALK_TARGET, MemoryStatus.REGISTERED))
+                    brain.eraseMemory(MemoryModuleType.WALK_TARGET);
+            }
+            return;
+        }
         if (brain.checkMemory(MemoryModuleType.ATTACK_TARGET, MemoryStatus.REGISTERED))
             brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
         if (state(mob) != 1) return; // Hostile mobs retain their native ranged/explosion attacks.

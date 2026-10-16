@@ -104,9 +104,10 @@ The Ancient City entry is required because cities override biome spawning with
 an empty monster list; it uses the same rarity and population checks.
 Parasites produce no movement vibrations and their own vibrations are ignored
 by sculk sensors and other vibration listeners, like the Warden's. Infected
-hosts still produce their normal vibrations. Spawn eggs and commands can place them anywhere for testing.
-Use the native mob spawn eggs and infect their hosts with a parasite. Find **Skulk Parasite Spawn Egg** in Spawn Eggs or Example
-Mod Tab, or use `/give @s examplemod:skulk_parasite_spawn_egg`.
+hosts still produce their normal vibrations. Spawn eggs and commands can place
+them anywhere for testing. Use the native mob spawn eggs and infect their hosts
+with a parasite. Find **Skulk Parasite Spawn Egg** in Spawn Eggs or Example Mod
+Tab, or use `/give @s examplemod:skulk_parasite_spawn_egg`.
 
 For a quick test, put a zombie or cow and a parasite in a small enclosure.
 Use `/summon examplemod:skulk_parasite`, `/summon minecraft:zombie`, or
@@ -156,8 +157,18 @@ This is a software preview using the model UVs; Minecraft lighting can differ.
 
 Run `./gradlew runSculkRenderCheck` (Windows: `.\\gradlew.bat runSculkRenderCheck`)
 for the headless client render-submission regression. It checks 301 native mob
-model layers and 16 cow/chicken variant skins, loads the packaged growth textures, reproduces the old
+model layers and 16 cow/chicken variant skins, loads the packaged growth textures,
+reproduces the old
 outline bug as a negative control, and checks the cutout pass, draw order, tint,
 invisibility, and outline handling. It uses client-data mode without opening a
 game window. This checks native submissions; in-game pixels still need visual review.
 
+The server regression infects all 88 supported mob types. It checks native data
+retention, persistence, repeated loading, real damage processing, projectile
+bonuses, XP events, every passive family's contact attack, Creative immunity and
+zombie-to-drowned conversion. Existing spawn, sensor, Sniffer and Cruncher tests
+also run in the same suite.
+
+Developers can export native meshes and skin composites into the client-data log
+with `./gradlew runSculkRenderCheck -PsculkVisualExport=true`. This is opt-in and
+does not run during ordinary gameplay.
