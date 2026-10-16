@@ -60,6 +60,10 @@ public class ExampleModClient {
     @SubscribeEvent
     static void checkSculkRendering(net.neoforged.neoforge.data.event.GatherDataEvent.Client event) {
         if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
+            try {
+                com.example.examplemod.client.ArchaeologyTableVisualRegression.run(
+                        event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
+            } catch(Exception failure){throw new IllegalStateException("Archaeology table visual check failed",failure);}
             com.example.examplemod.client.SculkRenderRegression.run(
                     event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
         }

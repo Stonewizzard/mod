@@ -31,7 +31,7 @@ public final class ArchaeologyTableTests {
             for(int x=0;x<8;x++)for(int z=0;z<8;z++)helper.setBlock(new BlockPos(x,0,z),Blocks.STONE);
             var pos=helper.absolutePos(new BlockPos(3,1,3));var player=helper.makeMockServerPlayerInLevel();
             player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
-            var bounds=new AABB(helper.absolutePos(BlockPos.ZERO),helper.absolutePos(new BlockPos(8,6,8)));
+            var bounds=new AABB(Vec3.atLowerCornerOf(helper.absolutePos(BlockPos.ZERO)),Vec3.atLowerCornerOf(helper.absolutePos(new BlockPos(8,6,8))));
             for(var facing:Direction.Plane.HORIZONTAL)for(boolean breakRight:new boolean[]{false,true}){
                 for(var item:level.getEntitiesOfClass(ItemEntity.class,bounds))item.discard();
                 player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);player.setYRot(facing.getOpposite().toYRot());

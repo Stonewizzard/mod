@@ -28,6 +28,7 @@ public final class ArchaeologyTableRenderer implements BlockEntityRenderer<Archa
         public List<ItemStackRenderState> items=List.of();
     }
     public ArchaeologyTableRenderer(BlockEntityRendererProvider.Context context){resolver=context.itemModelResolver();}
+    ArchaeologyTableRenderer(ItemModelResolver resolver){this.resolver=resolver;}
     @Override public State createRenderState(){return new State();}
     @Override public void extractRenderState(ArchaeologyTableBlockEntity table,State state,float partialTick,Vec3 camera,ModelFeatureRenderer.CrumblingOverlay breaking){
         BlockEntityRenderer.super.extractRenderState(table,state,partialTick,camera,breaking);
