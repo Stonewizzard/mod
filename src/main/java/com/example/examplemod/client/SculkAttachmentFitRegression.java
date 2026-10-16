@@ -39,14 +39,15 @@ final class SculkAttachmentFitRegression {
                 require(after==0,"Reported clipping must be cleared: "+key+" "+after);
             if(changed) {
                 adjusted++;
-                System.out.println("SCULK_FIT_ADJUSTED: "+key+" "+before+" -> "+after);
+                if(Boolean.getBoolean("examplemod.sculkVisualExport"))
+                    System.out.println("SCULK_FIT_ADJUSTED: "+key+" "+before+" -> "+after);
             }
             if(after>0){remaining++;System.out.println("SCULK_FIT_REMAINING: "+key+" "+after);}
             checked++;
         }
         require(checked>70,"Expected all native host model families");
         require(remaining==0,"Supported fitted models must have no solid-core intersections");
-        System.out.println("SCULK_FIT_CHECK: "+checked+" models, "+adjusted+" adjusted, "+remaining+" remaining overlaps");
+        System.out.println("SCULK_FIT_CHECK: PASS: "+checked+" models, "+adjusted+" adjusted, "+remaining+" remaining sampled core overlaps");
     }
     private static void require(boolean value,String message){if(!value)throw new AssertionError(message);}
 }

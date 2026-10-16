@@ -178,3 +178,10 @@ The in-game spelling is **Sculk**. Existing `skulk_*` registry IDs and asset pat
 remain compatible with saved entities, spawn eggs and worlds. Attachment fitting
 checks adjacent host bones; llama neck clearance and iron golem back placement
 receive specific adjustments. Panda, Sniffer and Cruncher placement is retained.
+
+![Parasite attachment clearance preview](docs/visuals/sculk-attachment-fit-preview.png)
+
+The placement regression checks 151 native model layers for sampled intersections
+between the parasite's solid body and adjacent host parts. The preview shows native
+meshes and UVs; the trader llama is shown with its base coat, without its blanket.
+In-game lighting and animated poses can differ.
