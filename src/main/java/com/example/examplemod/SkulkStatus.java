@@ -11,7 +11,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.memory.*;
@@ -36,6 +35,15 @@ public final class SkulkStatus {
                     .copyOnDeath().sync(ByteBufCodecs.VAR_INT).build());
     private static final Identifier SPEED = Identifier.fromNamespaceAndPath(ExampleMod.MODID, "sculk_speed");
     private static final Set<Mob> INSTALLED = Collections.newSetFromMap(new WeakHashMap<>());
+    // These bodies do not support a convincing attached parasite. Keep one policy
+    // for targeting, conversion, rendering, combat bonuses and old-save cleanup.
+    private static final Set<EntityType<?>> IMMUNE = Set.of(
+            EntityTypes.ENDER_DRAGON, EntityTypes.WITHER, EntityTypes.WARDEN,
+            EntityTypes.TADPOLE, EntityTypes.GHAST, EntityTypes.HAPPY_GHAST,
+            EntityTypes.ENDERMITE, EntityTypes.SILVERFISH,
+            EntityTypes.COD, EntityTypes.SALMON, EntityTypes.TROPICAL_FISH, EntityTypes.PUFFERFISH,
+            EntityTypes.SQUID, EntityTypes.GLOW_SQUID,
+            EntityTypes.BAT, EntityTypes.ALLAY, EntityTypes.VEX);
 
     private SkulkStatus() {}
 
@@ -48,12 +56,16 @@ public final class SkulkStatus {
     }
 
     public static boolean supports(EntityType<?> type) {
-        return type != EntityTypes.ENDER_DRAGON && type != EntityTypes.WITHER && type != EntityTypes.WARDEN
+        return !IMMUNE.contains(type)
                 && (BuiltInRegistries.ENTITY_TYPE.getKey(type).getNamespace().equals("minecraft")
                     || type == ExampleMod.CRUNCHER.get());
     }
 
     public static int state(LivingEntity entity) {
+        return supports(entity.getType()) ? storedState(entity) : 0;
+    }
+
+    private static int storedState(LivingEntity entity) {
         return entity.hasData(INFECTION) ? entity.getData(INFECTION) : 0;
     }
 
@@ -66,6 +78,7 @@ public final class SkulkStatus {
     }
 
     public static void infect(Mob mob) {
+        if (!supports(mob.getType())) return;
         mob.setData(INFECTION, mob instanceof Enemy || mob.getType().getCategory() == MobCategory.MONSTER ? 2 : 1);
         install(mob);
     }
@@ -117,7 +130,12 @@ public final class SkulkStatus {
 
     private static void tick(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof Mob mob) || !(mob.level() instanceof ServerLevel level)
-                || state(mob) == 0 || !mob.isAlive()) return;
+                || storedState(mob) == 0) return;
+        if (!supports(mob.getType())) {
+            restoreImmuneHost(mob);
+            return;
+        }
+        if (!mob.isAlive()) return;
         install(mob); // Reinstall transient goals after loading, without stacking saved modifiers.
         if (mob.isNoAi()) return;
         var target = mob.getTarget();
@@ -147,17 +165,32 @@ public final class SkulkStatus {
         mob.getLookControl().setLookAt(target, 30, 30);
         if (mob.tickCount % 10 == 0) mob.getNavigation().moveTo(target, 1.2);
         mob.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 1.2);
-        if (mob instanceof Bat || mob.getType()==EntityTypes.HAPPY_GHAST
-                || ((mob.getType()==EntityTypes.SQUID || mob.getType()==EntityTypes.GLOW_SQUID) && mob.isInWater())) {
-            if (mob instanceof Bat bat) bat.setResting(false);
-            var direction = target.getEyePosition().subtract(mob.position());
-            mob.setDeltaMovement(mob.getDeltaMovement().scale(0.75).add(direction.normalize().scale(0.09)));
-        }
         if (mob.tickCount % 20 == 0 && mob.getBoundingBox().inflate(0.5).intersects(target.getBoundingBox())
                 && mob.getSensing().hasLineOfSight(target)) {
             if (mob.getAttribute(Attributes.ATTACK_DAMAGE) != null && mob.getAttributeValue(Attributes.ATTACK_DAMAGE) > 0)
                 mob.doHurtTarget(level, target);
             else target.hurtServer(level, mob.damageSources().mobAttack(mob), 3);
+        }
+    }
+
+    /** Normalize previously infected excluded types in place, including NoAI hosts. */
+    private static void restoreImmuneHost(Mob mob) {
+        int oldState = storedState(mob);
+        mob.setData(INFECTION, 0); // Synchronizes the clean appearance to tracking clients.
+        var walking = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+        var flying = mob.getAttribute(Attributes.FLYING_SPEED);
+        if (walking != null) walking.removeModifier(SPEED);
+        if (flying != null) flying.removeModifier(SPEED);
+        mob.goalSelector.removeAllGoals(goal -> goal instanceof PursuePlayer);
+        INSTALLED.remove(mob);
+        if (oldState == 1) {
+            mob.setTarget(null);
+            mob.getNavigation().stop();
+            var brain = mob.getBrain();
+            if (brain.checkMemory(MemoryModuleType.ATTACK_TARGET, MemoryStatus.REGISTERED))
+                brain.eraseMemory(MemoryModuleType.ATTACK_TARGET);
+            if (brain.checkMemory(MemoryModuleType.WALK_TARGET, MemoryStatus.REGISTERED))
+                brain.eraseMemory(MemoryModuleType.WALK_TARGET);
         }
     }
 
@@ -169,3 +202,4 @@ public final class SkulkStatus {
         @Override public void tick() { mob.getNavigation().moveTo(mob.getTarget(), 1.2); }
     }
 }
+
