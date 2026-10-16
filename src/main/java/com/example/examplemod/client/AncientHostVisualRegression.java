@@ -95,7 +95,7 @@ final class AncientHostVisualRegression {
                         "Growth lost a native bone's scale: "+entry.getKey());
             }
             oldMeshes.add(posedFaces(bundle.growth.root()).toString());
-            if(Boolean.getBoolean("examplemod.ancientHostVisualExport")) {
+            if(Boolean.getBoolean("examplemod.ancientHostVisualExport") && (!baby || frame==12)) {
                 model.setupAnim(state);bundle.growth.setupAnim(snapshot);
                 var composite=copy(bundle.nativeSkin);
                 var graphics=composite.createGraphics();graphics.drawImage(uploaded.get(draws.get(0).texture),0,0,null);
