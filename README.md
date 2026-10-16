@@ -58,6 +58,58 @@ obtained with `/give`; the mob can be spawned with `/summon examplemod:cruncher`
 Both artifacts remain placeholders for future components. Crunchers do not
 spawn naturally yet; eggs are their survival acquisition route.
 
+## Archaeology Table
+
+Craft one **Archaeology Table** from **three planks, four sticks and one iron ingot**:
+
+```text
+Plank  Plank  Plank
+Stick  Iron   Stick
+Stick         Stick
+```
+
+It occupies **two blocks across and one block deep**. Both spaces must be clear
+when placing it. Face a different direction to rotate the table; click either
+half to open the same inventory. Find it in Functional Blocks or Example Mod Tab.
+
+The parchment-and-green-felt screen has one artifact slot and four dedicated tool
+slots: **drill, brush, hammer and magnifying glass**. It accepts both **Ancient
+Artifact** (Sniffer) and **Rare Ancient Artifact** (Cruncher). Each slot holds one
+item. Shift-click routes supported items to their matching slots. The artifact
+rests on the table's green mat, and all four inserted tools appear on the other
+half of the tabletop. Empty slots show faint tool guides with hover labels.
+
+Use Minecraft's normal **Brush**. The three new field tools are also craftable:
+
+- **Archaeology Drill:** two iron ingots, one redstone dust and two sticks.
+- **Archaeology Hammer:** two iron ingots and two sticks.
+- **Magnifying Glass:** one glass pane, one iron ingot and one stick.
+
+Find the tools in Tools & Utilities or Example Mod Tab. Picking up a stick
+unlocks the four new recipes in the recipe book. This first stage stores and
+displays artifacts and tools; artifact processing can be added later.
+
+Items and their components persist through saves. Nearby players see inventory
+changes on the tabletop, including when loading the chunk. Breaking either half
+removes the whole table, drops one table in Survival, and returns its contents.
+Closing the screen leaves the items stored. Existing tables require no special
+setup after restarting the game.
+
+![Archaeology Table and inventory preview](docs/visuals/archaeology-table-preview.png)
+
+This is a software preview using the actual block geometry, item textures and
+screen layout; Minecraft lighting can differ. For a quick in-game check, craft
+the table, add either artifact and all four tools, then close the screen and
+walk around it. Reopen from the other half, save/reload, and break either side.
+The regression suite checks all four facings, both halves, blocked placement,
+slot rules, shift-click, component persistence, crafting and duplicate-free drops.
+The client check verifies the real tabletop item submission transforms and neutral
+overlay coordinates.
+
+For testing, use `/give @s examplemod:archaeology_table`,
+`/give @s examplemod:archaeology_drill`, `/give @s examplemod:archaeology_hammer`
+and `/give @s examplemod:magnifying_glass`.
+
 ## Cruncher and egg visuals
 
 The hatchable Cruncher Egg has a custom flat obsidian-and-magma inventory icon.
