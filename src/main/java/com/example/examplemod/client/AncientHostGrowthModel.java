@@ -71,6 +71,8 @@ final class AncientHostGrowthModel extends EntityModel<AncientHostGrowthState> {
     AncientHostGrowthState snapshot(net.minecraft.client.renderer.entity.state.LivingEntityRenderState host,boolean cruncher) {
         var state=new AncientHostGrowthState();
         var poses=new LinkedHashMap<String,PartPose>(); sources.forEach((path,part)->poses.put(path,part.storePose()));
+        var visibility=new LinkedHashMap<String,Boolean>();sources.forEach((path,part)->visibility.put(path,part.visible));
+        state.visibility=Map.copyOf(visibility);
         state.poses=Map.copyOf(poses);state.ageInTicks=host.ageInTicks;state.isBaby=host.isBaby;
         state.walkAnimationPos=host.walkAnimationPos;state.walkAnimationSpeed=host.walkAnimationSpeed;
         state.cruncher=cruncher;state.outlineColor=host.outlineColor;
@@ -82,7 +84,10 @@ final class AncientHostGrowthModel extends EntityModel<AncientHostGrowthState> {
 
     @Override public void setupAnim(AncientHostGrowthState state) {
         super.setupAnim(state);
-        followers.forEach((path,part)->part.loadPose(state.poses.getOrDefault(path,part.getInitialPose())));
+        followers.forEach((path,part)->{
+            part.loadPose(state.poses.getOrDefault(path,part.getInitialPose()));
+            part.visible=state.visibility.getOrDefault(path,true);
+        });
         float phase=state.ageInTicks*.09F;
         parasite.xScale=parasite.yScale=parasite.zScale=1.05F;
         parasite.y+=Mth.sin(phase)*.07F;

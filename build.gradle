@@ -57,6 +57,7 @@ neoForge {
             clientData()
             systemProperty 'examplemod.sculkRenderCheck', 'true'
             systemProperty 'examplemod.sculkVisualExport', providers.gradleProperty('sculkVisualExport').getOrElse('false')
+            systemProperty 'examplemod.ancientHostVisualExport', providers.gradleProperty('ancientHostVisualExport').getOrElse('false')
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('build/sculk-render-check-data').getAbsolutePath(), '--existing', file('src/main/resources').getAbsolutePath()
         }
 
@@ -195,4 +196,5 @@ idea {
 neoForge.runs.named('sculkRenderCheck') {
     logLevel = org.slf4j.event.Level.INFO
 }
+
 

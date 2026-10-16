@@ -58,9 +58,9 @@ public final class AncientHostInfectionLayer<S extends LivingEntityRenderState,M
         collector.order(2).submitModel(bundle.growth,state,stack,RenderTypes.entityCutoutZOffset(bundle.armor[frame]),
                 light,overlay,-1,null,host.outlineColor);
         // Only the circulation channels and nodes emit light, never the whole skin or outline.
-        collector.order(3).submitModel(model,host,stack,RenderTypes.eyes(bundle.skinGlow[frame]),
+        collector.order(3).submitModel(model,host,stack,RenderTypes.entityCutoutZOffset(bundle.skinGlow[frame]),
                 0xf000f0,0,-1,null,host.outlineColor);
-        collector.order(4).submitModel(bundle.growth,state,stack,RenderTypes.eyes(bundle.armorGlow[frame]),
+        collector.order(4).submitModel(bundle.growth,state,stack,RenderTypes.entityCutoutZOffset(bundle.armorGlow[frame]),
                 0xf000f0,0,-1,null,host.outlineColor);
     }
 

@@ -83,7 +83,7 @@ final class AncientHostVisualRegression {
             for(var entry:snapshot.poses.entrySet())require(AncientHostGrowthModel.resolve(bundle.growth.root(),entry.getKey()).storePose().equals(entry.getValue()),
                     "Growth lost a native bone's pose: "+entry.getKey());
             oldMeshes.add(posedFaces(bundle.growth.root()).toString());
-            if(Boolean.getBoolean("examplemod.sculkVisualExport")) {
+            if(Boolean.getBoolean("examplemod.ancientHostVisualExport")) {
                 model.setupAnim(state);bundle.growth.setupAnim(snapshot);
                 var composite=copy(bundle.nativeSkin);
                 var graphics=composite.createGraphics();graphics.drawImage(uploaded.get(draws.get(0).texture),0,0,null);
@@ -93,7 +93,11 @@ final class AncientHostVisualRegression {
                 var json=new JsonObject();json.addProperty("name",(cruncher?"cruncher":"sniffer")+(baby?"_baby":"_adult"));
                 json.addProperty("frame",frame);json.addProperty("active",frame>=8);json.addProperty("skin",png(composite));json.addProperty("parasiteSkin",png(armor));
                 json.add("host",posedFaces(model.root()));json.add("parasite",posedFaces(bundle.growth.root()));
-                System.out.println("ANCIENT_HOST_VISUAL_EXPORT:"+new Gson().toJson(json));
+                var compressed=new ByteArrayOutputStream();
+                try(var zip=new java.util.zip.DeflaterOutputStream(compressed)) {
+                    zip.write(new Gson().toJson(json).getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                }
+                System.out.println("ANCIENT_HOST_VISUAL_EXPORT_Z:"+Base64.getEncoder().encodeToString(compressed.toByteArray()));
             }
         }
         require(new HashSet<>(oldMeshes).size()>8,"Colony geometry must animate");
