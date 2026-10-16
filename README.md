@@ -74,7 +74,7 @@ block texture metadata. Feeding, hatching, AI, drops, loot chances, collision,
 and combat behavior are unchanged by this visual update.
 
 
-## Skulk Parasite
+## Sculk Parasite
 
 A small, six-legged sculk creature seeks a nearby **Minecraft mob**, leaps onto
 it, and merges into the original host. Infection supports land, flying, aquatic,
@@ -93,7 +93,7 @@ be reinfected and do not spread infection by attacking.
   age, equipment, inventory, owner and variant data. It persists through saving and
   loading and follows native conversions such as a zombie becoming a drowned.
   Infection does not kill the host or duplicate its drops. NoAI remains respected.
-- **Save compatibility:** existing Skulk Cow and Skulk Zombie entity IDs and their
+- **Save compatibility:** existing Sculk Cow and Sculk Zombie entity IDs and their
   renderers remain available. New infections stay on the native entity type.
 
 Parasites naturally spawn **only in the Deep Dark or Ancient Cities**,
@@ -106,7 +106,7 @@ Parasites produce no movement vibrations and their own vibrations are ignored
 by sculk sensors and other vibration listeners, like the Warden's. Infected
 hosts still produce their normal vibrations. Spawn eggs and commands can place
 them anywhere for testing. Use the native mob spawn eggs and infect their hosts
-with a parasite. Find **Skulk Parasite Spawn Egg** in Spawn Eggs or Example Mod
+with a parasite. Find **Sculk Parasite Spawn Egg** in Spawn Eggs or Example Mod
 Tab, or use `/give @s examplemod:skulk_parasite_spawn_egg`.
 
 For a quick test, put a zombie or cow and a parasite in a small enclosure.
@@ -139,7 +139,7 @@ pale sensory horns, and bone pincers with four fine curling tentacles. The free
 and attached versions share this design and restrained animation. Attachments
 follow the host's body and head poses; separate growth masks fit baby skins.
 
-![Skulk Parasite and infected host skin preview](docs/visuals/skulk-parasite-preview.png)
+![Sculk Parasite and infected host skin preview](docs/visuals/skulk-parasite-preview.png)
 
 [Watch the tentacle animation preview](docs/visuals/skulk-parasite-tentacles.gif)
 
@@ -172,3 +172,16 @@ also run in the same suite.
 Developers can export native meshes and skin composites into the client-data log
 with `./gradlew runSculkRenderCheck -PsculkVisualExport=true`. This is opt-in and
 does not run during ordinary gameplay.
+
+
+The in-game spelling is **Sculk**. Existing `skulk_*` registry IDs and asset paths
+remain compatible with saved entities, spawn eggs and worlds. Attachment fitting
+checks adjacent host bones; llama neck clearance and iron golem back placement
+receive specific adjustments. Panda, Sniffer and Cruncher placement is retained.
+
+![Parasite attachment clearance preview](docs/visuals/sculk-attachment-fit-preview.png)
+
+The placement regression checks 151 native model layers for sampled intersections
+between the parasite's solid body and adjacent host parts. The preview shows native
+meshes and UVs; the trader llama is shown with its base coat, without its blanket.
+In-game lighting and animated poses can differ.
