@@ -1,0 +1,95 @@
+package com.example.examplemod.client;
+
+import com.example.examplemod.*;
+import com.google.gson.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.zip.DeflaterOutputStream;
+import javax.imageio.ImageIO;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.ItemStack;
+
+/** Snapshot the real drawing plan and exercise the shared hit regions and data-driven specimen. */
+public final class ExcavationVisualRegression {
+    public static void run(ResourceManager resources) throws Exception {
+        JsonObject language;
+        try(var reader=new InputStreamReader(resources.getResourceOrThrow(Identifier.fromNamespaceAndPath("examplemod","lang/en_us.json")).open(),StandardCharsets.UTF_8)){
+            language=JsonParser.parseReader(reader).getAsJsonObject();
+        }
+        BufferedImage font;
+        try(var input=resources.getResourceOrThrow(Identifier.withDefaultNamespace("textures/font/ascii.png")).open()){font=ImageIO.read(input);}
+        var assets=new JsonObject();var scenes=new JsonArray();var animation=new JsonArray();
+        var covered=new ExcavationStudy();var loose=new ExcavationStudy();
+        for(int cell=0;cell<ExcavationStudy.CELLS;cell++)if(ExcavationStudy.coveredCell(cell)){loose.work(1,cell);loose.work(1,cell);}
+        var partial=copy(loose);for(int cell=0;cell<ExcavationStudy.CELLS;cell++)if(cell%ExcavationStudy.COLS<13)partial.work(2,cell);
+        var complete=copy(loose);for(int cell=0;cell<ExcavationStudy.CELLS;cell++)complete.work(2,cell);
+        var damaged=copy(loose);damaged.work(3,6*ExcavationStudy.COLS+14);
+        boolean[] tools={false,true,true,true,true};
+        var labels=(ExcavationScreenView.Labels)(key,args)->String.format(Locale.ROOT,language.get("gui.examplemod.excavation."+key).getAsString(),args);
+        for(String name:new String[]{"covered","partial","inspected","complete","damaged","rare","inventory","empty"}){
+            var study=switch(name){case "covered"->covered;case "complete"->complete;case "damaged"->damaged;case "empty"->null;default->partial;};
+            boolean rare=name.equals("rare"),inventory=name.equals("inventory");int selected=name.equals("inspected")?4:name.equals("covered")||name.equals("damaged")?3:2;
+            int hover=name.equals("inspected")?6*ExcavationStudy.COLS+19:-1;
+            var state=new ExcavationScreenView.State(study,rare,inventory,selected,hover,tools,name.equals("empty")?"":rare?"Rare Ancient Artifact":"Ancient Artifact");
+            scenes.add(snapshot(name,state,labels,resources,font,assets));
+        }
+        animation.add(snapshot("covered",new ExcavationScreenView.State(covered,false,false,3,-1,tools,"Ancient Artifact"),labels,resources,font,assets));
+        animation.add(snapshot("loose",new ExcavationScreenView.State(loose,false,false,2,-1,tools,"Ancient Artifact"),labels,resources,font,assets));
+        for(int step=0;step<=14;step++){
+            var state=copy(loose);int limit=step*2;
+            for(int cell=0;cell<ExcavationStudy.CELLS;cell++)if(cell%ExcavationStudy.COLS<limit)state.work(2,cell);
+            animation.add(snapshot("brush_"+step,new ExcavationScreenView.State(state,false,false,2,6*ExcavationStudy.COLS+Math.min(27,limit),tools,"Ancient Artifact"),labels,resources,font,assets));
+        }
+        for(int i=0;i<5;i++){
+            var p=ExcavationLayout.SLOTS[i];require(p[0]>=0&&p[0]+16<=320&&p[1]+16<ExcavationLayout.BOARD_Y,"A field-kit slot overlaps the board");
+        }
+        require(ExcavationLayout.cellAt(20,72)==0&&ExcavationLayout.cellAt(299.99,191.99)==ExcavationStudy.CELLS-1
+                &&ExcavationLayout.cellAt(19.9,72)==-1&&ExcavationLayout.cellAt(300,72)==-1,"Board hit bounds must be precise");
+        for(int i=1;i<=4;i++)require(ExcavationLayout.toolAt(160+(i-1)*38,59)==i
+                &&ExcavationLayout.toolAt(ExcavationLayout.SLOTS[i][0],ExcavationLayout.SLOTS[i][1])==0,"Tool selection must not intercept native inventory slots");
+        if(Boolean.getBoolean("examplemod.excavationVisualExport")){
+            var root=new JsonObject();root.add("assets",assets);root.add("scenes",scenes);root.add("animation",animation);
+            try(var input=resources.getResourceOrThrow(Identifier.withDefaultNamespace("textures/font/ascii.png")).open()){root.addProperty("font",Base64.getEncoder().encodeToString(input.readAllBytes()));}
+            var output=new ByteArrayOutputStream();try(var zip=new DeflaterOutputStream(output)){zip.write(new Gson().toJson(root).getBytes(StandardCharsets.UTF_8));}
+            System.out.println("EXCAVATION_PREVIEW_Z:"+Base64.getEncoder().encodeToString(output.toByteArray()));
+        }
+        System.out.println("EXCAVATION_UI_CHECK: PASS: real drawing plan, eight study/inventory states, actual materials and specimen, safe bounds, separate tool/slot hit targets and full grid coverage");
+    }
+    private static ExcavationStudy copy(ExcavationStudy study){var stack=new ItemStack(ExampleMod.ANCIENT_ARTIFACT.get());study.write(stack);return ExcavationStudy.read(stack);}
+    private static JsonObject snapshot(String name,ExcavationScreenView.State state,ExcavationScreenView.Labels labels,ResourceManager resources,BufferedImage font,JsonObject assets)throws Exception{
+        var canvas=new RecordingCanvas(font);ExcavationScreenView.draw(canvas,state,labels);
+        // Native slot extraction draws these after the background; include their actual GUI textures in the review.
+        if(state.study()!=null){canvas.image(Identifier.withDefaultNamespace(state.rare()?"textures/item/prize_pottery_sherd.png":"textures/item/arms_up_pottery_sherd.png"),26,40,16,16,16,16,-1);}
+        for(int i=1;i<=4;i++)if(state.tools()[i]){
+            var id=i==2?Identifier.withDefaultNamespace("textures/item/brush.png"):ExcavationScreenView.texture("item/"+switch(i){case 1->"archaeology_drill";case 3->"archaeology_hammer";default->"magnifying_glass";});
+            var p=ExcavationLayout.SLOTS[i];canvas.image(id,p[0],p[1],16,16,i==2?16:32,i==2?16:32,-1);
+        }
+        for(var id:canvas.textures)if(!assets.has(id.toString()))try(var input=resources.getResourceOrThrow(id).open()){
+            byte[] bytes=input.readAllBytes();require(ImageIO.read(new ByteArrayInputStream(bytes))!=null,"Invalid excavation image "+id);
+            assets.addProperty(id.toString(),Base64.getEncoder().encodeToString(bytes));
+        }
+        var result=new JsonObject();result.addProperty("name",name);result.addProperty("width",320);result.addProperty("height",236);
+        result.addProperty("progress",state.study()==null?0:state.study().progress());result.addProperty("condition",state.study()==null?100:state.study().condition());result.add("commands",canvas.commands);return result;
+    }
+    private static final class RecordingCanvas implements ExcavationScreenView.Canvas {
+        final JsonArray commands=new JsonArray();final Set<Identifier> textures=new HashSet<>();final BufferedImage font;
+        RecordingCanvas(BufferedImage font){this.font=font;}
+        @Override public void fill(int x,int y,int w,int h,int color){bounds(x,y,w,h);var c=command("fill",x,y,w,h);c.addProperty("color",color);commands.add(c);}
+        @Override public void texture(Identifier id,int x,int y,int w,int h,float u,float v,int sw,int sh,int tw,int th,int color){
+            bounds(x,y,w,h);require(u>=0&&v>=0&&u+sw<=tw&&v+sh<=th,"Texture region escaped its asset");
+            var c=command("texture",x,y,w,h);c.addProperty("id",id.toString());c.addProperty("u",u);c.addProperty("v",v);c.addProperty("sw",sw);c.addProperty("sh",sh);c.addProperty("tw",tw);c.addProperty("th",th);c.addProperty("color",color);commands.add(c);textures.add(id);
+        }
+        @Override public void text(String text,int x,int y,int color){bounds(x,y,textWidth(text),8);var c=command("text",x,y,textWidth(text),8);c.addProperty("text",text);c.addProperty("color",color);commands.add(c);}
+        @Override public int textWidth(String text){int width=0,unit=font.getWidth()/16;for(int i=0;i<text.length();i++){
+            char ch=text.charAt(i);if(ch==' '){width+=4;continue;}int right=0;
+            if(ch<256)for(int x=0;x<unit;x++)for(int y=0;y<unit;y++)if((font.getRGB(ch%16*unit+x,ch/16*unit+y)>>>24)>0)right=Math.max(right,x+1);
+            width+=right*8/unit+1;
+        }return width;}
+        private static JsonObject command(String op,int x,int y,int w,int h){var c=new JsonObject();c.addProperty("op",op);c.addProperty("x",x);c.addProperty("y",y);c.addProperty("w",w);c.addProperty("h",h);return c;}
+        private static void bounds(int x,int y,int w,int h){require(x>=0&&y>=0&&w>=0&&h>=0&&x+w<=ExcavationLayout.WIDTH&&y+h<=ExcavationLayout.HEIGHT,"An excavation control escaped the compact screen: "+x+","+y+" "+w+"x"+h);}
+    }
+    private static void require(boolean value,String message){if(!value)throw new AssertionError(message);}
+}

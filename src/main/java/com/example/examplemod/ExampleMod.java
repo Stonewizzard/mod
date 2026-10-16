@@ -170,6 +170,7 @@ public class ExampleMod {
             modEventBus.addListener(CruncherTests::register);
             modEventBus.addListener(SkulkParasiteTests::register);
             modEventBus.addListener(ArchaeologyTableTests::register);
+            modEventBus.addListener(ExcavationTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
