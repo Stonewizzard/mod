@@ -22,7 +22,7 @@ final class SculkTexturePixelsRegression {
                 verify(ImageIO.read(input),file,false);
             }
         }
-        System.out.println("SCULK_PIXEL_CHECK: PASS: native upload matches Minecraft PNG decoding for colors, alpha and all four growth atlases; old red/blue swap rejected");
+        System.out.println("SCULK_PIXEL_CHECK: PASS: native upload matches Minecraft PNG decoding for colors, alpha and all four growth atlases; deliberately swapped pixels rejected");
     }
 
     private static void verify(BufferedImage source,String label,boolean negativeControl) throws Exception {
@@ -35,10 +35,11 @@ final class SculkTexturePixelsRegression {
             for(int y=0;y<source.getHeight();y++)for(int x=0;x<source.getWidth();x++)
                 if(uploaded.getPixel(x,y)!=decoded.getPixel(x,y))
                     throw new AssertionError("Native color/alpha mismatch in "+label+" at "+x+","+y);
-            if(negativeControl)try(var legacy=new NativeImage(source.getWidth(),source.getHeight(),false)) {
-                // This is the previous uploader. Its cyan pixel must fail the native decoder comparison.
-                legacy.setPixel(0,0,source.getRGB(0,0));
-                if(legacy.getPixel(0,0)==decoded.getPixel(0,0))
+            if(negativeControl)try(var swapped=new NativeImage(source.getWidth(),source.getHeight(),false)) {
+                // A deliberately wrong red/blue conversion must fail the decoder comparison.
+                int argb=source.getRGB(0,0);
+                swapped.setPixel(0,0,(argb&0xff00ff00)|((argb>>>16)&0xff)|((argb&0xff)<<16));
+                if(swapped.getPixel(0,0)==decoded.getPixel(0,0))
                     throw new AssertionError("Negative control failed to reproduce the red/blue swap");
             }
         }

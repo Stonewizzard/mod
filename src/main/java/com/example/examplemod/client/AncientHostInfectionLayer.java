@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -58,11 +59,12 @@ public final class AncientHostInfectionLayer<S extends LivingEntityRenderState,M
                 light,overlay,-1,null,host.outlineColor);
         collector.order(2).submitModel(bundle.growth,state,stack,RenderTypes.entityCutoutZOffset(bundle.armor[frame]),
                 light,overlay,-1,null,host.outlineColor);
+        // Zero selects the red damage row in this cutout shader; glow needs the neutral overlay.
         // Only the circulation channels and nodes emit light, never the whole skin or outline.
         collector.order(3).submitModel(model,host,stack,RenderTypes.entityCutoutZOffset(bundle.skinGlow[frame]),
-                0xf000f0,0,-1,null,host.outlineColor);
+                0xf000f0,OverlayTexture.NO_OVERLAY,-1,null,host.outlineColor);
         collector.order(4).submitModel(bundle.growth,state,stack,RenderTypes.entityCutoutZOffset(bundle.armorGlow[frame]),
-                0xf000f0,0,-1,null,host.outlineColor);
+                0xf000f0,OverlayTexture.NO_OVERLAY,-1,null,host.outlineColor);
     }
 
     private static Identifier upload(String name,BufferedImage image) {
