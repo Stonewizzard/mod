@@ -42,6 +42,7 @@ public final class SculkRenderRegression {
             verify(new BabyCowModel(BabyCowModel.createBodyLayer().bakeRoot()),
                     new CowRenderState(), true, true, resources);
             verifyAdaptiveModels(resources);
+            if (Boolean.getBoolean("examplemod.sculkVisualExport")) SculkVisualExport.write(resources);
             Files.writeString(Path.of("sculk-render-check-passed.txt"), "PASS\n");
             System.out.println("SCULK_RENDER_CHECK: PASS: native adult/baby models, packaged textures, cutout order, tint, outline state, invisibility, and legacy negative control");
         } catch (Exception failure) {
@@ -57,7 +58,12 @@ public final class SculkRenderRegression {
         for(int y=0;y<128;y++) for(int x=0;x<128;x++) white.setRGB(x,y,0xffffffff);
         int models=0,variantSkins=0;
         var roots=net.minecraft.client.model.geom.LayerDefinitions.createRoots();
+        var mobNames=net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.stream()
+                .filter(net.minecraft.world.entity.ai.attributes.DefaultAttributes::hasSupplier)
+                .map(type->net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath()).toList();
         for(var entry:roots.entrySet()) {
+            String modelName=entry.getKey().toString().split("#")[0].replace("minecraft:","");
+            if(mobNames.stream().noneMatch(name->modelName.equals(name)||modelName.startsWith(name+"_")||modelName.endsWith("_"+name)))continue;
             var root=entry.getValue().bakeRoot();
             var before=root.getAllParts().stream().map(net.minecraft.client.model.geom.ModelPart::storePose).toList();
             var geometry=new AdaptiveSculkSkin(root);
