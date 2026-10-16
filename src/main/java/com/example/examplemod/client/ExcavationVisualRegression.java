@@ -10,7 +10,6 @@ import java.util.zip.DeflaterOutputStream;
 import javax.imageio.ImageIO;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.item.ItemStack;
 
 /** Snapshot the real drawing plan and exercise the shared hit regions and data-driven specimen. */
 public final class ExcavationVisualRegression {
@@ -58,7 +57,7 @@ public final class ExcavationVisualRegression {
         }
         System.out.println("EXCAVATION_UI_CHECK: PASS: real drawing plan, eight study/inventory states, actual materials and specimen, safe bounds, separate tool/slot hit targets and full grid coverage");
     }
-    private static ExcavationStudy copy(ExcavationStudy study){var stack=new ItemStack(ExampleMod.ANCIENT_ARTIFACT.get());study.write(stack);return ExcavationStudy.read(stack);}
+    private static ExcavationStudy copy(ExcavationStudy study){return study.copy();}
     private static JsonObject snapshot(String name,ExcavationScreenView.State state,ExcavationScreenView.Labels labels,ResourceManager resources,BufferedImage font,JsonObject assets)throws Exception{
         var canvas=new RecordingCanvas(font);ExcavationScreenView.draw(canvas,state,labels);
         // Native slot extraction draws these after the background; include their actual GUI textures in the review.

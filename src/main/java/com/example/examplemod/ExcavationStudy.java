@@ -15,6 +15,11 @@ public final class ExcavationStudy {
     private final byte[] depths=new byte[CELLS],scars=new byte[CELLS];
     private int damage;
     public ExcavationStudy(){for(int i=0;i<CELLS;i++)depths[i]=(byte)(coveredCell(i)?3:0);}
+    public ExcavationStudy copy(){
+        var result=new ExcavationStudy();
+        System.arraycopy(depths,0,result.depths,0,CELLS);System.arraycopy(scars,0,result.scars,0,CELLS);
+        result.damage=damage;return result;
+    }
     public static boolean coveredCell(int cell){
         if(cell<0||cell>=CELLS)return false;
         int x=cell%COLS,y=cell/COLS;
