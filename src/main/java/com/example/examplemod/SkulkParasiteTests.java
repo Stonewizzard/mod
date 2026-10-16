@@ -296,12 +296,10 @@ public final class SkulkParasiteTests {
         host.setNoAi(true);
         host.setCustomName(Component.literal("Excluded saved host"));
         host.setHealth(host.getMaxHealth()*.7F);
-        float health=host.getHealth();
         var uuid=host.getUUID();
         var speed=host.getAttribute(Attributes.MOVEMENT_SPEED);
         var own=Identifier.fromNamespaceAndPath(ExampleMod.MODID,"sculk_speed");
         var other=Identifier.fromNamespaceAndPath(ExampleMod.MODID,"other_test_speed");
-        double nativeSpeed=speed==null ? 0:speed.getBaseValue();
         if(speed!=null) {
             speed.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(own,.3,
                     net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
@@ -313,6 +311,11 @@ public final class SkulkParasiteTests {
         var loaded=(net.minecraft.world.entity.Mob)type.create(helper.getLevel(),net.minecraft.world.entity.EntitySpawnReason.LOAD);
         loaded.load(net.minecraft.world.level.storage.TagValueInput.create(
                 net.minecraft.util.ProblemReporter.DISCARDING,helper.getLevel().registryAccess(),save(helper,host)));
+        // Size-dependent mobs can normalize attributes during native loading. The
+        // cleanup must preserve that loaded native state, without changing it again.
+        float health=loaded.getHealth();
+        var loadedSpeed=loaded.getAttribute(Attributes.MOVEMENT_SPEED);
+        double nativeSpeed=loadedSpeed==null ? 0:loadedSpeed.getBaseValue();
         require(helper, SkulkStatus.state(loaded)==0 && !SkulkStatus.infected(loaded)
                 && SkulkStatus.damageMultiplier(loaded)==1 && SkulkStatus.experience(loaded,5)==5,
                 "Stale infection must not grant appearance/combat/XP state: "+type);
