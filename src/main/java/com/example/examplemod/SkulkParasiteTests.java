@@ -172,6 +172,21 @@ public final class SkulkParasiteTests {
 
     private static void verifyConversion(GameTestHelper helper) {
         int checked = 0;
+        var hits = new java.util.concurrent.atomic.AtomicInteger();
+        var target = new net.neoforged.neoforge.common.util.FakePlayer(helper.getLevel(),
+                new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "AllFamiliesTarget")) {
+            @Override public boolean hurtServer(net.minecraft.server.level.ServerLevel level,
+                    net.minecraft.world.damagesource.DamageSource source, float amount) {
+                if (source.getEntity() instanceof net.minecraft.world.entity.Mob attacker
+                        && SkulkStatus.infected(attacker) && amount > 0) { hits.incrementAndGet(); return true; }
+                return false;
+            }
+        };
+        target.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        target.setPermanentlyInvulnerable(false);
+        target.getAbilities().invulnerable=false;
+        target.setPos(helper.absoluteVec(new Vec3(2.5, 1, 2.5)));
+        helper.getLevel().addNewPlayer(target);
         for (var type : net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE) {
             if (!net.minecraft.world.entity.ai.attributes.DefaultAttributes.hasSupplier(type)) continue;
             var entity = type.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
@@ -211,6 +226,15 @@ public final class SkulkParasiteTests {
             require(helper, Math.abs(victimHealth-victim.getHealth()-(hostile ? 3 : 2))<.0001,
                     "Actual damage pipeline must apply the hostile bonus once: " + type);
             victim.discard();
+            if (type == EntityTypes.SKELETON) {
+                var arrow = EntityTypes.ARROW.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+                arrow.setOwner(host);
+                var rangedVictim = EntityTypes.COW.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+                float health=rangedVictim.getHealth();
+                rangedVictim.hurtServer(helper.getLevel(),host.damageSources().arrow(arrow,host),2);
+                require(helper, Math.abs(health-rangedVictim.getHealth()-3)<.0001,"Projectile owner must receive the hostile damage bonus");
+                arrow.discard();rangedVictim.discard();
+            }
             var xp = new net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent(host, null, 5);
             net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(xp);
             require(helper, xp.getDroppedExperience()==(hostile ? 10 : 5), "XP event hook: " + type);
@@ -228,9 +252,31 @@ public final class SkulkParasiteTests {
                     "Loading/ticking must not stack speed modifiers: " + type);
             var second = ExampleMod.SKULK_PARASITE.get().create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
             require(helper, SkulkInfection.infect(second, host) == null && !second.isRemoved(), "Prevent repeat infection: " + type);
+            if (!hostile) {
+                host.setPos(target.position());host.setNoAi(false);host.tickCount=0;
+                int before=hits.get();
+                net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(host));
+                require(helper, hits.get()>before,"Passive host must actually attack a nearby survival player: "+type);
+                target.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+                host.setTarget(null);
+                before=hits.get();
+                net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(host));
+                require(helper,hits.get()==before,"Passive host must ignore Creative players: "+type);
+                target.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+                host.setNoAi(true);
+            }
+            if (type == EntityTypes.ZOMBIE) {
+                var drowned = host.convertTo(EntityTypes.DROWNED, net.minecraft.world.entity.ConversionParams.single(host, true, true), converted -> {});
+                require(helper, drowned != null && SkulkStatus.infected(drowned),
+                        "Native zombie-to-drowned conversion must carry infection");
+                net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(drowned));
+                require(helper, SkulkStatus.state(drowned)==2, "Converted hostile classification must remain hostile");
+                drowned.discard();
+            }
             second.discard(); host.discard(); restored.discard(); checked++;
         }
         require(helper, checked > 70, "All native mob families must be exercised; tested " + checked);
+        target.discard();
         ExampleMod.LOGGER.info("SCULK ALL-MOBS: {} native mob types preserve their identity and data", checked);
     }
 

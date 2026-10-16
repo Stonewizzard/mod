@@ -76,7 +76,13 @@ public final class SkulkStatus {
         if (state(mob) == 2) {
             speed(mob.getAttribute(Attributes.MOVEMENT_SPEED));
             speed(mob.getAttribute(Attributes.FLYING_SPEED));
+            if (mob.getType() == EntityTypes.GIANT && mob instanceof PathfinderMob pathfinder)
+                mob.goalSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.MeleeAttackGoal(pathfinder, 1, true));
         } else {
+            var walking = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+            var flying = mob.getAttribute(Attributes.FLYING_SPEED);
+            if (walking != null) walking.removeModifier(SPEED);
+            if (flying != null) flying.removeModifier(SPEED);
             mob.goalSelector.addGoal(0, new PursuePlayer(mob));
         }
     }
@@ -108,7 +114,9 @@ public final class SkulkStatus {
         install(mob); // Reinstall transient goals after loading, without stacking saved modifiers.
         if (mob.isNoAi()) return;
         var target = mob.getTarget();
-        if (!(target instanceof Player player) || !targetable(player) || mob.distanceToSqr(player) > 1024) {
+        boolean valid = target != null && target.isAlive() && mob.distanceToSqr(target) <= 1024
+                && (target instanceof Player player ? targetable(player) : state(mob) == 2);
+        if (!valid) {
             target = level.getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(16), SkulkStatus::targetable)
                     .stream().min(java.util.Comparator.comparingDouble(mob::distanceToSqr)).orElse(null);
             mob.setTarget(target);
@@ -131,7 +139,8 @@ public final class SkulkStatus {
         }
         if (mob.tickCount % 20 == 0 && mob.getBoundingBox().inflate(0.5).intersects(target.getBoundingBox())
                 && mob.getSensing().hasLineOfSight(target)) {
-            if (mob.getAttribute(Attributes.ATTACK_DAMAGE) != null) mob.doHurtTarget(level, target);
+            if (mob.getAttribute(Attributes.ATTACK_DAMAGE) != null && mob.getAttributeValue(Attributes.ATTACK_DAMAGE) > 0)
+                mob.doHurtTarget(level, target);
             else target.hurtServer(level, mob.damageSources().mobAttack(mob), 3);
         }
     }
