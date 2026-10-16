@@ -31,6 +31,10 @@ public final class ArchaeologyTableTests {
             for(int x=0;x<8;x++)for(int z=0;z<8;z++)helper.setBlock(new BlockPos(x,0,z),Blocks.STONE);
             var pos=helper.absolutePos(new BlockPos(3,1,3));var player=helper.makeMockServerPlayerInLevel();
             player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+            verifyRecipe(helper,ExampleMod.ARCHAEOLOGY_TABLE_ITEM.get(),new Item[]{Items.OAK_PLANKS,Items.OAK_PLANKS,Items.OAK_PLANKS,Items.STICK,Items.IRON_INGOT,Items.STICK,Items.STICK,Items.AIR,Items.STICK});
+            verifyRecipe(helper,ExampleMod.ARCHAEOLOGY_DRILL.get(),new Item[]{Items.AIR,Items.IRON_INGOT,Items.REDSTONE,Items.AIR,Items.STICK,Items.IRON_INGOT,Items.AIR,Items.STICK,Items.AIR});
+            verifyRecipe(helper,ExampleMod.ARCHAEOLOGY_HAMMER.get(),new Item[]{Items.IRON_INGOT,Items.IRON_INGOT,Items.AIR,Items.AIR,Items.STICK,Items.AIR,Items.AIR,Items.STICK,Items.AIR});
+            verifyRecipe(helper,ExampleMod.MAGNIFYING_GLASS.get(),new Item[]{Items.GLASS_PANE,Items.IRON_INGOT,Items.AIR,Items.AIR,Items.STICK,Items.AIR,Items.AIR,Items.AIR,Items.AIR});
             var bounds=new AABB(Vec3.atLowerCornerOf(helper.absolutePos(BlockPos.ZERO)),Vec3.atLowerCornerOf(helper.absolutePos(new BlockPos(8,6,8))));
             for(var facing:Direction.Plane.HORIZONTAL)for(boolean breakRight:new boolean[]{false,true}){
                 for(var item:level.getEntitiesOfClass(ItemEntity.class,bounds))item.discard();
@@ -75,6 +79,11 @@ public final class ArchaeologyTableTests {
             require(helper,level.getBlockState(pos).isAir() && player.getMainHandItem().getCount()==2,"Blocked placement must not leave half a table or consume an item");
             helper.succeed();
         }
+    }
+    private static void verifyRecipe(GameTestHelper helper,Item result,Item[] items){
+        var input=net.minecraft.world.item.crafting.CraftingInput.of(3,3,java.util.Arrays.stream(items).map(i->i==Items.AIR?ItemStack.EMPTY:new ItemStack(i)).toList());
+        var recipe=helper.getLevel().getServer().getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,helper.getLevel());
+        require(helper,recipe.isPresent() && recipe.get().value().assemble(input,helper.getLevel().registryAccess()).is(result),"Table and all three tools must be craftable from their documented materials: "+result);
     }
     private static void require(GameTestHelper helper,boolean condition,String message){if(!condition)throw helper.assertionException(message);}
 }
