@@ -26,7 +26,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 
-/** Tests actual conversion and AI, not just registration or data-file shape. */
+/** Exercise native infection, persistence, combat hooks, AI, spawning and vibrations. */
 public final class SkulkParasiteTests {
     public static void register(RegisterGameTestsEvent event) {
         Holder<TestEnvironmentDefinition<?>> environment = event.registerEnvironment(
@@ -102,7 +102,7 @@ public final class SkulkParasiteTests {
             verifySpawnEgg(helper);
             verifyConversion(helper);
             var unsupported = helper.spawn(EntityTypes.PIG, new BlockPos(1, 1, 1));
-            require(helper, !SkulkParasite.isSupportedHost(unsupported), "Pigs must not be infected");
+            require(helper, SkulkParasite.isSupportedHost(unsupported), "Pigs must support infection");
             unsupported.discard();
             var cow = helper.spawn(EntityTypes.COW, new BlockPos(4, 1, 4));
             cow.setNoAi(true);
@@ -116,7 +116,7 @@ public final class SkulkParasiteTests {
                 @Override
                 public boolean hurtServer(net.minecraft.server.level.ServerLevel level,
                         net.minecraft.world.damagesource.DamageSource source, float amount) {
-                    if (!(source.getEntity() instanceof SkulkCow)) return false;
+                    if (!(source.getEntity() instanceof net.minecraft.world.entity.Mob host) || !SkulkStatus.infected(host)) return false;
                     setHealth(getHealth() - amount);
                     return true;
                 }
@@ -127,8 +127,8 @@ public final class SkulkParasiteTests {
             player.setPos(helper.absoluteVec(new Vec3(6.5, 1, 4.5)));
             helper.getLevel().addNewPlayer(player);
             helper.runAfterDelay(120, () -> {
-                var infected = helper.getLevel().getEntitiesOfClass(SkulkCow.class, bounds(helper));
-                require(helper, cow.isRemoved() && parasite.isRemoved() && infected.size() == 1,
+                var infected = helper.getLevel().getEntitiesOfClass(net.minecraft.world.entity.animal.cow.Cow.class, bounds(helper), SkulkStatus::infected);
+                require(helper, !cow.isRemoved() && parasite.isRemoved() && infected.size() == 1,
                         "Parasite AI must find, approach and merge with one cow");
                 require(helper, infected.getFirst().position().distanceToSqr(start) > 1,
                         "Infection must occur at the host, not remotely");
@@ -140,7 +140,7 @@ public final class SkulkParasiteTests {
                             "Infected cow must chase and damage a player; cow=" + hostile.position()
                                     + " player=" + player.position() + " target=" + hostile.getTarget()
                                     + " NoAI=" + hostile.isNoAi() + " health=" + player.getHealth());
-                    require(helper, hostile.getType() == ExampleMod.SKULK_COW.get(), "Infected identity must be persistent");
+                    require(helper, hostile.getType() == EntityTypes.COW, "Infected identity must be persistent");
                     require(helper, helper.getLevel().getEntitiesOfClass(SkulkParasite.class, bounds(helper)).isEmpty(),
                             "Consumed parasite must not remain or infect a second host");
                     hostile.discard();
@@ -171,48 +171,123 @@ public final class SkulkParasiteTests {
     }
 
     private static void verifyConversion(GameTestHelper helper) {
-        var pos = new BlockPos(2, 1, 2);
-        var zombie = helper.spawn(EntityTypes.ZOMBIE, pos);
-        zombie.setNoAi(true);
-        zombie.setBaby(true);
-        zombie.setCustomName(Component.literal("Named host"));
-        zombie.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
-        zombie.setHealth(7);
-        var parasite = helper.spawn(ExampleMod.SKULK_PARASITE.get(), pos);
-        var result = SkulkInfection.infect(parasite, zombie);
-        require(helper, result instanceof SkulkZombie && zombie.isRemoved() && parasite.isRemoved(),
-                "A zombie infection must convert exactly once and consume the parasite");
-        var infected = (SkulkZombie) result;
-        require(helper, infected.isBaby() && infected.isNoAi() && infected.getHealth() == 7,
-                "Conversion must preserve baby status, NoAI and health");
-        require(helper, infected.getCustomName() != null && infected.getCustomName().getString().equals("Named host")
-                        && infected.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET),
-                "Conversion must preserve custom names and equipment");
-        require(helper, infected.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue() > zombie.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue()
-                        && infected.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue() > zombie.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue(),
-                "Infected zombie must be faster and stronger");
-        require(helper, infected.getExperienceReward(helper.getLevel(), null) > zombie.getExperienceReward(helper.getLevel(), null),
-                "Infected zombies must award more experience under the normal XP rules");
-        var saved = net.minecraft.world.level.storage.TagValueOutput.createWithContext(
-                net.minecraft.util.ProblemReporter.DISCARDING, helper.getLevel().registryAccess());
-        infected.saveWithoutId(saved);
-        var restored = ExampleMod.SKULK_ZOMBIE.get().create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
-        require(helper, restored != null, "Saved infected entity type must be creatable");
-        restored.load(net.minecraft.world.level.storage.TagValueInput.create(
-                net.minecraft.util.ProblemReporter.DISCARDING, helper.getLevel().registryAccess(), saved.buildResult()));
-        require(helper, restored.getType() == ExampleMod.SKULK_ZOMBIE.get() && restored.isBaby()
-                        && restored.getHealth() == 7 && restored.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET),
-                "Saving/loading must retain the infected type, age, health and equipment");
-        restored.discard();
-        for (String tag : new String[]{"zombies", "undead", "burn_in_daylight"}) {
-            require(helper, net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(infected.getType()).is(net.minecraft.tags.TagKey.create(Registries.ENTITY_TYPE,
-                            Identifier.fromNamespaceAndPath("minecraft", tag))),
-                    "Infected zombie must keep vanilla zombie classification: " + tag);
+        int checked = 0;
+        var hits = new java.util.concurrent.atomic.AtomicInteger();
+        var target = new net.neoforged.neoforge.common.util.FakePlayer(helper.getLevel(),
+                new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "AllFamiliesTarget")) {
+            @Override public boolean hurtServer(net.minecraft.server.level.ServerLevel level,
+                    net.minecraft.world.damagesource.DamageSource source, float amount) {
+                if (source.getEntity() instanceof net.minecraft.world.entity.Mob attacker
+                        && SkulkStatus.infected(attacker) && amount > 0) { hits.incrementAndGet(); return true; }
+                return false;
+            }
+        };
+        target.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        target.setPermanentlyInvulnerable(false);
+        target.getAbilities().invulnerable=false;
+        target.setPos(helper.absoluteVec(new Vec3(2.5, 1, 2.5)));
+        helper.getLevel().addNewPlayer(target);
+        for (var type : net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE) {
+            if (!net.minecraft.world.entity.ai.attributes.DefaultAttributes.hasSupplier(type)) continue;
+            var entity = type.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+            if (!(entity instanceof net.minecraft.world.entity.Mob host)) continue;
+            if (!SkulkStatus.supports(type)) {
+                require(helper, !SkulkParasite.isSupportedHost(host), "Boss/custom exclusions: " + type);
+                host.discard();
+                continue;
+            }
+            host.setNoAi(true);
+            host.setCustomName(Component.literal("Native host"));
+            host.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
+            var uuid = host.getUUID();
+            var original = save(helper, host);
+            var speed = host.getAttributeValue(Attributes.MOVEMENT_SPEED);
+            var parasite = ExampleMod.SKULK_PARASITE.get().create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+            require(helper, SkulkInfection.infect(parasite, host) == host && parasite.isRemoved() && !host.isRemoved(),
+                    "Infection must preserve the exact native mob: " + type);
+            require(helper, host.getUUID().equals(uuid) && host.getType() == type && host.isNoAi()
+                    && host.getItemBySlot(EquipmentSlot.HEAD).is(Items.IRON_HELMET), "Native identity/equipment: " + type);
+            var infectedData = save(helper, host);
+            // Native fields include all biome/skin variants, wool, tame owners, inventory and ages.
+            for (var key : original.keySet()) {
+                if (key.equals("attributes") || key.equals("NeoForgeData") || key.equals("neoforge:attachments")) continue;
+                require(helper, java.util.Objects.equals(original.get(key), infectedData.get(key)),
+                        "Infection changed native data " + type + "/" + key);
+            }
+            boolean hostile = SkulkStatus.state(host) == 2;
+            require(helper, Math.abs(host.getAttributeValue(Attributes.MOVEMENT_SPEED) - speed * (hostile ? 1.3 : 1)) < 0.00001,
+                    "Speed bonus must apply exactly once: " + type);
+            require(helper, SkulkStatus.damageMultiplier(host) == (hostile ? 1.5F : 1)
+                    && SkulkStatus.experience(host, 5) == (hostile ? 10 : 5), "Hostile rewards/damage: " + type);
+            var victim = EntityTypes.COW.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+            victim.setNoAi(true);
+            float victimHealth = victim.getHealth();
+            victim.hurtServer(helper.getLevel(), host.damageSources().mobAttack(host), 2);
+            require(helper, Math.abs(victimHealth-victim.getHealth()-(hostile ? 3 : 2))<.0001,
+                    "Actual damage pipeline must apply the hostile bonus once: " + type);
+            victim.discard();
+            if (type == EntityTypes.SKELETON) {
+                var arrow = EntityTypes.ARROW.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+                arrow.setOwner(host);
+                var rangedVictim = EntityTypes.COW.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+                float health=rangedVictim.getHealth();
+                rangedVictim.hurtServer(helper.getLevel(),host.damageSources().arrow(arrow,host),2);
+                require(helper, Math.abs(health-rangedVictim.getHealth()-3)<.0001,"Projectile owner must receive the hostile damage bonus");
+                arrow.discard();rangedVictim.discard();
+            }
+            var xp = new net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent(host, null, 5);
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(xp);
+            require(helper, xp.getDroppedExperience()==(hostile ? 10 : 5), "XP event hook: " + type);
+            var zero = new net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent(host, null, 0);
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(zero);
+            require(helper, zero.getDroppedExperience()==0, "Zero-XP drops must remain zero: " + type);
+            var restored = (net.minecraft.world.entity.Mob) type.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+            restored.load(net.minecraft.world.level.storage.TagValueInput.create(
+                    net.minecraft.util.ProblemReporter.DISCARDING, helper.getLevel().registryAccess(), infectedData));
+            require(helper, SkulkStatus.infected(restored) && restored.getUUID().equals(uuid)
+                    && restored.getType() == type && !SkulkStatus.canInfect(restored), "Persistent infection: " + type);
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(restored));
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(restored));
+            require(helper, Math.abs(restored.getAttributeValue(Attributes.MOVEMENT_SPEED)-host.getAttributeValue(Attributes.MOVEMENT_SPEED))<.00001,
+                    "Loading/ticking must not stack speed modifiers: " + type);
+            var second = ExampleMod.SKULK_PARASITE.get().create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+            require(helper, SkulkInfection.infect(second, host) == null && !second.isRemoved(), "Prevent repeat infection: " + type);
+            if (!hostile) {
+                host.setPos(target.position());host.setNoAi(false);host.tickCount=0;
+                int before=hits.get();
+                net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(host));
+                require(helper, hits.get()>before,"Passive host must actually attack a nearby survival player: "+type);
+                target.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+                host.setTarget(null);
+                before=hits.get();
+                net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(host));
+                require(helper,hits.get()==before,"Passive host must ignore Creative players: "+type);
+                require(helper,host.getNavigation().isDone(),"Passive pursuit must stop when the player becomes Creative: "+type);
+                target.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+                host.setNoAi(true);
+            }
+            if (type == EntityTypes.ZOMBIE) {
+                // ConversionTracker emits this event from the native conversion callback.
+                var drowned = host.convertTo(EntityTypes.DROWNED, net.minecraft.world.entity.ConversionParams.single(host, true, true),
+                        converted -> net.neoforged.neoforge.event.EventHooks.onLivingConvert(host, converted));
+                require(helper, drowned != null && SkulkStatus.infected(drowned),
+                        "Native zombie-to-drowned conversion must carry infection");
+                net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(drowned));
+                require(helper, SkulkStatus.state(drowned)==2, "Converted hostile classification must remain hostile");
+                drowned.discard();
+            }
+            second.discard(); host.discard(); restored.discard(); checked++;
         }
-        require(helper, !SkulkParasite.isSupportedHost(infected), "Infected hosts must not be infected again");
-        require(helper, helper.getLevel().getEntitiesOfClass(ItemEntity.class, bounds(helper)).isEmpty(),
-                "Infection must not trigger death loot or duplicate equipment");
-        infected.discard();
+        require(helper, checked > 70, "All native mob families must be exercised; tested " + checked);
+        target.discard();
+        ExampleMod.LOGGER.info("SCULK ALL-MOBS: {} supported mob types preserve their identity and data", checked);
+    }
+
+    private static net.minecraft.nbt.CompoundTag save(GameTestHelper helper, net.minecraft.world.entity.Mob mob) {
+        var output = net.minecraft.world.level.storage.TagValueOutput.createWithContext(
+                net.minecraft.util.ProblemReporter.DISCARDING, helper.getLevel().registryAccess());
+        mob.saveWithoutId(output);
+        return output.buildResult();
     }
 
     private static void verifyBiomeSpawns(GameTestHelper helper) {
@@ -243,3 +318,4 @@ public final class SkulkParasiteTests {
         if (!value) throw helper.assertionException(Component.literal(message));
     }
 }
+
