@@ -42,7 +42,7 @@ public final class ExcavationStudy {
         return tool==2?Math.abs(dx)<=r&&Math.abs(dy)<=r:dx*dx+dy*dy<=r*r;
     }
     public boolean work(int tool,int cell){
-        if(tool<1||tool>3||!coveredCell(cell)||complete())return false;
+        if(tool<1||tool>3||!coveredCell(cell)||(complete()&&tool!=2))return false;
         boolean changed=false;int power=tool==3?2:1;
         for(int i=0;i<CELLS;i++)if(coveredCell(i)&&affects(tool,cell,i)){
             int old=depths[i];

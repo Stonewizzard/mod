@@ -69,7 +69,7 @@ public final class ArchaeologyTableScreen extends AbstractContainerScreen<Archae
     private void attempt(){
         if(!excavating || menu.inventoryView() || !hasArtifact() || !hasTool(selectedTool) || selectedTool==4
                 || !menu.getCarried().isEmpty() || !ExcavationStudy.coveredCell(currentCell) || minecraft.level==null)return;
-        if(ExcavationStudy.read(menu.getSlot(0).getItem()).complete())return;
+        if(selectedTool!=2 && ExcavationStudy.read(menu.getSlot(0).getItem()).complete())return;
         long now=minecraft.level.getGameTime();if(now<nextClientTick)return;
         // A hammer held still delivers one strike; moving or clicking again is deliberate.
         if(selectedTool==3 && lastHammerCell==currentCell)return;
