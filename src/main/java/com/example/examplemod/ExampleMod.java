@@ -142,6 +142,7 @@ public class ExampleMod {
                         SkulkParasite::checkSpawnRules,
                         net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent.Operation.REPLACE));
         ENTITIES.register(modEventBus);
+        SkulkStatus.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -226,4 +227,5 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
+
 

@@ -59,9 +59,7 @@ public class SkulkParasite extends Monster {
     }
 
     public static boolean isSupportedHost(Mob mob) {
-        // Exact types deliberately exclude players, other zombie variants and infected mobs.
-        return mob.isAlive() && !mob.isInvulnerable()
-                && (mob.getType() == EntityTypes.ZOMBIE || mob.getType() == EntityTypes.COW);
+        return SkulkStatus.canInfect(mob);
     }
 
     public static boolean checkSpawnRules(EntityType<SkulkParasite> type, ServerLevelAccessor level,
@@ -134,3 +132,4 @@ public class SkulkParasite extends Monster {
         }
     }
 }
+
