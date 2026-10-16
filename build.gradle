@@ -197,4 +197,3 @@ neoForge.runs.named('sculkRenderCheck') {
     logLevel = org.slf4j.event.Level.INFO
 }
 
-

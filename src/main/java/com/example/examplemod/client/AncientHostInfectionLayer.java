@@ -47,9 +47,11 @@ public final class AncientHostInfectionLayer<S extends LivingEntityRenderState,M
 
     @Override public void submit(PoseStack stack,SubmitNodeCollector collector,int light,S host,float yaw,float pitch) {
         if(host.isInvisible || !host.getRenderDataOrDefault(AdaptiveSculkLayer.INFECTED,false))return;
-        M model=getParentModel();model.setupAnim(host);
+        M model=getParentModel();
         Bundle bundle=testBundle!=null?testBundle.apply(model.root()):bundles.computeIfAbsent(new Key(model.root(),baseTexture.apply(host)),key->
                 Bundle.create(Minecraft.getInstance().getResourceManager(),key.root,key.skin,cruncher,AncientHostInfectionLayer::upload));
+        // UV extraction resets model parts; restore this host's animation and baby scales afterwards.
+        model.setupAnim(host);
         var state=bundle.growth.snapshot(host,cruncher);
         int frame=Math.floorMod((int)(host.ageInTicks*(.25F+state.activity*.09F)),16);
         int overlay=LivingEntityRenderer.getOverlayCoords(host,0);

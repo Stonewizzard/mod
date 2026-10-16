@@ -182,4 +182,3 @@ public final class AdaptiveSculkLayer<S extends LivingEntityRenderState, M exten
     }
 }
 
-

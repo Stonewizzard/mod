@@ -62,7 +62,12 @@ final class AncientHostVisualRegression {
         });
         checkMasks(bundle);
         RenderLayerParent<S,M> parent=()->model;
-        var layer=new AncientHostInfectionLayer<S,M>(parent,cruncher,root->bundle);
+        boolean[] firstUse={true};
+        var layer=new AncientHostInfectionLayer<S,M>(parent,cruncher,root->{
+            // Reproduce the native-part reset caused by first-use UV extraction.
+            if(firstUse[0]){new AdaptiveSculkSkin(root);firstUse[0]=false;}
+            return bundle;
+        });
         state.setRenderData(AdaptiveSculkLayer.INFECTED,true);
         var oldMeshes=new ArrayList<String>();
         for(int frame=0;frame<16;frame++) {
@@ -76,8 +81,13 @@ final class AncientHostVisualRegression {
                 }
             }
             state.outlineColor=frame%2==0?0:0xff36a8c4;
+            model.setupAnim(state);
+            var expectedScales=new IdentityHashMap<ModelPart,AncientHostGrowthState.Scale>();
+            for(var part:model.root().getAllParts())expectedScales.put(part,new AncientHostGrowthState.Scale(part.xScale,part.yScale,part.zScale));
             var draws=new ArrayList<Draw>();
             layer.submit(new PoseStack(),collector(draws,0,uploaded),0,state,0,0);
+            expectedScales.forEach((part,scale)->require(part.xScale==scale.x() && part.yScale==scale.y() && part.zScale==scale.z(),
+                    "First-use texture construction changed a native animation scale"));
             require(draws.size()==4,"Expected tissue, raised growth and two emissive passes");
             for(int i=0;i<draws.size();i++) {
                 var draw=draws.get(i);
@@ -114,6 +124,12 @@ final class AncientHostVisualRegression {
             }
         }
         require(new HashSet<>(oldMeshes).size()>8,"Colony geometry must animate");
+        // Secondary motion must continue even when the host's native bones are held still.
+        var resting=bundle.growth.snapshot(state,cruncher);
+        resting.walkAnimationSpeed=0;resting.activity=0;resting.ageInTicks=0;
+        bundle.growth.setupAnim(resting);String restingMesh=posedFaces(bundle.growth.root()).toString();
+        resting.ageInTicks=20;bundle.growth.setupAnim(resting);
+        require(!restingMesh.equals(posedFaces(bundle.growth.root()).toString()),"An idle colony must breathe and move its tendrils");
         require(!Arrays.equals(uploaded.get(bundle.skinGlow[0]).getRGB(0,0,bundle.nativeSkin.getWidth(),bundle.nativeSkin.getHeight(),null,0,bundle.nativeSkin.getWidth()),
                 uploaded.get(bundle.skinGlow[8]).getRGB(0,0,bundle.nativeSkin.getWidth(),bundle.nativeSkin.getHeight(),null,0,bundle.nativeSkin.getWidth())),"Vein frames must visibly change");
         state.isInvisible=true;var invisible=new ArrayList<Draw>();layer.submit(new PoseStack(),collector(invisible,0,uploaded),0,state,0,0);

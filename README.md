@@ -135,6 +135,34 @@ Masks are cached per model/skin and rebuilt when resources reload. Armor and
 other equipment can cover growth naturally. Infection does not force a glowing
 outline or a blue tint over the entire mob.
 
+### Infected Sniffer and Cruncher
+
+These two hosts have their own asymmetrical infection artwork and fitted model
+layers. The Sniffer retains moss, rusty fur and its yellow nose around a colony
+of sculk plates, branching roots and a fused parasite. The Cruncher combines
+crying obsidian and magma seams with mineral-like sculk ridges, infected jaw
+hinges and roots that follow both jaws. Their original skins remain visible
+between the growth, including resource-pack replacements.
+
+The attached parasite breathes and moves its tentacles; shell fronds sway,
+filaments curl and small glands pulse. Sixteen vein frames animate localized
+cyan circulation, with stronger motion during activity. Cruncher magma patches
+also pulse while its original lava animation continues. Growth follows native
+body, head, leg, digging and jaw poses, and fits baby proportions separately.
+Only veins and nodes remain bright in darkness; infection adds no forced outline.
+This update changes visuals only, with feeding, combat, digging, drops and other
+behavior unchanged.
+
+![Infected Sniffer and Cruncher adult, baby and low-light previews](docs/visuals/ancient-host-infection-preview.png)
+
+[Watch the native pose and infection animation preview](docs/visuals/ancient-host-infection-animation.gif)
+
+These previews use exported native vertices, UVs, animation poses and texture
+frames in a software renderer. Minecraft lighting can differ. To check in game,
+infect an adult and baby of each species, inspect both flanks, and watch a
+Sniffer dig or a Cruncher crunch a geode. Compare daylight and darkness, then
+reload resources with F3+T to check the rebuilt textures.
+
 ![Native model previews of nine expanded host families](docs/visuals/sculk-all-mobs-preview.png)
 
 This is a software preview exported from native model vertices and UVs. Sheep
@@ -168,6 +196,9 @@ reproduces the old
 outline bug as a negative control, and checks the cutout pass, draw order, tint,
 invisibility, and outline handling. It uses client-data mode without opening a
 game window. This checks native submissions; in-game pixels still need visual review.
+It also checks the bespoke Sniffer/Cruncher adult and baby models across 16 poses,
+including native digging and crunching, bone scales, changing geometry and vein
+frames, localized fullbright passes, and clean/invisible hosts.
 
 The server regression checks every supported and excluded native mob type. It checks native data
 retention, persistence, repeated loading, real damage processing, projectile
@@ -178,12 +209,16 @@ also run in the same suite.
 Developers can export native meshes and skin composites into the client-data log
 with `./gradlew runSculkRenderCheck -PsculkVisualExport=true`. This is opt-in and
 does not run during ordinary gameplay.
+For the bespoke Sniffer/Cruncher preview data, use
+`./gradlew runSculkRenderCheck -PancientHostVisualExport=true` instead. Its compact
+exports include all adult animation frames and an active baby pose for each host.
 
 
 The in-game spelling is **Sculk**. Existing `skulk_*` registry IDs and asset paths
 remain compatible with saved entities, spawn eggs and worlds. Attachment fitting
 checks adjacent host bones; llama neck clearance and iron golem back placement
-receive specific adjustments. Panda, Sniffer and Cruncher placement is retained.
+receive specific adjustments. Panda retains its existing attachment; Sniffer and
+Cruncher use the bespoke layers described above.
 
 ![Parasite attachment clearance preview](docs/visuals/sculk-attachment-fit-preview.png)
 
