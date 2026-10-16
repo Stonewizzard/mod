@@ -47,6 +47,16 @@ public class ExampleModClient {
     }
 
     @SubscribeEvent
+    static void addInfectionLayers(EntityRenderersEvent.AddLayers event) {
+        com.example.examplemod.client.AdaptiveSculkLayer.addLayers(event);
+    }
+
+    @SubscribeEvent
+    static void infectionRenderState(net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent event) {
+        com.example.examplemod.client.AdaptiveSculkLayer.modifiers(event);
+    }
+
+    @SubscribeEvent
     static void checkSculkRendering(net.neoforged.neoforge.data.event.GatherDataEvent.Client event) {
         if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
             com.example.examplemod.client.SculkRenderRegression.run(
@@ -61,5 +71,6 @@ public class ExampleModClient {
         ExampleMod.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }
 }
+
 
 

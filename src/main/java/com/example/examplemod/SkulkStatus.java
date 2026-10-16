@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.EntityTickEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -42,7 +42,7 @@ public final class SkulkStatus {
         TYPES.register(modBus);
         NeoForge.EVENT_BUS.addListener(SkulkStatus::tick);
         NeoForge.EVENT_BUS.addListener(SkulkStatus::damage);
-        NeoForge.EVENT_BUS.addListener(SkulkStatus::experience);
+        NeoForge.EVENT_BUS.addListener(SkulkStatus::onExperience);
     }
 
     public static boolean supports(EntityType<?> type) {
@@ -91,7 +91,7 @@ public final class SkulkStatus {
             event.setAmount(event.getAmount() * damageMultiplier(attacker));
     }
 
-    private static void experience(LivingExperienceDropEvent event) {
+    private static void onExperience(LivingExperienceDropEvent event) {
         event.setDroppedExperience(experience(event.getEntity(), event.getDroppedExperience()));
     }
 
@@ -112,11 +112,11 @@ public final class SkulkStatus {
         }
         if (target == null) return;
         var brain = mob.getBrain();
-        if (brain.checkMemory(MemoryModuleTypes.ATTACK_TARGET, MemoryStatus.REGISTERED))
-            brain.setMemory(MemoryModuleTypes.ATTACK_TARGET, target);
+        if (brain.checkMemory(MemoryModuleType.ATTACK_TARGET, MemoryStatus.REGISTERED))
+            brain.setMemory(MemoryModuleType.ATTACK_TARGET, target);
         if (state(mob) != 1) return; // Hostile mobs retain their native ranged/explosion attacks.
-        if (brain.checkMemory(MemoryModuleTypes.WALK_TARGET, MemoryStatus.REGISTERED))
-            brain.setMemory(MemoryModuleTypes.WALK_TARGET, new WalkTarget(target, 1.2F, 1));
+        if (brain.checkMemory(MemoryModuleType.WALK_TARGET, MemoryStatus.REGISTERED))
+            brain.setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(target, 1.2F, 1));
         mob.getLookControl().setLookAt(target, 30, 30);
         if (mob.tickCount % 10 == 0) mob.getNavigation().moveTo(target, 1.2);
         mob.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 1.2);
