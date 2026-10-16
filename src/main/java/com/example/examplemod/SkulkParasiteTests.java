@@ -192,7 +192,9 @@ public final class SkulkParasiteTests {
             var entity = type.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
             if (!(entity instanceof net.minecraft.world.entity.Mob host)) continue;
             if (!SkulkStatus.supports(type)) {
-                require(helper, !SkulkParasite.isSupportedHost(host), "Boss/custom exclusions: " + type);
+                require(helper, !SkulkParasite.isSupportedHost(host), "Infection exclusions: " + type);
+                if (net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(type).getNamespace().equals("minecraft"))
+                    verifyImmuneHost(helper, host);
                 host.discard();
                 continue;
             }
@@ -278,9 +280,57 @@ public final class SkulkParasiteTests {
             }
             second.discard(); host.discard(); restored.discard(); checked++;
         }
-        require(helper, checked > 70, "All native mob families must be exercised; tested " + checked);
+        require(helper, checked >= 60, "All native mob families must be exercised; tested " + checked);
         target.discard();
         ExampleMod.LOGGER.info("SCULK ALL-MOBS: {} supported mob types preserve their identity and data", checked);
+    }
+
+    private static void verifyImmuneHost(GameTestHelper helper, net.minecraft.world.entity.Mob host) {
+        var type=host.getType();
+        var parasite=ExampleMod.SKULK_PARASITE.get().create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+        require(helper, SkulkInfection.infect(parasite,host)==null && !parasite.isRemoved(),
+                "Immune hosts must reject infection without consuming the parasite: "+type);
+        SkulkStatus.infect(host);
+        require(helper, !SkulkStatus.infected(host),"Direct infection must respect immunity: "+type);
+        parasite.discard();
+        host.setNoAi(true);
+        host.setCustomName(Component.literal("Excluded saved host"));
+        host.setHealth(host.getMaxHealth()*.7F);
+        float health=host.getHealth();
+        var uuid=host.getUUID();
+        var speed=host.getAttribute(Attributes.MOVEMENT_SPEED);
+        var own=Identifier.fromNamespaceAndPath(ExampleMod.MODID,"sculk_speed");
+        var other=Identifier.fromNamespaceAndPath(ExampleMod.MODID,"other_test_speed");
+        double nativeSpeed=speed==null ? 0:speed.getBaseValue();
+        if(speed!=null) {
+            speed.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(own,.3,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            speed.addPermanentModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(other,.2,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
+        // Reproduce a real old save, rather than trying to infect the now-immune mob.
+        host.setData(SkulkStatus.INFECTION, type.getCategory()==MobCategory.MONSTER ? 2:1);
+        var loaded=(net.minecraft.world.entity.Mob)type.create(helper.getLevel(),net.minecraft.world.entity.EntitySpawnReason.LOAD);
+        loaded.load(net.minecraft.world.level.storage.TagValueInput.create(
+                net.minecraft.util.ProblemReporter.DISCARDING,helper.getLevel().registryAccess(),save(helper,host)));
+        require(helper, SkulkStatus.state(loaded)==0 && !SkulkStatus.infected(loaded)
+                && SkulkStatus.damageMultiplier(loaded)==1 && SkulkStatus.experience(loaded,5)==5,
+                "Stale infection must not grant appearance/combat/XP state: "+type);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(loaded));
+        require(helper, loaded.getData(SkulkStatus.INFECTION)==0 && loaded.getUUID().equals(uuid)
+                && loaded.getType()==type && loaded.isNoAi() && loaded.getHealth()==health
+                && loaded.getCustomName().getString().equals("Excluded saved host"),
+                "Old infection cleanup must preserve the original mob and its data: "+type);
+        var restoredSpeed=loaded.getAttribute(Attributes.MOVEMENT_SPEED);
+        if(restoredSpeed!=null) require(helper,!restoredSpeed.hasModifier(own) && restoredSpeed.hasModifier(other)
+                && Math.abs(restoredSpeed.getValue()-nativeSpeed*1.2)<.00001,
+                "Cleanup must remove only the infection speed modifier: "+type);
+        var reloaded=(net.minecraft.world.entity.Mob)type.create(helper.getLevel(),net.minecraft.world.entity.EntitySpawnReason.LOAD);
+        reloaded.load(net.minecraft.world.level.storage.TagValueInput.create(
+                net.minecraft.util.ProblemReporter.DISCARDING,helper.getLevel().registryAccess(),save(helper,loaded)));
+        require(helper, !SkulkStatus.infected(reloaded) && reloaded.getData(SkulkStatus.INFECTION)==0,
+                "Clean state must persist after another save/load: "+type);
+        loaded.discard();reloaded.discard();
     }
 
     private static net.minecraft.nbt.CompoundTag save(GameTestHelper helper, net.minecraft.world.entity.Mob mob) {
@@ -318,4 +368,5 @@ public final class SkulkParasiteTests {
         if (!value) throw helper.assertionException(Component.literal(message));
     }
 }
+
 

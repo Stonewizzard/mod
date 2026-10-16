@@ -76,19 +76,24 @@ and combat behavior are unchanged by this visual update.
 
 ## Sculk Parasite
 
-A small, six-legged sculk creature seeks a nearby **Minecraft mob**, leaps onto
+A small, six-legged sculk creature seeks a nearby **eligible Minecraft mob**, leaps onto
 it, and merges into the original host. Infection supports land, flying, aquatic,
 passive, neutral and hostile mobs, plus this mod's Cruncher. **Players, the Ender
-Dragon, Wither and Warden are immune.** Other mods' entities are not automatically
-included. One successful infection consumes one parasite; infected hosts cannot
+Dragon, Wither and Warden are immune.** The following poor fits are also immune:
+
+- Tadpoles, endermites, silverfish, bats, allays and vexes.
+- Ghasts and happy ghasts.
+- Cod, salmon, tropical fish, pufferfish, squid and glow squid.
+- Slimes, magma cubes, blazes, breezes and shulkers.
+
+Other mods' entities are not automatically included. One successful infection consumes one parasite; infected hosts cannot
 be reinfected and do not spread infection by attacking.
 
 - **Hostile hosts:** retain native combat, including ranged attacks, with a 30%
   movement attribute bonus, 50% more damage and double their normal XP drops.
   Ordinary loot and zero-XP rules remain in effect.
 - **Passive/neutral hosts:** chase and attack Survival/Adventure players. Creative
-  and Spectator players are not targets. Their normal movement/navigation is used;
-  bats, happy ghasts and squid also receive pursuit steering.
+  and Spectator players are not targets. Their normal movement/navigation is used.
 - **Preserved data:** infection keeps the exact native entity, UUID, health, name,
   age, equipment, inventory, owner and variant data. It persists through saving and
   loading and follows native conversions such as a zombie becoming a drowned.
@@ -163,7 +168,7 @@ outline bug as a negative control, and checks the cutout pass, draw order, tint,
 invisibility, and outline handling. It uses client-data mode without opening a
 game window. This checks native submissions; in-game pixels still need visual review.
 
-The server regression infects all 88 supported mob types. It checks native data
+The server regression checks every supported and excluded native mob type. It checks native data
 retention, persistence, repeated loading, real damage processing, projectile
 bonuses, XP events, every passive family's contact attack, Creative immunity and
 zombie-to-drowned conversion. Existing spawn, sensor, Sniffer and Cruncher tests
@@ -181,7 +186,13 @@ receive specific adjustments. Panda, Sniffer and Cruncher placement is retained.
 
 ![Parasite attachment clearance preview](docs/visuals/sculk-attachment-fit-preview.png)
 
-The placement regression checks 151 native model layers for sampled intersections
+The placement regression checks eligible native model layers for sampled intersections
 between the parasite's solid body and adjacent host parts. The preview shows native
 meshes and UVs; the trader llama is shown with its base coat, without its blanket.
 In-game lighting and animated poses can differ.
+
+
+Previously infected excluded mobs return to their native appearance and behavior
+on their next server tick, including when loaded from a save with NoAI enabled.
+Cleanup removes the infection marker and its own speed modifier while preserving
+the mob's UUID, name, health, equipment, variants and other attribute modifiers.
