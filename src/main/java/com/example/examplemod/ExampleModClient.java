@@ -60,7 +60,6 @@ public class ExampleModClient {
     @SubscribeEvent
     static void checkSculkRendering(net.neoforged.neoforge.data.event.GatherDataEvent.Client event) {
         if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
-            com.example.examplemod.client.ExcavationApiProbe.run();
             try {
                 com.example.examplemod.client.ArchaeologyTableVisualRegression.run(
                         event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));

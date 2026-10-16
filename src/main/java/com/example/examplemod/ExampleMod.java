@@ -160,6 +160,7 @@ public class ExampleMod {
                         net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent.Operation.REPLACE));
         ENTITIES.register(modEventBus);
         SkulkStatus.register(modEventBus);
+        modEventBus.addListener(ExcavationPayload::register);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
