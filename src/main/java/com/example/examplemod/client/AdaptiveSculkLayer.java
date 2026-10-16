@@ -3,7 +3,6 @@ package com.example.examplemod.client;
 import com.example.examplemod.SkulkStatus;
 import com.example.examplemod.ExampleMod;
 import com.google.common.reflect.TypeToken;
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -147,8 +146,7 @@ public final class AdaptiveSculkLayer<S extends LivingEntityRenderState, M exten
                 try(var input=resources.getResourceOrThrow(source).open()) { base=ImageIO.read(input); }
                 if(base==null) throw new java.io.IOException("Invalid entity skin: "+source);
                 var image=GEOMETRY.computeIfAbsent(root,AdaptiveSculkSkin::new).paint(base,material);
-                var nativeImage=new NativeImage(image.getWidth(),image.getHeight(),false);
-                for(int y=0;y<image.getHeight();y++) for(int x=0;x<image.getWidth();x++) nativeImage.setPixel(x,y,image.getRGB(x,y));
+                var nativeImage=SculkTexturePixels.copy(image);
                 var location=id("dynamic/sculk/"+SKINS.size());
                 minecraft.getTextureManager().register(location,new DynamicTexture(()->"Sculk growth: "+source,nativeImage));
                 return location;

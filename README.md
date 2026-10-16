@@ -197,7 +197,10 @@ outline bug as a negative control, and checks the cutout pass, draw order, tint,
 invisibility, and outline handling. It uses client-data mode without opening a
 game window. This checks native submissions; in-game pixels still need visual review.
 It also checks the bespoke Sniffer/Cruncher adult and baby models across 16 poses,
-including native digging and crunching, bone scales, changing geometry and vein
+and compares actual native upload pixels with Minecraft's PNG decoder for color
+and alpha correctness, including a negative control for the old red/blue swap.
+The animation checks include
+native digging and crunching, bone scales, changing geometry and vein
 frames, localized fullbright passes, and clean/invisible hosts.
 
 The server regression checks every supported and excluded native mob type. It checks native data

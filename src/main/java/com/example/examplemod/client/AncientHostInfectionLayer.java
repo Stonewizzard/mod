@@ -1,6 +1,5 @@
 package com.example.examplemod.client;
 
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -68,8 +67,7 @@ public final class AncientHostInfectionLayer<S extends LivingEntityRenderState,M
 
     private static Identifier upload(String name,BufferedImage image) {
         var id=Identifier.fromNamespaceAndPath("examplemod","dynamic/ancient_infection/"+name);
-        var pixels=new NativeImage(image.getWidth(),image.getHeight(),false);
-        for(int y=0;y<image.getHeight();y++)for(int x=0;x<image.getWidth();x++)pixels.setPixel(x,y,image.getRGB(x,y));
+        var pixels=SculkTexturePixels.copy(image);
         Minecraft.getInstance().getTextureManager().register(id,new DynamicTexture(()->"Ancient host infection: "+name,pixels));
         LIVE_TEXTURES.add(id);return id;
     }
