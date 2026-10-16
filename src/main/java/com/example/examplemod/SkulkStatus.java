@@ -43,8 +43,7 @@ public final class SkulkStatus {
             EntityTypes.ENDERMITE, EntityTypes.SILVERFISH,
             EntityTypes.COD, EntityTypes.SALMON, EntityTypes.TROPICAL_FISH, EntityTypes.PUFFERFISH,
             EntityTypes.SQUID, EntityTypes.GLOW_SQUID,
-            EntityTypes.BAT, EntityTypes.ALLAY, EntityTypes.VEX,
-            EntityTypes.SLIME, EntityTypes.MAGMA_CUBE, EntityTypes.BLAZE, EntityTypes.BREEZE, EntityTypes.SHULKER);
+            EntityTypes.BAT, EntityTypes.ALLAY, EntityTypes.VEX);
 
     private SkulkStatus() {}
 

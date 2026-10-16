@@ -84,9 +84,10 @@ Dragon, Wither and Warden are immune.** The following poor fits are also immune:
 - Tadpoles, endermites, silverfish, bats, allays and vexes.
 - Ghasts and happy ghasts.
 - Cod, salmon, tropical fish, pufferfish, squid and glow squid.
-- Slimes, magma cubes, blazes, breezes and shulkers.
 
-Other mods' entities are not automatically included. One successful infection consumes one parasite; infected hosts cannot
+Slimes, magma cubes, blazes, breezes and shulkers remain infectable.
+Other mods' entities are not automatically included. One successful infection
+consumes one parasite; infected hosts cannot
 be reinfected and do not spread infection by attacking.
 
 - **Hostile hosts:** retain native combat, including ranged attacks, with a 30%
