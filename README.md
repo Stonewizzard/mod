@@ -76,18 +76,25 @@ and combat behavior are unchanged by this visual update.
 
 ## Skulk Parasite
 
-A small, six-legged sculk creature seeks a nearby **vanilla zombie or cow**, leaps
-onto it, and merges into that host. One successful infection consumes the parasite.
-Players and other mob types cannot be infected, and infected hosts cannot be
-infected again. A host does not spread infection by attacking.
+A small, six-legged sculk creature seeks a nearby **Minecraft mob**, leaps onto
+it, and merges into the original host. Infection supports land, flying, aquatic,
+passive, neutral and hostile mobs, plus this mod's Cruncher. **Players, the Ender
+Dragon, Wither and Warden are immune.** Other mods' entities are not automatically
+included. One successful infection consumes one parasite; infected hosts cannot
+be reinfected and do not spread infection by attacking.
 
-- **Skulk Zombie:** keeps zombie behavior, with 30% faster base movement, 50%
-  stronger base attacks, and 10 base XP instead of 5. Equipment and difficulty
-  still affect combat and XP under the normal rules.
-- **Skulk Cow:** keeps the cow body and ordinary cow loot, but chases and attacks
-  Survival/Adventure players. Creative and Spectator players are not targets.
-- Infection survives saving/loading. Names, equipment, age, health and other
-  standard conversion data are carried over; infection is not a host death.
+- **Hostile hosts:** retain native combat, including ranged attacks, with a 30%
+  movement attribute bonus, 50% more damage and double their normal XP drops.
+  Ordinary loot and zero-XP rules remain in effect.
+- **Passive/neutral hosts:** chase and attack Survival/Adventure players. Creative
+  and Spectator players are not targets. Their normal movement/navigation is used;
+  bats, happy ghasts and squid also receive pursuit steering.
+- **Preserved data:** infection keeps the exact native entity, UUID, health, name,
+  age, equipment, inventory, owner and variant data. It persists through saving and
+  loading and follows native conversions such as a zombie becoming a drowned.
+  Infection does not kill the host or duplicate its drops. NoAI remains respected.
+- **Save compatibility:** existing Skulk Cow and Skulk Zombie entity IDs and their
+  renderers remain available. New infections stay on the native entity type.
 
 Parasites naturally spawn **only in the Deep Dark or Ancient Cities**,
 one at a time. An otherwise-valid natural spawn has a **1-in-10 chance**, and
@@ -97,9 +104,8 @@ The Ancient City entry is required because cities override biome spawning with
 an empty monster list; it uses the same rarity and population checks.
 Parasites produce no movement vibrations and their own vibrations are ignored
 by sculk sensors and other vibration listeners, like the Warden's. Infected
-zombies and cows still produce their normal vibrations. Spawn eggs and commands can place them anywhere for testing.
-Only the parasite has a creative spawn egg; the two infected host types are
-created by infection. Find **Skulk Parasite Spawn Egg** in Spawn Eggs or Example
+hosts still produce their normal vibrations. Spawn eggs and commands can place them anywhere for testing.
+Use the native mob spawn eggs and infect their hosts with a parasite. Find **Skulk Parasite Spawn Egg** in Spawn Eggs or Example
 Mod Tab, or use `/give @s examplemod:skulk_parasite_spawn_egg`.
 
 For a quick test, put a zombie or cow and a parasite in a small enclosure.
@@ -108,11 +114,24 @@ Use `/summon examplemod:skulk_parasite`, `/summon minecraft:zombie`, or
 infected cow attack. `/locate biome minecraft:deep_dark` and
 `/locate structure minecraft:ancient_city` help find natural habitat.
 
-Infected hosts keep their native skins beneath patches of sculk. Growth spreads
-from a zombie's shoulder across part of the face, shirt, and upper legs, or along
-a cow's spine, both flanks, face, and upper legs. One eye turns cyan while the other stays normal. Raised
-roots and small sculk plates join these patches to the parasite embedded in the
-host. Most skin, clothing, coat markings, and legs remain visible.
+Infected hosts keep their native skins beneath connected patches of sculk. Cow
+and zombie infections retain the approved shoulder/spine growth and fitted baby
+attachments. Other mobs project the same sculk tissue through their own model
+geometry and UV coordinates. The attached parasite follows an animated body bone,
+with its size and surface orientation fitted to the host. Native fur and clothing
+layers receive matching growth; sheep retain wool colors and shearing behavior.
+
+Cow, chicken and pig biome variants, pet coats, fish patterns and other native
+appearance data remain native. Resource-pack skins remain visible outside the
+sculk patches; the projection respects their image dimensions and alpha holes.
+Masks are cached per model/skin and rebuilt when resources reload. Armor and
+other equipment can cover growth naturally. Infection does not force a glowing
+outline or a blue tint over the entire mob.
+
+![Native model previews of nine expanded host families](docs/visuals/sculk-all-mobs-preview.png)
+
+This is a software preview exported from native model vertices and UVs. Sheep
+is shown sheared. Minecraft lighting and animated poses can differ.
 
 The parasite combines a broad, ridged carapace, six bent supporting legs, two
 pale sensory horns, and bone pincers with four fine curling tentacles. The free
@@ -136,8 +155,9 @@ This is a software preview using the model UVs; Minecraft lighting can differ.
 
 
 Run `./gradlew runSculkRenderCheck` (Windows: `.\\gradlew.bat runSculkRenderCheck`)
-for the headless client render-submission regression. It bakes the native adult
-and baby host models, loads the packaged growth textures, reproduces the old
+for the headless client render-submission regression. It checks 301 native mob
+model layers and 16 cow/chicken variant skins, loads the packaged growth textures, reproduces the old
 outline bug as a negative control, and checks the cutout pass, draw order, tint,
 invisibility, and outline handling. It uses client-data mode without opening a
 game window. This checks native submissions; in-game pixels still need visual review.
+

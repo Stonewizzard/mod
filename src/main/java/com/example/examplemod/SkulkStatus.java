@@ -32,7 +32,7 @@ public final class SkulkStatus {
             NeoForgeRegistries.Keys.ATTACHMENT_TYPES, ExampleMod.MODID);
     public static final Supplier<AttachmentType<Integer>> INFECTION = TYPES.register("sculk_infection", () ->
             AttachmentType.builder(() -> 0).serialize(Codec.intRange(0, 2).fieldOf("state"), v -> v != 0)
-                    .sync(ByteBufCodecs.VAR_INT).build());
+                    .copyOnDeath().sync(ByteBufCodecs.VAR_INT).build());
     private static final Identifier SPEED = Identifier.fromNamespaceAndPath(ExampleMod.MODID, "sculk_speed");
     private static final Set<Mob> INSTALLED = Collections.newSetFromMap(new WeakHashMap<>());
 
@@ -70,6 +70,9 @@ public final class SkulkStatus {
 
     private static void install(Mob mob) {
         if (!INSTALLED.add(mob)) return;
+        // Native transformations (for example zombie -> drowned) carry the marker.
+        int kind = mob instanceof Enemy || mob.getType().getCategory() == MobCategory.MONSTER ? 2 : 1;
+        if (state(mob) != kind) mob.setData(INFECTION, kind);
         if (state(mob) == 2) {
             speed(mob.getAttribute(Attributes.MOVEMENT_SPEED));
             speed(mob.getAttribute(Attributes.FLYING_SPEED));
@@ -120,8 +123,9 @@ public final class SkulkStatus {
         mob.getLookControl().setLookAt(target, 30, 30);
         if (mob.tickCount % 10 == 0) mob.getNavigation().moveTo(target, 1.2);
         mob.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 1.2);
-        if (mob instanceof Bat bat) {
-            bat.setResting(false);
+        if (mob instanceof Bat || mob.getType()==EntityTypes.HAPPY_GHAST
+                || ((mob.getType()==EntityTypes.SQUID || mob.getType()==EntityTypes.GLOW_SQUID) && mob.isInWater())) {
+            if (mob instanceof Bat bat) bat.setResting(false);
             var direction = target.getEyePosition().subtract(mob.position());
             mob.setDeltaMovement(mob.getDeltaMovement().scale(0.75).add(direction.normalize().scale(0.09)));
         }

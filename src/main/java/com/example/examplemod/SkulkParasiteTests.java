@@ -26,7 +26,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 
-/** Tests actual conversion and AI, not just registration or data-file shape. */
+/** Exercise native infection, persistence, combat hooks, AI, spawning and vibrations. */
 public final class SkulkParasiteTests {
     public static void register(RegisterGameTestsEvent event) {
         Holder<TestEnvironmentDefinition<?>> environment = event.registerEnvironment(
@@ -204,11 +204,28 @@ public final class SkulkParasiteTests {
                     "Speed bonus must apply exactly once: " + type);
             require(helper, SkulkStatus.damageMultiplier(host) == (hostile ? 1.5F : 1)
                     && SkulkStatus.experience(host, 5) == (hostile ? 10 : 5), "Hostile rewards/damage: " + type);
+            var victim = EntityTypes.COW.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
+            victim.setNoAi(true);
+            float victimHealth = victim.getHealth();
+            victim.hurtServer(helper.getLevel(), host.damageSources().mobAttack(host), 2);
+            require(helper, Math.abs(victimHealth-victim.getHealth()-(hostile ? 3 : 2))<.0001,
+                    "Actual damage pipeline must apply the hostile bonus once: " + type);
+            victim.discard();
+            var xp = new net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent(host, null, 5);
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(xp);
+            require(helper, xp.getDroppedExperience()==(hostile ? 10 : 5), "XP event hook: " + type);
+            var zero = new net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent(host, null, 0);
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(zero);
+            require(helper, zero.getDroppedExperience()==0, "Zero-XP drops must remain zero: " + type);
             var restored = (net.minecraft.world.entity.Mob) type.create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
             restored.load(net.minecraft.world.level.storage.TagValueInput.create(
                     net.minecraft.util.ProblemReporter.DISCARDING, helper.getLevel().registryAccess(), infectedData));
             require(helper, SkulkStatus.infected(restored) && restored.getUUID().equals(uuid)
                     && restored.getType() == type && !SkulkStatus.canInfect(restored), "Persistent infection: " + type);
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(restored));
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(restored));
+            require(helper, Math.abs(restored.getAttributeValue(Attributes.MOVEMENT_SPEED)-host.getAttributeValue(Attributes.MOVEMENT_SPEED))<.00001,
+                    "Loading/ticking must not stack speed modifiers: " + type);
             var second = ExampleMod.SKULK_PARASITE.get().create(helper.getLevel(), net.minecraft.world.entity.EntitySpawnReason.LOAD);
             require(helper, SkulkInfection.infect(second, host) == null && !second.isRemoved(), "Prevent repeat infection: " + type);
             second.discard(); host.discard(); restored.discard(); checked++;

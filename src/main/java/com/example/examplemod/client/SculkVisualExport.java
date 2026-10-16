@@ -28,7 +28,7 @@ final class SculkVisualExport {
                     .filter(e->!e.getKey().getPath().contains("baby") && !e.getKey().getPath().contains("eyes")
                             && !e.getKey().getPath().contains("angry") && !e.getKey().getPath().contains("tame")
                             && !e.getKey().getPath().contains("wool"))
-                    .sorted(java.util.Comparator.comparing(e->e.getKey().toString())).findFirst();
+                    .sorted(java.util.Comparator.comparingInt(e->e.getKey().getPath().endsWith("/"+kind+".png")?0:1)).findFirst();
             if(layer.isEmpty() || skin.isEmpty())continue;
             var geometry=new AdaptiveSculkSkin(layer.get().getValue().bakeRoot());
             BufferedImage base;try(var in=skin.get().getValue().open()){base=ImageIO.read(in);}
