@@ -38,7 +38,8 @@ public final class ExcavationTests {
             var table=ArchaeologyTableBlock.inventory(level,pos);var artifact=new ItemStack(ExampleMod.ANCIENT_ARTIFACT.get());
             artifact.set(DataComponents.CUSTOM_NAME,Component.literal("Saved specimen"));
             var custom=new net.minecraft.nbt.CompoundTag();custom.putString("unrelated","preserved");artifact.set(DataComponents.CUSTOM_DATA,CustomData.of(custom));table.setItem(0,artifact);
-            var menu=new ArchaeologyTableMenu(22,player.getInventory(),table),collaborator=new ArchaeologyTableMenu(23,other.getInventory(),table);
+            var menu=new ArchaeologyTableMenu(22,player.getInventory(),table);
+            var collaborator=new ArchaeologyTableMenu(23,other.getInventory(),table);
             require(helper,!menu.studyAction(player,1,CENTER),"A packet must not operate a menu the sender has not opened");
             var old=player.containerMenu;var oldOther=other.containerMenu;player.containerMenu=menu;other.containerMenu=collaborator;
             require(helper,!menu.studyAction(player,1,CENTER),"A missing field-kit tool must block excavation");
