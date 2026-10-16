@@ -58,6 +58,3 @@ jobs:
           ./gradlew runSculkRenderCheck
           test -f run/sculk-render-check-passed.txt
 
-
-      - name: Inspect native infection and model APIs
-        run: ./gradlew inspectExpandedInfectionApi --no-configuration-cache

@@ -41,11 +41,61 @@ public final class SculkRenderRegression {
                     new CowRenderState(), true, false, resources);
             verify(new BabyCowModel(BabyCowModel.createBodyLayer().bakeRoot()),
                     new CowRenderState(), true, true, resources);
+            verifyAdaptiveModels(resources);
             Files.writeString(Path.of("sculk-render-check-passed.txt"), "PASS\n");
             System.out.println("SCULK_RENDER_CHECK: PASS: native adult/baby models, packaged textures, cutout order, tint, outline state, invisibility, and legacy negative control");
         } catch (Exception failure) {
             throw new IllegalStateException("Sculk render regression failed", failure);
         }
+    }
+
+    private static void verifyAdaptiveModels(ResourceManager resources) throws Exception {
+        java.awt.image.BufferedImage tissue;
+        try (var input=resources.getResourceOrThrow(Identifier.fromNamespaceAndPath("examplemod",
+                "textures/entity/sculk_growth_material.png")).open()) { tissue=ImageIO.read(input); }
+        var white=new java.awt.image.BufferedImage(128,128,java.awt.image.BufferedImage.TYPE_INT_ARGB);
+        for(int y=0;y<128;y++) for(int x=0;x<128;x++) white.setRGB(x,y,0xffffffff);
+        int models=0,variantSkins=0;
+        var roots=net.minecraft.client.model.geom.LayerDefinitions.createRoots();
+        for(var entry:roots.entrySet()) {
+            var root=entry.getValue().bakeRoot();
+            var before=root.getAllParts().stream().map(net.minecraft.client.model.geom.ModelPart::storePose).toList();
+            var geometry=new AdaptiveSculkSkin(root);
+            require(before.equals(root.getAllParts().stream().map(net.minecraft.client.model.geom.ModelPart::storePose).toList()),
+                    "Projection must not mutate the native pose: "+entry.getKey());
+            if(geometry.anchor==null) continue;
+            require(Float.isFinite(geometry.scale) && geometry.scale>0 && geometry.scale<=.9F,
+                    "Invalid parasite attachment scale: "+entry.getKey());
+            var painted=geometry.paint(white,tissue);
+            int covered=0;
+            for(int y=0;y<128;y++) for(int x=0;x<128;x++) if((painted.getRGB(x,y)>>>24)!=0) covered++;
+            require(covered>0,"Native UV projection has no growth: "+entry.getKey());
+            models++;
+        }
+        // Real variant sheets include adult/baby cow and chicken UV layouts, and resource alpha.
+        var cow=new AdaptiveSculkSkin(CowModel.createBodyLayer().bakeRoot());
+        var chickenEntry=roots.entrySet().stream().filter(e->e.getKey().toString().equals("minecraft:chicken#main")).findFirst();
+        require(chickenEntry.isPresent(),"Native chicken model must be available");
+        var chicken=new AdaptiveSculkSkin(chickenEntry.orElseThrow().getValue().bakeRoot());
+        for(var entry:resources.listResources("textures/entity",p->p.getPath().endsWith(".png")).entrySet()) {
+            String path=entry.getKey().getPath();
+            if(!path.contains("/cow/") && !path.contains("/chicken/")) continue;
+            java.awt.image.BufferedImage base;
+            try(var input=entry.getValue().open()) { base=ImageIO.read(input); }
+            var output=(path.contains("/cow/")?cow:chicken).paint(base,tissue);
+            int exposed=0,covered=0;
+            for(int y=0;y<base.getHeight();y++) for(int x=0;x<base.getWidth();x++) {
+                int alpha=output.getRGB(x,y)>>>24;
+                require(alpha==0||alpha==255,"Cutout masks must stay crisp: "+path);
+                require(alpha==0||(base.getRGB(x,y)>>>24)>=128,"Growth must not fill native transparent holes: "+path);
+                if(alpha==0 && (base.getRGB(x,y)>>>24)>=128)exposed++;
+                if(alpha==255)covered++;
+            }
+            require(exposed>0 && covered>0,"Variant must retain native skin around sculk: "+path);
+            variantSkins++;
+        }
+        require(models>100 && variantSkins>=6,"Expected all model families and biome variants");
+        System.out.println("SCULK_ADAPTIVE_CHECK: PASS: "+models+" native model layers and "+variantSkins+" cow/chicken variant skins");
     }
 
     private static <S extends LivingEntityRenderState, M extends EntityModel<? super S>> void verify(
@@ -124,3 +174,4 @@ public final class SculkRenderRegression {
 
     private record Draw(RenderType type, int tint, int outline, int order) {}
 }
+

@@ -119,7 +119,7 @@ public final class AdaptiveSculkLayer<S extends LivingEntityRenderState, M exten
             stack.mulPose(new Matrix4f(pose.pose()));
             var anchor=new Vector3f(geometry.localAnchor).fma(2.1F*geometry.scale,geometry.normal).div(16);
             stack.translate(anchor.x,anchor.y,anchor.z);
-            stack.mulPose(new Quaternionf().rotationTo(new Vector3f(0,-1,0),geometry.normal));
+            stack.mulPose(new Matrix4f().rotation(new Quaternionf().rotationTo(new Vector3f(0,-1,0),geometry.normal)));
             stack.scale(geometry.scale,geometry.scale,geometry.scale);
             collector.order(3).submitModel(parasite,state,stack,RenderTypes.entityCutoutZOffset(PARASITE),
                     light,LivingEntityRenderer.getOverlayCoords(state,0),-1,null,state.outlineColor);

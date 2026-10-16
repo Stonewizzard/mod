@@ -195,22 +195,3 @@ neoForge.runs.named('sculkRenderCheck') {
     logLevel = org.slf4j.event.Level.INFO
 }
 
-
-// Temporary native API inspection for the infection expansion.
-tasks.register('inspectExpandedInfectionApi', Exec) {
-    doFirst {
-        def runtime = project.sourceSets.main.compileClasspath
-        def names = ['Mob', 'EntityType', 'ModelPart', 'ModelPart$Cube', 'ModelPart$Visitor', 'VertexConsumer', 'NativeImage', 'DynamicTexture', 'TextureManager', 'AttributeInstance', 'Bat', 'DefaultAttributes', 'Brain', 'LivingEntityRenderer', 'EntityModel', 'Model', 'ModelPart$Polygon', 'ModelPart$Vertex', 'SheepWoolLayer', 'SkeletonClothingLayer', 'LayerDefinitions', 'VertexConsumer', 'ContextKey', 'MemoryModuleTypes', 'Enemy'] as Set
-        def classes = []
-        runtime.files.findAll { it.name.endsWith('.jar') }.each { file ->
-            def archive = new java.util.zip.ZipFile(file)
-            archive.entries().each { entry ->
-                def simpleName = entry.name.tokenize('/').last().replace('.class', '')
-                if ((entry.name.startsWith('net/minecraft/') || entry.name.startsWith('com/mojang/')) && entry.name.endsWith('.class') && names.contains(simpleName)) classes.add(entry.name.replace('/', '.').replace('.class', ''))
-            }
-            archive.close()
-        }
-        commandLine project.javaToolchains.launcherFor(project.java.toolchain).get().metadata.installationPath.file('bin/javap').asFile,
-                '-p', '-classpath', runtime.asPath, *classes
-    }
-}
