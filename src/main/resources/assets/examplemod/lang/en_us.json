@@ -18,6 +18,18 @@
   "entity.examplemod.skulk_parasite": "Sculk Parasite",
   "entity.examplemod.skulk_zombie": "Sculk Zombie",
   "entity.examplemod.skulk_cow": "Sculk Cow",
-  "item.examplemod.skulk_parasite_spawn_egg": "Sculk Parasite Spawn Egg"
+  "item.examplemod.skulk_parasite_spawn_egg": "Sculk Parasite Spawn Egg",
+  "block.examplemod.archaeology_table": "Archaeology Table",
+  "container.examplemod.archaeology_table": "Archaeology Table",
+  "item.examplemod.archaeology_drill": "Archaeology Drill",
+  "item.examplemod.archaeology_hammer": "Archaeology Hammer",
+  "item.examplemod.magnifying_glass": "Magnifying Glass",
+  "gui.examplemod.artifact": "Artifact",
+  "gui.examplemod.field_kit": "Field Kit",
+  "gui.examplemod.table_slot.0": "Artifact — Sniffer or Cruncher finds",
+  "gui.examplemod.table_slot.1": "Archaeology Drill",
+  "gui.examplemod.table_slot.2": "Brush",
+  "gui.examplemod.table_slot.3": "Archaeology Hammer",
+  "gui.examplemod.table_slot.4": "Magnifying Glass"
 }
 

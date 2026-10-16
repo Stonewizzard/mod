@@ -100,6 +100,19 @@ public class ExampleMod {
     // Placeholder reward; future artifact components can be selected by the debris loot modifier.
     public static final DeferredItem<Item> ANCIENT_ARTIFACT = ITEMS.registerSimpleItem("ancient_artifact");
 
+    public static final DeferredBlock<ArchaeologyTableBlock> ARCHAEOLOGY_TABLE=BLOCKS.registerBlock(
+            "archaeology_table",ArchaeologyTableBlock::new,p->p.strength(2.0F).sound(net.minecraft.world.level.block.SoundType.WOOD).noOcclusion());
+    public static final DeferredItem<BlockItem> ARCHAEOLOGY_TABLE_ITEM=ITEMS.registerSimpleBlockItem("archaeology_table",ARCHAEOLOGY_TABLE);
+    public static final DeferredItem<Item> ARCHAEOLOGY_DRILL=ITEMS.registerSimpleItem("archaeology_drill",p->p.stacksTo(1));
+    public static final DeferredItem<Item> ARCHAEOLOGY_HAMMER=ITEMS.registerSimpleItem("archaeology_hammer",p->p.stacksTo(1));
+    public static final DeferredItem<Item> MAGNIFYING_GLASS=ITEMS.registerSimpleItem("magnifying_glass",p->p.stacksTo(1));
+    public static final DeferredRegister<net.minecraft.world.level.block.entity.BlockEntityType<?>> BLOCK_ENTITIES=DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE,MODID);
+    public static final DeferredHolder<net.minecraft.world.level.block.entity.BlockEntityType<?>,net.minecraft.world.level.block.entity.BlockEntityType<ArchaeologyTableBlockEntity>> ARCHAEOLOGY_TABLE_ENTITY=
+            BLOCK_ENTITIES.register("archaeology_table",()->new net.minecraft.world.level.block.entity.BlockEntityType<>(ArchaeologyTableBlockEntity::new,ARCHAEOLOGY_TABLE.get()));
+    public static final DeferredRegister<net.minecraft.world.inventory.MenuType<?>> MENUS=DeferredRegister.create(Registries.MENU,MODID);
+    public static final DeferredHolder<net.minecraft.world.inventory.MenuType<?>,net.minecraft.world.inventory.MenuType<ArchaeologyTableMenu>> ARCHAEOLOGY_TABLE_MENU=
+            MENUS.register("archaeology_table",()->new net.minecraft.world.inventory.MenuType<>(ArchaeologyTableMenu::new,net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
+
     // Keep the original saved ID so existing Example Blocks become Sniffer Heads.
     public static final DeferredBlock<SnifferSkullBlock> SNIFFER_SKULL = BLOCKS.registerBlock(
             "example_block", SnifferSkullBlock::new,
@@ -125,6 +138,10 @@ public class ExampleMod {
                 output.accept(SKULK_PARASITE_SPAWN_EGG.get());
                 output.accept(ANCIENT_GEODE_ITEM.get());
                 output.accept(RARE_ANCIENT_ARTIFACT.get());
+                output.accept(ARCHAEOLOGY_TABLE_ITEM.get());
+                output.accept(ARCHAEOLOGY_DRILL.get());
+                output.accept(ARCHAEOLOGY_HAMMER.get());
+                output.accept(MAGNIFYING_GLASS.get());
             }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -151,12 +168,15 @@ public class ExampleMod {
             modEventBus.addListener(SnifferDebrisTests::register);
             modEventBus.addListener(CruncherTests::register);
             modEventBus.addListener(SkulkParasiteTests::register);
+            modEventBus.addListener(ArchaeologyTableTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
         BLOCKS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
+        BLOCK_ENTITIES.register(modEventBus);
+        MENUS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
         LOOT_MODIFIERS.register(modEventBus);
@@ -199,6 +219,12 @@ public class ExampleMod {
         } else if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
             event.accept(CRUNCHER_EGG_ITEM);
             event.accept(ANCIENT_GEODE_ITEM);
+        } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+            event.accept(ARCHAEOLOGY_TABLE_ITEM);
+        } else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            event.accept(ARCHAEOLOGY_DRILL);
+            event.accept(ARCHAEOLOGY_HAMMER);
+            event.accept(MAGNIFYING_GLASS);
         }
     }
 
