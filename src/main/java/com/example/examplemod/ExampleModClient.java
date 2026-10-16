@@ -40,6 +40,7 @@ public class ExampleModClient {
 
     @SubscribeEvent
     static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ExampleMod.ARCHAEOLOGY_TABLE_ENTITY.get(),com.example.examplemod.client.ArchaeologyTableRenderer::new);
         event.registerEntityRenderer(ExampleMod.CRUNCHER.get(), CruncherRenderer::new);
         event.registerEntityRenderer(ExampleMod.SKULK_PARASITE.get(), SkulkParasiteRenderer::new);
         event.registerEntityRenderer(ExampleMod.SKULK_ZOMBIE.get(), SkulkZombieRenderer::new);
@@ -59,7 +60,6 @@ public class ExampleModClient {
     @SubscribeEvent
     static void checkSculkRendering(net.neoforged.neoforge.data.event.GatherDataEvent.Client event) {
         if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
-            com.example.examplemod.client.ArcheologyApiProbe.run();
             com.example.examplemod.client.SculkRenderRegression.run(
                     event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
         }
@@ -70,6 +70,11 @@ public class ExampleModClient {
         // Some client setup code
         ExampleMod.LOGGER.info("HELLO FROM CLIENT SETUP");
         ExampleMod.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+    }
+
+    @SubscribeEvent
+    static void registerTableScreen(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event){
+        event.register(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),com.example.examplemod.client.ArchaeologyTableScreen::new);
     }
 }
 
