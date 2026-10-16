@@ -42,6 +42,7 @@ public final class SculkRenderRegression {
             verify(new BabyCowModel(BabyCowModel.createBodyLayer().bakeRoot()),
                     new CowRenderState(), true, true, resources);
             verifyAdaptiveModels(resources);
+            SculkAttachmentFitRegression.run();
             if (Boolean.getBoolean("examplemod.sculkVisualExport")) SculkVisualExport.write(resources);
             Files.writeString(Path.of("sculk-render-check-passed.txt"), "PASS\n");
             System.out.println("SCULK_RENDER_CHECK: PASS: native adult/baby models, packaged textures, cutout order, tint, outline state, invisibility, and legacy negative control");
@@ -180,4 +181,5 @@ public final class SculkRenderRegression {
 
     private record Draw(RenderType type, int tint, int outline, int order) {}
 }
+
 

@@ -21,7 +21,7 @@ final class SculkVisualExport {
         try(var in=resources.getResourceOrThrow(Identifier.fromNamespaceAndPath("examplemod","textures/entity/skulk_parasite.png")).open()) { parasiteSkin=ImageIO.read(in); }
         var mesh=new MeshDefinition(); SkulkParasiteGeometry.addParasite(mesh.getRoot(),"parasite",PartPose.ZERO);
         var parasite=new AdaptiveSculkSkin(LayerDefinition.create(mesh,64,64).bakeRoot());
-        for(String kind:new String[]{"chicken","pig","sheep","skeleton","spider","bee","axolotl","wolf","sniffer"}) {
+        for(String kind:new String[]{"llama","iron_golem","panda","trader_llama","camel","snow_golem","ravager","horse","polar_bear","copper_golem"}) {
             var layer=roots.entrySet().stream().filter(e->e.getKey().toString().equals("minecraft:"+kind+"#main")).findFirst();
             var skin=textures.entrySet().stream().filter(e->e.getKey().getPath().contains("/"+kind+"/")
                     || e.getKey().getPath().endsWith("/"+kind+".png"))
@@ -38,9 +38,9 @@ final class SculkVisualExport {
             var root=new JsonObject();root.addProperty("name",kind);root.addProperty("source",skin.get().getKey().toString());
             root.addProperty("skin",png(composite));root.addProperty("parasiteSkin",png(parasiteSkin));
             root.add("host",faces(geometry,new Matrix4f()));
-            var transform=new Matrix4f(geometry.anchor.transform());
-            var point=new Vector3f(geometry.localAnchor).fma(2.1F*geometry.scale,geometry.normal).div(16);
-            transform.translate(point).rotate(new Quaternionf().rotationTo(new Vector3f(0,-1,0),geometry.normal)).scale(geometry.scale);
+            var type=net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.withDefaultNamespace(kind));
+            var placement=SculkAttachmentPlacement.fit(geometry,type);
+            var transform=placement.transform(geometry);
             root.add("parasite",faces(parasite,transform));
             System.out.println("SCULK_VISUAL_EXPORT:"+new Gson().toJson(root));
         }
@@ -63,3 +63,4 @@ final class SculkVisualExport {
         return faces;
     }
 }
+

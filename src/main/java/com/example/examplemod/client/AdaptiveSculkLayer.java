@@ -43,6 +43,8 @@ public final class AdaptiveSculkLayer<S extends LivingEntityRenderState, M exten
     private final SkulkParasiteModel parasite;
     private final SkulkAttachmentLayer<S,M> approved;
     private final List<Outer> outers;
+    private final EntityType<?> hostType;
+    private final Map<ModelPart,SculkAttachmentPlacement> placements = new IdentityHashMap<>();
     private record SkinKey(ModelPart root, Identifier source) {}
     private record Outer(EntityModel<?> adult, EntityModel<?> baby, Identifier adultSkin, Identifier babySkin, boolean wool) {}
 
@@ -51,6 +53,7 @@ public final class AdaptiveSculkLayer<S extends LivingEntityRenderState, M exten
     private AdaptiveSculkLayer(LivingEntityRenderer<?,S,M> renderer, EntityRenderersEvent.AddLayers event, EntityType<?> type) {
         super(renderer);
         this.renderer=renderer;
+        this.hostType=type;
         var mesh=new MeshDefinition();
         SkulkParasiteGeometry.addParasite(mesh.getRoot(), "parasite", PartPose.ZERO);
         parasite=new SkulkParasiteModel(LayerDefinition.create(mesh,64,64).bakeRoot());
@@ -113,14 +116,15 @@ public final class AdaptiveSculkLayer<S extends LivingEntityRenderState, M exten
     private void attach(EntityModel<?> host,S state,PoseStack stack,SubmitNodeCollector collector,int light) {
         var geometry=GEOMETRY.computeIfAbsent(host.root(),AdaptiveSculkSkin::new);
         if(geometry.anchor==null) return;
+        var placement=placements.computeIfAbsent(host.root(),root->SculkAttachmentPlacement.fit(geometry,hostType));
         host.root().visit(new PoseStack(),(pose,path,index,cube)-> {
             if(!path.equals(geometry.anchor.path()) || index!=geometry.anchor.index()) return;
             stack.pushPose();
             stack.mulPose(new Matrix4f(pose.pose()));
-            var anchor=new Vector3f(geometry.localAnchor).fma(2.1F*geometry.scale,geometry.normal).div(16);
+            var anchor=new Vector3f(placement.point).fma(2.1F*placement.scale,placement.normal).div(16);
             stack.translate(anchor.x,anchor.y,anchor.z);
-            stack.mulPose(new Matrix4f().rotation(new Quaternionf().rotationTo(new Vector3f(0,-1,0),geometry.normal)));
-            stack.scale(geometry.scale,geometry.scale,geometry.scale);
+            stack.mulPose(new Matrix4f().rotation(new Quaternionf().rotationTo(new Vector3f(0,-1,0),placement.normal)));
+            stack.scale(placement.scale,placement.scale,placement.scale);
             collector.order(3).submitModel(parasite,state,stack,RenderTypes.entityCutoutZOffset(PARASITE),
                     light,LivingEntityRenderer.getOverlayCoords(state,0),-1,null,state.outlineColor);
             stack.popPose();
@@ -173,3 +177,4 @@ public final class AdaptiveSculkLayer<S extends LivingEntityRenderState, M exten
         return List.copyOf(result);
     }
 }
+
