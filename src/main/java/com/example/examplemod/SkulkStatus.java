@@ -23,6 +23,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingExperienceDropEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
@@ -43,6 +44,7 @@ public final class SkulkStatus {
         NeoForge.EVENT_BUS.addListener(SkulkStatus::tick);
         NeoForge.EVENT_BUS.addListener(SkulkStatus::damage);
         NeoForge.EVENT_BUS.addListener(SkulkStatus::onExperience);
+        NeoForge.EVENT_BUS.addListener(SkulkStatus::converted);
     }
 
     public static boolean supports(EntityType<?> type) {
@@ -102,6 +104,11 @@ public final class SkulkStatus {
 
     private static void onExperience(LivingExperienceDropEvent event) {
         event.setDroppedExperience(experience(event.getEntity(), event.getDroppedExperience()));
+    }
+
+    private static void converted(LivingConversionEvent.Post event) {
+        if (infected(event.getEntity()) && event.getOutcome() instanceof Mob outcome
+                && outcome.level() instanceof ServerLevel && supports(outcome.getType())) infect(outcome);
     }
 
     private static boolean targetable(Player player) {

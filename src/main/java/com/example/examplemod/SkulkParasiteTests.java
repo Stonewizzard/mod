@@ -266,7 +266,9 @@ public final class SkulkParasiteTests {
                 host.setNoAi(true);
             }
             if (type == EntityTypes.ZOMBIE) {
-                var drowned = host.convertTo(EntityTypes.DROWNED, net.minecraft.world.entity.ConversionParams.single(host, true, true), converted -> {});
+                // ConversionTracker emits this event from the native conversion callback.
+                var drowned = host.convertTo(EntityTypes.DROWNED, net.minecraft.world.entity.ConversionParams.single(host, true, true),
+                        converted -> net.neoforged.neoforge.event.EventHooks.onLivingConvert(host, converted));
                 require(helper, drowned != null && SkulkStatus.infected(drowned),
                         "Native zombie-to-drowned conversion must carry infection");
                 net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.EntityTickEvent.Post(drowned));
