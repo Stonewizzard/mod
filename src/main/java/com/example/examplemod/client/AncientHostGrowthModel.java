@@ -15,12 +15,28 @@ final class AncientHostGrowthModel extends EntityModel<AncientHostGrowthState> {
     private final List<ModelPart> fronds=new ArrayList<>();
     private final List<ModelPart> glands=new ArrayList<>();
     private final List<ModelPart> filaments=new ArrayList<>();
+    private final Map<ModelPart,Fit> fits=new LinkedHashMap<>();
+    private final Fit bodyFit;
+    private record Fit(float x,float y,float z,float sx,float sy,float sz) {
+        static Fit from(ModelPart.Cube cube,float x,float y,float z,float width,float height,float depth) {
+            float sx=(cube.maxX-cube.minX)/width,sy=(cube.maxY-cube.minY)/height,sz=(cube.maxZ-cube.minZ)/depth;
+            return new Fit(cube.minX-x*sx,cube.minY-y*sy,cube.minZ-z*sz,sx,sy,sz);
+        }
+        void apply(ModelPart part){part.x=x;part.y=y;part.z=z;part.xScale=sx;part.yScale=sy;part.zScale=sz;}
+    }
 
-    private AncientHostGrowthModel(ModelPart root,Map<String,ModelPart> sources,String bodyPath) {
+    private AncientHostGrowthModel(ModelPart root,Map<String,ModelPart> sources,String bodyPath,
+            String headPath,AdaptiveSculkSkin geometry,boolean cruncher) {
         super(root);
         this.sources=sources;
         sources.forEach((path,part)->followers.put(path,resolve(root,path)));
         var growth=resolve(root,bodyPath).getChild("infection_growth");
+        var bodyCube=largestCube(geometry,bodyPath);
+        var headCube=largestCube(geometry,headPath);
+        bodyFit=Fit.from(bodyCube,-12.5F,-14,-20,25,29,40);
+        fits.put(growth,bodyFit);
+        fits.put(resolve(root,headPath).getChild("infection_face"),
+                Fit.from(headCube,-6.5F,-7.5F,cruncher?-9.5F:-11.5F,13,cruncher?14:18,11));
         parasite=growth.getChild("colony");
         for(int i=0;i<7;i++)fronds.add(growth.getChild("ridge_"+i));
         for(int i=0;i<4;i++) {
@@ -65,7 +81,7 @@ final class AncientHostGrowthModel extends EntityModel<AncientHostGrowthState> {
         }
         var root=LayerDefinition.create(mesh,128,128).bakeRoot();
         root.setInitialPose(nativeRoot.getInitialPose());
-        return new AncientHostGrowthModel(root,sources,bodyPath);
+        return new AncientHostGrowthModel(root,sources,bodyPath,headPath,geometry,cruncher);
     }
 
     AncientHostGrowthState snapshot(net.minecraft.client.renderer.entity.state.LivingEntityRenderState host,boolean cruncher) {
@@ -73,6 +89,9 @@ final class AncientHostGrowthModel extends EntityModel<AncientHostGrowthState> {
         var poses=new LinkedHashMap<String,PartPose>(); sources.forEach((path,part)->poses.put(path,part.storePose()));
         var visibility=new LinkedHashMap<String,Boolean>();sources.forEach((path,part)->visibility.put(path,part.visible));
         state.visibility=Map.copyOf(visibility);
+        var scales=new LinkedHashMap<String,AncientHostGrowthState.Scale>();
+        sources.forEach((path,part)->scales.put(path,new AncientHostGrowthState.Scale(part.xScale,part.yScale,part.zScale)));
+        state.scales=Map.copyOf(scales);
         state.poses=Map.copyOf(poses);state.ageInTicks=host.ageInTicks;state.isBaby=host.isBaby;
         state.walkAnimationPos=host.walkAnimationPos;state.walkAnimationSpeed=host.walkAnimationSpeed;
         state.cruncher=cruncher;state.outlineColor=host.outlineColor;
@@ -87,10 +106,16 @@ final class AncientHostGrowthModel extends EntityModel<AncientHostGrowthState> {
         followers.forEach((path,part)->{
             part.loadPose(state.poses.getOrDefault(path,part.getInitialPose()));
             part.visible=state.visibility.getOrDefault(path,true);
+            var scale=state.scales.getOrDefault(path,new AncientHostGrowthState.Scale(1,1,1));
+            part.xScale=scale.x();part.yScale=scale.y();part.zScale=scale.z();
         });
+        fits.forEach((part,fit)->fit.apply(part));
         float phase=state.ageInTicks*.09F;
-        parasite.xScale=parasite.yScale=parasite.zScale=1.05F;
-        parasite.y+=Mth.sin(phase)*.07F;
+        float parasiteScale=Math.min(bodyFit.sx,Math.min(bodyFit.sy,bodyFit.sz));
+        parasite.xScale=1.05F*parasiteScale/bodyFit.sx;
+        parasite.yScale=1.05F*parasiteScale/bodyFit.sy;
+        parasite.zScale=1.05F*parasiteScale/bodyFit.sz;
+        parasite.y=-14-(2.3F-Mth.sin(phase)*.07F)*parasiteScale/bodyFit.sy;
         SkulkParasiteGeometry.animate(parasite,phase+state.walkAnimationPos*.25F,
                 .065F+state.walkAnimationSpeed*.06F+state.activity*.11F);
         for(int i=0;i<fronds.size();i++) {
@@ -161,10 +186,11 @@ final class AncientHostGrowthModel extends EntityModel<AncientHostGrowthState> {
 
     private static void leg(PartDefinition parent,AdaptiveSculkSkin.Surface surface,int index) {
         var c=surface.cube();boolean left=surface.transform().m30()>0;
-        float x=left?c.maxX+.1F:c.minX-.7F;
+        float w=(c.maxX-c.minX)/7,h=(c.maxY-c.minY)/10,d=(c.maxZ-c.minZ)/8;
+        float x=left?c.maxX+.1F*w:c.minX-.7F*w;
         var growth=parent.addOrReplaceChild("infection_leg",CubeListBuilder.create().texOffs(70+index%3*12,48)
-                .addBox(x,c.minY+1,c.minZ+1,.6F,3.4F,3.2F),PartPose.ZERO);
-        vessel(growth,"leg_root",new float[][]{{x,c.minY+.2F,c.minZ+2},{x,c.minY+2,c.minZ+1},{x,c.minY+5,c.minZ+.3F}},.32F);
+                .addBox(x,c.minY+h,c.minZ+d,.6F*w,3.4F*h,3.2F*d),PartPose.ZERO);
+        vessel(growth,"leg_root",new float[][]{{x,c.minY+.2F*h,c.minZ+2*d},{x,c.minY+2*h,c.minZ+d},{x,c.minY+5*h,c.minZ+.3F*d}},.32F*Math.min(w,Math.min(h,d)));
     }
 
     private static void vessel(PartDefinition parent,String name,float[][] points,float thickness) {
@@ -182,5 +208,9 @@ final class AncientHostGrowthModel extends EntityModel<AncientHostGrowthState> {
     }
     private static String pathEnding(Map<String,?> paths,String ending) {
         return paths.keySet().stream().filter(p->p.endsWith(ending)).findFirst().orElseThrow(()->new IllegalStateException("Missing native bone "+ending));
+    }
+    private static ModelPart.Cube largestCube(AdaptiveSculkSkin geometry,String path) {
+        return geometry.surfaces.stream().filter(s->s.path().equals(path)).map(AdaptiveSculkSkin.Surface::cube)
+                .max(Comparator.comparingDouble(c->(c.maxX-c.minX)*(c.maxY-c.minY)*(c.maxZ-c.minZ))).orElseThrow();
     }
 }

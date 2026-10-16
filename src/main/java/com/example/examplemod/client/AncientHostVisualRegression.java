@@ -68,6 +68,13 @@ final class AncientHostVisualRegression {
         for(int frame=0;frame<16;frame++) {
             state.ageInTicks=frame*4;state.walkAnimationPos=frame*.75F;state.walkAnimationSpeed=.6F;
             if(state instanceof CruncherRenderState active)active.crunching=frame>=8;
+            if(frame>=8)state.walkAnimationSpeed=0;
+            if(frame==8 && state instanceof SnifferRenderState sniffer) {
+                for(var field:SnifferRenderState.class.getFields()) {
+                    if(field.getName().toLowerCase(Locale.ROOT).contains("dig")
+                            && field.get(sniffer) instanceof net.minecraft.world.entity.AnimationState animation) animation.start(0);
+                }
+            }
             state.outlineColor=frame%2==0?0:0xff36a8c4;
             var draws=new ArrayList<Draw>();
             layer.submit(new PoseStack(),collector(draws,0,uploaded),0,state,0,0);
@@ -82,6 +89,11 @@ final class AncientHostVisualRegression {
             bundle.growth.setupAnim(snapshot);
             for(var entry:snapshot.poses.entrySet())require(AncientHostGrowthModel.resolve(bundle.growth.root(),entry.getKey()).storePose().equals(entry.getValue()),
                     "Growth lost a native bone's pose: "+entry.getKey());
+            for(var entry:snapshot.scales.entrySet()) {
+                var part=AncientHostGrowthModel.resolve(bundle.growth.root(),entry.getKey());var scale=entry.getValue();
+                require(part.xScale==scale.x() && part.yScale==scale.y() && part.zScale==scale.z(),
+                        "Growth lost a native bone's scale: "+entry.getKey());
+            }
             oldMeshes.add(posedFaces(bundle.growth.root()).toString());
             if(Boolean.getBoolean("examplemod.ancientHostVisualExport")) {
                 model.setupAnim(state);bundle.growth.setupAnim(snapshot);

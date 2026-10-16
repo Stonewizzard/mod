@@ -12,8 +12,8 @@ final class AncientHostSkin {
     static Result create(AdaptiveSculkSkin geometry,BufferedImage nativeSkin,BufferedImage material,boolean cruncher) {
         var growth=new BufferedImage(nativeSkin.getWidth(),nativeSkin.getHeight(),BufferedImage.TYPE_INT_ARGB);
         var veins=new BufferedImage(nativeSkin.getWidth(),nativeSkin.getHeight(),BufferedImage.TYPE_INT_ARGB);
-        var body=geometry.surfaces.stream().filter(s->s.path().endsWith("/body")).findFirst().orElseThrow();
-        var head=geometry.surfaces.stream().filter(s->s.path().endsWith("/head")).findFirst().orElseThrow();
+        var body=geometry.surfaces.stream().filter(s->s.path().endsWith("/body")).max(Comparator.comparingDouble(AncientHostSkin::volume)).orElseThrow();
+        var head=geometry.surfaces.stream().filter(s->s.path().endsWith("/head")).max(Comparator.comparingDouble(AncientHostSkin::volume)).orElseThrow();
         var inverseBody=new Matrix4f(body.transform()).invert();
         var inverseHead=new Matrix4f(head.transform()).invert();
         for(var surface:geometry.surfaces)for(var polygon:surface.cube().polygons) {
@@ -37,6 +37,8 @@ final class AncientHostSkin {
                 var p=new Vector3f(a.x()+(b.x()-a.x())*s+(d.x()-a.x())*t,
                         a.y()+(b.y()-a.y())*s+(d.y()-a.y())*t,a.z()+(b.z()-a.z())*s+(d.z()-a.z())*t).div(16);
                 relative.transformPosition(p).mul(16);
+                if(face)normalize(p,head.cube(),-6.5F,-7.5F,cruncher?-9.5F:-11.5F,13,cruncher?14:18,11);
+                else normalize(p,body.cube(),-12.5F,-14,-20,25,29,40);
                 double noise=Math.sin(p.x*.52+Math.sin(p.z*.23)*1.6)+.65*Math.cos(p.y*.61-p.z*.36);
                 double coverage;
                 if(face) {
@@ -70,6 +72,14 @@ final class AncientHostSkin {
             }
         }
         return new Result(growth,veins);
+    }
+
+    private static double volume(AdaptiveSculkSkin.Surface surface) {
+        var c=surface.cube();return (c.maxX-c.minX)*(c.maxY-c.minY)*(c.maxZ-c.minZ);
+    }
+    private static void normalize(Vector3f p,net.minecraft.client.model.geom.ModelPart.Cube c,
+            float x,float y,float z,float width,float height,float depth) {
+        p.set(x+(p.x-c.minX)*width/(c.maxX-c.minX),y+(p.y-c.minY)*height/(c.maxY-c.minY),z+(p.z-c.minZ)*depth/(c.maxZ-c.minZ));
     }
 
     private static final float[][][] BODY_ROUTES={
