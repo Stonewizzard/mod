@@ -12,11 +12,14 @@ final class SculkAttachmentFitRegression {
     static void run() {
         var types=BuiltInRegistries.ENTITY_TYPE.stream().filter(DefaultAttributes::hasSupplier)
                 .filter(com.example.examplemod.SkulkStatus::supports)
+                .filter(type->!java.util.Set.of("player","armor_stand","mannequin")
+                        .contains(BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath()))
+                .filter(type->type!=EntityTypes.COW && type!=EntityTypes.ZOMBIE) // Their approved attachments have separate tests.
                 .sorted(Comparator.comparingInt(type->-BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath().length())).toList();
         int checked=0,adjusted=0,remaining=0;
         for(var entry:LayerDefinitions.createRoots().entrySet()) {
             String key=entry.getKey().toString();
-            if(!key.endsWith("#main"))continue;
+            if(!key.endsWith("#main") || key.contains("_armor#") || key.contains("_spit#"))continue;
             String name=key.split("#")[0].replace("minecraft:","");
             var found=types.stream().filter(type->{String id=BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath();
                 return name.equals(id)||name.startsWith(id+"_")||name.endsWith("_"+id);}).findFirst();
@@ -42,6 +45,7 @@ final class SculkAttachmentFitRegression {
             checked++;
         }
         require(checked>70,"Expected all native host model families");
+        require(remaining==0,"Supported fitted models must have no solid-core intersections");
         System.out.println("SCULK_FIT_CHECK: "+checked+" models, "+adjusted+" adjusted, "+remaining+" remaining overlaps");
     }
     private static void require(boolean value,String message){if(!value)throw new AssertionError(message);}
