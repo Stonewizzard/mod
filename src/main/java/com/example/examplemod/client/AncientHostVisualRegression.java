@@ -99,11 +99,12 @@ final class AncientHostVisualRegression {
                 model.setupAnim(state);bundle.growth.setupAnim(snapshot);
                 var composite=copy(bundle.nativeSkin);
                 var graphics=composite.createGraphics();graphics.drawImage(uploaded.get(draws.get(0).texture),0,0,null);
-                graphics.drawImage(uploaded.get(draws.get(2).texture),0,0,null);graphics.dispose();
+                graphics.dispose();
                 var armor=copy(uploaded.get(draws.get(1).texture));
-                graphics=armor.createGraphics();graphics.drawImage(uploaded.get(draws.get(3).texture),0,0,null);graphics.dispose();
                 var json=new JsonObject();json.addProperty("name",(cruncher?"cruncher":"sniffer")+(baby?"_baby":"_adult"));
                 json.addProperty("frame",frame);json.addProperty("active",frame>=8);json.addProperty("skin",png(composite));json.addProperty("parasiteSkin",png(armor));
+                json.addProperty("skinGlow",png(uploaded.get(draws.get(2).texture)));
+                json.addProperty("parasiteGlow",png(uploaded.get(draws.get(3).texture)));
                 json.add("host",posedFaces(model.root()));json.add("parasite",posedFaces(bundle.growth.root()));
                 var compressed=new ByteArrayOutputStream();
                 try(var zip=new java.util.zip.DeflaterOutputStream(compressed)) {
@@ -157,6 +158,8 @@ final class AncientHostVisualRegression {
     private static JsonArray posedFaces(ModelPart root) {
         var faces=new JsonArray();
         root.visit(new PoseStack(),(pose,path,index,cube)->{
+            var part=root;if(!part.visible)return;
+            for(String token:path.split("/"))if(!token.isEmpty()){part=part.getChild(token);if(!part.visible)return;}
             for(var polygon:cube.polygons){var vertices=new JsonArray();for(var vertex:polygon.vertices()) {
                 var p=pose.pose().transformPosition(new Vector3f(vertex.x(),vertex.y(),vertex.z()).div(16)).mul(16);
                 var v=new JsonArray();v.add(p.x);v.add(p.y);v.add(p.z);v.add(vertex.u());v.add(vertex.v());vertices.add(v);
