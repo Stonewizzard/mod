@@ -16,6 +16,8 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.SnifferRenderState;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.joml.Vector3f;
@@ -81,6 +83,7 @@ final class AncientHostVisualRegression {
                 }
             }
             state.outlineColor=frame%2==0?0:0xff36a8c4;
+            state.hasRedOverlay=frame%3==0;
             model.setupAnim(state);
             var expectedScales=new IdentityHashMap<ModelPart,AncientHostGrowthState.Scale>();
             for(var part:model.root().getAllParts())expectedScales.put(part,new AncientHostGrowthState.Scale(part.xScale,part.yScale,part.zScale));
@@ -93,7 +96,10 @@ final class AncientHostVisualRegression {
                 var draw=draws.get(i);
                 require(draw.order==i+1 && draw.tint==-1 && draw.outline==state.outlineColor,"Wrong pass/tint/outline state");
                 require(uploaded.containsKey(draw.texture),"A draw referenced an unbuilt texture");
-                if(i>=2)require(draw.light==0xf000f0,"Veins and nodes must remain emissive in darkness");
+                if(i>=2) {
+                    require(draw.light==0xf000f0,"Veins and nodes must remain emissive in darkness");
+                    require(draw.overlay==OverlayTexture.NO_OVERLAY,"Glow must use the neutral overlay; zero applies the red damage tint");
+                } else require(draw.overlay==LivingEntityRenderer.getOverlayCoords(state,0),"Normal tissue must retain the host's actual hurt overlay");
             }
             var snapshot=bundle.growth.snapshot(state,cruncher);
             bundle.growth.setupAnim(snapshot);
@@ -162,13 +168,13 @@ final class AncientHostVisualRegression {
                 var texture=uploaded.keySet().stream().filter(id->
                         type==net.minecraft.client.renderer.rendertype.RenderTypes.entityCutoutZOffset(id)
                         || type==net.minecraft.client.renderer.rendertype.RenderTypes.eyes(id)).findFirst().orElseThrow();
-                draws.add(new Draw(order,texture,(Integer)args[4],(Integer)args[6],(Integer)args[8]));return null;
+                draws.add(new Draw(order,texture,(Integer)args[4],(Integer)args[5],(Integer)args[6],(Integer)args[8]));return null;
             }
             throw new AssertionError("Unexpected collector method "+method);
         });
     }
 
-    private record Draw(int order,Identifier texture,int light,int tint,int outline) {}
+    private record Draw(int order,Identifier texture,int light,int overlay,int tint,int outline) {}
     private static BufferedImage copy(BufferedImage source){var copy=new BufferedImage(source.getWidth(),source.getHeight(),BufferedImage.TYPE_INT_ARGB);var g=copy.createGraphics();g.drawImage(source,0,0,null);g.dispose();return copy;}
     private static String png(BufferedImage image)throws Exception{var out=new ByteArrayOutputStream();ImageIO.write(image,"png",out);return Base64.getEncoder().encodeToString(out.toByteArray());}
     private static JsonArray posedFaces(ModelPart root) {

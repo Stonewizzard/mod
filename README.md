@@ -197,8 +197,15 @@ outline bug as a negative control, and checks the cutout pass, draw order, tint,
 invisibility, and outline handling. It uses client-data mode without opening a
 game window. This checks native submissions; in-game pixels still need visual review.
 It also checks the bespoke Sniffer/Cruncher adult and baby models across 16 poses,
-including native digging and crunching, bone scales, changing geometry and vein
-frames, localized fullbright passes, and clean/invisible hosts.
+and compares actual native upload pixels with Minecraft's PNG decoder for color
+and alpha correctness, including a deliberately swapped-pixel negative control.
+The animation checks include
+native digging and crunching, bone scales, changing geometry and vein
+frames, localized fullbright passes with neutral overlay coordinates, and
+clean/invisible hosts. Hurt and outline states vary during the submission check;
+only the ordinary tissue should receive the host's actual hurt flash. Zero is
+not a neutral overlay coordinate for the cutout shader: it selects the red damage
+row and must not be used for the glowing veins or parasite details.
 
 The server regression checks every supported and excluded native mob type. It checks native data
 retention, persistence, repeated loading, real damage processing, projectile

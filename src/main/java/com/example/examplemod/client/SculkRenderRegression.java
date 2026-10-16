@@ -43,6 +43,7 @@ public final class SculkRenderRegression {
                     new CowRenderState(), true, true, resources);
             verifyAdaptiveModels(resources);
             SculkAttachmentFitRegression.run();
+            SculkTexturePixelsRegression.run(resources);
             AncientHostVisualRegression.run(resources);
             if (Boolean.getBoolean("examplemod.sculkVisualExport")) SculkVisualExport.write(resources);
             Files.writeString(Path.of("sculk-render-check-passed.txt"), "PASS\n");
