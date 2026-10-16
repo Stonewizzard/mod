@@ -36,7 +36,7 @@ public final class ArchaeologyTableTests {
             verifyRecipe(helper,ExampleMod.ARCHAEOLOGY_HAMMER.get(),new Item[]{Items.IRON_INGOT,Items.IRON_INGOT,Items.AIR,Items.AIR,Items.STICK,Items.AIR,Items.AIR,Items.STICK,Items.AIR});
             verifyRecipe(helper,ExampleMod.MAGNIFYING_GLASS.get(),new Item[]{Items.GLASS_PANE,Items.IRON_INGOT,Items.AIR,Items.AIR,Items.STICK,Items.AIR,Items.AIR,Items.AIR,Items.AIR});
             var bounds=new AABB(Vec3.atLowerCornerOf(helper.absolutePos(BlockPos.ZERO)),Vec3.atLowerCornerOf(helper.absolutePos(new BlockPos(8,6,8))));
-            for(var facing:Direction.Plane.HORIZONTAL)for(boolean breakRight:new boolean[]{false,true}){
+            for(var facing:Direction.Plane.HORIZONTAL)for(boolean breakRight:new boolean[]{false,true})for(boolean dropTable:new boolean[]{false,true}){
                 for(var item:level.getEntitiesOfClass(ItemEntity.class,bounds))item.discard();
                 player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);player.setYRot(facing.getOpposite().toYRot());
                 player.setItemInHand(InteractionHand.MAIN_HAND,new ItemStack(ExampleMod.ARCHAEOLOGY_TABLE_ITEM.get(),2));
@@ -52,7 +52,9 @@ public final class ArchaeologyTableTests {
                 require(helper,menu.slots.size()==41 && menu.stillValid(player),"Table must expose five slots plus the player's inventory");
                 for(int i=0;i<5;i++){
                     Item item=i==0?(breakRight?ExampleMod.RARE_ANCIENT_ARTIFACT.get():ExampleMod.ANCIENT_ARTIFACT.get()):ArchaeologyTableMenu.tool(i);
-                    player.getInventory().setItem(9+i,new ItemStack(item,i==0?4:1));
+                    var storedStack=new ItemStack(item,i==0?4:1);
+                    if(i==0)storedStack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,Component.literal("Excavation specimen"));
+                    player.getInventory().setItem(9+i,storedStack);
                     require(helper,!menu.quickMoveStack(player,5+i).isEmpty() && table.getItem(i).is(item) && table.getItem(i).getCount()==1,"Shift-click must route each item to its dedicated slot");
                 }
                 require(helper,player.getInventory().getItem(9).getCount()==3 && menu.quickMoveStack(player,5).isEmpty(),"A full artifact slot must neither consume nor duplicate surplus artifacts");
@@ -60,15 +62,15 @@ public final class ArchaeologyTableTests {
                 var saved=table.saveWithFullMetadata(level.registryAccess());
                 var restored=BlockEntity.loadStatic(pos,state,saved,level.registryAccess());
                 require(helper,restored instanceof ArchaeologyTableBlockEntity,"Saved table must reload as the correct block entity");
-                for(int i=0;i<5;i++)require(helper,((ArchaeologyTableBlockEntity)restored).getItem(i).is(table.getItem(i).getItem()),"All five stored stacks must survive serialization");
+                for(int i=0;i<5;i++)require(helper,ItemStack.matches(((ArchaeologyTableBlockEntity)restored).getItem(i),table.getItem(i)),"All five stored stacks, counts and components must survive serialization");
                 require(helper,table.getUpdatePacket()!=null && !table.getUpdateTag(level.registryAccess()).isEmpty(),"World item displays need inventory update and chunk-load packets");
                 player.snapTo(pos.getX()+30,pos.getY(),pos.getZ());require(helper,!menu.stillValid(player),"The server must close menus opened from too far away");
-                level.destroyBlock(breakRight?other:pos,true);
+                level.destroyBlock(breakRight?other:pos,dropTable);
                 require(helper,level.getBlockState(pos).isAir() && level.getBlockState(other).isAir(),"Breaking either half must remove both halves");
                 var drops=level.getEntitiesOfClass(ItemEntity.class,bounds);
                 int tables=drops.stream().filter(e->e.getItem().is(ExampleMod.ARCHAEOLOGY_TABLE_ITEM.get())).mapToInt(e->e.getItem().getCount()).sum();
                 int stored=drops.stream().filter(e->!e.getItem().is(ExampleMod.ARCHAEOLOGY_TABLE_ITEM.get())).mapToInt(e->e.getItem().getCount()).sum();
-                require(helper,tables==1 && stored==5,"Breaking either half must drop exactly one table and all five stored items; got "+tables+"/"+stored);
+                require(helper,tables==(dropTable?1:0) && stored==5,"Breaking either half must respect the block-drop flag and return all five stored items; got "+tables+"/"+stored);
             }
             // A blocked partner must leave the first position and the held stack untouched.
             var other=pos.east();level.setBlockAndUpdate(other,Blocks.STONE.defaultBlockState());
@@ -83,7 +85,7 @@ public final class ArchaeologyTableTests {
     private static void verifyRecipe(GameTestHelper helper,Item result,Item[] items){
         var input=net.minecraft.world.item.crafting.CraftingInput.of(3,3,java.util.Arrays.stream(items).map(i->i==Items.AIR?ItemStack.EMPTY:new ItemStack(i)).toList());
         var recipe=helper.getLevel().getServer().getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,helper.getLevel());
-        require(helper,recipe.isPresent() && recipe.get().value().assemble(input,helper.getLevel().registryAccess()).is(result),"Table and all three tools must be craftable from their documented materials: "+result);
+        require(helper,recipe.isPresent() && recipe.get().value().assemble(input).is(result),"Table and all three tools must be craftable from their documented materials: "+result);
     }
     private static void require(GameTestHelper helper,boolean condition,String message){if(!condition)throw helper.assertionException(message);}
 }

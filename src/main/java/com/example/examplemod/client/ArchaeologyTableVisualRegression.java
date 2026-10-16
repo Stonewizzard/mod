@@ -61,7 +61,7 @@ public final class ArchaeologyTableVisualRegression {
             state.items=List.of(new ItemStackRenderState());draws.clear();renderer.submit(state,stack,null,null);
             require(draws.isEmpty(),"Empty slots must not leave stale display items");
         }
-        if(Boolean.getBoolean("examplemod.tableVisualExport"))for(String path:new String[]{"textures/item/brush.png","textures/item/arms_up_pottery_sherd.png","textures/item/prize_pottery_sherd.png"}){
+        if(Boolean.getBoolean("examplemod.tableVisualExport"))for(String path:new String[]{"textures/item/brush.png","textures/item/arms_up_pottery_sherd.png","textures/item/prize_pottery_sherd.png","textures/block/raw_gold_block.png","textures/font/ascii.png"}){
             var id=Identifier.withDefaultNamespace(path);
             if(resources.getResource(id).isPresent())try(var input=resources.getResourceOrThrow(id).open()){
                 System.out.println("TABLE_ITEM_TEXTURE:"+path+":"+Base64.getEncoder().encodeToString(input.readAllBytes()));
