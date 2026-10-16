@@ -71,14 +71,18 @@ public final class AdaptiveSculkLayer<S extends LivingEntityRenderState, M exten
 
     @SuppressWarnings({"rawtypes","unchecked"})
     public static void addLayers(EntityRenderersEvent.AddLayers event) {
+        AncientHostInfectionLayer.clearTextures();
         // Renderer/model recreation is part of a resource reload; discard GPU masks of old skins.
         var manager=Minecraft.getInstance().getTextureManager();
         SKINS.values().forEach(manager::release);
         SKINS.clear(); GEOMETRY.clear(); FAILED.clear(); material=null;
         for (var type:event.getEntityTypes()) {
             if (!SkulkStatus.supports(type)) continue;
-            if (event.getRenderer(type) instanceof LivingEntityRenderer renderer)
-                renderer.addLayer(new AdaptiveSculkLayer(renderer,event,type));
+            if (event.getRenderer(type) instanceof LivingEntityRenderer renderer) {
+                if(type==EntityTypes.SNIFFER || type==ExampleMod.CRUNCHER.get())
+                    renderer.addLayer(new AncientHostInfectionLayer(renderer,type==ExampleMod.CRUNCHER.get()));
+                else renderer.addLayer(new AdaptiveSculkLayer(renderer,event,type));
+            }
         }
     }
 
