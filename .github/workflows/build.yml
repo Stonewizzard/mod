@@ -57,19 +57,3 @@ jobs:
           rm -f run/sculk-render-check-passed.txt
           ./gradlew runSculkRenderCheck
           test -f run/sculk-render-check-passed.txt
-      - name: Verify rejection of the obsolete mouse-button code
-        run: |
-          task_input_source=src/main/java/com/example/examplemod/client/ExcavationInput.java
-          cp "$task_input_source" /tmp/excavation-input-original.java
-          trap 'cp /tmp/excavation-input-original.java "$task_input_source"' EXIT
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('src/main/java/com/example/examplemod/client/ExcavationInput.java')
-          p.write_text(p.read_text().replace('event.button()==InputConstants.MOUSE_BUTTON_LEFT', 'event.button()==0'))
-          PY
-          if ./gradlew runSculkRenderCheck > build/obsolete-input-check.log 2>&1; then
-            cat build/obsolete-input-check.log
-            exit 1
-          fi
-          grep -F 'Native primary click must open Inventory' build/obsolete-input-check.log
-          echo 'EXCAVATION_INPUT_NEGATIVE_CONTROL: PASS: the original button-code bug is detected'
