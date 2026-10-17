@@ -34,7 +34,7 @@ Components retain quality, original rarity, matrix and excavation provenance for
 
 Damage per stroke is capped at 8/5/3 for field/precision/resonant tiers. Brushes and lenses never damage the inclusion. A precision drill stops safely, but a strong hammer still requires care.
 
-Successful work costs one durability. Field drill/hammer last 256/192 strokes; precision drill/brush/hammer last 768/256/640; resonant 1,536/512/1,280. The vanilla brush keeps vanilla durability. Inspection is free. Native Unbreaking and Mending apply to working tools. Mending repairs tools when held/equipped in the usual way; it does not draw experience into a table slot or GUI cursor. Repair working tools with iron at an anvil. Lenses do not wear out.
+Successful work costs one durability. Field drill/hammer last 256/192 strokes; precision drill/brush/hammer last 768/256/640; resonant 1,536/512/1,280. The vanilla brush keeps vanilla durability. Inspection is free. Native Unbreaking and Mending apply to working tools. Mending repairs tools when held/equipped in the usual way; it does not draw experience into a table slot or GUI cursor. Repair custom working tools with iron at an anvil; the vanilla brush retains its normal repair rules. Lenses do not wear out.
 
 Use a smithing table:
 

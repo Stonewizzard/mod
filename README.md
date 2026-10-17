@@ -26,14 +26,15 @@ breaks and drops **one Netherite Scrap** and **one Ancient Artifact** instead of
 seeds or an ancient debris block. Buried debris is untouched. Mob griefing must
 be enabled. Normal sniffer restrictions and digging cooldowns still apply.
 
-Ancient Artifact is a placeholder item using a vanilla pottery-sherd icon. Find
-it in Ingredients or Example Mod Tab, or use `/give @s examplemod:ancient_artifact`.
+Artifacts have their own rock icons and sealed contents. Sniffers find common (70%),
+uncommon (25%) and rare (5%) specimens. Find them in Ingredients or Example Mod Tab,
+or use `/give @s examplemod:ancient_artifact`.
 
 ## Cruncher progression
 
 A successful ancient-debris excavation has a **1-in-15 chance (about 6.7%)** to
 also drop **one Cruncher Egg**, matching the vanilla Sniffer Egg chance from
-warm-ocean-ruin suspicious sand. Scrap and the ordinary artifact remain guaranteed.
+warm-ocean-ruin suspicious sand. Scrap and one artifact specimen remain guaranteed.
 Place the egg with room above it: it hatches into a baby Cruncher on the vanilla
 Sniffer Egg timing: about **20 minutes**, or **10 minutes on warped nylium**, plus a small
 random delay for each of its three stages.
@@ -42,7 +43,7 @@ The baby grows up after about **one minute** in this testing build.
 The Cruncher is a passive, fire-immune Nether relative of the sniffer with six
 legs, a charcoal/magma hide, and oversized animated jaws. Adult Crunchers search
 within eight blocks for reachable Ancient Geodes, walk beside them, and crunch
-them into **one Rare Ancient Artifact**. Geodes come from ominous-vault rewards
+them into **one Rare Ancient Artifact (80%) or Epic Ancient Artifact (20%)**. Geodes come from ominous-vault rewards
 with a **20% chance (1 in 5)** per reward. Normal vaults do not gain them.
 The geode has a stepped dragon-egg shape with a dark shell and purple crystal.
 
@@ -55,7 +56,7 @@ spawns an adult Cruncher. Its Nether-colored icon uses the vanilla magma-cube
 spawn-egg texture. Give it with `/give @s examplemod:cruncher_spawn_egg`.
 Rare Ancient Artifact is in Ingredients and Example Mod Tab. These items can be
 obtained with `/give`; the mob can be spawned with `/summon examplemod:cruncher`.
-Both artifacts remain placeholders for future components. Crunchers do not
+Artifacts can be excavated into usable ancient components at the archaeology table. Crunchers do not
 spawn naturally yet; eggs are their survival acquisition route.
 
 ## Archaeology Table
@@ -72,77 +73,53 @@ It occupies **two blocks across and one block deep**. Both spaces must be clear
 when placing it. Face a different direction to rotate the table; click either
 half to open the same inventory. Find it in Functional Blocks or Example Mod Tab.
 
-The parchment-and-green-felt screen puts the **artifact input and field kit along
-the top**, above a large excavation workspace. It accepts both **Ancient Artifact**
-(Sniffer) and **Rare Ancient Artifact** (Cruncher). Each dedicated slot holds one
-item. Open the **Inventory** tab to access your full inventory; your hotbar remains
-available on both tabs. Shift-click routes supported items to their matching slots.
-The artifact rests on the table's green mat, and all four inserted tools appear on
-the other half of the tabletop. Empty slots show faint tool guides.
+The parchment-and-green-felt screen has a specimen input and recovery output on the
+left, four tool slots across the top, and a large excavation board. The Inventory
+tab opens your full inventory; the hotbar stays available. Stored tools and the
+specimen (or recovered result) also appear on the physical table.
 
-Use Minecraft's normal **Brush**. The three new field tools are also craftable:
+Use Minecraft's normal **Brush**. The starter field tools are inexpensive:
 
 - **Archaeology Drill:** two iron ingots, one redstone dust and two sticks.
 - **Archaeology Hammer:** two iron ingots and two sticks.
 - **Magnifying Glass:** one glass pane, one iron ingot and one stick.
 
-Find the tools in Tools & Utilities or Example Mod Tab. Picking up a stick
-unlocks the four new recipes in the recipe book.
+Pick the actual tool up onto your cursor. Clicking another stored tool returns
+the held one to its matching empty slot and picks up the new one. Inspect with
+the lens, hammer bulk rock, drill near the find, and brush the final cover. There
+is no timer or scan tooltip. The progress and condition meters show the result
+of your work.
 
-On the **Excavate** tab, insert an artifact and tools, then **pick up the actual tool
-item onto your cursor**, just like moving an item in
-Minecraft's inventory. Click or drag over the specimen while holding that tool to
-work. Click another tool in the field kit to switch: the held tool returns to
-its matching slot and the clicked tool moves onto your cursor. Its return slot
-must be empty. You can also put a tool back manually or pick tools up from your
-inventory or hotbar. Empty hands and unrelated items do not excavate.
+Specimens have five rock matrices and five find families. Recover an exposed
+pickaxe head, sword blade, axe head or resonant core at good condition. Alloy
+finds and badly damaged components produce stackable ancient fragments. Recovery
+consumes one specimen and puts its result in the output slot; take that output
+before recovering another. The old free Reset action is gone. Progress stays on
+the specimen when removed or saved, and old prototype studies retain their work.
 
-- **Hammer:** breaks a broad patch of thick crust. A second strike near delicate
-  material can damage it. Holding still makes one strike; move or click again for another.
-- **Drill:** removes one layer at a precise point. Switch to the brush near the surface.
-- **Brush:** safely sweeps away loose sediment; it cannot break the thick outer crust.
-- **Lens:** inspect buried edges without removing any material.
+Use components/fragments plus diamonds to smith **precision tools**, then resonant
+cores plus netherite scrap for **resonant tools**. Upgrades change control,
+coverage, speed and durability. All rocks remain possible with field tools.
+Recovered heads and blades also craft restored diamond-level swords, pickaxes
+and axes. Quality is recorded for future gear systems; current gear has fixed stats.
 
-The enlarged specimen appears as you remove its cover. **Uncovered** and
-**Condition** meters track the study; damaged areas show scratches. Ordinary finds
-have earthy cover and rare finds have dark basalt and ash. This first excavation
-uses a generic ancient metal fragment as a stand-in. It does **not** consume the
-artifact, wear out tools, award gear, or implement specific future gear components.
-Use **Reset** to try the study again while keeping your items.
+The [playtest guide](docs/ARCHAEOLOGY_GUIDE.md) has exact recipes, rarity weights,
+tool differences and a review checklist. The [design notes](docs/ARCHAEOLOGY_DESIGN.md)
+compare the alternatives and describe what is intentionally left for later.
 
-Progress and condition stay on the artifact when you remove it or save/reload.
-Players sharing a table work on the same server-validated study.
+![Expanded excavation board: four components and rock matrices](docs/visuals/archaeology-expansion.png)
 
-![Excavation workspace and inventory tab](docs/visuals/excavation-workspace-preview.png)
+This software preview uses the screen's actual drawing commands, packaged
+textures and Minecraft bitmap font. It is not a live client screenshot.
 
-![Excavation interaction study](docs/visuals/excavation-workspace.gif)
-
-These software previews use the same drawing plan, dimensions, actual textures and
-bitmap font as the screen. The animation demonstrates successive brush strokes;
-it is not a recording of a live game session.
-
-Items and their components persist through saves. Nearby players see inventory
-changes on the tabletop, including when loading the chunk. Breaking either half
-removes the whole table, drops one table in Survival, and returns its contents.
-Closing the screen leaves the items stored. Existing tables require no special
-setup after restarting the game.
-
-For a quick in-game check, craft the table, add either artifact and all four tools,
-then switch to Excavate and try hammering the outer crust before brushing the loose
-cover. Check the lens and drill, remove/reinsert the artifact, and save/reload.
-Close the screen and walk around the table to see the displayed items. Reopen from
-the other half, then break either side to recover the contents.
-The regression suite checks all four facings, both halves, blocked placement,
-slot rules, shift-click, component persistence, crafting and duplicate-free drops.
-The study regression also checks tool damage, safe completion, retained item data,
-shared progress, native pickup/return of all four tools, cursor-tool validation,
-packet encoding, invalid actions and interaction range. The client
-check verifies the real excavation drawing plan and hit regions, as well as the
-tabletop item submission transforms and neutral overlay coordinates.
+Closing the screen leaves stored items in place and returns a carried tool
+through Minecraft's normal inventory handling. Breaking either half returns all
+stored items and the recovered output. Players share server-owned excavation
+state; a full output or duplicate recovery request consumes nothing.
 
 For testing, use `/give @s examplemod:archaeology_table`,
-`/give @s examplemod:archaeology_drill`, `/give @s examplemod:archaeology_hammer`
-and `/give @s examplemod:magnifying_glass`.
+`/give @s examplemod:ancient_artifact`, `/give @s examplemod:epic_ancient_artifact`,
+and the field/precision/resonant tool items from the creative menu.
 
 ## Cruncher and egg visuals
 
@@ -326,6 +303,3 @@ on their next server tick, including when loaded from a save with NoAI enabled.
 Cleanup removes the infection marker and its own speed modifier while preserving
 the mob's UUID, name, health, equipment, variants and other attribute modifiers.
 
-## Archaeology expansion
-
-See the [playtest guide](docs/ARCHAEOLOGY_GUIDE.md) for sealed artifacts, rock matrices, recovery, tool upgrades and restored equipment. The [design notes](docs/ARCHAEOLOGY_DESIGN.md) compare the options and explain the progression choices.

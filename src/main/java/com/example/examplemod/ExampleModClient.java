@@ -83,3 +83,6 @@ public class ExampleModClient {
         event.register(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),com.example.examplemod.client.ArchaeologyTableScreen::new);
     }
 }
+
+
+
