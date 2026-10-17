@@ -89,8 +89,12 @@ Use Minecraft's normal **Brush**. The three new field tools are also craftable:
 Find the tools in Tools & Utilities or Example Mod Tab. Picking up a stick
 unlocks the four new recipes in the recipe book.
 
-On the **Excavate** tab, insert an artifact and tools, then click a tool's label
-below its slot to select it. Click or drag over the specimen to work:
+On the **Excavate** tab, insert an artifact and tools, then **pick up the actual tool
+item onto your cursor**, just like moving an item in
+Minecraft's inventory. Click or drag over the specimen while holding that tool to
+work. Put it back in its field-kit slot and pick up a different tool to switch.
+You can also pick tools up from your inventory or hotbar. Hover over the labels
+for help. Empty hands and unrelated items do not excavate.
 
 - **Hammer:** breaks a broad patch of thick crust. A second strike near delicate
   material can damage it. Holding still makes one strike; move or click again for another.
@@ -130,7 +134,8 @@ the other half, then break either side to recover the contents.
 The regression suite checks all four facings, both halves, blocked placement,
 slot rules, shift-click, component persistence, crafting and duplicate-free drops.
 The study regression also checks tool damage, safe completion, retained item data,
-shared progress, packet encoding, invalid actions and interaction range. The client
+shared progress, native pickup/return of all four tools, cursor-tool validation,
+packet encoding, invalid actions and interaction range. The client
 check verifies the real excavation drawing plan and hit regions, as well as the
 tabletop item submission transforms and neutral overlay coordinates.
 

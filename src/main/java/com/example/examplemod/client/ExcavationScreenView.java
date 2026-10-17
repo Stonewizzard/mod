@@ -15,7 +15,7 @@ public final class ExcavationScreenView {
         default void outline(int x,int y,int w,int h,int color){fill(x,y,w,1,color);fill(x,y+h-1,w,1,color);fill(x,y,1,h,color);fill(x+w-1,y,1,h,color);}
     }
     public interface Labels {String get(String key,Object...args);}
-    public record State(ExcavationStudy study,boolean rare,boolean inventory,int selectedTool,int hoveredCell,boolean[] tools,String artifactName){}
+    public record State(ExcavationStudy study,boolean rare,boolean inventory,int heldTool,int hoveredCell,boolean[] tools,String artifactName){}
     public static Identifier texture(String path){return Identifier.fromNamespaceAndPath("examplemod","textures/"+path+".png");}
     private static final Identifier PAPER=texture("block/table_parchment"),MAT=texture("block/table_mat"),RELIC=texture("gui/excavation/study_relic");
     private static final String[] GUIDES={"","archaeology_drill","brush_guide","archaeology_hammer","magnifying_glass"};
@@ -29,11 +29,11 @@ public final class ExcavationScreenView {
         c.text(fit(c,s.artifactName.isEmpty()?labels.get("empty_input"):s.artifactName,93),58,42,0xff51432e);
         for(int tool=1;tool<=4;tool++){
             int x=159+(tool-1)*38;
-            boolean selected=s.selectedTool==tool;
+            boolean selected=s.heldTool==tool;
             c.fill(x,34,36,33,selected?0xff8caf96:0xffb29b6b);c.fill(x+1,35,34,31,selected?0xffd2d3a7:0xffd5c294);
             var pos=ExcavationLayout.SLOTS[tool];slot(c,pos[0],pos[1],false);
             if(!s.tools[tool])c.image(texture("item/"+GUIDES[tool]),pos[0],pos[1],16,16,32,32,0x55ffffff);
-            String name=labels.get("tool."+tool);c.text(name,x+(36-c.textWidth(name))/2,57,s.tools[tool]?0xff374f3a:0xff8e866d);
+            String name=labels.get("tool."+tool);c.text(name,x+(36-c.textWidth(name))/2,57,s.tools[tool]||selected?0xff374f3a:0xff8e866d);
             if(selected)c.fill(x+2,65,32,2,0xff468473);
         }
         c.fill(17,69,286,126,0xff9c7b48);c.image(MAT,19,71,282,122,32,32,-1);
@@ -48,6 +48,10 @@ public final class ExcavationScreenView {
             c.text(labels.get("ready"),20,198,0xff5c583e);
         }else {
             board(c,s);
+            if(s.heldTool==0){
+                String hint=labels.get("hold_tool_hint");int w=c.textWidth(hint)+12;
+                c.fill(160-w/2,76,w,13,0xe8344e3c);c.text(hint,166-w/2,79,0xffe7dfb5);
+            }
             int progress=s.study.progress(),condition=s.study.condition();
             c.text(labels.get("progress",progress),20,198,0xff355743);
             c.text(labels.get("condition",condition),190,198,condition<50?0xff9d4a37:0xff355743);
@@ -79,10 +83,10 @@ public final class ExcavationScreenView {
                 if(row==0||!ExcavationStudy.coveredCell(cell-ExcavationStudy.COLS)||s.study.depth(cell-ExcavationStudy.COLS)<depth)c.fill(x,y,10,1,0x709d8b64);
                 if(row==ExcavationStudy.ROWS-1||!ExcavationStudy.coveredCell(cell+ExcavationStudy.COLS)||s.study.depth(cell+ExcavationStudy.COLS)<depth)c.fill(x,y+9,10,1,0x80433225);
             }else if(s.study.scar(cell)>0){c.fill(x+2,y+3,5,1,0xc094573e);c.fill(x+5,y+4,1,4,0xc094573e);}
-            if(s.hoveredCell>=0 && s.tools[s.selectedTool] && ExcavationStudy.affects(s.selectedTool,s.hoveredCell,cell)){
-                boolean danger=s.selectedTool!=2 && s.selectedTool!=4 && ExcavationStudy.relicCell(cell) && depth<=(s.selectedTool==3?2:1);
+            if(s.hoveredCell>=0 && s.heldTool>=1 && s.heldTool<=4 && ExcavationStudy.affects(s.heldTool,s.hoveredCell,cell)){
+                boolean danger=s.heldTool!=2 && s.heldTool!=4 && ExcavationStudy.relicCell(cell) && depth<=(s.heldTool==3?2:1);
                 c.fill(x,y,10,10,danger?0x48e9a077:0x2886d7bb);
-                if(s.selectedTool==4 && ExcavationStudy.relicCell(cell))c.outline(x+1,y+1,8,8,0x9991d4c3);
+                if(s.heldTool==4 && ExcavationStudy.relicCell(cell))c.outline(x+1,y+1,8,8,0x9991d4c3);
                 else c.outline(x,y,10,10,danger?0x90d18b62:0x708bd1b1);
             }
         }
