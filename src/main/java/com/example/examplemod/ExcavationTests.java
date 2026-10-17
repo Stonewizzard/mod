@@ -83,7 +83,10 @@ public final class ExcavationTests {
                     var completed=table.getItem(0).copy();
                     require(helper,!menu.clickMenuButton(player,0)&&ItemStack.matches(table.getItem(0),completed),"Full output must not consume the specimen, even immediately after brushing");
                     table.setItem(5,ItemStack.EMPTY);
-                    require(helper,menu.clickMenuButton(player,0)&&table.getItem(0).isEmpty()&&!table.getItem(5).isEmpty(),"Native recovery must work in the same tick as the final brush stroke, consuming one input exactly once");
+                    new net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket(999,0).handle(player.connection);
+                    require(helper,!table.getItem(0).isEmpty()&&table.getItem(5).isEmpty(),"The native packet handler must reject a different menu id");
+                    new net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket(menu.containerId,0).handle(player.connection);
+                    require(helper,table.getItem(0).isEmpty()&&!table.getItem(5).isEmpty(),"The actual native recovery packet handler must work in the same tick as the final brush stroke, consuming one input exactly once");
                     var reward=table.getItem(5).copy();require(helper,!collaborator.clickMenuButton(other,0)&&ItemStack.matches(reward,table.getItem(5)),"Two viewers must not claim twice");
                     require(helper,!menu.quickMoveStack(player,5).isEmpty()&&table.getItem(5).isEmpty(),"Recovered output must shift-click into the player inventory");
                     menu.clicked(2,0,ContainerInput.PICKUP,player);menu.clicked(1,0,ContainerInput.PICKUP,player);int before=player.getInventory().countItem(menu.getCarried().getItem());
