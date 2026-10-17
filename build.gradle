@@ -199,3 +199,10 @@ neoForge.runs.named('sculkRenderCheck') {
     logLevel = org.slf4j.event.Level.INFO
 }
 
+
+tasks.register('writeNativeInputClasspath') {
+    doLast {
+        file('build/native-input-classpath.txt').text = sourceSets.main.compileClasspath.asPath
+    }
+}
+
