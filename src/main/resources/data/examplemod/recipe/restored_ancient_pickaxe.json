@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " P ",
+    "ISI",
+    " S "
+  ],
+  "key": {
+    "P": "examplemod:ancient_pickaxe_head",
+    "I": "minecraft:iron_ingot",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "examplemod:restored_ancient_pickaxe"
+  }
+}

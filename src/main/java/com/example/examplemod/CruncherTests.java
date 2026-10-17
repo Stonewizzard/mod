@@ -272,7 +272,7 @@ public final class CruncherTests {
     }
 
     private static int countRare(GameTestHelper helper) {
-        return items(helper).stream().filter(e -> e.getItem().is(ExampleMod.RARE_ANCIENT_ARTIFACT.get()))
+        return items(helper).stream().filter(e -> e.getItem().is(ArchaeologyTableMenu.ARTIFACTS)&&ArtifactProfile.sealed(e.getItem())&&ArchaeologyContent.rarity(e.getItem())>=2)
                 .mapToInt(e -> e.getItem().getCount()).sum();
     }
 
@@ -286,3 +286,4 @@ public final class CruncherTests {
         }
     }
 }
+

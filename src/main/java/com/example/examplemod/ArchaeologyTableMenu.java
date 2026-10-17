@@ -29,15 +29,18 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
         for(int tool=1;tool<=4;tool++)if(accepts(tool,getCarried()))return tool;
         return 0;
     }
-    public ArchaeologyTableMenu(int id,Inventory inventory){this(id,inventory,new SimpleContainer(5));}
+    public ArchaeologyTableMenu(int id,Inventory inventory){this(id,inventory,new SimpleContainer(6));}
     public ArchaeologyTableMenu(int id,Inventory inventory,Container container){
-        super(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),id);checkContainerSize(container,5);this.container=container;
+        super(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),id);checkContainerSize(container,6);this.container=container;
         clientMenu=!(container instanceof ArchaeologyTableBlockEntity);
-        for(int i=0;i<5;i++){
+        if(!clientMenu&&!container.getItem(0).isEmpty()&&accepts(0,container.getItem(0))){
+            var prepared=container.getItem(0).copy();ArtifactProfile.seal(prepared,inventory.player.level().random.nextLong());container.setItem(0,prepared);
+        }
+        for(int i=0;i<6;i++){
             final int slot=i;
             addSlot(new Slot(container,i,POSITIONS[i][0],POSITIONS[i][1]){
                 @Override public boolean mayPlace(ItemStack stack){return accepts(slot,stack);}
-                @Override public int getMaxStackSize(){return 1;}
+                @Override public int getMaxStackSize(){return slot==5?64:1;}
             });
         }
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inventory,9+row*9+col,79+col*18,111+row*18){
@@ -51,16 +54,26 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
                 || !accepts(0,table.getItem(0)))return false;
         long now=player.level().getGameTime();if(now<nextStudyTick)return false;
         var artifact=table.getItem(0).copy();
-        if(tool==0 && cell==-1)ExcavationStudy.reset(artifact);
-        else {
-            if(tool<1||tool>3||carriedTool()!=tool||!ExcavationStudy.coveredCell(cell))return false;
-            var study=ExcavationStudy.read(artifact);if(!study.work(tool,cell))return false;
-            study.write(artifact);
+        ArtifactProfile.seal(artifact,player.level().random.nextLong());
+        var study=ExcavationStudy.read(artifact);
+        if(tool==0&&cell==-1){
+            if(!study.recoverable()||!table.getItem(5).isEmpty())return false;
+            var reward=ArchaeologyContent.reward(study);
+            // Commit exactly once on the server thread. A second viewer sees empty input or occupied output.
+            artifact.shrink(1);table.setItem(0,artifact);table.setItem(5,reward);
+            nextStudyTick=now+2;broadcastChanges();return true;
         }
-        nextStudyTick=now+2;table.setItem(0,artifact);broadcastChanges();return true;
+        if(tool<1||tool>3||carriedTool()!=tool||!ExcavationStudy.coveredCell(cell))return false;
+        var held=getCarried();int tier=ArchaeologyContent.tier(held);
+        if(!study.work(tool,tier,cell))return false;
+        study.write(artifact);
+        held.hurtAndBreak(1,player.level(),player,unused->{});
+        if(held.isEmpty())setCarried(ItemStack.EMPTY);
+        nextStudyTick=now+ArchaeologyContent.cooldown(tool,tier);
+        table.setItem(0,artifact);broadcastChanges();return true;
     }
     public static Item tool(int slot){return switch(slot){case 1->ExampleMod.ARCHAEOLOGY_DRILL.get();case 2->Items.BRUSH;case 3->ExampleMod.ARCHAEOLOGY_HAMMER.get();case 4->ExampleMod.MAGNIFYING_GLASS.get();default->Items.AIR;};}
-    public static boolean accepts(int slot,ItemStack stack){return !stack.isEmpty() && (slot==0?stack.is(ARTIFACTS):slot>0 && slot<5 && stack.is(tool(slot)));}
+    public static boolean accepts(int slot,ItemStack stack){return !stack.isEmpty() && (slot==0?stack.is(ARTIFACTS):slot>0 && slot<5 && ArchaeologyContent.role(stack)==slot);}
     @Override public boolean stillValid(Player player){return container.stillValid(player);}
     @Override public void clicked(int index,int button,ContainerInput input,Player player){
         // Menu pickup button 0 is the primary inventory action; SDL mouse codes are mapped by the screen.
@@ -76,7 +89,7 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
     @Override public ItemStack quickMoveStack(Player player,int index){
         var slot=slots.get(index);if(!slot.hasItem())return ItemStack.EMPTY;
         var stack=slot.getItem();var original=stack.copy();
-        if(index<5){if(!moveItemStackTo(stack,5,slots.size(),true))return ItemStack.EMPTY;}
+        if(index<6){if(!moveItemStackTo(stack,6,slots.size(),true))return ItemStack.EMPTY;}
         else {
             boolean inserted=false;
             for(int i=0;i<5;i++)if(accepts(i,stack)){inserted=moveItemStackTo(stack,i,i+1,false);break;}

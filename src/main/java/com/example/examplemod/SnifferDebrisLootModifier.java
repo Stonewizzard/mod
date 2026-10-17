@@ -50,7 +50,7 @@ public class SnifferDebrisLootModifier extends LootModifier {
             return generatedLoot;
         }
         generatedLoot.add(new ItemStack(Items.NETHERITE_SCRAP));
-        generatedLoot.add(new ItemStack(ExampleMod.ANCIENT_ARTIFACT.get()));
+        generatedLoot.add(ArchaeologyContent.specimen(context.getRandom(),false));
         if (context.getRandom().nextFloat() < CRUNCHER_EGG_CHANCE) {
             generatedLoot.add(new ItemStack(ExampleMod.CRUNCHER_EGG_ITEM.get()));
         }

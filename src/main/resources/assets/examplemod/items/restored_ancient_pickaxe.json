@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "examplemod:item/restored_ancient_pickaxe"
+  }
+}

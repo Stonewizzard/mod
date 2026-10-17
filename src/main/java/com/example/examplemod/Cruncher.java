@@ -233,7 +233,7 @@ public class Cruncher extends Animal {
             if (progress >= CRUNCH_TICKS && level() instanceof ServerLevel level
                     && EventHooks.canEntityGrief(level, Cruncher.this)
                     && level.destroyBlock(target, false, Cruncher.this)) {
-                Block.popResource(level, target, new ItemStack(ExampleMod.RARE_ANCIENT_ARTIFACT.get()));
+                Block.popResource(level, target, ArchaeologyContent.specimen(level.random,true));
                 finished = true;
                 entityData.set(CRUNCHING, false);
             }

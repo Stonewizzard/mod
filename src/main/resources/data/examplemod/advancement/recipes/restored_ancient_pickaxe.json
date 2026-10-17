@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_part": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "examplemod:ancient_pickaxe_head"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_part"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "examplemod:restored_ancient_pickaxe"
+    ]
+  }
+}

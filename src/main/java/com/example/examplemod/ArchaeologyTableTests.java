@@ -49,15 +49,15 @@ public final class ArchaeologyTableTests {
                 var table=ArchaeologyTableBlock.inventory(level,pos);
                 require(helper,table!=null && ArchaeologyTableBlock.inventory(level,other)==table && level.getBlockEntity(other)==null,"Both halves must resolve one master inventory");
                 var menu=new ArchaeologyTableMenu(1,player.getInventory(),table);
-                require(helper,menu.slots.size()==41 && menu.stillValid(player),"Table must expose five slots plus the player's inventory");
+                require(helper,menu.slots.size()==42 && menu.stillValid(player),"Table must expose six slots plus the player's inventory");
                 for(int i=0;i<5;i++){
                     Item item=i==0?(breakRight?ExampleMod.RARE_ANCIENT_ARTIFACT.get():ExampleMod.ANCIENT_ARTIFACT.get()):ArchaeologyTableMenu.tool(i);
                     var storedStack=new ItemStack(item,i==0?4:1);
                     if(i==0)storedStack.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,Component.literal("Excavation specimen"));
                     player.getInventory().setItem(9+i,storedStack);
-                    require(helper,!menu.quickMoveStack(player,5+i).isEmpty() && table.getItem(i).is(item) && table.getItem(i).getCount()==1,"Shift-click must route each item to its dedicated slot");
+                    require(helper,!menu.quickMoveStack(player,6+i).isEmpty() && table.getItem(i).is(item) && table.getItem(i).getCount()==1,"Shift-click must route each item to its dedicated slot");
                 }
-                require(helper,player.getInventory().getItem(9).getCount()==3 && menu.quickMoveStack(player,5).isEmpty(),"A full artifact slot must neither consume nor duplicate surplus artifacts");
+                require(helper,player.getInventory().getItem(9).getCount()==3 && menu.quickMoveStack(player,6).isEmpty(),"A full artifact slot must neither consume nor duplicate surplus artifacts");
                 require(helper,!menu.getSlot(0).mayPlace(new ItemStack(Items.STONE)) && !menu.getSlot(1).mayPlace(new ItemStack(Items.BRUSH)),"Slots must reject unrelated items and tools in the wrong location");
                 var saved=table.saveWithFullMetadata(level.registryAccess());
                 var restored=BlockEntity.loadStatic(pos,state,saved,level.registryAccess());

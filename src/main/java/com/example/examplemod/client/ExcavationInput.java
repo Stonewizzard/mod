@@ -12,6 +12,8 @@ final class ExcavationInput {
         void inventoryView(boolean value);
         boolean hasArtifact();
         int carriedTool();
+        default int tier(){return 0;}
+        default boolean recoverable(){return complete();}
         boolean complete();
         long gameTime();
         void send(int tool,int cell);
@@ -28,7 +30,7 @@ final class ExcavationInput {
         if(primary(event)){
             if(ExcavationLayout.inside(x,y,176,7,65,15)){session.inventoryView(false);return true;}
             if(ExcavationLayout.inside(x,y,245,7,65,15)){session.inventoryView(true);return true;}
-            if(!session.inventoryView()&&session.hasArtifact()&&ExcavationLayout.inside(x,y,267,214,40,14)){
+            if(!session.inventoryView()&&session.hasArtifact()&&session.recoverable()&&ExcavationLayout.inside(x,y,267,214,40,14)){
                 session.send(0,-1);return true;
             }
         }
@@ -61,6 +63,6 @@ final class ExcavationInput {
         if(tool!=2&&session.complete())return;
         long now=session.gameTime();if(now==Long.MIN_VALUE||now<nextTick)return;
         if(tool==3&&lastHammerCell==currentCell)return;
-        session.send(tool,currentCell);nextTick=now+2;lastHammerCell=currentCell;
+        session.send(tool,currentCell);nextTick=now+com.example.examplemod.ArchaeologyContent.cooldown(tool,session.tier());lastHammerCell=currentCell;
     }
 }

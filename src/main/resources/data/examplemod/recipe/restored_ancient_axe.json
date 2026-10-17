@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "PI ",
+    " S ",
+    " S "
+  ],
+  "key": {
+    "P": "examplemod:ancient_axe_head",
+    "I": "minecraft:iron_ingot",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "examplemod:restored_ancient_axe"
+  }
+}

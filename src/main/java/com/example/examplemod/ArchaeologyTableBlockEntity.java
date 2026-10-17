@@ -19,14 +19,19 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 public final class ArchaeologyTableBlockEntity extends BaseContainerBlockEntity {
-    private NonNullList<ItemStack> items=NonNullList.withSize(5,ItemStack.EMPTY);
+    private NonNullList<ItemStack> items=NonNullList.withSize(6,ItemStack.EMPTY);
     public ArchaeologyTableBlockEntity(BlockPos pos,BlockState state){super(ExampleMod.ARCHAEOLOGY_TABLE_ENTITY.get(),pos,state);}
-    @Override public int getContainerSize(){return 5;}
-    @Override public int getMaxStackSize(){return 1;}
+    @Override public int getContainerSize(){return 6;}
+    @Override public int getMaxStackSize(){return 64;}
+    @Override public int getMaxStackSize(ItemStack stack){return ArchaeologyTableMenu.accepts(0,stack)||ArchaeologyContent.role(stack)>0?1:64;}
     @Override protected NonNullList<ItemStack> getItems(){return items;}
     @Override protected void setItems(NonNullList<ItemStack> items){this.items=items;}
     @Override protected Component getDefaultName(){return Component.translatable("container.examplemod.archaeology_table");}
     @Override protected AbstractContainerMenu createMenu(int id,Inventory inventory){return new ArchaeologyTableMenu(id,inventory,this);}
+    @Override public void setItem(int slot,ItemStack stack){
+        if(slot==0&&!stack.isEmpty()&&level instanceof ServerLevel&&ArchaeologyTableMenu.accepts(0,stack))ArtifactProfile.seal(stack,level.random.nextLong());
+        super.setItem(slot,stack);
+    }
     @Override public boolean canPlaceItem(int slot,ItemStack stack){return ArchaeologyTableMenu.accepts(slot,stack);}
     @Override public boolean stillValid(Player player){
         if(!super.stillValid(player)||level==null)return false;
@@ -38,7 +43,7 @@ public final class ArchaeologyTableBlockEntity extends BaseContainerBlockEntity 
         super.setChanged();
         if(level instanceof ServerLevel)level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),Block.UPDATE_CLIENTS);
     }
-    @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);items=NonNullList.withSize(5,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);}
+    @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);items=NonNullList.withSize(6,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);}
     @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);ContainerHelper.saveAllItems(output,items);}
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries){return saveCustomOnly(registries);}
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket(){return ClientboundBlockEntityDataPacket.create(this);}

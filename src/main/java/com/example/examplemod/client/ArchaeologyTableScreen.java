@@ -20,6 +20,8 @@ public final class ArchaeologyTableScreen extends AbstractContainerScreen<Archae
             @Override public void inventoryView(boolean value){menu.inventoryView(value);}
             @Override public boolean hasArtifact(){return ArchaeologyTableScreen.this.hasArtifact();}
             @Override public int carriedTool(){return menu.carriedTool();}
+            @Override public int tier(){return ArchaeologyContent.tier(menu.getCarried());}
+            @Override public boolean recoverable(){return ExcavationStudy.read(menu.getSlot(0).getItem()).recoverable();}
             @Override public boolean complete(){return ExcavationStudy.read(menu.getSlot(0).getItem()).complete();}
             @Override public long gameTime(){return minecraft.level==null?Long.MIN_VALUE:minecraft.level.getGameTime();}
             @Override public void send(int tool,int cell){ArchaeologyTableScreen.this.send(tool,cell);}
@@ -32,7 +34,7 @@ public final class ArchaeologyTableScreen extends AbstractContainerScreen<Archae
         boolean[] tools=new boolean[5];for(int i=1;i<=4;i++)tools[i]=ArchaeologyTableMenu.accepts(i,menu.getSlot(i).getItem());
         var artifact=menu.getSlot(0).getItem();
         var state=new ExcavationScreenView.State(hasArtifact()?ExcavationStudy.read(artifact):null,
-                artifact.is(ExampleMod.RARE_ANCIENT_ARTIFACT.get()),menu.inventoryView(),menu.carriedTool(),hover,tools,artifact.isEmpty()?"":artifact.getHoverName().getString());
+                artifact.is(ExampleMod.RARE_ANCIENT_ARTIFACT.get()),menu.inventoryView(),menu.carriedTool(),hover,tools,artifact.isEmpty()?"":artifact.getHoverName().getString(),ArchaeologyContent.tier(menu.getCarried()),!menu.getSlot(5).getItem().isEmpty());
         ExcavationScreenView.draw(new ExcavationScreenView.Canvas(){
             @Override public void fill(int x,int y,int w,int h,int color){g.fill(leftPos+x,topPos+y,leftPos+x+w,topPos+y+h,color);}
             @Override public void texture(Identifier id,int x,int y,int w,int h,float u,float v,int sw,int sh,int tw,int th,int color){

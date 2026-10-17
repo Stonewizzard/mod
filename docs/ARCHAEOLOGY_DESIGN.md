@@ -30,6 +30,7 @@ This is a reviewable first progression pass for a recurring feature, rather than
 - Hammer: broad and forceful, risky near a find. Drill: precise removal, upgraded depth stop. Brush: gentle finishing; higher tiers remove weathered cover over a wider area. Lens: progressively wider inspection, never damages anything.
 - Three tiers change coverage, precision, cooldown and service life. Tool wear occurs only on a successful excavation stroke. Lens inspection is free.
 - Condition is capped per stroke so one click cannot destroy a full component. Careful finishing can preserve 100%; quality is stored on recovered components.
+- Three restored, diamond-level weapons/tools give the first heads and blades a usable crafting destination. Their fixed stats avoid prematurely committing to quality-dependent combat scaling.
 - Ancient fragments provide a useful fallback, rather than a dead-end failure item.
 
 ## Safety and compatibility

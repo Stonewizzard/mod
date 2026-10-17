@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "examplemod:resonant_core",
+  "base": "examplemod:precision_drill",
+  "addition": "minecraft:netherite_scrap",
+  "result": {
+    "id": "examplemod:resonant_drill"
+  }
+}

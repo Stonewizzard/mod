@@ -325,3 +325,7 @@ Previously infected excluded mobs return to their native appearance and behavior
 on their next server tick, including when loaded from a save with NoAI enabled.
 Cleanup removes the infection marker and its own speed modifier while preserving
 the mob's UUID, name, health, equipment, variants and other attribute modifiers.
+
+## Archaeology expansion
+
+See the [playtest guide](docs/ARCHAEOLOGY_GUIDE.md) for sealed artifacts, rock matrices, recovery, tool upgrades and restored equipment. The [design notes](docs/ARCHAEOLOGY_DESIGN.md) compare the options and explain the progression choices.

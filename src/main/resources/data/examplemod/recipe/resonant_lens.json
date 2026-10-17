@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "examplemod:resonant_core",
+  "base": "examplemod:precision_lens",
+  "addition": "minecraft:netherite_scrap",
+  "result": {
+    "id": "examplemod:resonant_lens"
+  }
+}
