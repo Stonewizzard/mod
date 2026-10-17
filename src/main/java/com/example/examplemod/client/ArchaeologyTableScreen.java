@@ -34,7 +34,7 @@ public final class ArchaeologyTableScreen extends AbstractContainerScreen<Archae
         boolean[] tools=new boolean[5];for(int i=1;i<=4;i++)tools[i]=ArchaeologyTableMenu.accepts(i,menu.getSlot(i).getItem());
         var artifact=menu.getSlot(0).getItem();
         var state=new ExcavationScreenView.State(hasArtifact()?ExcavationStudy.read(artifact):null,
-                artifact.is(ExampleMod.RARE_ANCIENT_ARTIFACT.get()),menu.inventoryView(),menu.carriedTool(),hover,tools,artifact.isEmpty()?"":artifact.getHoverName().getString(),ArchaeologyContent.tier(menu.getCarried()),!menu.getSlot(5).getItem().isEmpty());
+                ArchaeologyContent.rarity(artifact)>=2,menu.inventoryView(),menu.carriedTool(),hover,tools,artifact.isEmpty()?"":artifact.getHoverName().getString(),ArchaeologyContent.tier(menu.getCarried()),!menu.getSlot(5).getItem().isEmpty());
         ExcavationScreenView.draw(new ExcavationScreenView.Canvas(){
             @Override public void fill(int x,int y,int w,int h,int color){g.fill(leftPos+x,topPos+y,leftPos+x+w,topPos+y+h,color);}
             @Override public void texture(Identifier id,int x,int y,int w,int h,float u,float v,int sw,int sh,int tw,int th,int color){
@@ -57,6 +57,9 @@ public final class ArchaeologyTableScreen extends AbstractContainerScreen<Archae
     @Override protected void containerTick(){super.containerTick();input.tick();}
     @Override public void onClose(){input.stop();super.onClose();}
     private void send(int tool,int cell){
-        if(minecraft.getConnection()!=null)minecraft.getConnection().send(new ServerboundCustomPayloadPacket(new ExcavationPayload(menu.containerId,tool,cell)));
+        if(minecraft.getConnection()==null)return;
+        if(tool==0&&cell==-1)minecraft.getConnection().send(new net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket(menu.containerId,0));
+        else minecraft.getConnection().send(new ServerboundCustomPayloadPacket(new ExcavationPayload(menu.containerId,tool,cell)));
     }
 }
+

@@ -30,7 +30,7 @@ final class ExcavationInput {
         if(primary(event)){
             if(ExcavationLayout.inside(x,y,176,7,65,15)){session.inventoryView(false);return true;}
             if(ExcavationLayout.inside(x,y,245,7,65,15)){session.inventoryView(true);return true;}
-            if(!session.inventoryView()&&session.hasArtifact()&&session.recoverable()&&ExcavationLayout.inside(x,y,257,214,50,14)){
+            if(!session.inventoryView()&&session.hasArtifact()&&ExcavationLayout.recoveryAt(x,y)){
                 session.send(0,-1);return true;
             }
         }
@@ -66,3 +66,4 @@ final class ExcavationInput {
         session.send(tool,currentCell);nextTick=now+com.example.examplemod.ArchaeologyContent.cooldown(tool,session.tier());lastHammerCell=currentCell;
     }
 }
+

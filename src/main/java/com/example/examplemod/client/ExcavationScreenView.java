@@ -73,7 +73,7 @@ public final class ExcavationScreenView {
         for(int col=0;col<9;col++)slot(c,79+col*18,213,false);
         if(s.study!=null && !s.inventory){
             boolean enabled=s.study.recoverable()&&!s.outputOccupied;
-            c.fill(257,214,50,14,0xffac8d55);c.fill(258,215,48,12,enabled?0xffe0cd9c:0xffb8aa87);
+            c.fill(ExcavationLayout.RECOVER_X,ExcavationLayout.RECOVER_Y,ExcavationLayout.RECOVER_WIDTH,ExcavationLayout.RECOVER_HEIGHT,0xffac8d55);c.fill(ExcavationLayout.RECOVER_X+1,ExcavationLayout.RECOVER_Y+1,ExcavationLayout.RECOVER_WIDTH-2,ExcavationLayout.RECOVER_HEIGHT-2,enabled?0xffe0cd9c:0xffb8aa87);
             String action=labels.get(s.study.condition()<60?"salvage":"recover");
             c.text(action,282-c.textWidth(action)/2,217,enabled?0xff355743:0xff82785c);
         }
@@ -116,3 +116,4 @@ public final class ExcavationScreenView {
         c.fill(x,y,16,1,0xff584c35);c.fill(x,y,1,16,0xff584c35);c.fill(x+1,y+16,16,1,0xffedddad);
     }
 }
+

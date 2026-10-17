@@ -20,13 +20,16 @@ final class ExcavationInputRegression {
             require(f.click(250,12,1)&&f.inventory,"Native primary click must open Inventory");
             f.click(165,137,1);require(f.requests.isEmpty(),"Inventory view must not excavate behind its slots");
             require(f.click(180,12,1)&&!f.inventory,"Native primary click must return to Excavate");
-            require(f.click(280,220,1)&&f.requests.size()==1&&f.last().tool()==0&&f.last().cell()==-1,"Native primary click must send Recover");
+            require(f.click(280,220,1)&&f.requests.size()==1&&f.last().tool()==0&&f.last().cell()==-1,"Native primary click must send Recover for server validation even before a fresh client state arrives");
             require(f.tool==1,"Tabs and Recover must preserve the carried tool");
             int before=f.requests.size();f.click(250,12,3);f.click(280,220,3);f.click(165,137,3);
             require(!f.inventory&&f.requests.size()==before,"Secondary clicks must not activate primary-only controls");
             f.click(250,12,0);f.click(165,137,0);
             require(!f.inventory&&f.requests.size()==before,"The obsolete GLFW zero code must not stand in for a primary click");
             require(!f.click(177,47,1)&&!f.click(85,220,1),"Native field-kit and hotbar slots must retain their normal inventory clicks");
+        }
+        for(int[] origin:new int[][]{{0,2},{48,20}})for(int[] point:new int[][]{{257,214},{306,227},{282,221}}){
+            var f=new Fixture(origin[0],origin[1]);require(f.click(point[0],point[1],1)&&f.requests.size()==1&&f.last().tool()==0,"The entire painted recovery button must work with the actual screen offset");
         }
         for(int tool=1;tool<=3;tool++){
             var f=new Fixture(48,20);f.tool=tool;
@@ -65,7 +68,7 @@ final class ExcavationInputRegression {
         @Override public boolean hasArtifact(){return artifact;}
         @Override public int carriedTool(){return tool;}
         @Override public boolean complete(){return study.complete();}
-        @Override public boolean recoverable(){return true;}
+        @Override public boolean recoverable(){return study.recoverable();}
         @Override public long gameTime(){return time;}
         @Override public void send(int tool,int cell){
             requests.add(new ExcavationPayload(19,tool,cell));
@@ -74,3 +77,4 @@ final class ExcavationInputRegression {
     }
     private static void require(boolean valid,String message){if(!valid)throw new AssertionError(message);}
 }
+

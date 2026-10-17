@@ -4,6 +4,8 @@
     "examplemod:ancient_artifact",
     "examplemod:uncommon_ancient_artifact",
     "examplemod:rare_ancient_artifact",
-    "examplemod:epic_ancient_artifact"
+    "examplemod:epic_ancient_artifact",
+    "examplemod:legendary_ancient_artifact",
+    "examplemod:unique_ancient_artifact"
   ]
 }

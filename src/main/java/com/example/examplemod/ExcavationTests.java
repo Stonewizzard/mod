@@ -62,7 +62,7 @@ public final class ExcavationTests {
             require(helper,!menu.studyAction(player,1,CENTER),"Same-tick requests must be throttled");
             other.getInventory().setItem(0,new ItemStack(ArchaeologyContent.PRECISION_DRILL.get()));collaborator.clicked(33,0,ContainerInput.PICKUP,other);
             require(helper,collaborator.carriedTool()==1&&collaborator.studyAction(other,1,CENTER)&&ExcavationStudy.read(table.getItem(0)).depth(CENTER)==1,"Second viewer must work against current shared server state");
-            require(helper,!collaborator.studyAction(other,0,-1),"An unfinished specimen cannot be recovered or reset");
+            require(helper,!collaborator.clickMenuButton(other,0),"An unfinished specimen cannot be recovered or reset");
             var restored=BlockEntity.loadStatic(pos,state,table.saveWithFullMetadata(level.registryAccess()),level.registryAccess());
             require(helper,restored instanceof ArchaeologyTableBlockEntity&&ItemStack.matches(((ArchaeologyTableBlockEntity)restored).getItem(0),table.getItem(0)),"Study and profile must survive table serialization");
             var client=new ArchaeologyTableMenu(24,player.getInventory());
@@ -73,12 +73,18 @@ public final class ExcavationTests {
             helper.runAfterDelay(4,()->{
                 menu.clicked(2,0,ContainerInput.PICKUP,player);require(helper,menu.studyAction(player,2,CENTER)&&ExcavationStudy.read(table.getItem(0)).depth(CENTER)==0,"Swapping to brush must safely finish the last layer");
                 require(helper,ExcavationStudy.read(table.getItem(0)).condition()==100,"Careful brush finish must preserve condition");
-                var sealed=ArchaeologyContent.specimen(92,2);var finished=finish(ExcavationStudy.read(sealed));finished.write(sealed);table.setItem(0,sealed);table.setItem(5,new ItemStack(Items.DIRT));
+                var sealed=ArchaeologyContent.specimen(92,2);var finished=finish(ExcavationStudy.read(sealed));finished.write(sealed);
+                int last=0;while(!finished.inclusion(last))last++;final int lastCell=last;
+                var root=sealed.get(DataComponents.CUSTOM_DATA).copyTag();var tag=root.getCompoundOrEmpty(ExcavationStudy.KEY);var cover=tag.getByteArray("Depths").orElseThrow();cover[lastCell]=1;tag.putByteArray("Depths",cover);root.put(ExcavationStudy.KEY,tag);sealed.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
+                table.setItem(0,sealed);table.setItem(5,new ItemStack(Items.DIRT));
                 helper.runAfterDelay(2,()->{
-                    require(helper,!menu.studyAction(player,0,-1)&&ItemStack.matches(table.getItem(0),sealed),"Full output must not consume the specimen");
+                    require(helper,!menu.clickMenuButton(player,999),"Unknown native menu buttons must be ignored");
+                    require(helper,menu.studyAction(player,2,lastCell)&&ExcavationStudy.read(table.getItem(0)).complete(),"The final brush stroke must finish the specimen");
+                    var completed=table.getItem(0).copy();
+                    require(helper,!menu.clickMenuButton(player,0)&&ItemStack.matches(table.getItem(0),completed),"Full output must not consume the specimen, even immediately after brushing");
                     table.setItem(5,ItemStack.EMPTY);
-                    require(helper,menu.studyAction(player,0,-1)&&table.getItem(0).isEmpty()&&!table.getItem(5).isEmpty(),"Recovery consumes one input and publishes one reward");
-                    var reward=table.getItem(5).copy();require(helper,!collaborator.studyAction(other,0,-1)&&ItemStack.matches(reward,table.getItem(5)),"Two viewers must not claim twice");
+                    require(helper,menu.clickMenuButton(player,0)&&table.getItem(0).isEmpty()&&!table.getItem(5).isEmpty(),"Native recovery must work in the same tick as the final brush stroke, consuming one input exactly once");
+                    var reward=table.getItem(5).copy();require(helper,!collaborator.clickMenuButton(other,0)&&ItemStack.matches(reward,table.getItem(5)),"Two viewers must not claim twice");
                     require(helper,!menu.quickMoveStack(player,5).isEmpty()&&table.getItem(5).isEmpty(),"Recovered output must shift-click into the player inventory");
                     menu.clicked(2,0,ContainerInput.PICKUP,player);menu.clicked(1,0,ContainerInput.PICKUP,player);int before=player.getInventory().countItem(menu.getCarried().getItem());
                     menu.removed(player);require(helper,menu.getCarried().isEmpty()&&player.getInventory().countItem(ExampleMod.ARCHAEOLOGY_DRILL.get())==before+1,"Closing must return the actual held tool exactly once");
@@ -167,9 +173,9 @@ public final class ExcavationTests {
         require(helper,!brush.copy().work(2,0,CENTER)&&brush.work(2,1,CENTER)&&brush.depth(CENTER)==1,"Upgraded brush must remove weathered cover that a field brush cannot");
         require(helper,ExcavationStudy.radius(4,2)>ExcavationStudy.radius(4,0)&&ArchaeologyContent.cooldown(1,1)<ArchaeologyContent.cooldown(1,0),"Tier effects must include lens reach and drill speed");
         var kinds=new java.util.HashSet<ArtifactProfile.Find>();var matrices=new java.util.HashSet<ArtifactProfile.Matrix>();
-        for(int rarity=0;rarity<4;rarity++)for(int seed=0;seed<40;seed++){
+        for(int rarity=0;rarity<6;rarity++)for(int seed=0;seed<40;seed++){
             var stack=ArchaeologyContent.specimen(seed,rarity);var profile=ArtifactProfile.read(stack);kinds.add(profile.find());matrices.add(profile.matrix());
-            require(helper,profile.equals(ArtifactProfile.roll(seed,rarity)),"A specimen must seal its deterministic profile");
+            require(helper,profile.rarity()==rarity&&ArchaeologyContent.rarity(stack)==rarity&&ArchaeologyTableMenu.accepts(0,stack)&&profile.equals(ArtifactProfile.roll(seed,rarity)),"A specimen must seal its deterministic profile");
             var a=ExcavationStudy.read(stack);a.work(1,CENTER);a.write(stack);ArtifactProfile.seal(stack,seed+1);
             require(helper,a.equals(ExcavationStudy.read(stack)),"Reinsertion must preserve progress and cannot reroll contents");
             var safe=finish(a);require(helper,safe.complete()&&safe.condition()==100,"Every rarity and matrix must be finishable with starter tools without damage");
@@ -188,10 +194,11 @@ public final class ExcavationTests {
         require(helper,ArchaeologyContent.reward(ExcavationStudy.read(intact)).is(ArchaeologyContent.FRAGMENTS.get()),"Below 60% condition a component must become salvage rather than usable gear");
         var ruined=ArchaeologyContent.specimen(19,3);new ExcavationStudy(ArtifactProfile.read(ruined)).write(ruined);var ruinedRoot=ruined.get(DataComponents.CUSTOM_DATA).copyTag();var ruinedTag=ruinedRoot.getCompoundOrEmpty(ExcavationStudy.KEY);ruinedTag.putInt("Damage",100);ruinedRoot.put(ExcavationStudy.KEY,ruinedTag);ruined.set(DataComponents.CUSTOM_DATA,CustomData.of(ruinedRoot));
         var ruinedState=ExcavationStudy.read(ruined);require(helper,!ruinedState.complete()&&ruinedState.recoverable()&&!ruinedState.work(1,CENTER)&&ArchaeologyContent.reward(ruinedState).is(ArchaeologyContent.FRAGMENTS.get()),"Ruined finds must stop wearing tools and permit immediate salvage even while covered");
-        var random=net.minecraft.util.RandomSource.create(222);int[] sniffer=new int[4],cruncher=new int[4];
+        var random=net.minecraft.util.RandomSource.create(222);int[] sniffer=new int[6],cruncher=new int[6];
         for(int i=0;i<1000;i++){sniffer[ArchaeologyContent.rarity(ArchaeologyContent.specimen(random,false))]++;cruncher[ArchaeologyContent.rarity(ArchaeologyContent.specimen(random,true))]++;}
-        require(helper,sniffer[0]>600&&sniffer[1]>180&&sniffer[2]>20&&sniffer[3]==0&&cruncher[0]==0&&cruncher[1]==0&&cruncher[3]>130&&cruncher[2]>700,"Loot rarity weights must remain in their documented ranges");
-        System.out.println("ARCHAEOLOGY_EXPANSION_CHECK: PASS: 160 sealed specimens, all matrices/finds, migration, safe field completion, tool tiers, provenance and weighted source rewards");
+        require(helper,sniffer[0]>600&&sniffer[1]>180&&sniffer[2]>20&&sniffer[3]==0&&cruncher[0]==0&&cruncher[1]==0&&cruncher[3]>130&&cruncher[2]>700&&sniffer[4]==0&&sniffer[5]==0&&cruncher[4]==0&&cruncher[5]==0,"Loot rarity weights must remain in their documented ranges");
+        System.out.println("ARCHAEOLOGY_EXPANSION_CHECK: PASS: 240 sealed specimens, all matrices/finds, migration, safe field completion, tool tiers, provenance and weighted source rewards");
     }
     private static void require(GameTestHelper helper,boolean valid,String message){if(!valid)throw helper.assertionException(message);}
 }
+

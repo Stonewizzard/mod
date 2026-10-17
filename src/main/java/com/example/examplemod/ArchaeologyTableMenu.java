@@ -52,7 +52,7 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
     public boolean studyAction(net.minecraft.server.level.ServerPlayer player,int tool,int cell){
         if(player.containerMenu!=this || !stillValid(player) || !(container instanceof ArchaeologyTableBlockEntity table)
                 || !accepts(0,table.getItem(0)))return false;
-        long now=player.level().getGameTime();if(now<nextStudyTick)return false;
+        long now=player.level().getGameTime();
         var artifact=table.getItem(0).copy();
         ArtifactProfile.seal(artifact,player.level().getRandom().nextLong());
         var study=ExcavationStudy.read(artifact);
@@ -63,6 +63,7 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
             artifact.shrink(1);table.setItem(0,artifact);table.setItem(5,reward);
             nextStudyTick=now+2;broadcastChanges();return true;
         }
+        if(now<nextStudyTick)return false;
         if(tool<1||tool>3||carriedTool()!=tool||!ExcavationStudy.coveredCell(cell))return false;
         var held=getCarried();int tier=ArchaeologyContent.tier(held);
         if(!study.work(tool,tier,cell))return false;
@@ -71,6 +72,9 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
         if(held.isEmpty())setCarried(ItemStack.EMPTY);
         nextStudyTick=now+ArchaeologyContent.cooldown(tool,tier);
         table.setItem(0,artifact);broadcastChanges();return true;
+    }
+    @Override public boolean clickMenuButton(Player player,int button){
+        return button==0&&player instanceof net.minecraft.server.level.ServerPlayer server&&studyAction(server,0,-1);
     }
     public static Item tool(int slot){return switch(slot){case 1->ExampleMod.ARCHAEOLOGY_DRILL.get();case 2->Items.BRUSH;case 3->ExampleMod.ARCHAEOLOGY_HAMMER.get();case 4->ExampleMod.MAGNIFYING_GLASS.get();default->Items.AIR;};}
     public static boolean accepts(int slot,ItemStack stack){return !stack.isEmpty() && (slot==0?stack.is(ARTIFACTS):slot>0 && slot<5 && ArchaeologyContent.role(stack)==slot);}
@@ -99,3 +103,4 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
         slot.onTake(player,stack);return original;
     }
 }
+

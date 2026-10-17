@@ -82,5 +82,7 @@
   "gui.examplemod.excavation.salvage": "Salvage",
   "gui.examplemod.excavation.recovered": "Recovered",
   "gui.examplemod.excavation.ruined": "Ruined specimen - salvage available",
-  "gui.examplemod.excavation.output_full": "Take the previous find first"
+  "gui.examplemod.excavation.output_full": "Take the previous find first",
+  "item.examplemod.legendary_ancient_artifact": "Legendary Ancient Artifact",
+  "item.examplemod.unique_ancient_artifact": "Unique Ancient Artifact"
 }
