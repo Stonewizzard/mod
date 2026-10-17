@@ -20,7 +20,7 @@ public final class ArtifactQuality {
         int score=score(stack);if(score<0)return;
         stack.set(DataComponents.LORE,new ItemLore(List.of(Component.literal("Excavation score: "+score+"/100").withStyle(net.minecraft.ChatFormatting.GRAY))));
     }
-    public static double average(List<ItemStack> pieces){return pieces.stream().mapToInt(s->Math.max(0,score(s))).sum()/5.0;}
+    public static double average(List<ItemStack> pieces){return pieces.isEmpty()?0:pieces.stream().mapToInt(s->Math.max(0,score(s))).sum()/(double)pieces.size();}
     public static double assemblyScore(ItemStack stack){
         var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ASSEMBLY);
         return tag.getIntOr("Version",0)==1?Math.clamp(tag.getDoubleOr("Score",0),0,100):-1;
@@ -35,7 +35,7 @@ public final class ArtifactQuality {
             data.putString("Item",net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
             parts.put(ReconstructionPattern.PICKAXE.parts.get(i),data);
         }
-        record.putInt("Version",1);record.putString("Pattern","pickaxe");record.putInt("ScoreTotal",total);record.putDouble("Score",total/5.0);record.put("Parts",parts);
+        record.putInt("Version",1);record.putInt("PartCount",5);record.putString("Pattern","pickaxe");record.putInt("ScoreTotal",total);record.putDouble("Score",total/5.0);record.put("Parts",parts);
         var root=new CompoundTag();root.put(ASSEMBLY,record);result.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
         result.set(DataComponents.LORE,new ItemLore(List.of(Component.literal("Assembly score: "+formatted(total/5.0)+"/100").withStyle(net.minecraft.ChatFormatting.GRAY))));
         return result;

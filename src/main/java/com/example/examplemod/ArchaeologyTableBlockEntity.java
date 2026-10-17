@@ -48,4 +48,3 @@ public final class ArchaeologyTableBlockEntity extends BaseContainerBlockEntity 
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries){return saveCustomOnly(registries);}
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket(){return ClientboundBlockEntityDataPacket.create(this);}
 }
-

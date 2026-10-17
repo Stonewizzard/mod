@@ -91,7 +91,7 @@ is no timer or scan tooltip. The progress and condition meters show the result
 of your work.
 
 Specimens have five rock matrices and five find families. Recover an exposed
-pickaxe head, sword blade, axe head or resonant core at good condition. Alloy
+pickaxe component, sword blade, axe head or resonant core at good condition. Alloy
 finds and badly damaged components produce stackable ancient fragments. Recovery
 consumes one specimen and puts its result in the output slot; take that output
 before recovering another. The old free Reset action is gone. Progress stays on
@@ -120,6 +120,12 @@ state; a full output or duplicate recovery request consumes nothing.
 For testing, use `/give @s examplemod:archaeology_table`,
 `/give @s examplemod:ancient_artifact`, `/give @s examplemod:epic_ancient_artifact`,
 and the field/precision/resonant tool items from the creative menu.
+
+## Reconstruction Table
+
+Select **Pickaxe** at the new starter bench and assemble three head pieces (`/ - \`), a star-shaped connector, and a handle. All five pieces can be unveiled in artifacts. Each recovered piece remembers its excavation score; the finished pickaxe keeps every individual record plus an average assembly score for future modifiers.
+
+Craft the bench from three planks, a crafting table and two sticks. See the [reconstruction guide](docs/RECONSTRUCTION_GUIDE.md) for the layout, item IDs, score example and testing notes.
 
 ## Cruncher and egg visuals
 
@@ -302,4 +308,5 @@ Previously infected excluded mobs return to their native appearance and behavior
 on their next server tick, including when loaded from a save with NoAI enabled.
 Cleanup removes the infection marker and its own speed modifier while preserving
 the mob's UUID, name, health, equipment, variants and other attribute modifiers.
+
 

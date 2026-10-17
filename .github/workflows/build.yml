@@ -55,6 +55,5 @@ jobs:
         timeout-minutes: 10
         run: |
           rm -f run/sculk-render-check-passed.txt
-          ./gradlew runSculkRenderCheck -PexcavationVisualExport=true
+          ./gradlew runSculkRenderCheck
           test -f run/sculk-render-check-passed.txt
-

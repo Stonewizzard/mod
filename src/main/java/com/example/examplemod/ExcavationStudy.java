@@ -83,4 +83,3 @@ public final class ExcavationStudy {
     @Override public boolean equals(Object other){return other instanceof ExcavationStudy s&&damage==s.damage&&strokes==s.strokes&&profile.equals(s.profile)&&Arrays.equals(depths,s.depths)&&Arrays.equals(scars,s.scars);}
     @Override public int hashCode(){return 31*(31*profile.hashCode()+Arrays.hashCode(depths))+Arrays.hashCode(scars)+damage+strokes;}
 }
-
