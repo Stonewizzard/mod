@@ -34,7 +34,7 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
         super(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),id);checkContainerSize(container,6);this.container=container;
         clientMenu=!(container instanceof ArchaeologyTableBlockEntity);
         if(!clientMenu&&!container.getItem(0).isEmpty()&&accepts(0,container.getItem(0))){
-            var prepared=container.getItem(0).copy();ArtifactProfile.seal(prepared,inventory.player.level().random.nextLong());container.setItem(0,prepared);
+            var prepared=container.getItem(0).copy();ArtifactProfile.seal(prepared,inventory.player.level().getRandom().nextLong());container.setItem(0,prepared);
         }
         for(int i=0;i<6;i++){
             final int slot=i;
@@ -54,7 +54,7 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
                 || !accepts(0,table.getItem(0)))return false;
         long now=player.level().getGameTime();if(now<nextStudyTick)return false;
         var artifact=table.getItem(0).copy();
-        ArtifactProfile.seal(artifact,player.level().random.nextLong());
+        ArtifactProfile.seal(artifact,player.level().getRandom().nextLong());
         var study=ExcavationStudy.read(artifact);
         if(tool==0&&cell==-1){
             if(!study.recoverable()||!table.getItem(5).isEmpty())return false;

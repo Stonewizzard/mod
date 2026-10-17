@@ -29,7 +29,7 @@ public final class ArchaeologyTableBlockEntity extends BaseContainerBlockEntity 
     @Override protected Component getDefaultName(){return Component.translatable("container.examplemod.archaeology_table");}
     @Override protected AbstractContainerMenu createMenu(int id,Inventory inventory){return new ArchaeologyTableMenu(id,inventory,this);}
     @Override public void setItem(int slot,ItemStack stack){
-        if(slot==0&&!stack.isEmpty()&&level instanceof ServerLevel&&ArchaeologyTableMenu.accepts(0,stack))ArtifactProfile.seal(stack,level.random.nextLong());
+        if(slot==0&&!stack.isEmpty()&&level instanceof ServerLevel&&ArchaeologyTableMenu.accepts(0,stack))ArtifactProfile.seal(stack,level.getRandom().nextLong());
         super.setItem(slot,stack);
     }
     @Override public boolean canPlaceItem(int slot,ItemStack stack){return ArchaeologyTableMenu.accepts(slot,stack);}

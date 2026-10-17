@@ -32,7 +32,7 @@ public final class ExcavationTests {
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
         @Override protected MutableComponent typeDescription(){return Component.literal("Sealed artifacts, tiered tools, persistent excavation and atomic recovery");}
         @Override public void run(GameTestHelper helper){
-            verifyStudies(helper);var level=helper.getLevel();
+            verifyStudies(helper);verifyRecipes(helper);var level=helper.getLevel();
             for(int x=0;x<8;x++)for(int z=0;z<8;z++)helper.setBlock(new BlockPos(x,0,z),Blocks.STONE);
             var local=new BlockPos(3,1,3);var pos=helper.absolutePos(local);var state=ExampleMod.ARCHAEOLOGY_TABLE.get().defaultBlockState();
             helper.setBlock(local,state);var player=helper.makeMockServerPlayerInLevel();var other=helper.makeMockServerPlayerInLevel();
@@ -106,6 +106,30 @@ public final class ExcavationTests {
         predicted.clicked(4,0,ContainerInput.PICKUP,player);predicted.clicked(3,0,ContainerInput.PICKUP,player);
         require(helper,ItemStack.matches(predicted.getSlot(4).getItem(),original[4])&&predicted.getSlot(3).getItem().isEmpty()&&ItemStack.matches(predicted.getCarried(),original[3]),
                 "The client menu must predict the same lens-to-hammer switch as the server");
+    }
+    private static void verifyRecipes(GameTestHelper helper){
+        var level=helper.getLevel();var manager=level.getServer().getRecipeManager();
+        var unbreaking=level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(net.minecraft.world.item.enchantment.Enchantments.UNBREAKING);
+        for(int tier=1;tier<=2;tier++)for(int role=1;role<=4;role++){
+            var base=new ItemStack(tier==1?ArchaeologyTableMenu.tool(role):ArchaeologyContent.upgrade(role,1));
+            base.set(DataComponents.CUSTOM_NAME,Component.literal("Inherited tool"));
+            if(role!=4){base.setDamageValue(7);base.enchant(unbreaking,2);}
+            var input=new net.minecraft.world.item.crafting.SmithingRecipeInput(new ItemStack(tier==1?ArchaeologyContent.FRAGMENTS.get():ArchaeologyContent.CORE.get()),base,new ItemStack(tier==1?Items.DIAMOND:Items.NETHERITE_SCRAP));
+            var recipe=manager.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.SMITHING,input,level);
+            require(helper,recipe.isPresent(),"All eight native smithing upgrades must load and match");
+            var upgraded=recipe.get().value().assemble(input);
+            require(helper,upgraded.is(ArchaeologyContent.upgrade(role,tier))&&upgraded.getHoverName().getString().equals("Inherited tool"),"Smithing must preserve custom names on the correct tier");
+            if(role!=4)require(helper,upgraded.getDamageValue()==7&&net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(unbreaking,upgraded)==2,"Upgrade must preserve damage and enchantments");
+        }
+        var parts=new net.minecraft.world.item.Item[]{ArchaeologyContent.SWORD_BLADE.get(),ArchaeologyContent.PICKAXE_HEAD.get(),ArchaeologyContent.AXE_HEAD.get()};
+        var gear=new net.minecraft.world.item.Item[]{ArchaeologyContent.SWORD.get(),ArchaeologyContent.PICKAXE.get(),ArchaeologyContent.AXE.get()};
+        int[][] pattern={{0,1,0,0,2,0,0,3,0},{0,1,0,2,3,2,0,3,0},{1,2,0,0,3,0,0,3,0}};
+        for(int i=0;i<3;i++){
+            final int kind=i;var stacks=java.util.Arrays.stream(pattern[i]).mapToObj(n->n==0?ItemStack.EMPTY:new ItemStack(n==1?parts[kind]:n==2?Items.IRON_INGOT:Items.STICK)).toList();
+            var input=net.minecraft.world.item.crafting.CraftingInput.of(3,3,stacks);var recipe=manager.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,level);
+            require(helper,recipe.isPresent()&&recipe.get().value().assemble(input).is(gear[i]),"Every recovered equipment part must have a working restored-gear recipe");
+        }
+        System.out.println("ARCHAEOLOGY_RECIPE_CHECK: PASS: eight upgrades retain names, damage and enchantments; three restored equipment recipes");
     }
     private static ExcavationStudy finish(ExcavationStudy study){
         for(int i=0;i<ExcavationStudy.CELLS;i++)while(study.depth(i)>1&&!study.recoverable())study.work(1,i);

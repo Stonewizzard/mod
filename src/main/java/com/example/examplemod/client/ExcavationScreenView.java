@@ -73,9 +73,9 @@ public final class ExcavationScreenView {
         for(int col=0;col<9;col++)slot(c,79+col*18,213,false);
         if(s.study!=null && !s.inventory){
             boolean enabled=s.study.recoverable()&&!s.outputOccupied;
-            c.fill(267,214,40,14,0xffac8d55);c.fill(268,215,38,12,enabled?0xffe0cd9c:0xffb8aa87);
+            c.fill(257,214,50,14,0xffac8d55);c.fill(258,215,48,12,enabled?0xffe0cd9c:0xffb8aa87);
             String action=labels.get(s.study.condition()<60?"salvage":"recover");
-            c.text(action,287-c.textWidth(action)/2,217,enabled?0xff355743:0xff82785c);
+            c.text(action,282-c.textWidth(action)/2,217,enabled?0xff355743:0xff82785c);
         }
         for(int x:new int[]{5,312})for(int y:new int[]{5,228})c.fill(x,y,3,3,0xffd3ae63);
     }
