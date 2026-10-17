@@ -8,6 +8,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -61,6 +62,17 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
     public static Item tool(int slot){return switch(slot){case 1->ExampleMod.ARCHAEOLOGY_DRILL.get();case 2->Items.BRUSH;case 3->ExampleMod.ARCHAEOLOGY_HAMMER.get();case 4->ExampleMod.MAGNIFYING_GLASS.get();default->Items.AIR;};}
     public static boolean accepts(int slot,ItemStack stack){return !stack.isEmpty() && (slot==0?stack.is(ARTIFACTS):slot>0 && slot<5 && stack.is(tool(slot)));}
     @Override public boolean stillValid(Player player){return container.stillValid(player);}
+    @Override public void clicked(int index,int button,ContainerInput input,Player player){
+        // Menu pickup button 0 is the primary inventory action; SDL mouse codes are mapped by the screen.
+        if(input==ContainerInput.PICKUP&&button==0&&index>=1&&index<=4){
+            int home=carriedTool();var held=getCarried();var next=container.getItem(index);
+            if(home>0&&home!=index&&held.getCount()==1&&next.getCount()==1&&accepts(index,next)&&container.getItem(home).isEmpty()){
+                // Both prediction and the server use this same native inventory click, with no item copies or extra packet.
+                container.setItem(home,held);container.setItem(index,ItemStack.EMPTY);setCarried(next);return;
+            }
+        }
+        super.clicked(index,button,input,player);
+    }
     @Override public ItemStack quickMoveStack(Player player,int index){
         var slot=slots.get(index);if(!slot.hasItem())return ItemStack.EMPTY;
         var stack=slot.getItem();var original=stack.copy();
