@@ -119,7 +119,7 @@ public final class ReconstructionTests {
         for(int i=0;i<2;i++){
             var item=i==0?ArchaeologyContent.LEGENDARY.get():ArchaeologyContent.UNIQUE.get();int color=i==0?0xFFB52E:0xFF668B;var colors=new java.util.ArrayList<Integer>();
             new ItemStack(item).getStyledHoverName().visit((style,text)->{if(!text.isEmpty()&&style.getColor()!=null)colors.add(style.getColor().getValue());return java.util.Optional.empty();},net.minecraft.network.chat.Style.EMPTY);
-            require(helper,!colors.isEmpty()&&colors.stream().allMatch(c->c==color),"Legendary and Unique names must keep distinct colors after native rarity styling");
+            System.out.println("COLOR_DEBUG:"+new ItemStack(item).getItemName()+":"+colors);require(helper,!colors.isEmpty()&&colors.stream().allMatch(c->c==color),"Legendary and Unique names must keep distinct colors after native rarity styling");
         }
         require(helper,ArchaeologyContent.artifacts().size()==6&&ArchaeologyContent.artifacts().get(2)==ExampleMod.RARE_ANCIENT_ARTIFACT.get(),"Creative artifact order must match rarity progression");
         System.out.println("ARTIFACT_PRESENTATION_CHECK: PASS: native styled Legendary/Unique names and contiguous rarity order");

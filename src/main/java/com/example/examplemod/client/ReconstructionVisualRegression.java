@@ -19,12 +19,12 @@ public final class ReconstructionVisualRegression {
             if(state>0&&selected!=null)for(int slot:selected.slots)inserted[slot]=true;
             if(state==1&&selected!=null)inserted[selected.slots.getFirst()]=false;
             var view=new ReconstructionScreenView.State(pattern,inserted,scores,false,92.8,false);
-            var canvas=new ExcavationVisualRegression.RecordingCanvas(font);ReconstructionScreenView.draw(canvas,view);
+            var canvas=new ExcavationVisualRegression.RecordingCanvas(font,320,242);ReconstructionScreenView.draw(canvas,view);
             for(int i=0;i<5;i++)if(inserted[i]){var p=ReconstructionTableMenu.POSITIONS[i];canvas.image(ExcavationScreenView.texture("item/"+selected.partId(i)),p[0],p[1],16,16,32,32,-1);}
             snapshot(resources,font,assets,scenes,canvas,(selected==null?"unselected":selected.key())+new String[]{"_empty","_partial","_ready"}[state]);
         }
         for(int state=0;state<3;state++){
-            var canvas=new ExcavationVisualRegression.RecordingCanvas(font);var inserted=new boolean[5];int[] scores={-1,-1,-1,-1,-1};if(state==1)Arrays.fill(inserted,true);
+            var canvas=new ExcavationVisualRegression.RecordingCanvas(font,320,242);var inserted=new boolean[5];int[] scores={-1,-1,-1,-1,-1};if(state==1)Arrays.fill(inserted,true);
             ReconstructionScreenView.draw(canvas,new ReconstructionScreenView.State(state==2?2:1,inserted,scores,state==0,0,state==2));
             if(state==0)canvas.image(ExcavationScreenView.texture("item/restored_ancient_pickaxe"),277,73,16,16,32,32,-1);
             snapshot(resources,font,assets,scenes,canvas,new String[]{"completed","unscored","spare_parts"}[state]);

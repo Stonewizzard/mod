@@ -128,7 +128,9 @@ public final class ExcavationVisualRegression {
     }
     static final class RecordingCanvas implements ExcavationScreenView.Canvas {
         final JsonArray commands=new JsonArray();final Set<Identifier> textures=new HashSet<>();final BufferedImage font;
-        RecordingCanvas(BufferedImage font){this.font=font;}
+        final int width,height;
+        RecordingCanvas(BufferedImage font){this(font,ExcavationLayout.WIDTH,ExcavationLayout.HEIGHT);}
+        RecordingCanvas(BufferedImage font,int width,int height){this.font=font;this.width=width;this.height=height;}
         @Override public void fill(int x,int y,int w,int h,int color){bounds(x,y,w,h);var c=command("fill",x,y,w,h);c.addProperty("color",color);commands.add(c);}
         @Override public void texture(Identifier id,int x,int y,int w,int h,float u,float v,int sw,int sh,int tw,int th,int color){
             bounds(x,y,w,h);require(u>=0&&v>=0&&u+sw<=tw&&v+sh<=th,"Texture region escaped its asset");
@@ -141,7 +143,7 @@ public final class ExcavationVisualRegression {
             width+=right*8/unit+1;
         }return width;}
         private static JsonObject command(String op,int x,int y,int w,int h){var c=new JsonObject();c.addProperty("op",op);c.addProperty("x",x);c.addProperty("y",y);c.addProperty("w",w);c.addProperty("h",h);return c;}
-        private static void bounds(int x,int y,int w,int h){require(x>=0&&y>=0&&w>=0&&h>=0&&x+w<=ExcavationLayout.WIDTH&&y+h<=ExcavationLayout.HEIGHT,"An excavation control escaped the compact screen: "+x+","+y+" "+w+"x"+h);}
+        private void bounds(int x,int y,int w,int h){require(x>=0&&y>=0&&w>=0&&h>=0&&x+w<=width&&y+h<=height,"An excavation control escaped the compact screen: "+x+","+y+" "+w+"x"+h);}
     }
     private static void require(boolean value,String message){if(!value)throw new AssertionError(message);}
 }
