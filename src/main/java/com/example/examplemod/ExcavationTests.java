@@ -187,7 +187,7 @@ public final class ExcavationTests {
             if(reward.is(ArchaeologyContent.FRAGMENTS.get()))require(helper,!reward.has(DataComponents.CUSTOM_DATA),"Commodity fragments should stack across specimens");
             else require(helper,reward.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty("examplemod:recovered").getIntOr("Quality",-1)==100,"Recovered components must record their quality and provenance");
         }
-        require(helper,kinds.size()==9&&matrices.size()==5,"Seeded variation must exercise all find types and rock matrices");
+        require(helper,kinds.size()==13&&matrices.size()==5,"Seeded variation must exercise all find types and rock matrices");
         var old=new ItemStack(ExampleMod.ANCIENT_ARTIFACT.get());var root=new net.minecraft.nbt.CompoundTag();root.putString("unrelated","keep");var tag=new net.minecraft.nbt.CompoundTag();tag.putInt("Version",1);
         byte[] depths=new byte[ExcavationStudy.CELLS];java.util.Arrays.fill(depths,(byte)1);tag.putByteArray("Depths",depths);tag.putByteArray("Scars",new byte[ExcavationStudy.CELLS]);tag.putInt("Damage",17);root.put(ExcavationStudy.KEY,tag);old.set(DataComponents.CUSTOM_DATA,CustomData.of(root));ArtifactProfile.seal(old,123);
         var migrated=ExcavationStudy.read(old);require(helper,migrated.profile().find()==ArtifactProfile.Find.LEGACY&&migrated.condition()==83&&migrated.depth(CENTER)==1,"Version-one studies must preserve their footprint, condition and cover");migrated.write(old);
@@ -205,5 +205,6 @@ public final class ExcavationTests {
     }
     private static void require(GameTestHelper helper,boolean valid,String message){if(!valid)throw helper.assertionException(message);}
 }
+
 
 

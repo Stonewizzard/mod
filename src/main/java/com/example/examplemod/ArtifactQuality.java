@@ -27,17 +27,24 @@ public final class ArtifactQuality {
     }
     public static String formatted(double score){return String.format(Locale.ROOT,"%.1f",score);}
     public static ItemStack assemble(List<ItemStack> pieces){
-        if(pieces.size()!=5)throw new IllegalArgumentException("A pickaxe has five pieces");
-        var result=new ItemStack(ArchaeologyContent.PICKAXE.get());var record=new CompoundTag();var parts=new CompoundTag();int total=0;
-        for(int i=0;i<5;i++){
+        return assemble(ReconstructionPattern.PICKAXE,pieces);
+    }
+    public static ItemStack assemble(ReconstructionPattern pattern,List<ItemStack> pieces){
+        if(pieces.size()!=pattern.parts.size())throw new IllegalArgumentException("Wrong part count for "+pattern.key());
+        for(int i=0;i<pieces.size();i++)if(!pieces.get(i).is(pattern.part(pattern.slots.get(i))))throw new IllegalArgumentException("Wrong reconstruction part");
+        var result=new ItemStack(pattern.output());var record=new CompoundTag();var parts=new CompoundTag();int total=0;
+        for(int i=0;i<pieces.size();i++){
             var stack=pieces.get(i);var data=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(RECOVERED).copy();
             int score=score(stack);total+=Math.max(0,score);data.putInt("Score",Math.max(0,score));data.putBoolean("Scored",score>=0);
             data.putString("Item",net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
-            parts.put(ReconstructionPattern.PICKAXE.parts.get(i),data);
+            var modifiers=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactModifiers.KEY);
+            if(!modifiers.isEmpty())data.put("Modifiers",modifiers.copy());
+            parts.put(pattern.parts.get(i),data);
         }
-        record.putInt("Version",1);record.putInt("PartCount",5);record.putString("Pattern","pickaxe");record.putInt("ScoreTotal",total);record.putDouble("Score",total/5.0);record.put("Parts",parts);
+        record.putInt("Version",1);record.putInt("PartCount",pieces.size());record.putString("Pattern",pattern.key());record.putInt("ScoreTotal",total);record.putDouble("Score",total/(double)pieces.size());record.put("Parts",parts);
         var root=new CompoundTag();root.put(ASSEMBLY,record);result.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
-        result.set(DataComponents.LORE,new ItemLore(List.of(Component.literal("Assembly score: "+formatted(total/5.0)+"/100").withStyle(net.minecraft.ChatFormatting.GRAY))));
+        result.set(DataComponents.LORE,new ItemLore(List.of(Component.literal("Assembly score: "+formatted(total/(double)pieces.size())+"/100").withStyle(net.minecraft.ChatFormatting.GRAY))));
         return result;
     }
 }
+

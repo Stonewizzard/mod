@@ -4,6 +4,12 @@
     "examplemod:pickaxe_head_bridge",
     "examplemod:pickaxe_right_tip",
     "examplemod:ancient_tool_connector",
-    "examplemod:ancient_tool_handle"
+    "examplemod:ancient_tool_handle",
+    "examplemod:ancient_sword_blade",
+    "examplemod:ancient_axe_head",
+    "examplemod:ancient_shovel_head",
+    "examplemod:ancient_hoe_head",
+    "examplemod:ancient_mace_head",
+    "examplemod:ancient_spear_tip"
   ]
 }

@@ -58,7 +58,7 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
         var study=ExcavationStudy.read(artifact);
         if(tool==0&&cell==-1){
             if(!study.recoverable()||!table.getItem(5).isEmpty())return false;
-            var reward=ArchaeologyContent.reward(study);
+            var reward=ArchaeologyContent.reward(study,artifact);
             // Commit exactly once on the server thread. A second viewer sees empty input or occupied output.
             artifact.shrink(1);table.setItem(0,artifact);table.setItem(5,reward);
             nextStudyTick=now+2;broadcastChanges();return true;
@@ -67,7 +67,7 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
         if(tool<1||tool>3||carriedTool()!=tool||!ExcavationStudy.coveredCell(cell))return false;
         var held=getCarried();int tier=ArchaeologyContent.tier(held);
         if(!study.work(tool,tier,cell))return false;
-        study.write(artifact);
+        study.write(artifact);ArtifactModifiers.seal(artifact,study);
         held.hurtAndBreak(1,player.level(),player,unused->{});
         if(held.isEmpty())setCarried(ItemStack.EMPTY);
         nextStudyTick=now+ArchaeologyContent.cooldown(tool,tier);
@@ -103,4 +103,5 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
         slot.onTake(player,stack);return original;
     }
 }
+
 

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "examplemod:restored_ancient_pickaxe",
+    "examplemod:restored_ancient_axe",
+    "examplemod:restored_ancient_shovel",
+    "examplemod:restored_ancient_hoe"
+  ]
+}

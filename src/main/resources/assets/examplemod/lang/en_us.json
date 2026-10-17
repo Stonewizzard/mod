@@ -1,5 +1,5 @@
 {
-  "itemGroup.examplemod": "Example Mod Tab",
+  "itemGroup.examplemod": "Ancient Discoveries",
   "block.examplemod.example_block": "Sniffer Head",
   "item.examplemod.example_item": "Example Item",
   "examplemod.configuration.title": "Example Mod Configs",
@@ -91,5 +91,13 @@
   "item.examplemod.pickaxe_head_bridge": "Ancient Pickaxe Head Bridge",
   "item.examplemod.pickaxe_right_tip": "Ancient Pickaxe Right Tip",
   "item.examplemod.ancient_tool_connector": "Ancient Tool Connector",
-  "item.examplemod.ancient_tool_handle": "Ancient Tool Handle"
+  "item.examplemod.ancient_tool_handle": "Ancient Tool Handle",
+  "item.examplemod.restored_ancient_shovel": "Restored Ancient Shovel",
+  "item.examplemod.restored_ancient_hoe": "Restored Ancient Hoe",
+  "item.examplemod.restored_ancient_mace": "Restored Ancient Mace",
+  "item.examplemod.restored_ancient_spear": "Restored Ancient Spear",
+  "item.examplemod.ancient_shovel_head": "Ancient Shovel Head",
+  "item.examplemod.ancient_hoe_head": "Ancient Hoe Head",
+  "item.examplemod.ancient_mace_head": "Ancient Mace Head",
+  "item.examplemod.ancient_spear_tip": "Ancient Spear Tip"
 }

@@ -36,7 +36,7 @@ public final class ExcavationVisualRegression {
             var state=new ExcavationScreenView.State(study,rare,inventory,held,hover,storedTools(held),name.equals("empty")?"":rare?"Rare Ancient Artifact":"Ancient Artifact");
             scenes.add(snapshot(name,state,labels,resources,font,assets));
         }
-        for(var find:new ArtifactProfile.Find[]{ArtifactProfile.Find.PICKAXE_HEAD,ArtifactProfile.Find.SWORD_BLADE,ArtifactProfile.Find.AXE_HEAD,ArtifactProfile.Find.RESONANT_CORE,ArtifactProfile.Find.PICKAXE_LEFT,ArtifactProfile.Find.PICKAXE_BRIDGE,ArtifactProfile.Find.PICKAXE_RIGHT,ArtifactProfile.Find.TOOL_CONNECTOR,ArtifactProfile.Find.TOOL_HANDLE}){
+        for(var find:new ArtifactProfile.Find[]{ArtifactProfile.Find.PICKAXE_HEAD,ArtifactProfile.Find.SWORD_BLADE,ArtifactProfile.Find.AXE_HEAD,ArtifactProfile.Find.RESONANT_CORE,ArtifactProfile.Find.PICKAXE_LEFT,ArtifactProfile.Find.PICKAXE_BRIDGE,ArtifactProfile.Find.PICKAXE_RIGHT,ArtifactProfile.Find.TOOL_CONNECTOR,ArtifactProfile.Find.TOOL_HANDLE,ArtifactProfile.Find.SHOVEL_HEAD,ArtifactProfile.Find.HOE_HEAD,ArtifactProfile.Find.MACE_HEAD,ArtifactProfile.Find.SPEAR_TIP}){
             var id=ExcavationScreenView.texture("gui/excavation/"+find.path());BufferedImage art;
             try(var input=resources.getResourceOrThrow(id).open()){art=ImageIO.read(input);}
             require(art.getWidth()==128&&art.getHeight()==64,"Component artwork must match board texture coordinates");
@@ -145,5 +145,6 @@ public final class ExcavationVisualRegression {
     }
     private static void require(boolean value,String message){if(!value)throw new AssertionError(message);}
 }
+
 
 
