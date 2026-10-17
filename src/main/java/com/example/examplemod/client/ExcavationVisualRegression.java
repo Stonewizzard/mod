@@ -14,6 +14,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 /** Snapshot the real drawing plan and exercise the shared hit regions and data-driven specimen. */
 public final class ExcavationVisualRegression {
     public static void run(ResourceManager resources) throws Exception {
+        ExcavationInputRegression.run();
         JsonObject language;
         try(var reader=new InputStreamReader(resources.getResourceOrThrow(Identifier.fromNamespaceAndPath("examplemod","lang/en_us.json")).open(),StandardCharsets.UTF_8)){
             language=JsonParser.parseReader(reader).getAsJsonObject();

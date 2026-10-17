@@ -57,22 +57,19 @@ jobs:
           rm -f run/sculk-render-check-passed.txt
           ./gradlew runSculkRenderCheck
           test -f run/sculk-render-check-passed.txt
-
-      - name: Inspect native mouse and menu dispatch
+      - name: Verify rejection of the obsolete mouse-button code
         run: |
-          task_mc_jar=$(find /home/runner -name 'minecraft-patched-26.3.0.77.jar' -print -quit)
-          if [ -z "$task_mc_jar" ]; then
-            ./gradlew writeNativeInputClasspath
-            task_mc_jar=$(cat build/native-input-classpath.txt)
-          fi
-          test -n "$task_mc_jar"
-          javap -c -p -classpath "$task_mc_jar" net.minecraft.client.MouseHandler net.minecraft.client.input.MouseButtonEvent net.minecraft.client.input.MouseButtonInfo net.minecraft.world.entity.player.Inventory net.minecraft.client.gui.screens.inventory.AbstractContainerScreen net.minecraft.client.gui.screens.Screen net.minecraft.client.gui.components.events.AbstractContainerEventHandler net.minecraft.client.gui.components.events.ContainerEventHandler net.minecraft.server.network.ServerGamePacketListenerImpl net.minecraft.world.inventory.AbstractContainerMenu net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl > build/native-input-dispatch.txt
+          task_input_source=src/main/java/com/example/examplemod/client/ExcavationInput.java
+          cp "$task_input_source" /tmp/excavation-input-original.java
+          trap 'cp /tmp/excavation-input-original.java "$task_input_source"' EXIT
           python - <<'PY'
-          import re
           from pathlib import Path
-          text = Path('build/native-input-dispatch.txt').read_text()
-          sections = re.split(r'(?=^  [^ ].*[;{]$)', text, flags=re.M)
-          for section in sections:
-              if re.search(r'mouseClicked|mouseReleased|mouseDragged|onPress|onButton|handleContainerClick|handleCustomPayload|getCarried|setCarried|broadcastCarried|\.send\(|button\(|Screen\(|Inventory\(|MouseButtonEvent\(', section):
-                  print(section)
+          p=Path('src/main/java/com/example/examplemod/client/ExcavationInput.java')
+          p.write_text(p.read_text().replace('event.button()==InputConstants.MOUSE_BUTTON_LEFT', 'event.button()==0'))
           PY
+          if ./gradlew runSculkRenderCheck > build/obsolete-input-check.log 2>&1; then
+            cat build/obsolete-input-check.log
+            exit 1
+          fi
+          grep -F 'Native primary click must open Inventory' build/obsolete-input-check.log
+          echo 'EXCAVATION_INPUT_NEGATIVE_CONTROL: PASS: the original button-code bug is detected'
