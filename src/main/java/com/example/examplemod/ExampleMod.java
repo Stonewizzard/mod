@@ -160,6 +160,7 @@ public class ExampleMod {
                         net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent.Operation.REPLACE));
         ENTITIES.register(modEventBus);
         SkulkStatus.register(modEventBus);
+        modEventBus.addListener(ExcavationPayload::register);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -169,6 +170,7 @@ public class ExampleMod {
             modEventBus.addListener(CruncherTests::register);
             modEventBus.addListener(SkulkParasiteTests::register);
             modEventBus.addListener(ArchaeologyTableTests::register);
+            modEventBus.addListener(ExcavationTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered

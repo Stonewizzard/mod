@@ -72,12 +72,13 @@ It occupies **two blocks across and one block deep**. Both spaces must be clear
 when placing it. Face a different direction to rotate the table; click either
 half to open the same inventory. Find it in Functional Blocks or Example Mod Tab.
 
-The parchment-and-green-felt screen has one artifact slot and four dedicated tool
-slots: **drill, brush, hammer and magnifying glass**. It accepts both **Ancient
-Artifact** (Sniffer) and **Rare Ancient Artifact** (Cruncher). Each slot holds one
-item. Shift-click routes supported items to their matching slots. The artifact
-rests on the table's green mat, and all four inserted tools appear on the other
-half of the tabletop. Empty slots show faint tool guides with hover labels.
+The parchment-and-green-felt screen puts the **artifact input and field kit along
+the top**, above a large excavation workspace. It accepts both **Ancient Artifact**
+(Sniffer) and **Rare Ancient Artifact** (Cruncher). Each dedicated slot holds one
+item. Open the **Inventory** tab to access your full inventory; your hotbar remains
+available on both tabs. Shift-click routes supported items to their matching slots.
+The artifact rests on the table's green mat, and all four inserted tools appear on
+the other half of the tabletop. Empty slots show faint tool guides with hover labels.
 
 Use Minecraft's normal **Brush**. The three new field tools are also craftable:
 
@@ -86,8 +87,34 @@ Use Minecraft's normal **Brush**. The three new field tools are also craftable:
 - **Magnifying Glass:** one glass pane, one iron ingot and one stick.
 
 Find the tools in Tools & Utilities or Example Mod Tab. Picking up a stick
-unlocks the four new recipes in the recipe book. This first stage stores and
-displays artifacts and tools; artifact processing can be added later.
+unlocks the four new recipes in the recipe book.
+
+On the **Excavate** tab, insert an artifact and tools, then click a tool's label
+below its slot to select it. Click or drag over the specimen to work:
+
+- **Hammer:** breaks a broad patch of thick crust. A second strike near delicate
+  material can damage it. Holding still makes one strike; move or click again for another.
+- **Drill:** removes one layer at a precise point. Switch to the brush near the surface.
+- **Brush:** safely sweeps away loose sediment; it cannot break the thick outer crust.
+- **Lens:** inspect buried edges without removing any material.
+
+The enlarged specimen appears as you remove its cover. **Uncovered** and
+**Condition** meters track the study; damaged areas show scratches. Ordinary finds
+have earthy cover and rare finds have dark basalt and ash. This first excavation
+uses a generic ancient metal fragment as a stand-in. It does **not** consume the
+artifact, wear out tools, award gear, or implement specific future gear components.
+Use **Reset** to try the study again while keeping your items.
+
+Progress and condition stay on the artifact when you remove it or save/reload.
+Players sharing a table work on the same server-validated study.
+
+![Excavation workspace and inventory tab](docs/visuals/excavation-workspace-preview.png)
+
+![Excavation interaction study](docs/visuals/excavation-workspace.gif)
+
+These software previews use the same drawing plan, dimensions, actual textures and
+bitmap font as the screen. The animation demonstrates successive brush strokes;
+it is not a recording of a live game session.
 
 Items and their components persist through saves. Nearby players see inventory
 changes on the tabletop, including when loading the chunk. Breaking either half
@@ -95,16 +122,17 @@ removes the whole table, drops one table in Survival, and returns its contents.
 Closing the screen leaves the items stored. Existing tables require no special
 setup after restarting the game.
 
-![Archaeology Table and inventory preview](docs/visuals/archaeology-table-preview.png)
-
-This is a software preview using the actual block geometry, item textures and
-screen layout; Minecraft lighting can differ. For a quick in-game check, craft
-the table, add either artifact and all four tools, then close the screen and
-walk around it. Reopen from the other half, save/reload, and break either side.
+For a quick in-game check, craft the table, add either artifact and all four tools,
+then switch to Excavate and try hammering the outer crust before brushing the loose
+cover. Check the lens and drill, remove/reinsert the artifact, and save/reload.
+Close the screen and walk around the table to see the displayed items. Reopen from
+the other half, then break either side to recover the contents.
 The regression suite checks all four facings, both halves, blocked placement,
 slot rules, shift-click, component persistence, crafting and duplicate-free drops.
-The client check verifies the real tabletop item submission transforms and neutral
-overlay coordinates.
+The study regression also checks tool damage, safe completion, retained item data,
+shared progress, packet encoding, invalid actions and interaction range. The client
+check verifies the real excavation drawing plan and hit regions, as well as the
+tabletop item submission transforms and neutral overlay coordinates.
 
 For testing, use `/give @s examplemod:archaeology_table`,
 `/give @s examplemod:archaeology_drill`, `/give @s examplemod:archaeology_hammer`

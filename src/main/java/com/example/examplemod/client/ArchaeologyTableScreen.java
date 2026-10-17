@@ -1,59 +1,101 @@
 package com.example.examplemod.client;
 
-import com.example.examplemod.ArchaeologyTableMenu;
-import com.example.examplemod.ExampleMod;
+import com.example.examplemod.*;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
-/** Parchment notes, a felt artifact mat, and an engraved four-tool field kit. */
+/** A large excavation board with a top field kit and a separate inventory tab. */
 public final class ArchaeologyTableScreen extends AbstractContainerScreen<ArchaeologyTableMenu> {
-    private static Identifier texture(String path){return Identifier.fromNamespaceAndPath(ExampleMod.MODID,"textures/"+path+".png");}
-    private static final Identifier PAPER=texture("block/table_parchment"),MAT=texture("block/table_mat");
-    private static final String[] GUIDES={"","archaeology_drill","brush_guide","archaeology_hammer","magnifying_glass"};
+    private int selectedTool=2,currentCell=-1,lastHammerCell=-1;
+    private boolean excavating;
+    private long nextClientTick=Long.MIN_VALUE;
     public ArchaeologyTableScreen(ArchaeologyTableMenu menu,Inventory inventory,Component title){
-        super(menu,inventory,title,176,202);inventoryLabelY=108;
+        super(menu,inventory,title,ExcavationLayout.WIDTH,ExcavationLayout.HEIGHT);
     }
+    private boolean hasArtifact(){return ArchaeologyTableMenu.accepts(0,menu.getSlot(0).getItem());}
+    private boolean hasTool(int tool){return tool>=1&&tool<=4&&ArchaeologyTableMenu.accepts(tool,menu.getSlot(tool).getItem());}
     @Override public void extractBackground(GuiGraphicsExtractor g,int mouseX,int mouseY,float partialTick){
-        int x=leftPos,y=topPos;
-        g.fill(x,y,x+176,y+202,0xff38281c);
-        g.fill(x+2,y+2,x+174,y+200,0xffaf884a);
-        g.blit(RenderPipelines.GUI_TEXTURED,PAPER,x+4,y+4,0F,0F,168,194,32,32,32,32);
-        g.fill(x+5,y+5,x+171,y+21,0xff354c39);
-        g.fill(x+8,y+23,x+168,y+24,0xffaa8853);
-        g.blit(RenderPipelines.GUI_TEXTURED,MAT,x+19,y+35,0F,0F,68,56,32,32,32,32);
-        g.outline(x+18,y+34,70,58,0xffa88345);
-        g.fill(x+94,y+34,x+158,y+86,0xffaf9666);
-        g.fill(x+95,y+35,x+157,y+85,0xffcdbb8e);
-        for(int i=0;i<5;i++){
-            var slot=menu.getSlot(i);slot(g,x+slot.x,y+slot.y,i==0);
-            if(i>0 && !slot.hasItem())g.blit(RenderPipelines.GUI_TEXTURED,texture("item/"+GUIDES[i]),x+slot.x,y+slot.y,
-                    0F,0F,16,16,32,32,32,32,0x55ffffff);
+        int hover=ExcavationLayout.cellAt(mouseX-leftPos,mouseY-topPos);
+        if(excavating)currentCell=hover;
+        boolean[] tools=new boolean[5];for(int i=1;i<=4;i++)tools[i]=hasTool(i);
+        var artifact=menu.getSlot(0).getItem();
+        var state=new ExcavationScreenView.State(hasArtifact()?ExcavationStudy.read(artifact):null,
+                artifact.is(ExampleMod.RARE_ANCIENT_ARTIFACT.get()),menu.inventoryView(),selectedTool,hover,tools,artifact.isEmpty()?"":artifact.getHoverName().getString());
+        ExcavationScreenView.draw(new ExcavationScreenView.Canvas(){
+            @Override public void fill(int x,int y,int w,int h,int color){g.fill(leftPos+x,topPos+y,leftPos+x+w,topPos+y+h,color);}
+            @Override public void texture(Identifier id,int x,int y,int w,int h,float u,float v,int sw,int sh,int tw,int th,int color){
+                g.blit(RenderPipelines.GUI_TEXTURED,id,leftPos+x,topPos+y,u,v,w,h,sw,sh,tw,th,color);
+            }
+            @Override public void text(String text,int x,int y,int color){g.text(font,text,leftPos+x,topPos+y,color,false);}
+            @Override public int textWidth(String text){return font.width(text);}
+        },state,(key,args)->Component.translatable("gui.examplemod.excavation."+key,args).getString());
+    }
+    @Override protected void extractLabels(GuiGraphicsExtractor g,int mouseX,int mouseY){}
+    @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){
+        if(event.button()==0){
+            double x=event.x()-leftPos,y=event.y()-topPos;
+            if(ExcavationLayout.inside(x,y,176,7,65,15)){menu.inventoryView(false);excavating=false;return true;}
+            if(ExcavationLayout.inside(x,y,245,7,65,15)){menu.inventoryView(true);excavating=false;return true;}
+            int tool=ExcavationLayout.toolAt(x,y);
+            if(tool>0){selectedTool=tool;excavating=false;return true;}
+            if(!menu.inventoryView() && hasArtifact() && menu.getCarried().isEmpty()){
+                if(ExcavationLayout.inside(x,y,267,214,40,14)){send(0,-1);excavating=false;return true;}
+                int cell=ExcavationLayout.cellAt(x,y);
+                if(ExcavationStudy.coveredCell(cell)){
+                    currentCell=cell;lastHammerCell=-1;excavating=true;attempt();return true;
+                }
+            }
         }
-        g.fill(x+8,y+101,x+168,y+102,0xffa88345);
-        for(int row=0;row<3;row++)for(int col=0;col<9;col++)slot(g,x+8+col*18,y+120+row*18,false);
-        for(int col=0;col<9;col++)slot(g,x+8+col*18,y+178,false);
-        for(int dx:new int[]{5,168})for(int dy:new int[]{5,195})g.fill(x+dx,y+dy,x+dx+3,y+dy+3,0xffd1ac62);
+        return super.mouseClicked(event,doubleClick);
     }
-    private static void slot(GuiGraphicsExtractor g,int x,int y,boolean mat){
-        g.fill(x-1,y-1,x+17,y+17,0xff806541);
-        g.fill(x,y,x+16,y+16,mat?0xff263c2e:0xff8e805f);
-        g.fill(x,y,x+16,y+1,0xff584c35);
-        g.fill(x,y,x+1,y+16,0xff584c35);
-        g.fill(x+1,y+16,x+17,y+17,0xffedddad);
+    @Override public boolean mouseDragged(MouseButtonEvent event,double dx,double dy){
+        if(excavating){currentCell=ExcavationLayout.cellAt(event.x()-leftPos,event.y()-topPos);attempt();return true;}
+        return super.mouseDragged(event,dx,dy);
     }
-    @Override protected void extractLabels(GuiGraphicsExtractor g,int mouseX,int mouseY){
-        g.text(font,title,10,9,0xfff0e6c7,false);
-        g.text(font,Component.translatable("gui.examplemod.artifact"),24,25,0xff4d4931,false);
-        g.text(font,Component.translatable("gui.examplemod.field_kit"),101,25,0xff4d4931,false);
-        g.text(font,playerInventoryTitle,8,108,0xff51432e,false);
+    @Override public boolean mouseReleased(MouseButtonEvent event){
+        if(excavating){excavating=false;lastHammerCell=-1;return true;}
+        return super.mouseReleased(event);
+    }
+    @Override protected void containerTick(){super.containerTick();attempt();}
+    @Override public void onClose(){excavating=false;super.onClose();}
+    private void attempt(){
+        if(!excavating || menu.inventoryView() || !hasArtifact() || !hasTool(selectedTool) || selectedTool==4
+                || !menu.getCarried().isEmpty() || !ExcavationStudy.coveredCell(currentCell) || minecraft.level==null)return;
+        if(selectedTool!=2 && ExcavationStudy.read(menu.getSlot(0).getItem()).complete())return;
+        long now=minecraft.level.getGameTime();if(now<nextClientTick)return;
+        // A hammer held still delivers one strike; moving or clicking again is deliberate.
+        if(selectedTool==3 && lastHammerCell==currentCell)return;
+        send(selectedTool,currentCell);nextClientTick=now+2;lastHammerCell=currentCell;
+    }
+    private void send(int tool,int cell){
+        if(minecraft.getConnection()!=null)minecraft.getConnection().send(new ServerboundCustomPayloadPacket(new ExcavationPayload(menu.containerId,tool,cell)));
     }
     @Override protected void extractTooltip(GuiGraphicsExtractor g,int mouseX,int mouseY){
         super.extractTooltip(g,mouseX,mouseY);
-        if(hoveredSlot!=null && hoveredSlot.index<5 && !hoveredSlot.hasItem())
-            g.setTooltipForNextFrame(font,Component.translatable("gui.examplemod.table_slot."+hoveredSlot.index),mouseX,mouseY);
+        if(hoveredSlot!=null && hoveredSlot.index<5 && !hoveredSlot.hasItem()){
+            g.setTooltipForNextFrame(font,Component.translatable("gui.examplemod.table_slot."+hoveredSlot.index),mouseX,mouseY);return;
+        }
+        double x=mouseX-leftPos,y=mouseY-topPos;int tool=ExcavationLayout.toolAt(x,y);
+        if(tool>0){
+            g.setTooltipForNextFrame(font,List.of(Component.translatable(ArchaeologyTableMenu.tool(tool).getDescriptionId()),
+                    Component.translatable("gui.examplemod.excavation.help."+tool),
+                    Component.translatable(hasTool(tool)?"gui.examplemod.excavation.select_hint":"gui.examplemod.excavation.missing_tool")),Optional.empty(),mouseX,mouseY);return;
+        }
+        if(!menu.inventoryView() && hasArtifact()){
+            if(ExcavationLayout.inside(x,y,267,214,40,14))g.setTooltipForNextFrame(font,Component.translatable("gui.examplemod.excavation.reset_hint"),mouseX,mouseY);
+            int cell=ExcavationLayout.cellAt(x,y);
+            if(selectedTool==4 && hasTool(4) && ExcavationStudy.coveredCell(cell))
+                g.setTooltipForNextFrame(font,Component.translatable(ExcavationStudy.relicCell(cell)?"gui.examplemod.excavation.scan.inclusion":"gui.examplemod.excavation.scan.cover"),mouseX,mouseY);
+            else if(!excavating && selectedTool==2 && hasTool(2) && ExcavationStudy.coveredCell(cell) && ExcavationStudy.read(menu.getSlot(0).getItem()).depth(cell)>1)
+                g.setTooltipForNextFrame(font,Component.translatable("gui.examplemod.excavation.hard_cover"),mouseX,mouseY);
+        }
     }
 }
