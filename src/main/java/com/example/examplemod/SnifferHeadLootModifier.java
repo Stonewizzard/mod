@@ -31,4 +31,3 @@ public class SnifferHeadLootModifier extends LootModifier {
         return CODEC;
     }
 }
-

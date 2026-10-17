@@ -62,4 +62,3 @@ public class SnifferDebrisLootModifier extends LootModifier {
         return CODEC;
     }
 }
-
