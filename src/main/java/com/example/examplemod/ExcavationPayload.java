@@ -15,7 +15,7 @@ public record ExcavationPayload(int menuId,int tool,int cell) implements CustomP
             (buffer,payload)->{buffer.writeVarInt(payload.menuId);buffer.writeVarInt(payload.tool);buffer.writeVarInt(payload.cell);},
             buffer->new ExcavationPayload(buffer.readVarInt(),buffer.readVarInt(),buffer.readVarInt()));
     @Override public Type<? extends CustomPacketPayload> type(){return TYPE;}
-    public static void register(RegisterPayloadHandlersEvent event){event.registrar("1").playToServer(TYPE,STREAM_CODEC,ExcavationPayload::handle);}
+    public static void register(RegisterPayloadHandlersEvent event){event.registrar("2").playToServer(TYPE,STREAM_CODEC,ExcavationPayload::handle);}
     private static void handle(ExcavationPayload payload,IPayloadContext context){
         context.enqueueWork(()->{
             if(context.player() instanceof ServerPlayer player && player.containerMenu instanceof ArchaeologyTableMenu menu

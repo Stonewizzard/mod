@@ -89,7 +89,7 @@ public final class SnifferDebrisTests {
                 if (index == 0) {
                     require(helper, targetIsAir, "Digging must consume exposed ancient debris; items=" + items(helper).stream().map(e -> e.getItem().toString()).toList() + " sniffer=" + sniffer.position() + " tick=" + sniffer.tickCount);
                     require(helper, count(helper, Items.NETHERITE_SCRAP) == 1, "Must drop exactly one netherite scrap");
-                    require(helper, count(helper, ExampleMod.ANCIENT_ARTIFACT.get()) == 1, "Must drop exactly one artifact");
+                    require(helper, items(helper).stream().filter(e->e.getItem().is(ArchaeologyTableMenu.ARTIFACTS)&&ArtifactProfile.sealed(e.getItem())).mapToInt(e->e.getItem().getCount()).sum() == 1, "Must drop exactly one artifact");
                     int eggs = count(helper, ExampleMod.CRUNCHER_EGG_ITEM.get());
                     require(helper, eggs >= 0 && eggs <= 1, "A dig can award at most one Cruncher Egg");
                     require(helper, count(helper, Items.ANCIENT_DEBRIS) == 0, "Must not also drop the debris block");
@@ -101,7 +101,7 @@ public final class SnifferDebrisTests {
                     require(helper, count(helper, Items.TORCHFLOWER_SEEDS) + count(helper, Items.PITCHER_POD) == 1,
                             "Ordinary digging must retain its vanilla seed reward");
                     require(helper, count(helper, Items.NETHERITE_SCRAP) == 0
-                            && count(helper, ExampleMod.ANCIENT_ARTIFACT.get()) == 0, "No excavation rewards for dirt");
+                            && items(helper).stream().filter(e->e.getItem().is(ArchaeologyTableMenu.ARTIFACTS)&&ArtifactProfile.sealed(e.getItem())).mapToInt(e->e.getItem().getCount()).sum() == 0, "No excavation rewards for dirt");
                     if (index == 2) {
                         require(helper, helper.getLevel().getBlockState(helper.absolutePos(TARGET.below())).is(Blocks.ANCIENT_DEBRIS),
                                 "Buried ancient debris must remain untouched");
@@ -145,7 +145,7 @@ public final class SnifferDebrisTests {
             require(helper, helper.getLevel().getBlockState(helper.absolutePos(TARGET)).isAir(),
                     "Each successful debris loot roll must consume its block");
             require(helper, loot.stream().filter(s -> s.is(Items.NETHERITE_SCRAP)).mapToInt(s -> s.getCount()).sum() == 1
-                            && loot.stream().filter(s -> s.is(ExampleMod.ANCIENT_ARTIFACT.get())).mapToInt(s -> s.getCount()).sum() == 1,
+                            && loot.stream().filter(s -> s.is(ArchaeologyTableMenu.ARTIFACTS)&&ArtifactProfile.sealed(s)).mapToInt(s -> s.getCount()).sum() == 1,
                     "Reducing egg odds must preserve the guaranteed scrap and artifact");
             require(helper, loot.stream().mapToInt(s -> s.getCount()).sum() == 2 + count,
                     "Excavation must not add ordinary seeds or a creative spawn egg");
@@ -171,3 +171,4 @@ public final class SnifferDebrisTests {
         }
     }
 }
+

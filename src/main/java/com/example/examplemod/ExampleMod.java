@@ -83,7 +83,7 @@ public class ExampleMod {
     public static final DeferredBlock<AncientGeodeBlock> ANCIENT_GEODE = BLOCKS.registerBlock(
             "ancient_geode", AncientGeodeBlock::new, p -> p.strength(3.0F, 9.0F).noOcclusion());
     public static final DeferredItem<BlockItem> ANCIENT_GEODE_ITEM = ITEMS.registerSimpleBlockItem("ancient_geode", ANCIENT_GEODE);
-    public static final DeferredItem<Item> RARE_ANCIENT_ARTIFACT = ITEMS.registerSimpleItem("rare_ancient_artifact");
+    public static final DeferredItem<Item> RARE_ANCIENT_ARTIFACT = ITEMS.registerSimpleItem("rare_ancient_artifact",p->p.stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE));
 
     // Register the codec used by our sniffer death-loot JSON.
     public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS =
@@ -98,13 +98,13 @@ public class ExampleMod {
             LOOT_MODIFIERS.register("ominous_geode", () -> OminousGeodeLootModifier.CODEC);
 
     // Placeholder reward; future artifact components can be selected by the debris loot modifier.
-    public static final DeferredItem<Item> ANCIENT_ARTIFACT = ITEMS.registerSimpleItem("ancient_artifact");
+    public static final DeferredItem<Item> ANCIENT_ARTIFACT = ITEMS.registerSimpleItem("ancient_artifact",p->p.stacksTo(1));
 
     public static final DeferredBlock<ArchaeologyTableBlock> ARCHAEOLOGY_TABLE=BLOCKS.registerBlock(
             "archaeology_table",ArchaeologyTableBlock::new,p->p.strength(2.0F).sound(net.minecraft.world.level.block.SoundType.WOOD).noOcclusion());
     public static final DeferredItem<BlockItem> ARCHAEOLOGY_TABLE_ITEM=ITEMS.registerSimpleBlockItem("archaeology_table",ARCHAEOLOGY_TABLE);
-    public static final DeferredItem<Item> ARCHAEOLOGY_DRILL=ITEMS.registerSimpleItem("archaeology_drill",p->p.stacksTo(1));
-    public static final DeferredItem<Item> ARCHAEOLOGY_HAMMER=ITEMS.registerSimpleItem("archaeology_hammer",p->p.stacksTo(1));
+    public static final DeferredItem<Item> ARCHAEOLOGY_DRILL=ITEMS.registerSimpleItem("archaeology_drill",p->p.durability(256).enchantable(8).repairable(net.minecraft.world.item.Items.IRON_INGOT));
+    public static final DeferredItem<Item> ARCHAEOLOGY_HAMMER=ITEMS.registerSimpleItem("archaeology_hammer",p->p.durability(192).enchantable(8).repairable(net.minecraft.world.item.Items.IRON_INGOT));
     public static final DeferredItem<Item> MAGNIFYING_GLASS=ITEMS.registerSimpleItem("magnifying_glass",p->p.stacksTo(1));
     public static final DeferredRegister<net.minecraft.world.level.block.entity.BlockEntityType<?>> BLOCK_ENTITIES=DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE,MODID);
     public static final DeferredHolder<net.minecraft.world.level.block.entity.BlockEntityType<?>,net.minecraft.world.level.block.entity.BlockEntityType<ArchaeologyTableBlockEntity>> ARCHAEOLOGY_TABLE_ENTITY=
@@ -142,6 +142,9 @@ public class ExampleMod {
                 output.accept(ARCHAEOLOGY_DRILL.get());
                 output.accept(ARCHAEOLOGY_HAMMER.get());
                 output.accept(MAGNIFYING_GLASS.get());
+                ArchaeologyContent.materials().forEach(output::accept);
+                ArchaeologyContent.tools().forEach(output::accept);
+                output.accept(ArchaeologyContent.SWORD.get());
             }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -176,6 +179,7 @@ public class ExampleMod {
         // Register the Deferred Register to the mod event bus so blocks get registered
         BLOCKS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
+        ArchaeologyContent.register();
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
         MENUS.register(modEventBus);
@@ -210,11 +214,13 @@ public class ExampleMod {
 
     // Add the Sniffer Head item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+        if(event.getTabKey()==CreativeModeTabs.COMBAT){event.accept(ArchaeologyContent.SWORD);}
+        else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(SNIFFER_SKULL_ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(ANCIENT_ARTIFACT);
             event.accept(RARE_ANCIENT_ARTIFACT);
+            ArchaeologyContent.materials().forEach(event::accept);
         } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
             event.accept(CRUNCHER_SPAWN_EGG);
             event.accept(SKULK_PARASITE_SPAWN_EGG);
@@ -227,6 +233,7 @@ public class ExampleMod {
             event.accept(ARCHAEOLOGY_DRILL);
             event.accept(ARCHAEOLOGY_HAMMER);
             event.accept(MAGNIFYING_GLASS);
+            ArchaeologyContent.tools().forEach(event::accept);
         }
     }
 
@@ -255,5 +262,3 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
-
-

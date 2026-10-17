@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "#examplemod:ancient_components",
+  "base": "examplemod:archaeology_drill",
+  "addition": "minecraft:diamond",
+  "result": {
+    "id": "examplemod:precision_drill"
+  }
+}

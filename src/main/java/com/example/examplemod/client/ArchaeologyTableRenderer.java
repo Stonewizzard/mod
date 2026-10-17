@@ -36,7 +36,7 @@ public final class ArchaeologyTableRenderer implements BlockEntityRenderer<Archa
         var items=new ArrayList<ItemStackRenderState>(5);
         for(int i=0;i<5;i++){
             var item=new ItemStackRenderState();
-            resolver.updateForTopItem(item,table.getItem(i),ItemDisplayContext.FIXED,table.getLevel(),null,(int)table.getBlockPos().asLong()+i);
+            resolver.updateForTopItem(item,table.getItem(i==0&&table.getItem(0).isEmpty()?5:i),ItemDisplayContext.FIXED,table.getLevel(),null,(int)table.getBlockPos().asLong()+i);
             items.add(item);
         }
         state.items=List.copyOf(items);

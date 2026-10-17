@@ -36,6 +36,21 @@ public final class ExcavationVisualRegression {
             var state=new ExcavationScreenView.State(study,rare,inventory,held,hover,storedTools(held),name.equals("empty")?"":rare?"Rare Ancient Artifact":"Ancient Artifact");
             scenes.add(snapshot(name,state,labels,resources,font,assets));
         }
+        for(var find:new ArtifactProfile.Find[]{ArtifactProfile.Find.PICKAXE_HEAD,ArtifactProfile.Find.SWORD_BLADE,ArtifactProfile.Find.AXE_HEAD,ArtifactProfile.Find.RESONANT_CORE}){
+            var id=ExcavationScreenView.texture("gui/excavation/"+find.path());BufferedImage art;
+            try(var input=resources.getResourceOrThrow(id).open()){art=ImageIO.read(input);}
+            require(art.getWidth()==128&&art.getHeight()==64,"Component artwork must match board texture coordinates");
+            for(int cell=0;cell<ExcavationStudy.CELLS;cell++){
+                int x=cell%28,y=cell/28;boolean hit=false;
+                for(int py=y*64/12;py<(int)Math.ceil((y+1)*64/12.0);py++)for(int px=x*128/28;px<(int)Math.ceil((x+1)*128/28.0);px++)if((art.getRGB(px,py)>>>24)>127)hit=true;
+                require(hit==ArtifactFootprints.contains(find,cell),"Rendered component alpha and excavation collision mask must agree");
+            }
+            for(var matrix:ArtifactProfile.Matrix.values()){
+                var specimen=new ExcavationStudy(new ArtifactProfile(817,matrix==ArtifactProfile.Matrix.SANDSTONE?0:matrix==ArtifactProfile.Matrix.SHALE?1:matrix==ArtifactProfile.Matrix.OBSIDIAN?3:2,matrix,find));
+                for(int cell=0;cell<ExcavationStudy.CELLS;cell++)if(cell%28<14){while(specimen.depth(cell)>1)specimen.work(1,cell);specimen.work(2,cell);}
+                scenes.add(snapshot(find.path()+"_"+matrix.name().toLowerCase(Locale.ROOT),new ExcavationScreenView.State(specimen,true,false,4,6*28+14,storedTools(4),"Epic Ancient Artifact",2,false),labels,resources,font,assets));
+            }
+        }
         animation.add(snapshot("covered",new ExcavationScreenView.State(covered,false,false,3,-1,storedTools(3),"Ancient Artifact"),labels,resources,font,assets));
         animation.add(snapshot("loose",new ExcavationScreenView.State(loose,false,false,2,-1,storedTools(2),"Ancient Artifact"),labels,resources,font,assets));
         for(int step=0;step<=14;step++){
@@ -43,7 +58,7 @@ public final class ExcavationVisualRegression {
             for(int cell=0;cell<ExcavationStudy.CELLS;cell++)if(cell%ExcavationStudy.COLS<limit)state.work(2,cell);
             animation.add(snapshot("brush_"+step,new ExcavationScreenView.State(state,false,false,2,6*ExcavationStudy.COLS+Math.min(27,limit),storedTools(2),"Ancient Artifact"),labels,resources,font,assets));
         }
-        for(int i=0;i<5;i++){
+        for(int i=0;i<6;i++){
             var p=ExcavationLayout.SLOTS[i];require(p[0]>=0&&p[0]+16<=320&&p[1]+16<ExcavationLayout.BOARD_Y,"A field-kit slot overlaps the board");
         }
         require(ExcavationLayout.cellAt(20,72)==0&&ExcavationLayout.cellAt(299.99,191.99)==ExcavationStudy.CELLS-1
@@ -65,23 +80,26 @@ public final class ExcavationVisualRegression {
             var output=new ByteArrayOutputStream();try(var zip=new DeflaterOutputStream(output)){zip.write(new Gson().toJson(root).getBytes(StandardCharsets.UTF_8));}
             System.out.println("EXCAVATION_PREVIEW_Z:"+Base64.getEncoder().encodeToString(output.toByteArray()));
         }
-        System.out.println("EXCAVATION_UI_CHECK: PASS: real drawing plan, eleven study/inventory states, four held-tool highlights with empty kit slots, empty-hand instructions, safe bounds and full grid coverage");
+        System.out.println("EXCAVATION_UI_CHECK: PASS: real drawing plan, 31 study/material/component/inventory states, four held-tool highlights with empty kit slots, empty-hand instructions, safe bounds and full grid coverage");
     }
     private static boolean[] storedTools(int held){var tools=new boolean[]{false,true,true,true,true};if(held>0)tools[held]=false;return tools;}
     private static ExcavationStudy copy(ExcavationStudy study){return study.copy();}
     private static JsonObject snapshot(String name,ExcavationScreenView.State state,ExcavationScreenView.Labels labels,ResourceManager resources,BufferedImage font,JsonObject assets)throws Exception{
         var canvas=new RecordingCanvas(font);ExcavationScreenView.draw(canvas,state,labels);
         // Native slot extraction draws these after the background; include their actual GUI textures in the review.
-        if(state.study()!=null){canvas.image(Identifier.withDefaultNamespace(state.rare()?"textures/item/prize_pottery_sherd.png":"textures/item/arms_up_pottery_sherd.png"),26,40,16,16,16,16,-1);}
+        if(state.study()!=null){
+            var specimen=switch(state.study().profile().rarity()){case 1->"uncommon_ancient_artifact";case 2->"rare_ancient_artifact";case 3->"epic_ancient_artifact";default->"ancient_artifact";};
+            canvas.image(ExcavationScreenView.texture("item/"+specimen),26,40,16,16,32,32,-1);
+        }
         for(int i=1;i<=4;i++)if(state.tools()[i]){
             var id=i==2?Identifier.withDefaultNamespace("textures/item/brush.png"):ExcavationScreenView.texture("item/"+switch(i){case 1->"archaeology_drill";case 3->"archaeology_hammer";default->"magnifying_glass";});
             var p=ExcavationLayout.SLOTS[i];canvas.image(id,p[0],p[1],16,16,i==2?16:32,i==2?16:32,-1);
         }
         // Native container rendering draws the actual carried item over the work surface.
         if(state.heldTool()>0&&state.hoveredCell()>=0){
-            int tool=state.heldTool();var id=tool==2?Identifier.withDefaultNamespace("textures/item/brush.png"):ExcavationScreenView.texture("item/"+switch(tool){case 1->"archaeology_drill";case 3->"archaeology_hammer";default->"magnifying_glass";});
+            int tool=state.heldTool();var id=state.tier()>0?ExcavationScreenView.texture("item/"+(state.tier()==1?"precision_":"resonant_")+switch(tool){case 1->"drill";case 2->"brush";case 3->"hammer";default->"lens";}):tool==2?Identifier.withDefaultNamespace("textures/item/brush.png"):ExcavationScreenView.texture("item/"+switch(tool){case 1->"archaeology_drill";case 3->"archaeology_hammer";default->"magnifying_glass";});
             canvas.image(id,ExcavationLayout.BOARD_X+state.hoveredCell()%ExcavationStudy.COLS*10-3,
-                    ExcavationLayout.BOARD_Y+state.hoveredCell()/ExcavationStudy.COLS*10-3,16,16,tool==2?16:32,tool==2?16:32,-1);
+                    ExcavationLayout.BOARD_Y+state.hoveredCell()/ExcavationStudy.COLS*10-3,16,16,tool==2&&state.tier()==0?16:32,tool==2&&state.tier()==0?16:32,-1);
         }
         for(var id:canvas.textures)if(!assets.has(id.toString()))try(var input=resources.getResourceOrThrow(id).open()){
             byte[] bytes=input.readAllBytes();require(ImageIO.read(new ByteArrayInputStream(bytes))!=null,"Invalid excavation image "+id);

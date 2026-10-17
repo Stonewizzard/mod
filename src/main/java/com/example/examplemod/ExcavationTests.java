@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.component.CustomData;
@@ -29,73 +30,59 @@ public final class ExcavationTests {
     private static final class StudyTest extends GameTestInstance {
         StudyTest(TestData<Holder<TestEnvironmentDefinition<?>>> data){super(data);}
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
-        @Override protected MutableComponent typeDescription(){return Component.literal("Excavation tools, retained specimens and multiplayer action validation");}
+        @Override protected MutableComponent typeDescription(){return Component.literal("Sealed artifacts, tiered tools, persistent excavation and atomic recovery");}
         @Override public void run(GameTestHelper helper){
-            verifyTools(helper);var level=helper.getLevel();
+            verifyStudies(helper);verifyBalance(helper);verifyRecipes(helper);var level=helper.getLevel();
             for(int x=0;x<8;x++)for(int z=0;z<8;z++)helper.setBlock(new BlockPos(x,0,z),Blocks.STONE);
             var local=new BlockPos(3,1,3);var pos=helper.absolutePos(local);var state=ExampleMod.ARCHAEOLOGY_TABLE.get().defaultBlockState();
             helper.setBlock(local,state);var player=helper.makeMockServerPlayerInLevel();var other=helper.makeMockServerPlayerInLevel();
+            player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);other.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
             player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);other.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+1.5);
             ExampleMod.ARCHAEOLOGY_TABLE.get().setPlacedBy(level,pos,state,player,new ItemStack(ExampleMod.ARCHAEOLOGY_TABLE_ITEM.get()));
             var table=ArchaeologyTableBlock.inventory(level,pos);var artifact=new ItemStack(ExampleMod.ANCIENT_ARTIFACT.get());
-            artifact.set(DataComponents.CUSTOM_NAME,Component.literal("Saved specimen"));
-            var custom=new net.minecraft.nbt.CompoundTag();custom.putString("unrelated","preserved");artifact.set(DataComponents.CUSTOM_DATA,CustomData.of(custom));table.setItem(0,artifact);
-            var menu=new ArchaeologyTableMenu(22,player.getInventory(),table);
-            var collaborator=new ArchaeologyTableMenu(23,other.getInventory(),table);
-            require(helper,!menu.studyAction(player,1,CENTER),"A packet must not operate a menu the sender has not opened");
+            ArtifactProfile.legacy().write(artifact);artifact.set(DataComponents.CUSTOM_NAME,Component.literal("Saved specimen"));table.setItem(0,artifact);
+            var menu=new ArchaeologyTableMenu(22,player.getInventory(),table);var collaborator=new ArchaeologyTableMenu(23,other.getInventory(),table);
+            require(helper,!menu.studyAction(player,1,CENTER),"Unopened menu must reject packets");
+            var enchanted=new ItemStack(ArchaeologyContent.PRECISION_DRILL.get());
+            var unbreaking=level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(net.minecraft.world.item.enchantment.Enchantments.UNBREAKING);enchanted.enchant(unbreaking,3);
+            enchanted.hurtAndBreak(100,level,player,unused->{});require(helper,enchanted.getDamageValue()>0&&enchanted.getDamageValue()<80,"Native Unbreaking must reduce excavation-tool durability cost");
+            var fragile=new ItemStack(ExampleMod.ARCHAEOLOGY_DRILL.get());fragile.setDamageValue(fragile.getMaxDamage()-1);fragile.hurtAndBreak(1,level,player,unused->{});require(helper,fragile.isEmpty(),"Native tool wear must consume a broken tool");
             var old=player.containerMenu;var oldOther=other.containerMenu;player.containerMenu=menu;other.containerMenu=collaborator;
-            require(helper,menu.carriedTool()==0&&!menu.studyAction(player,1,CENTER),"An empty cursor must not default to the brush or operate a tool");
-            var drill=new ItemStack(ExampleMod.ARCHAEOLOGY_DRILL.get());drill.set(DataComponents.CUSTOM_NAME,Component.literal("Field drill"));
-            table.setItem(1,drill.copy());table.setItem(2,new ItemStack(net.minecraft.world.item.Items.BRUSH));
-            table.setItem(3,new ItemStack(ExampleMod.ARCHAEOLOGY_HAMMER.get()));table.setItem(4,new ItemStack(ExampleMod.MAGNIFYING_GLASS.get()));
-            verifyToolSwitches(helper,menu,player,table);
-            require(helper,!menu.studyAction(player,1,CENTER),"A stored tool must not operate until picked up");
+            for(int tier=0;tier<3;tier++){
+                for(int role=1;role<=4;role++){var tool=new ItemStack(tier==0?ArchaeologyTableMenu.tool(role):ArchaeologyContent.upgrade(role,tier));tool.set(DataComponents.CUSTOM_NAME,Component.literal("Tool "+tier+"/"+role));table.setItem(role,tool);}
+                verifyToolSwitches(helper,menu,player,table);
+            }
+            for(int role=1;role<=4;role++)table.setItem(role,new ItemStack(ArchaeologyTableMenu.tool(role)));
+            require(helper,menu.carriedTool()==0&&!menu.studyAction(player,1,CENTER),"Stored tools cannot operate");
+            player.snapTo(pos.getX()+30,pos.getY(),pos.getZ());require(helper,!menu.studyAction(player,0,-1),"Remote players must not act on a table");player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);
             menu.clicked(1,0,ContainerInput.PICKUP,player);
-            require(helper,menu.carriedTool()==1&&table.getItem(1).isEmpty()&&ItemStack.matches(menu.getCarried(),drill),"Native pickup must activate the actual drill and preserve its components");
-            require(helper,!menu.studyAction(player,2,CENTER),"The packet must match the carried tool, not another tool stored in the kit");
-            require(helper,!menu.studyAction(player,999,CENTER)&&!menu.studyAction(player,1,Integer.MAX_VALUE)&&!menu.studyAction(player,1,-2),"Forged tools and coordinates must be ignored");
-            require(helper,!menu.studyAction(other,1,CENTER),"One player must not issue actions through another player's menu");
-            require(helper,menu.studyAction(player,1,CENTER)&&ExcavationStudy.read(table.getItem(0)).depth(CENTER)==2,"A valid drill action must remove one layer");
-            require(helper,!menu.studyAction(player,1,CENTER),"Repeated same-tick packets must be throttled");
-            other.getInventory().setItem(0,new ItemStack(ExampleMod.ARCHAEOLOGY_DRILL.get()));collaborator.clicked(32,0,ContainerInput.PICKUP,other);
-            require(helper,collaborator.carriedTool()==1&&collaborator.studyAction(other,1,CENTER)&&ExcavationStudy.read(table.getItem(0)).depth(CENTER)==1,"A tool picked up from the hotbar must work against current shared server state");
-            menu.clicked(1,0,ContainerInput.PICKUP,player);
-            require(helper,menu.carriedTool()==0&&ItemStack.matches(table.getItem(1),drill),"Native return must deactivate the tool without changing or duplicating it");
-            menu.clicked(2,0,ContainerInput.PICKUP,player);
-            require(helper,menu.carriedTool()==2&&table.getItem(2).isEmpty(),"Picking up the brush must switch away from the drill");
+            require(helper,!menu.studyAction(player,2,CENTER)&&!menu.studyAction(other,1,CENTER)&&!menu.studyAction(player,999,CENTER)&&!menu.studyAction(player,1,Integer.MAX_VALUE),"Forged or wrong-cursor actions must be rejected");
+            require(helper,menu.studyAction(player,1,CENTER)&&ExcavationStudy.read(table.getItem(0)).depth(CENTER)==2,"Native carried drill must remove a layer");
+            require(helper,menu.getCarried().getDamageValue()==1,"Successful excavation must wear the actual cursor tool once");
+            require(helper,!menu.studyAction(player,1,CENTER),"Same-tick requests must be throttled");
+            other.getInventory().setItem(0,new ItemStack(ArchaeologyContent.PRECISION_DRILL.get()));collaborator.clicked(33,0,ContainerInput.PICKUP,other);
+            require(helper,collaborator.carriedTool()==1&&collaborator.studyAction(other,1,CENTER)&&ExcavationStudy.read(table.getItem(0)).depth(CENTER)==1,"Second viewer must work against current shared server state");
+            require(helper,!collaborator.studyAction(other,0,-1),"An unfinished specimen cannot be recovered or reset");
             var restored=BlockEntity.loadStatic(pos,state,table.saveWithFullMetadata(level.registryAccess()),level.registryAccess());
-            require(helper,restored instanceof ArchaeologyTableBlockEntity && ItemStack.matches(((ArchaeologyTableBlockEntity)restored).getItem(0),table.getItem(0)),"Study data and artifact components must survive table serialization");
-            var clientMenu=new ArchaeologyTableMenu(24,player.getInventory());
-            require(helper,!clientMenu.getSlot(5).isActive()&&clientMenu.getSlot(32).isActive()&&menu.getSlot(5).isActive(),"Only the client's main inventory is hidden on the excavation tab");
-            clientMenu.inventoryView(true);require(helper,clientMenu.getSlot(5).isActive(),"Inventory tab must restore ordinary slot interaction");
+            require(helper,restored instanceof ArchaeologyTableBlockEntity&&ItemStack.matches(((ArchaeologyTableBlockEntity)restored).getItem(0),table.getItem(0)),"Study and profile must survive table serialization");
+            var client=new ArchaeologyTableMenu(24,player.getInventory());
+            require(helper,client.getSlot(5).isActive()&&!client.getSlot(6).isActive()&&client.getSlot(33).isActive(),"Output and hotbar remain available; main inventory is tabbed");
+            client.inventoryView(true);require(helper,client.getSlot(6).isActive()&&!client.getSlot(5).mayPlace(new ItemStack(Items.DIRT)),"Inventory tab must work and output must reject deposits");
             var buffer=new RegistryFriendlyByteBuf(Unpooled.buffer(),level.registryAccess());
-            try {for(var packet:new ExcavationPayload[]{new ExcavationPayload(22,3,ExcavationStudy.CELLS-1),new ExcavationPayload(22,0,-1)}){
-                buffer.clear();ExcavationPayload.STREAM_CODEC.encode(buffer,packet);require(helper,packet.equals(ExcavationPayload.STREAM_CODEC.decode(buffer)),"Payload must preserve the entire grid and reset action");
-            }}finally{buffer.release();}
-            helper.runAfterDelay(2,()->{
-                require(helper,menu.studyAction(player,2,CENTER)&&ExcavationStudy.read(table.getItem(0)).depth(CENTER)==0,"Brush must remove the final sediment without damage");
-                require(helper,ExcavationStudy.read(table.getItem(0)).condition()==100&&table.getItem(0).getCount()==1&&menu.getCarried().getCount()==1,"Excavation must preserve the actual artifact and cursor tool");
-                menu.clicked(3,0,ContainerInput.PICKUP,player);
-                require(helper,menu.carriedTool()==3&&table.getItem(3).isEmpty()&&ArchaeologyTableMenu.accepts(2,table.getItem(2)),"Clicking the hammer must return the held brush to its slot");
+            try {for(var packet:new ExcavationPayload[]{new ExcavationPayload(22,3,ExcavationStudy.CELLS-1),new ExcavationPayload(22,0,-1)}){buffer.clear();ExcavationPayload.STREAM_CODEC.encode(buffer,packet);require(helper,packet.equals(ExcavationPayload.STREAM_CODEC.decode(buffer)),"Packet roundtrip must retain recovery and grid coordinates");}}finally{buffer.release();}
+            helper.runAfterDelay(4,()->{
+                menu.clicked(2,0,ContainerInput.PICKUP,player);require(helper,menu.studyAction(player,2,CENTER)&&ExcavationStudy.read(table.getItem(0)).depth(CENTER)==0,"Swapping to brush must safely finish the last layer");
+                require(helper,ExcavationStudy.read(table.getItem(0)).condition()==100,"Careful brush finish must preserve condition");
+                var sealed=ArchaeologyContent.specimen(92,2);var finished=finish(ExcavationStudy.read(sealed));finished.write(sealed);table.setItem(0,sealed);table.setItem(5,new ItemStack(Items.DIRT));
                 helper.runAfterDelay(2,()->{
-                    require(helper,menu.studyAction(player,0,-1),"Reset must be available for this non-consuming study");
-                    var reset=ExcavationStudy.read(table.getItem(0));var root=table.getItem(0).get(DataComponents.CUSTOM_DATA).copyTag();
-                    require(helper,reset.progress()==0&&reset.condition()==100&&root.getStringOr("unrelated","").equals("preserved")&&table.getItem(0).getHoverName().getString().equals("Saved specimen"),"Reset must preserve unrelated data and the artifact name");
-                    require(helper,menu.carriedTool()==3&&menu.getCarried().getCount()==1,"Reset must leave the held hammer intact");
-                    menu.clicked(4,0,ContainerInput.PICKUP,player);
-                    require(helper,menu.carriedTool()==4&&!menu.studyAction(player,4,CENTER),"The held lens must be recognized without removing material");
-                    menu.clicked(4,0,ContainerInput.PICKUP,player);
-                    require(helper,menu.carriedTool()==0&&!menu.studyAction(player,3,CENTER),"Putting a tool back must stop excavation");
-                    for(int tool=1;tool<=4;tool++)require(helper,table.getItem(tool).getCount()==1&&ArchaeologyTableMenu.accepts(tool,table.getItem(tool)),"Switching all four tools must leave exactly one of each in its native slot");
-                    menu.setCarried(new ItemStack(net.minecraft.world.item.Items.DIRT));
-                    require(helper,menu.carriedTool()==0&&!menu.studyAction(player,1,CENTER),"An unrelated cursor item must never count as an excavation tool");menu.setCarried(ItemStack.EMPTY);
-                    menu.clicked(1,0,ContainerInput.PICKUP,player);
-                    player.snapTo(pos.getX()+30,pos.getY(),pos.getZ());require(helper,!menu.studyAction(player,1,CENTER),"Remote players must not excavate");
-                    player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);menu.clicked(1,0,ContainerInput.PICKUP,player);
-                    collaborator.clicked(32,0,ContainerInput.PICKUP,other);
-                    int previousDrills=player.getInventory().countItem(drill.getItem());menu.clicked(1,0,ContainerInput.PICKUP,player);menu.removed(player);
-                    require(helper,menu.getCarried().isEmpty()&&table.getItem(1).isEmpty()&&player.getInventory().countItem(drill.getItem())==previousDrills+1,"Closing with a held tool must use native return-to-inventory handling exactly once");
-                    player.containerMenu=old;other.containerMenu=oldOther;helper.succeed();
+                    require(helper,!menu.studyAction(player,0,-1)&&ItemStack.matches(table.getItem(0),sealed),"Full output must not consume the specimen");
+                    table.setItem(5,ItemStack.EMPTY);
+                    require(helper,menu.studyAction(player,0,-1)&&table.getItem(0).isEmpty()&&!table.getItem(5).isEmpty(),"Recovery consumes one input and publishes one reward");
+                    var reward=table.getItem(5).copy();require(helper,!collaborator.studyAction(other,0,-1)&&ItemStack.matches(reward,table.getItem(5)),"Two viewers must not claim twice");
+                    require(helper,!menu.quickMoveStack(player,5).isEmpty()&&table.getItem(5).isEmpty(),"Recovered output must shift-click into the player inventory");
+                    menu.clicked(2,0,ContainerInput.PICKUP,player);menu.clicked(1,0,ContainerInput.PICKUP,player);int before=player.getInventory().countItem(menu.getCarried().getItem());
+                    menu.removed(player);require(helper,menu.getCarried().isEmpty()&&player.getInventory().countItem(ExampleMod.ARCHAEOLOGY_DRILL.get())==before+1,"Closing must return the actual held tool exactly once");
+                    collaborator.removed(other);player.containerMenu=old;other.containerMenu=oldOther;helper.succeed();
                 });
             });
         }
@@ -126,22 +113,85 @@ public final class ExcavationTests {
         require(helper,ItemStack.matches(predicted.getSlot(4).getItem(),original[4])&&predicted.getSlot(3).getItem().isEmpty()&&ItemStack.matches(predicted.getCarried(),original[3]),
                 "The client menu must predict the same lens-to-hammer switch as the server");
     }
-    private static void verifyTools(GameTestHelper helper){
-        var study=new ExcavationStudy();require(helper,study.progress()==0&&study.condition()==100,"New study must start covered and intact");
-        require(helper,!study.work(2,CENTER)&&!study.work(4,CENTER),"Brush cannot break heavy cover, and magnifier cannot remove it");
-        require(helper,study.work(3,CENTER)&&study.depth(CENTER)==1&&study.condition()==100,"One hammer strike should remove coarse cover safely");
-        require(helper,study.work(3,CENTER)&&study.condition()<100,"Hammer must warn through condition loss when used near exposed material");
-        var precision=new ExcavationStudy();precision.work(1,CENTER);precision.work(1,CENTER);precision.work(1,CENTER);
-        require(helper,precision.condition()==99,"Drill must be less damaging but still require care at the surface");
-        var safe=new ExcavationStudy();
-        for(int i=0;i<ExcavationStudy.CELLS;i++)if(ExcavationStudy.coveredCell(i)){safe.work(1,i);safe.work(1,i);}
-        for(int i=0;i<ExcavationStudy.CELLS;i++)safe.work(2,i);
-        require(helper,safe.complete()&&safe.condition()==100&&!safe.work(3,CENTER),"Careful excavation must finish intact and stop accepting destructive strokes after completion");
-        var item=new ItemStack(ExampleMod.RARE_ANCIENT_ARTIFACT.get());safe.write(item);
-        require(helper,safe.equals(ExcavationStudy.read(item)),"Study state must travel with a removed artifact");
-        require(helper,!new ExcavationStudy().work(-9,CENTER)&&!new ExcavationStudy().work(3,-1),"Out-of-range strokes must be ignored");
-        var malformed=new net.minecraft.nbt.CompoundTag();var root=new net.minecraft.nbt.CompoundTag();malformed.putInt("Version",1);malformed.putByteArray("Depths",new byte[1]);root.put(ExcavationStudy.KEY,malformed);
-        item.set(DataComponents.CUSTOM_DATA,CustomData.of(root));require(helper,ExcavationStudy.read(item).equals(new ExcavationStudy()),"Malformed study data must recover to a fresh board");
+    private static void verifyBalance(GameTestHelper helper){
+        for(var matrix:ArtifactProfile.Matrix.values())for(int tier=0;tier<3;tier++){
+            var study=new ExcavationStudy(new ArtifactProfile(817,2,matrix,ArtifactProfile.Find.PICKAXE_HEAD));int ticks=0;
+            for(int pass=0;pass<5;pass++)for(int cell=0;cell<ExcavationStudy.CELLS;cell++){
+                int power=ExcavationStudy.power(3,tier);boolean safe=true;
+                for(int other=0;other<ExcavationStudy.CELLS;other++)if(study.inclusion(other)&&ExcavationStudy.affects(3,tier,cell,other)&&study.depth(other)>0&&study.depth(other)<=power)safe=false;
+                if(safe&&study.work(3,tier,cell))ticks+=ArchaeologyContent.cooldown(3,tier);
+            }
+            for(int cell=0;cell<ExcavationStudy.CELLS;cell++)if(study.inclusion(cell))while(study.depth(cell)>1&&!study.recoverable()){
+                if(study.work(1,tier,cell))ticks+=ArchaeologyContent.cooldown(1,tier);else break;
+            }
+            for(int cell=0;cell<ExcavationStudy.CELLS;cell++)if(study.work(2,tier,cell))ticks+=2;
+            require(helper,study.complete()&&study.condition()==100,"A conservative hammer/drill/brush route must work at every tier and hardness");
+            System.out.println("ARCHAEOLOGY_BALANCE: "+matrix+" tier="+tier+" strokes="+study.strokes()+" minimumSeconds="+(ticks/20.0));
+        }
+    }
+    private static void verifyRecipes(GameTestHelper helper){
+        var level=helper.getLevel();var manager=level.getServer().getRecipeManager();
+        var unbreaking=level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(net.minecraft.world.item.enchantment.Enchantments.UNBREAKING);
+        for(int tier=1;tier<=2;tier++)for(int role=1;role<=4;role++){
+            var base=new ItemStack(tier==1?ArchaeologyTableMenu.tool(role):ArchaeologyContent.upgrade(role,1));
+            base.set(DataComponents.CUSTOM_NAME,Component.literal("Inherited tool"));
+            if(role!=4){base.setDamageValue(7);base.enchant(unbreaking,2);}
+            var input=new net.minecraft.world.item.crafting.SmithingRecipeInput(new ItemStack(tier==1?ArchaeologyContent.FRAGMENTS.get():ArchaeologyContent.CORE.get()),base,new ItemStack(tier==1?Items.DIAMOND:Items.NETHERITE_SCRAP));
+            var recipe=manager.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.SMITHING,input,level);
+            require(helper,recipe.isPresent(),"All eight native smithing upgrades must load and match");
+            var upgraded=recipe.get().value().assemble(input);
+            require(helper,upgraded.is(ArchaeologyContent.upgrade(role,tier))&&upgraded.getHoverName().getString().equals("Inherited tool"),"Smithing must preserve custom names on the correct tier");
+            if(role!=4)require(helper,upgraded.getDamageValue()==7&&net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(unbreaking,upgraded)==2,"Upgrade must preserve damage and enchantments");
+        }
+        var parts=new net.minecraft.world.item.Item[]{ArchaeologyContent.SWORD_BLADE.get(),ArchaeologyContent.PICKAXE_HEAD.get(),ArchaeologyContent.AXE_HEAD.get()};
+        var gear=new net.minecraft.world.item.Item[]{ArchaeologyContent.SWORD.get(),ArchaeologyContent.PICKAXE.get(),ArchaeologyContent.AXE.get()};
+        int[][] pattern={{0,1,0,0,2,0,0,3,0},{0,1,0,2,3,2,0,3,0},{1,2,0,0,3,0,0,3,0}};
+        for(int i=0;i<3;i++){
+            final int kind=i;var stacks=java.util.Arrays.stream(pattern[i]).mapToObj(n->n==0?ItemStack.EMPTY:new ItemStack(n==1?parts[kind]:n==2?Items.IRON_INGOT:Items.STICK)).toList();
+            var input=net.minecraft.world.item.crafting.CraftingInput.of(3,3,stacks);var recipe=manager.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,level);
+            require(helper,recipe.isPresent()&&recipe.get().value().assemble(input).is(gear[i]),"Every recovered equipment part must have a working restored-gear recipe");
+        }
+        System.out.println("ARCHAEOLOGY_RECIPE_CHECK: PASS: eight upgrades retain names, damage and enchantments; three restored equipment recipes");
+    }
+    private static ExcavationStudy finish(ExcavationStudy study){
+        for(int i=0;i<ExcavationStudy.CELLS;i++)while(study.depth(i)>1&&!study.recoverable())study.work(1,i);
+        for(int i=0;i<ExcavationStudy.CELLS;i++)study.work(2,i);
+        return study;
+    }
+    private static void verifyStudies(GameTestHelper helper){
+        var risky=new ExcavationStudy();risky.work(3,CENTER);risky.work(3,CENTER);
+        require(helper,risky.condition()>=92&&risky.condition()<100,"Damage must be meaningful but capped per stroke");
+        var precise=new ExcavationStudy();precise.work(1,1,CENTER);precise.work(1,1,CENTER);
+        require(helper,precise.depth(CENTER)==1&&!precise.work(1,1,CENTER)&&precise.condition()==100,"Precision drill must stop at the dust layer without damage or wear");
+        var brush=new ExcavationStudy();brush.work(1,CENTER);
+        require(helper,!brush.copy().work(2,0,CENTER)&&brush.work(2,1,CENTER)&&brush.depth(CENTER)==1,"Upgraded brush must remove weathered cover that a field brush cannot");
+        require(helper,ExcavationStudy.radius(4,2)>ExcavationStudy.radius(4,0)&&ArchaeologyContent.cooldown(1,1)<ArchaeologyContent.cooldown(1,0),"Tier effects must include lens reach and drill speed");
+        var kinds=new java.util.HashSet<ArtifactProfile.Find>();var matrices=new java.util.HashSet<ArtifactProfile.Matrix>();
+        for(int rarity=0;rarity<4;rarity++)for(int seed=0;seed<40;seed++){
+            var stack=ArchaeologyContent.specimen(seed,rarity);var profile=ArtifactProfile.read(stack);kinds.add(profile.find());matrices.add(profile.matrix());
+            require(helper,profile.equals(ArtifactProfile.roll(seed,rarity)),"A specimen must seal its deterministic profile");
+            var a=ExcavationStudy.read(stack);a.work(1,CENTER);a.write(stack);ArtifactProfile.seal(stack,seed+1);
+            require(helper,a.equals(ExcavationStudy.read(stack)),"Reinsertion must preserve progress and cannot reroll contents");
+            var safe=finish(a);require(helper,safe.complete()&&safe.condition()==100,"Every rarity and matrix must be finishable with starter tools without damage");
+            var reward=ArchaeologyContent.reward(safe);require(helper,!reward.isEmpty(),"Every excavation must recover a component or salvage");
+            if(reward.is(ArchaeologyContent.FRAGMENTS.get()))require(helper,!reward.has(DataComponents.CUSTOM_DATA),"Commodity fragments should stack across specimens");
+            else require(helper,reward.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty("examplemod:recovered").getIntOr("Quality",-1)==100,"Recovered components must record their quality and provenance");
+        }
+        require(helper,kinds.size()==5&&matrices.size()==5,"Seeded variation must exercise all find types and rock matrices");
+        var old=new ItemStack(ExampleMod.ANCIENT_ARTIFACT.get());var root=new net.minecraft.nbt.CompoundTag();root.putString("unrelated","keep");var tag=new net.minecraft.nbt.CompoundTag();tag.putInt("Version",1);
+        byte[] depths=new byte[ExcavationStudy.CELLS];java.util.Arrays.fill(depths,(byte)1);tag.putByteArray("Depths",depths);tag.putByteArray("Scars",new byte[ExcavationStudy.CELLS]);tag.putInt("Damage",17);root.put(ExcavationStudy.KEY,tag);old.set(DataComponents.CUSTOM_DATA,CustomData.of(root));ArtifactProfile.seal(old,123);
+        var migrated=ExcavationStudy.read(old);require(helper,migrated.profile().find()==ArtifactProfile.Find.LEGACY&&migrated.condition()==83&&migrated.depth(CENTER)==1,"Version-one studies must preserve their footprint, condition and cover");migrated.write(old);
+        require(helper,old.get(DataComponents.CUSTOM_DATA).copyTag().getStringOr("unrelated","").equals("keep"),"Study writes must preserve unrelated item data");
+        var intact=new ItemStack(ExampleMod.RARE_ANCIENT_ARTIFACT.get());new ArtifactProfile(19,2,ArtifactProfile.Matrix.BASALT,ArtifactProfile.Find.SWORD_BLADE).write(intact);var exposed=finish(ExcavationStudy.read(intact));exposed.write(intact);
+        require(helper,ArchaeologyContent.reward(exposed).is(ArchaeologyContent.SWORD_BLADE.get()),"Good-condition specific finds must yield the matching usable component");
+        var damagedRoot=intact.get(DataComponents.CUSTOM_DATA).copyTag();var damagedStudy=damagedRoot.getCompoundOrEmpty(ExcavationStudy.KEY);damagedStudy.putInt("Damage",41);damagedRoot.put(ExcavationStudy.KEY,damagedStudy);intact.set(DataComponents.CUSTOM_DATA,CustomData.of(damagedRoot));
+        require(helper,ArchaeologyContent.reward(ExcavationStudy.read(intact)).is(ArchaeologyContent.FRAGMENTS.get()),"Below 60% condition a component must become salvage rather than usable gear");
+        var ruined=ArchaeologyContent.specimen(19,3);new ExcavationStudy(ArtifactProfile.read(ruined)).write(ruined);var ruinedRoot=ruined.get(DataComponents.CUSTOM_DATA).copyTag();var ruinedTag=ruinedRoot.getCompoundOrEmpty(ExcavationStudy.KEY);ruinedTag.putInt("Damage",100);ruinedRoot.put(ExcavationStudy.KEY,ruinedTag);ruined.set(DataComponents.CUSTOM_DATA,CustomData.of(ruinedRoot));
+        var ruinedState=ExcavationStudy.read(ruined);require(helper,!ruinedState.complete()&&ruinedState.recoverable()&&!ruinedState.work(1,CENTER)&&ArchaeologyContent.reward(ruinedState).is(ArchaeologyContent.FRAGMENTS.get()),"Ruined finds must stop wearing tools and permit immediate salvage even while covered");
+        var random=net.minecraft.util.RandomSource.create(222);int[] sniffer=new int[4],cruncher=new int[4];
+        for(int i=0;i<1000;i++){sniffer[ArchaeologyContent.rarity(ArchaeologyContent.specimen(random,false))]++;cruncher[ArchaeologyContent.rarity(ArchaeologyContent.specimen(random,true))]++;}
+        require(helper,sniffer[0]>600&&sniffer[1]>180&&sniffer[2]>20&&sniffer[3]==0&&cruncher[0]==0&&cruncher[1]==0&&cruncher[3]>130&&cruncher[2]>700,"Loot rarity weights must remain in their documented ranges");
+        System.out.println("ARCHAEOLOGY_EXPANSION_CHECK: PASS: 160 sealed specimens, all matrices/finds, migration, safe field completion, tool tiers, provenance and weighted source rewards");
     }
     private static void require(GameTestHelper helper,boolean valid,String message){if(!valid)throw helper.assertionException(message);}
 }

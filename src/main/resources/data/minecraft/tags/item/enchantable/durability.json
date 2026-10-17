@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "examplemod:archaeology_drill",
+    "examplemod:archaeology_hammer",
+    "examplemod:precision_drill",
+    "examplemod:precision_brush",
+    "examplemod:precision_hammer",
+    "examplemod:resonant_drill",
+    "examplemod:resonant_brush",
+    "examplemod:resonant_hammer"
+  ]
+}
