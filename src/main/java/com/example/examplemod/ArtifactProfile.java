@@ -23,7 +23,9 @@ public record ArtifactProfile(long seed,int rarity,Matrix matrix,Find find) {
         int choice=random.nextInt(100);
         Matrix matrix=switch(rarity){case 0->choice<70?Matrix.SANDSTONE:Matrix.SHALE;case 1->choice<60?Matrix.SHALE:Matrix.DEEPSLATE;case 2->choice<35?Matrix.DEEPSLATE:Matrix.BASALT;default->choice<25?Matrix.BASALT:Matrix.OBSIDIAN;};
         int kind=random.nextInt(100);
-        Find find=kind<(rarity>=2?30:0)?Find.RESONANT_CORE:kind<45?Find.ALLOY:Find.values()[1+random.nextInt(3)];
+        int coreChance=rarity==3?60:rarity==2?30:0;
+        int alloyChance=switch(rarity){case 0->45;case 1->25;case 2->15;default->5;};
+        Find find=kind<coreChance?Find.RESONANT_CORE:kind<coreChance+alloyChance?Find.ALLOY:Find.values()[1+random.nextInt(3)];
         return new ArtifactProfile(seed,rarity,matrix,find);
     }
     public String rarityName(){return new String[]{"Common","Uncommon","Rare","Epic"}[rarity];}

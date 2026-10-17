@@ -19,7 +19,7 @@ This changes which specimen drops, not how often those activities happen. Existi
 
 Common finds contain sandstone or shale; uncommon contain shale or deepslate; rare contain deepslate or basalt; epic contain basalt or obsidian. Rock has seeded irregular thickness. A specimen's rock and inclusion are fixed; putting it back cannot change either.
 
-Pickaxe heads, sword blades and axe heads can be recovered at any rarity. Rare/epic finds also have a 30% chance of containing a resonant core. Alloy inclusions yield ancient fragments. Recovering below 60% condition also yields fragments instead of a usable part. A completely ruined specimen may be salvaged immediately. Better rarity and remaining condition increase fragment yield (one to six).
+Pickaxe heads, sword blades and axe heads can be recovered at any rarity. Rare finds have a 30% chance of containing a resonant core, rising to 60% for epic finds. Alloy inclusion chances decrease from 45% common to 25% uncommon, 15% rare and 5% epic. Alloy inclusions yield ancient fragments, which stack across specimens. Recovering below 60% condition also yields fragments instead of a usable part. A completely ruined specimen may be salvaged immediately. Better rarity and remaining condition increase fragment yield (one to six).
 
 Components retain quality, original rarity, matrix and excavation provenance for future equipment systems. At 90% condition they are Pristine; 75–89% Fine; 60–74% Worn. These labels do not currently change combat stats. Restored equipment uses fixed, diamond-level attributes and 1,800 durability, and repairs with iron.
 

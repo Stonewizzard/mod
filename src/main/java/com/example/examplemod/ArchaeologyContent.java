@@ -50,7 +50,7 @@ public final class ArchaeologyContent {
     public static ItemStack reward(ExcavationStudy study){
         var profile=study.profile();boolean salvage=study.condition()<60||profile.find()==ArtifactProfile.Find.LEGACY||profile.find()==ArtifactProfile.Find.ALLOY;
         var stack=new ItemStack(salvage?FRAGMENTS.get():switch(profile.find()){case PICKAXE_HEAD->PICKAXE_HEAD.get();case SWORD_BLADE->SWORD_BLADE.get();case AXE_HEAD->AXE_HEAD.get();case RESONANT_CORE->CORE.get();default->FRAGMENTS.get();});
-        if(salvage)stack.setCount(1+profile.rarity()+study.condition()/40);
+        if(salvage){stack.setCount(1+profile.rarity()+study.condition()/40);return stack;}
         var tag=new CompoundTag();tag.putInt("Quality",study.condition());tag.putInt("Rarity",profile.rarity());tag.putString("Matrix",profile.matrix().name());tag.putString("Find",profile.find().name());tag.putLong("Seed",profile.seed());tag.putInt("Strokes",study.strokes());
         var root=new CompoundTag();root.put("examplemod:recovered",tag);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
         // Fixed item name survives storage. Custom player names still take precedence.

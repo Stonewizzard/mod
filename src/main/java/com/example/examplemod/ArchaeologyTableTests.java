@@ -59,10 +59,11 @@ public final class ArchaeologyTableTests {
                 }
                 require(helper,player.getInventory().getItem(9).getCount()==3 && menu.quickMoveStack(player,6).isEmpty(),"A full artifact slot must neither consume nor duplicate surplus artifacts");
                 require(helper,!menu.getSlot(0).mayPlace(new ItemStack(Items.STONE)) && !menu.getSlot(1).mayPlace(new ItemStack(Items.BRUSH)),"Slots must reject unrelated items and tools in the wrong location");
+                table.setItem(5,new ItemStack(ArchaeologyContent.FRAGMENTS.get(),3));
                 var saved=table.saveWithFullMetadata(level.registryAccess());
                 var restored=BlockEntity.loadStatic(pos,state,saved,level.registryAccess());
                 require(helper,restored instanceof ArchaeologyTableBlockEntity,"Saved table must reload as the correct block entity");
-                for(int i=0;i<5;i++)require(helper,ItemStack.matches(((ArchaeologyTableBlockEntity)restored).getItem(i),table.getItem(i)),"All five stored stacks, counts and components must survive serialization");
+                for(int i=0;i<6;i++)require(helper,ItemStack.matches(((ArchaeologyTableBlockEntity)restored).getItem(i),table.getItem(i)),"All six stored stacks, counts and components must survive serialization");
                 require(helper,table.getUpdatePacket()!=null && !table.getUpdateTag(level.registryAccess()).isEmpty(),"World item displays need inventory update and chunk-load packets");
                 player.snapTo(pos.getX()+30,pos.getY(),pos.getZ());require(helper,!menu.stillValid(player),"The server must close menus opened from too far away");
                 level.destroyBlock(breakRight?other:pos,dropTable);
@@ -70,7 +71,7 @@ public final class ArchaeologyTableTests {
                 var drops=level.getEntitiesOfClass(ItemEntity.class,bounds);
                 int tables=drops.stream().filter(e->e.getItem().is(ExampleMod.ARCHAEOLOGY_TABLE_ITEM.get())).mapToInt(e->e.getItem().getCount()).sum();
                 int stored=drops.stream().filter(e->!e.getItem().is(ExampleMod.ARCHAEOLOGY_TABLE_ITEM.get())).mapToInt(e->e.getItem().getCount()).sum();
-                require(helper,tables==(dropTable?1:0) && stored==5,"Breaking either half must respect the block-drop flag and return all five stored items; got "+tables+"/"+stored);
+                require(helper,tables==(dropTable?1:0) && stored==8,"Breaking either half must respect the block-drop flag and return five input/tool items and three recovered fragments; got "+tables+"/"+stored);
             }
             // A blocked partner must leave the first position and the held stack untouched.
             var other=pos.east();level.setBlockAndUpdate(other,Blocks.STONE.defaultBlockState());

@@ -60,7 +60,7 @@ final class ExcavationInput {
         int tool=session.carriedTool();
         if(tool==0||session.inventoryView()||!session.hasArtifact()){stop();return;}
         if(!excavating||tool==4||!ExcavationStudy.coveredCell(currentCell))return;
-        if(tool!=2&&session.complete())return;
+        if(session.complete())return;
         long now=session.gameTime();if(now==Long.MIN_VALUE||now<nextTick)return;
         if(tool==3&&lastHammerCell==currentCell)return;
         session.send(tool,currentCell);nextTick=now+com.example.examplemod.ArchaeologyContent.cooldown(tool,session.tier());lastHammerCell=currentCell;

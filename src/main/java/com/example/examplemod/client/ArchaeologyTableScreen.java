@@ -22,7 +22,7 @@ public final class ArchaeologyTableScreen extends AbstractContainerScreen<Archae
             @Override public int carriedTool(){return menu.carriedTool();}
             @Override public int tier(){return ArchaeologyContent.tier(menu.getCarried());}
             @Override public boolean recoverable(){return ExcavationStudy.read(menu.getSlot(0).getItem()).recoverable();}
-            @Override public boolean complete(){return ExcavationStudy.read(menu.getSlot(0).getItem()).complete();}
+            @Override public boolean complete(){return ExcavationStudy.read(menu.getSlot(0).getItem()).recoverable();}
             @Override public long gameTime(){return minecraft.level==null?Long.MIN_VALUE:minecraft.level.getGameTime();}
             @Override public void send(int tool,int cell){ArchaeologyTableScreen.this.send(tool,cell);}
         });

@@ -95,7 +95,7 @@ public final class ExcavationScreenView {
                 if(row==ExcavationStudy.ROWS-1||!ExcavationStudy.coveredCell(cell+ExcavationStudy.COLS)||s.study.depth(cell+ExcavationStudy.COLS)<depth)c.fill(x,y+9,10,1,0x80433225);
             }else if(s.study.scar(cell)>0){c.fill(x+2,y+3,5,1,0xc094573e);c.fill(x+5,y+4,1,4,0xc094573e);}
             if(s.hoveredCell>=0 && s.heldTool>=1 && s.heldTool<=4 && ExcavationStudy.affects(s.heldTool,s.tier,s.hoveredCell,cell)){
-                boolean danger=s.heldTool!=2 && s.heldTool!=4 && !(s.heldTool==1&&s.tier>0) && s.study.inclusion(cell) && depth<=(s.heldTool==3?(s.tier==0?2:3):1);
+                boolean danger=s.heldTool!=2 && s.heldTool!=4 && !(s.heldTool==1&&s.tier>0) && s.study.inclusion(cell) && depth<=ExcavationStudy.power(s.heldTool,s.tier);
                 c.fill(x,y,10,10,danger?0x48e9a077:0x2886d7bb);
                 if(s.heldTool==4 && s.study.inclusion(cell))c.outline(x+1,y+1,8,8,0x9991d4c3);
                 else c.outline(x,y,10,10,danger?0x90d18b62:0x708bd1b1);

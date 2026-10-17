@@ -40,6 +40,8 @@ public final class ExcavationStudy {
     public int progress(){int all=0,exposed=0;for(int i=0;i<CELLS;i++)if(inclusion(i)){all++;if(depths[i]==0)exposed++;}return all==0?0:exposed*100/all;}
     public boolean complete(){return progress()==100;}
     public boolean recoverable(){return complete()||condition()==0;}
+    public static int power(int tool,int tier){return tool==3?(tier==0?2:3):1;}
+    public static int damageCap(int tier){return tier==0?8:tier==1?5:3;}
     public static int radius(int tool){return radius(tool,0);}
     public static int radius(int tool,int tier){return tool==4?2+tier:tool==3?2+(tier==2?1:0):tool==2?1+(tier==2?1:0):tool==1&&tier==2?1:0;}
     public static boolean affects(int tool,int center,int cell){return affects(tool,0,center,cell);}
@@ -51,7 +53,7 @@ public final class ExcavationStudy {
     public boolean work(int tool,int cell){return work(tool,0,cell);}
     public boolean work(int tool,int tier,int cell){
         if(tool<1||tool>3||!coveredCell(cell)||recoverable())return false;
-        tier=Math.clamp(tier,0,2);boolean changed=false;int strokeDamage=0,power=tool==3?(tier==0?2:3):1;
+        tier=Math.clamp(tier,0,2);boolean changed=false;int strokeDamage=0,power=power(tool,tier);
         for(int i=0;i<CELLS;i++)if(coveredCell(i)&&affects(tool,tier,cell,i)){
             int old=depths[i];if(old==0)continue;
             if(tool==2&&old>(tier==0?1:2))continue;
@@ -61,7 +63,7 @@ public final class ExcavationStudy {
                 scars[i]=(byte)Math.min(3,scars[i]+1);strokeDamage+=tool==3?3:1;changed=true;
             }
         }
-        if(changed){damage=Math.min(100,damage+Math.min(tier==0?8:tier==1?5:3,strokeDamage));strokes++;}
+        if(changed){damage=Math.min(100,damage+Math.min(damageCap(tier),strokeDamage));strokes++;}
         return changed;
     }
     public static ExcavationStudy read(ItemStack stack){
