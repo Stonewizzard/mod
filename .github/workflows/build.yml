@@ -60,7 +60,7 @@ jobs:
 
       - name: Inspect native mouse and menu dispatch
         run: |
-          task_mc_jar=$(rg --files /home/runner/.gradle/caches | rg '/minecraft-patched-26\.3\.0\.77\.jar$' | head -n 1)
+          task_mc_jar=$(find /home/runner/.gradle/caches -name 'minecraft-patched-26.3.0.77.jar' -print -quit)
           test -n "$task_mc_jar"
           javap -c -p -classpath "$task_mc_jar" net.minecraft.client.MouseHandler net.minecraft.client.input.MouseButtonEvent net.minecraft.client.input.MouseButtonInfo net.minecraft.client.gui.screens.inventory.AbstractContainerScreen net.minecraft.client.gui.screens.Screen net.minecraft.client.gui.components.events.AbstractContainerEventHandler net.minecraft.client.gui.components.events.ContainerEventHandler net.minecraft.server.network.ServerGamePacketListenerImpl net.minecraft.world.inventory.AbstractContainerMenu net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl > build/native-input-dispatch.txt
           python - <<'PY'
