@@ -23,6 +23,11 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
     private long nextStudyTick=Long.MIN_VALUE;
     public boolean inventoryView(){return inventoryView;}
     public void inventoryView(boolean visible){inventoryView=visible;}
+    /** Uses the real container cursor stack, including native pickup/return synchronization. */
+    public int carriedTool(){
+        for(int tool=1;tool<=4;tool++)if(accepts(tool,getCarried()))return tool;
+        return 0;
+    }
     public ArchaeologyTableMenu(int id,Inventory inventory){this(id,inventory,new SimpleContainer(5));}
     public ArchaeologyTableMenu(int id,Inventory inventory,Container container){
         super(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),id);checkContainerSize(container,5);this.container=container;
@@ -47,7 +52,7 @@ public final class ArchaeologyTableMenu extends AbstractContainerMenu {
         var artifact=table.getItem(0).copy();
         if(tool==0 && cell==-1)ExcavationStudy.reset(artifact);
         else {
-            if(tool<1||tool>3||!accepts(tool,table.getItem(tool))||!ExcavationStudy.coveredCell(cell))return false;
+            if(tool<1||tool>3||carriedTool()!=tool||!ExcavationStudy.coveredCell(cell))return false;
             var study=ExcavationStudy.read(artifact);if(!study.work(tool,cell))return false;
             study.write(artifact);
         }

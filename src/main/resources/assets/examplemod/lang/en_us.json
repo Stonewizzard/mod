@@ -26,7 +26,7 @@
   "item.examplemod.magnifying_glass": "Magnifying Glass",
   "gui.examplemod.artifact": "Artifact",
   "gui.examplemod.field_kit": "Field Kit",
-  "gui.examplemod.table_slot.0": "Artifact — Sniffer or Cruncher finds",
+  "gui.examplemod.table_slot.0": "Artifact \u2014 Sniffer or Cruncher finds",
   "gui.examplemod.table_slot.1": "Archaeology Drill",
   "gui.examplemod.table_slot.2": "Brush",
   "gui.examplemod.table_slot.3": "Archaeology Hammer",
@@ -44,7 +44,7 @@
   "gui.examplemod.excavation.inventory_hint": "Shift-click finds and tools into the table.",
   "gui.examplemod.excavation.stored_hint": "Your table contents stay here when closed.",
   "gui.examplemod.excavation.empty_board": "Place an artifact in the slot above.",
-  "gui.examplemod.excavation.empty_hint": "Then choose a tool from the field kit.",
+  "gui.examplemod.excavation.empty_hint": "Then pick up a tool from the field kit.",
   "gui.examplemod.excavation.ready": "Ready for a new excavation",
   "gui.examplemod.excavation.progress": "Uncovered: %s%%",
   "gui.examplemod.excavation.condition": "Condition: %s%%",
@@ -56,10 +56,10 @@
   "gui.examplemod.excavation.help.2": "Gently clears loose sediment without damage.",
   "gui.examplemod.excavation.help.3": "Breaks thick crust. Risky near delicate edges.",
   "gui.examplemod.excavation.help.4": "Inspect the cover for buried edges.",
-  "gui.examplemod.excavation.select_hint": "Click this label to select the tool.",
-  "gui.examplemod.excavation.missing_tool": "Place this tool in the slot above to use it.",
   "gui.examplemod.excavation.scan.inclusion": "A delicate inclusion lies beneath. Brush near the surface.",
   "gui.examplemod.excavation.scan.cover": "Loose cover; no inclusion detected here.",
-  "gui.examplemod.excavation.hard_cover": "Thick cover: try the hammer or drill first."
+  "gui.examplemod.excavation.hard_cover": "Thick cover: try the hammer or drill first.",
+  "gui.examplemod.excavation.pickup_hint": "Pick up this tool, then click or drag over the specimen.",
+  "gui.examplemod.excavation.hold_tool_hint": "Pick up a tool to excavate"
 }
 
