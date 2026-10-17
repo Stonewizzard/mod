@@ -32,10 +32,11 @@ public final class ExcavationTests {
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
         @Override protected MutableComponent typeDescription(){return Component.literal("Sealed artifacts, tiered tools, persistent excavation and atomic recovery");}
         @Override public void run(GameTestHelper helper){
-            verifyStudies(helper);verifyRecipes(helper);var level=helper.getLevel();
+            verifyStudies(helper);verifyBalance(helper);verifyRecipes(helper);var level=helper.getLevel();
             for(int x=0;x<8;x++)for(int z=0;z<8;z++)helper.setBlock(new BlockPos(x,0,z),Blocks.STONE);
             var local=new BlockPos(3,1,3);var pos=helper.absolutePos(local);var state=ExampleMod.ARCHAEOLOGY_TABLE.get().defaultBlockState();
             helper.setBlock(local,state);var player=helper.makeMockServerPlayerInLevel();var other=helper.makeMockServerPlayerInLevel();
+            player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);other.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
             player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);other.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+1.5);
             ExampleMod.ARCHAEOLOGY_TABLE.get().setPlacedBy(level,pos,state,player,new ItemStack(ExampleMod.ARCHAEOLOGY_TABLE_ITEM.get()));
             var table=ArchaeologyTableBlock.inventory(level,pos);var artifact=new ItemStack(ExampleMod.ANCIENT_ARTIFACT.get());
@@ -106,6 +107,22 @@ public final class ExcavationTests {
         predicted.clicked(4,0,ContainerInput.PICKUP,player);predicted.clicked(3,0,ContainerInput.PICKUP,player);
         require(helper,ItemStack.matches(predicted.getSlot(4).getItem(),original[4])&&predicted.getSlot(3).getItem().isEmpty()&&ItemStack.matches(predicted.getCarried(),original[3]),
                 "The client menu must predict the same lens-to-hammer switch as the server");
+    }
+    private static void verifyBalance(GameTestHelper helper){
+        for(var matrix:ArtifactProfile.Matrix.values())for(int tier=0;tier<3;tier++){
+            var study=new ExcavationStudy(new ArtifactProfile(817,2,matrix,ArtifactProfile.Find.PICKAXE_HEAD));int ticks=0;
+            for(int pass=0;pass<5;pass++)for(int cell=0;cell<ExcavationStudy.CELLS;cell++){
+                int power=tier==0?2:3;boolean safe=true;
+                for(int other=0;other<ExcavationStudy.CELLS;other++)if(study.inclusion(other)&&ExcavationStudy.affects(3,tier,cell,other)&&study.depth(other)>0&&study.depth(other)<=power)safe=false;
+                if(safe&&study.work(3,tier,cell))ticks+=ArchaeologyContent.cooldown(3,tier);
+            }
+            for(int cell=0;cell<ExcavationStudy.CELLS;cell++)if(study.inclusion(cell))while(study.depth(cell)>1&&!study.recoverable()){
+                if(study.work(1,tier,cell))ticks+=ArchaeologyContent.cooldown(1,tier);else break;
+            }
+            for(int cell=0;cell<ExcavationStudy.CELLS;cell++)if(study.work(2,tier,cell))ticks+=2;
+            require(helper,study.complete()&&study.condition()==100,"A conservative hammer/drill/brush route must work at every tier and hardness");
+            System.out.println("ARCHAEOLOGY_BALANCE: "+matrix+" tier="+tier+" strokes="+study.strokes()+" minimumSeconds="+(ticks/20.0));
+        }
     }
     private static void verifyRecipes(GameTestHelper helper){
         var level=helper.getLevel();var manager=level.getServer().getRecipeManager();
