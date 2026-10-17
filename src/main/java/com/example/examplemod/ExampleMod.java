@@ -180,10 +180,10 @@ public class ExampleMod {
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
-        BLOCKS.register(modEventBus);
-        // Register the Deferred Register to the mod event bus so items get registered
         ArchaeologyContent.register();
         ReconstructionContent.register();
+        BLOCKS.register(modEventBus);
+        // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
         MENUS.register(modEventBus);

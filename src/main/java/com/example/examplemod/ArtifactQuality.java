@@ -21,6 +21,10 @@ public final class ArtifactQuality {
         stack.set(DataComponents.LORE,new ItemLore(List.of(Component.literal("Excavation score: "+score+"/100").withStyle(net.minecraft.ChatFormatting.GRAY))));
     }
     public static double average(List<ItemStack> pieces){return pieces.stream().mapToInt(s->Math.max(0,score(s))).sum()/5.0;}
+    public static double assemblyScore(ItemStack stack){
+        var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ASSEMBLY);
+        return tag.getIntOr("Version",0)==1?Math.clamp(tag.getDoubleOr("Score",0),0,100):-1;
+    }
     public static String formatted(double score){return String.format(Locale.ROOT,"%.1f",score);}
     public static ItemStack assemble(List<ItemStack> pieces){
         if(pieces.size()!=5)throw new IllegalArgumentException("A pickaxe has five pieces");

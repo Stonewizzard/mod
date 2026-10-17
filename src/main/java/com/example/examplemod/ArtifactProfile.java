@@ -17,6 +17,7 @@ public record ArtifactProfile(long seed,int rarity,Matrix matrix,Find find) {
     public enum Find {LEGACY,PICKAXE_HEAD,SWORD_BLADE,AXE_HEAD,RESONANT_CORE,ALLOY,PICKAXE_LEFT,PICKAXE_BRIDGE,PICKAXE_RIGHT,TOOL_CONNECTOR,TOOL_HANDLE;
         public String path(){return name().toLowerCase(java.util.Locale.ROOT);}
     }
+    private static final Find[] METAL_FINDS={Find.PICKAXE_LEFT,Find.PICKAXE_BRIDGE,Find.PICKAXE_RIGHT,Find.TOOL_CONNECTOR,Find.TOOL_HANDLE,Find.SWORD_BLADE,Find.AXE_HEAD};
     public static ArtifactProfile legacy(){return new ArtifactProfile(0,0,Matrix.SANDSTONE,Find.LEGACY);}
     public static ArtifactProfile roll(long seed,int rarity){
         rarity=Math.clamp(rarity,0,5);var random=new Random(seed);
@@ -25,7 +26,7 @@ public record ArtifactProfile(long seed,int rarity,Matrix matrix,Find find) {
         int kind=random.nextInt(100);
         int coreChance=rarity>=3?60:rarity==2?30:0;
         int alloyChance=switch(rarity){case 0->45;case 1->25;case 2->15;default->5;};
-        Find find=kind<coreChance?Find.RESONANT_CORE:kind<coreChance+alloyChance?Find.ALLOY:new Find[]{Find.PICKAXE_LEFT,Find.PICKAXE_BRIDGE,Find.PICKAXE_RIGHT,Find.TOOL_CONNECTOR,Find.TOOL_HANDLE,Find.SWORD_BLADE,Find.AXE_HEAD}[random.nextInt(7)];
+        Find find=kind<coreChance?Find.RESONANT_CORE:kind<coreChance+alloyChance?Find.ALLOY:METAL_FINDS[random.nextInt(METAL_FINDS.length)];
         return new ArtifactProfile(seed,rarity,matrix,find);
     }
     public String rarityName(){return new String[]{"Common","Uncommon","Rare","Epic","Legendary","Unique"}[rarity];}
