@@ -78,7 +78,7 @@ the top**, above a large excavation workspace. It accepts both **Ancient Artifac
 item. Open the **Inventory** tab to access your full inventory; your hotbar remains
 available on both tabs. Shift-click routes supported items to their matching slots.
 The artifact rests on the table's green mat, and all four inserted tools appear on
-the other half of the tabletop. Empty slots show faint tool guides with hover labels.
+the other half of the tabletop. Empty slots show faint tool guides.
 
 Use Minecraft's normal **Brush**. The three new field tools are also craftable:
 
@@ -92,9 +92,10 @@ unlocks the four new recipes in the recipe book.
 On the **Excavate** tab, insert an artifact and tools, then **pick up the actual tool
 item onto your cursor**, just like moving an item in
 Minecraft's inventory. Click or drag over the specimen while holding that tool to
-work. Put it back in its field-kit slot and pick up a different tool to switch.
-You can also pick tools up from your inventory or hotbar. Hover over the labels
-for help. Empty hands and unrelated items do not excavate.
+work. Click another tool in the field kit to switch: the held tool returns to
+its matching slot and the clicked tool moves onto your cursor. Its return slot
+must be empty. You can also put a tool back manually or pick tools up from your
+inventory or hotbar. Empty hands and unrelated items do not excavate.
 
 - **Hammer:** breaks a broad patch of thick crust. A second strike near delicate
   material can damage it. Holding still makes one strike; move or click again for another.

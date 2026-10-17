@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
@@ -47,6 +48,7 @@ public final class ExcavationTests {
             var drill=new ItemStack(ExampleMod.ARCHAEOLOGY_DRILL.get());drill.set(DataComponents.CUSTOM_NAME,Component.literal("Field drill"));
             table.setItem(1,drill.copy());table.setItem(2,new ItemStack(net.minecraft.world.item.Items.BRUSH));
             table.setItem(3,new ItemStack(ExampleMod.ARCHAEOLOGY_HAMMER.get()));table.setItem(4,new ItemStack(ExampleMod.MAGNIFYING_GLASS.get()));
+            verifyToolSwitches(helper,menu,player,table);
             require(helper,!menu.studyAction(player,1,CENTER),"A stored tool must not operate until picked up");
             menu.clicked(1,0,ContainerInput.PICKUP,player);
             require(helper,menu.carriedTool()==1&&table.getItem(1).isEmpty()&&ItemStack.matches(menu.getCarried(),drill),"Native pickup must activate the actual drill and preserve its components");
@@ -73,14 +75,14 @@ public final class ExcavationTests {
             helper.runAfterDelay(2,()->{
                 require(helper,menu.studyAction(player,2,CENTER)&&ExcavationStudy.read(table.getItem(0)).depth(CENTER)==0,"Brush must remove the final sediment without damage");
                 require(helper,ExcavationStudy.read(table.getItem(0)).condition()==100&&table.getItem(0).getCount()==1&&menu.getCarried().getCount()==1,"Excavation must preserve the actual artifact and cursor tool");
-                menu.clicked(2,0,ContainerInput.PICKUP,player);menu.clicked(3,0,ContainerInput.PICKUP,player);
-                require(helper,menu.carriedTool()==3&&table.getItem(3).isEmpty(),"Returning the brush and picking up the hammer must change tools");
+                menu.clicked(3,0,ContainerInput.PICKUP,player);
+                require(helper,menu.carriedTool()==3&&table.getItem(3).isEmpty()&&ArchaeologyTableMenu.accepts(2,table.getItem(2)),"Clicking the hammer must return the held brush to its slot");
                 helper.runAfterDelay(2,()->{
                     require(helper,menu.studyAction(player,0,-1),"Reset must be available for this non-consuming study");
                     var reset=ExcavationStudy.read(table.getItem(0));var root=table.getItem(0).get(DataComponents.CUSTOM_DATA).copyTag();
                     require(helper,reset.progress()==0&&reset.condition()==100&&root.getStringOr("unrelated","").equals("preserved")&&table.getItem(0).getHoverName().getString().equals("Saved specimen"),"Reset must preserve unrelated data and the artifact name");
                     require(helper,menu.carriedTool()==3&&menu.getCarried().getCount()==1,"Reset must leave the held hammer intact");
-                    menu.clicked(3,0,ContainerInput.PICKUP,player);menu.clicked(4,0,ContainerInput.PICKUP,player);
+                    menu.clicked(4,0,ContainerInput.PICKUP,player);
                     require(helper,menu.carriedTool()==4&&!menu.studyAction(player,4,CENTER),"The held lens must be recognized without removing material");
                     menu.clicked(4,0,ContainerInput.PICKUP,player);
                     require(helper,menu.carriedTool()==0&&!menu.studyAction(player,3,CENTER),"Putting a tool back must stop excavation");
@@ -97,6 +99,32 @@ public final class ExcavationTests {
                 });
             });
         }
+    }
+    private static void verifyToolSwitches(GameTestHelper helper,ArchaeologyTableMenu menu,net.minecraft.server.level.ServerPlayer player,Container table){
+        var original=new ItemStack[5];for(int i=0;i<5;i++)original[i]=table.getItem(i).copy();
+        for(int held=1;held<=4;held++)for(int target=1;target<=4;target++)if(held!=target){
+            menu.clicked(held,0,ContainerInput.PICKUP,player);menu.clicked(target,0,ContainerInput.PICKUP,player);
+            require(helper,ItemStack.matches(table.getItem(held),original[held])&&table.getItem(target).isEmpty()&&ItemStack.matches(menu.getCarried(),original[target]),
+                    "One click must return the held tool home and pick up the clicked tool, preserving item components");
+            require(helper,ItemStack.matches(table.getItem(0),original[0]),"Tool switching must leave the artifact unchanged");
+            menu.clicked(held,0,ContainerInput.PICKUP,player);menu.clicked(held,0,ContainerInput.PICKUP,player);
+            for(int i=1;i<=4;i++)require(helper,ItemStack.matches(table.getItem(i),original[i]),"Switching back must retain exactly one original tool in each slot");
+            require(helper,menu.getCarried().isEmpty(),"Returning a tool normally must clear the cursor");
+        }
+        menu.clicked(4,0,ContainerInput.PICKUP,player);
+        table.setItem(4,original[4].copy());menu.clicked(3,0,ContainerInput.PICKUP,player);
+        require(helper,ItemStack.matches(menu.getCarried(),original[4])&&ItemStack.matches(table.getItem(4),original[4])&&ItemStack.matches(table.getItem(3),original[3]),
+                "An occupied home slot must prevent a switch without overwriting or losing either tool");
+        table.setItem(4,ItemStack.EMPTY);table.setItem(3,ItemStack.EMPTY);menu.clicked(3,0,ContainerInput.PICKUP,player);
+        require(helper,ItemStack.matches(menu.getCarried(),original[4])&&table.getItem(3).isEmpty(),"An empty target is not a selectable tool");
+        table.setItem(3,original[3].copy());menu.clicked(3,1,ContainerInput.PICKUP,player);
+        require(helper,menu.carriedTool()==4&&ItemStack.matches(table.getItem(3),original[3]),"Secondary inventory clicks must keep native slot behavior");
+        menu.clicked(4,0,ContainerInput.PICKUP,player);
+        var predicted=new ArchaeologyTableMenu(25,player.getInventory());
+        for(int i=1;i<=4;i++)predicted.getSlot(i).setByPlayer(original[i].copy());
+        predicted.clicked(4,0,ContainerInput.PICKUP,player);predicted.clicked(3,0,ContainerInput.PICKUP,player);
+        require(helper,ItemStack.matches(predicted.getSlot(4).getItem(),original[4])&&predicted.getSlot(3).getItem().isEmpty()&&ItemStack.matches(predicted.getCarried(),original[3]),
+                "The client menu must predict the same lens-to-hammer switch as the server");
     }
     private static void verifyTools(GameTestHelper helper){
         var study=new ExcavationStudy();require(helper,study.progress()==0&&study.condition()==100,"New study must start covered and intact");

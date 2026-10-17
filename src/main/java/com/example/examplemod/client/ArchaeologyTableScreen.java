@@ -1,8 +1,6 @@
 package com.example.examplemod.client;
 
 import com.example.examplemod.*;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -58,25 +56,5 @@ public final class ArchaeologyTableScreen extends AbstractContainerScreen<Archae
     @Override public void onClose(){input.stop();super.onClose();}
     private void send(int tool,int cell){
         if(minecraft.getConnection()!=null)minecraft.getConnection().send(new ServerboundCustomPayloadPacket(new ExcavationPayload(menu.containerId,tool,cell)));
-    }
-    @Override protected void extractTooltip(GuiGraphicsExtractor g,int mouseX,int mouseY){
-        super.extractTooltip(g,mouseX,mouseY);
-        if(hoveredSlot!=null && hoveredSlot.index<5 && !hoveredSlot.hasItem()){
-            g.setTooltipForNextFrame(font,Component.translatable("gui.examplemod.table_slot."+hoveredSlot.index),mouseX,mouseY);return;
-        }
-        double x=mouseX-leftPos,y=mouseY-topPos;int tool=ExcavationLayout.toolAt(x,y);
-        if(tool>0){
-            g.setTooltipForNextFrame(font,List.of(Component.translatable(ArchaeologyTableMenu.tool(tool).getDescriptionId()),
-                    Component.translatable("gui.examplemod.excavation.help."+tool),
-                    Component.translatable("gui.examplemod.excavation.pickup_hint")),Optional.empty(),mouseX,mouseY);return;
-        }
-        if(!menu.inventoryView() && hasArtifact()){
-            if(ExcavationLayout.inside(x,y,267,214,40,14))g.setTooltipForNextFrame(font,Component.translatable("gui.examplemod.excavation.reset_hint"),mouseX,mouseY);
-            int cell=ExcavationLayout.cellAt(x,y);
-            if(menu.carriedTool()==4 && ExcavationStudy.coveredCell(cell))
-                g.setTooltipForNextFrame(font,Component.translatable(ExcavationStudy.relicCell(cell)?"gui.examplemod.excavation.scan.inclusion":"gui.examplemod.excavation.scan.cover"),mouseX,mouseY);
-            else if(!input.excavating() && menu.carriedTool()==2 && ExcavationStudy.coveredCell(cell) && ExcavationStudy.read(menu.getSlot(0).getItem()).depth(cell)>1)
-                g.setTooltipForNextFrame(font,Component.translatable("gui.examplemod.excavation.hard_cover"),mouseX,mouseY);
-        }
     }
 }
