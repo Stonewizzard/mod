@@ -116,6 +116,14 @@ public final class ReconstructionTests {
         System.out.println("MODIFIER_FOUNDATION_CHECK: PASS: deterministic weighted pools, eligibility, exclusive groups, empty live definitions, completion freeze, recovery/assembly/item-codec persistence");
     }
     private static void verifyPresentation(GameTestHelper helper){
+        var pos=helper.absolutePos(new BlockPos(3,1,3));
+        for(var facing:Direction.Plane.HORIZONTAL)for(var part:ArchaeologyTableBlock.Part.values()){
+            var state=ExampleMod.ARCHAEOLOGY_TABLE.get().defaultBlockState().setValue(ArchaeologyTableBlock.FACING,facing).setValue(ArchaeologyTableBlock.PART,part);
+            var boxes=state.getShape(helper.getLevel(),pos).toAabbs();
+            var outside=rotatePoint(part==ArchaeologyTableBlock.Part.LEFT?2.5:13.5,2.5,facing);var seam=rotatePoint(part==ArchaeologyTableBlock.Part.LEFT?13.5:2.5,2.5,facing);
+            require(helper,boxes.stream().anyMatch(b->b.contains(outside[0]/16,1.0/16,outside[1]/16))&&boxes.stream().noneMatch(b->b.contains(seam[0]/16,1.0/16,seam[1]/16)),"Rotated table outlines must keep the real outer legs and remove phantom legs at the seam");
+        }
+
         for(int i=0;i<2;i++){
             var item=i==0?ArchaeologyContent.LEGENDARY.get():ArchaeologyContent.UNIQUE.get();int color=i==0?0xFFB52E:0xFF668B;var colors=new java.util.ArrayList<Integer>();
             new ItemStack(item).getStyledHoverName().visit((style,text)->{if(!text.isEmpty()&&style.getColor()!=null)colors.add(style.getColor().getValue());return java.util.Optional.empty();},net.minecraft.network.chat.Style.EMPTY);
@@ -124,6 +132,7 @@ public final class ReconstructionTests {
         require(helper,ArchaeologyContent.artifacts().size()==6&&ArchaeologyContent.artifacts().get(2)==ExampleMod.RARE_ANCIENT_ARTIFACT.get(),"Creative artifact order must match rarity progression");
         System.out.println("ARTIFACT_PRESENTATION_CHECK: PASS: native styled Legendary/Unique names and contiguous rarity order");
     }
+    private static double[] rotatePoint(double x,double z,Direction facing){int turns=switch(facing){case EAST->1;case SOUTH->2;case WEST->3;default->0;};for(int i=0;i<turns;i++){double nx=16-z;z=x;x=nx;}return new double[]{x,z};}
     private static void verifyRecipe(GameTestHelper helper){
         var input=net.minecraft.world.item.crafting.CraftingInput.of(3,3,Arrays.asList(new ItemStack(Items.OAK_PLANKS),new ItemStack(Items.OAK_PLANKS),new ItemStack(Items.OAK_PLANKS),ItemStack.EMPTY,new ItemStack(Items.CRAFTING_TABLE),ItemStack.EMPTY,new ItemStack(Items.STICK),ItemStack.EMPTY,new ItemStack(Items.STICK)));
         var recipe=helper.getLevel().getServer().getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,helper.getLevel());require(helper,recipe.isPresent()&&recipe.get().value().assemble(input).is(ReconstructionContent.TABLE_ITEM.get()),"The starter reconstruction bench must have its inexpensive crafting recipe");
