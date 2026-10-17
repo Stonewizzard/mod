@@ -18,8 +18,8 @@ public final class ArchaeologyContent {
     public static final DeferredItem<Item> UNCOMMON=ExampleMod.ITEMS.registerSimpleItem("uncommon_ancient_artifact",p->p.stacksTo(1).rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> EPIC=ExampleMod.ITEMS.registerSimpleItem("epic_ancient_artifact",p->p.stacksTo(1).rarity(Rarity.EPIC));
     // Acquisition is deliberately left to future progression; neither item enters source loot rolls.
-    public static final DeferredItem<Item> LEGENDARY=ExampleMod.ITEMS.registerSimpleItem("legendary_ancient_artifact",p->p.stacksTo(1).rarity(Rarity.EPIC).component(DataComponents.ITEM_NAME,Component.empty().append(Component.translatable("item.examplemod.legendary_ancient_artifact").withStyle(style->style.withColor(0xFFB52E)))));
-    public static final DeferredItem<Item> UNIQUE=ExampleMod.ITEMS.registerSimpleItem("unique_ancient_artifact",p->p.stacksTo(1).rarity(Rarity.EPIC).component(DataComponents.ITEM_NAME,Component.empty().append(Component.translatable("item.examplemod.unique_ancient_artifact").withStyle(style->style.withColor(0xFF668B)))));
+    public static final DeferredItem<Item> LEGENDARY=ExampleMod.ITEMS.registerItem("legendary_ancient_artifact",p->new ColoredArtifactItem(p,0xFFB52E),p->p.stacksTo(1).rarity(Rarity.EPIC));
+    public static final DeferredItem<Item> UNIQUE=ExampleMod.ITEMS.registerItem("unique_ancient_artifact",p->new ColoredArtifactItem(p,0xFF668B),p->p.stacksTo(1).rarity(Rarity.EPIC));
     public static final DeferredItem<Item> PICKAXE_HEAD=part("ancient_pickaxe_head"),SWORD_BLADE=part("ancient_sword_blade"),AXE_HEAD=part("ancient_axe_head"),CORE=part("resonant_core");
     public static final DeferredItem<Item> FRAGMENTS=ExampleMod.ITEMS.registerSimpleItem("ancient_fragments");
     public static final DeferredItem<Item> PRECISION_DRILL=tool("precision_drill",768),PRECISION_BRUSH=tool("precision_brush",256),PRECISION_HAMMER=tool("precision_hammer",640),PRECISION_LENS=lens("precision_lens");

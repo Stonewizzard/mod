@@ -36,6 +36,7 @@ public final class ReconstructionScreenView {
         }
         for(int i=0;i<5;i++){
             int[] p=ReconstructionTableMenu.POSITIONS[i];String part=pattern==null?null:pattern.partId(i);
+            if(part==null&&!s.spare)continue;
             slot(c,p[0],p[1],part!=null);
             if(part!=null&&!s.inserted[i])c.image(ExcavationScreenView.texture("item/"+part),p[0],p[1],16,16,32,32,0x66ffffff);
             if(part!=null&&s.inserted[i])count++;

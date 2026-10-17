@@ -19,7 +19,7 @@ public final class ReconstructionTableMenu extends AbstractContainerMenu {
         for(int i=0;i<6;i++){final int slot=i;addSlot(new Slot(container,i,POSITIONS[i][0],POSITIONS[i][1]){
             @Override public boolean mayPlace(ItemStack stack){return accepts(pattern(),slot,stack);}
             // Spare pieces stay visible/removable when a different pattern is selected.
-            @Override public boolean isActive(){return slot==5||pattern()!=0||hasItem();}
+            @Override public boolean isActive(){var p=ReconstructionPattern.byId(pattern());return slot==5||hasItem()||(p!=null&&p.part(slot)!=null);}
             @Override public int getMaxStackSize(){return 1;}
         });}
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inventory,9+row*9+col,79+col*18,161+row*18));

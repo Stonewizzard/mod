@@ -18,7 +18,8 @@ public final class ReconstructionVisualRegression {
             var selected=ReconstructionPattern.byId(pattern);var inserted=new boolean[5];var scores=new int[]{92,87,100,89,96};
             if(state>0&&selected!=null)for(int slot:selected.slots)inserted[slot]=true;
             if(state==1&&selected!=null)inserted[selected.slots.getFirst()]=false;
-            var view=new ReconstructionScreenView.State(pattern,inserted,scores,false,92.8,false);
+            double average=0;if(selected!=null)for(int slot:selected.slots)average+=inserted[slot]?scores[slot]/(double)selected.parts.size():0;
+            var view=new ReconstructionScreenView.State(pattern,inserted,scores,false,average,false);
             var canvas=new ExcavationVisualRegression.RecordingCanvas(font,320,242);ReconstructionScreenView.draw(canvas,view);
             for(int i=0;i<5;i++)if(inserted[i]){var p=ReconstructionTableMenu.POSITIONS[i];canvas.image(ExcavationScreenView.texture("item/"+selected.partId(i)),p[0],p[1],16,16,32,32,-1);}
             snapshot(resources,font,assets,scenes,canvas,(selected==null?"unselected":selected.key())+new String[]{"_empty","_partial","_ready"}[state]);
