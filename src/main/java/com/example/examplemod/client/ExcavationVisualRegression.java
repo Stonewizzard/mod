@@ -51,6 +51,24 @@ public final class ExcavationVisualRegression {
                 scenes.add(snapshot(find.path()+"_"+matrix.name().toLowerCase(Locale.ROOT),new ExcavationScreenView.State(specimen,true,false,4,6*28+14,storedTools(4),"Epic Ancient Artifact",2,false),labels,resources,font,assets));
             }
         }
+        for(int rarity=0;rarity<6;rarity++){
+            var specimen=new ExcavationStudy(ArtifactProfile.roll(817,rarity));
+            scenes.add(snapshot("rarity_"+rarity,new ExcavationScreenView.State(specimen,rarity>=2,false,4,6*28+14,storedTools(4),specimen.profile().rarityName()),labels,resources,font,assets));
+        }
+        for(String icon:new String[]{"ancient_artifact","uncommon_ancient_artifact","rare_ancient_artifact","epic_ancient_artifact","legendary_ancient_artifact","unique_ancient_artifact"}){
+            BufferedImage art;try(var input=resources.getResourceOrThrow(ExcavationScreenView.texture("item/"+icon)).open()){art=ImageIO.read(input);}
+            require(art.getWidth()==32&&art.getHeight()==32,"Artifact icons must have a consistent inventory resolution");
+            int pixels=0;boolean[][] visited=new boolean[32][32];int groups=0;
+            for(int y=0;y<32;y++)for(int x=0;x<32;x++){
+                if(x<2||x>=30||y<2||y>=30)require((art.getRGB(x,y)>>>24)==0,"Stray corner/edge pixels in "+icon);
+                if((art.getRGB(x,y)>>>24)<128||visited[y][x])continue;
+                groups++;var queue=new java.util.ArrayDeque<Integer>();queue.add(y*32+x);visited[y][x]=true;
+                while(!queue.isEmpty()){int point=queue.removeFirst();pixels++;int px=point%32,py=point/32;
+                    for(int dy=-1;dy<=1;dy++)for(int dx=-1;dx<=1;dx++){int nx=px+dx,ny=py+dy;if(nx>=0&&nx<32&&ny>=0&&ny<32&&!visited[ny][nx]&&(art.getRGB(nx,ny)>>>24)>=128){visited[ny][nx]=true;queue.add(ny*32+nx);}}
+                }
+            }
+            require(groups==1&&pixels>=64,"An artifact icon must be one solid readable rock with no detached specks: "+icon+" groups="+groups);
+        }
         animation.add(snapshot("covered",new ExcavationScreenView.State(covered,false,false,3,-1,storedTools(3),"Ancient Artifact"),labels,resources,font,assets));
         animation.add(snapshot("loose",new ExcavationScreenView.State(loose,false,false,2,-1,storedTools(2),"Ancient Artifact"),labels,resources,font,assets));
         for(int step=0;step<=14;step++){
@@ -80,7 +98,7 @@ public final class ExcavationVisualRegression {
             var output=new ByteArrayOutputStream();try(var zip=new DeflaterOutputStream(output)){zip.write(new Gson().toJson(root).getBytes(StandardCharsets.UTF_8));}
             System.out.println("EXCAVATION_PREVIEW_Z:"+Base64.getEncoder().encodeToString(output.toByteArray()));
         }
-        System.out.println("EXCAVATION_UI_CHECK: PASS: real drawing plan, 31 study/material/component/inventory states, four held-tool highlights with empty kit slots, empty-hand instructions, safe bounds and full grid coverage");
+        System.out.println("EXCAVATION_UI_CHECK: PASS: real drawing plan, 37 study/material/component/inventory states and six clean connected artifact icons, four held-tool highlights with empty kit slots, empty-hand instructions, safe bounds and full grid coverage");
     }
     private static boolean[] storedTools(int held){var tools=new boolean[]{false,true,true,true,true};if(held>0)tools[held]=false;return tools;}
     private static ExcavationStudy copy(ExcavationStudy study){return study.copy();}
@@ -88,7 +106,7 @@ public final class ExcavationVisualRegression {
         var canvas=new RecordingCanvas(font);ExcavationScreenView.draw(canvas,state,labels);
         // Native slot extraction draws these after the background; include their actual GUI textures in the review.
         if(state.study()!=null){
-            var specimen=switch(state.study().profile().rarity()){case 1->"uncommon_ancient_artifact";case 2->"rare_ancient_artifact";case 3->"epic_ancient_artifact";default->"ancient_artifact";};
+            var specimen=switch(state.study().profile().rarity()){case 1->"uncommon_ancient_artifact";case 2->"rare_ancient_artifact";case 3->"epic_ancient_artifact";case 4->"legendary_ancient_artifact";case 5->"unique_ancient_artifact";default->"ancient_artifact";};
             canvas.image(ExcavationScreenView.texture("item/"+specimen),26,40,16,16,32,32,-1);
         }
         for(int i=1;i<=4;i++)if(state.tools()[i]){
@@ -127,3 +145,4 @@ public final class ExcavationVisualRegression {
     }
     private static void require(boolean value,String message){if(!value)throw new AssertionError(message);}
 }
+
