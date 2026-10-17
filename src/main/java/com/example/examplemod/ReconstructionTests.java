@@ -106,7 +106,7 @@ public final class ReconstructionTests {
         var rolls=ArtifactModifiers.roll(profile,90,pool);require(helper,rolls.equals(ArtifactModifiers.roll(profile,90,pool))&&rolls.size()==2&&rolls.stream().map(ArtifactModifiers.Roll::id).distinct().count()==2,"Seeded rolls must be deterministic, unique and respect exclusive groups");
         require(helper,ArtifactModifiers.roll(profile,59,pool).isEmpty(),"Modifier entries must respect excavation score gates");
         var lower=ArtifactModifiers.roll(new ArtifactProfile(721,0,ArtifactProfile.Matrix.SHALE,profile.find()),90,pool);require(helper,lower.size()==1&&lower.stream().noneMatch(r->r.id().equals(c.id())),"Per-entry rarity gates must be respected");
-        for(var find:ArtifactProfile.Find.values())require(helper,ArtifactModifierCatalog.pool(find).entries().isEmpty(),"Live modifier pools must remain empty until abilities are designed");
+        for(var find:ArtifactProfile.Find.values())require(helper,ArtifactModifierCatalog.pool(find).entries().isEmpty()!=ArtifactModifierCatalog.pickaxePart(find),"Only pickaxe-compatible parts should have active pools");
         var study=new ExcavationStudy(profile);for(int cell=0;cell<ExcavationStudy.CELLS;cell++)while(study.depth(cell)>1&&!study.complete())study.work(1,cell);for(int cell=0;cell<ExcavationStudy.CELLS;cell++)study.work(2,cell);
         var specimen=ArchaeologyContent.specimen(721,2);var root=specimen.get(DataComponents.CUSTOM_DATA).copyTag();var frozen=ArtifactModifiers.record(profile,90,pool);root.put(ArtifactModifiers.KEY,frozen);specimen.set(DataComponents.CUSTOM_DATA,CustomData.of(root));ArtifactModifiers.seal(specimen,study);
         var piece=ArchaeologyContent.reward(study,specimen);require(helper,ArtifactModifiers.read(piece).equals(rolls),"Recovery must preserve completion-time rolls rather than rerolling after pool edits");
@@ -139,4 +139,5 @@ public final class ReconstructionTests {
     }
     private static void require(GameTestHelper helper,boolean valid,String message){if(!valid)throw helper.assertionException(message);}
 }
+
 

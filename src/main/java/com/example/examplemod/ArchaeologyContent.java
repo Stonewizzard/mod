@@ -59,10 +59,10 @@ public final class ArchaeologyContent {
     }
     public static ItemStack reward(ExcavationStudy study,ItemStack source){
         var result=reward(study);if(result.is(FRAGMENTS.get()))return result;
-        ArtifactModifiers.seal(source,study);ArtifactModifiers.transfer(source,result);return result;
+        ArtifactModifiers.seal(source,study);ArtifactModifiers.transfer(source,result);ArtifactQuality.showRecoveredScore(result);return result;
     }
     public static ItemStack reward(ExcavationStudy study){
-        var profile=study.profile();boolean salvage=study.condition()<60||profile.find()==ArtifactProfile.Find.LEGACY||profile.find()==ArtifactProfile.Find.ALLOY;
+        var profile=study.profile();boolean salvage=(study.condition()<=0||(study.condition()<60&&!ArtifactModifierCatalog.pickaxePart(profile.find())))||profile.find()==ArtifactProfile.Find.LEGACY||profile.find()==ArtifactProfile.Find.ALLOY;
         var stack=new ItemStack(salvage?FRAGMENTS.get():switch(profile.find()){case PICKAXE_HEAD->PICKAXE_HEAD.get();case SWORD_BLADE->SWORD_BLADE.get();case AXE_HEAD->AXE_HEAD.get();case RESONANT_CORE->CORE.get();case PICKAXE_LEFT,PICKAXE_BRIDGE,PICKAXE_RIGHT,TOOL_CONNECTOR,TOOL_HANDLE,SHOVEL_HEAD,HOE_HEAD,MACE_HEAD,SPEAR_TIP->ReconstructionContent.reward(profile.find());default->FRAGMENTS.get();});
         if(salvage){stack.setCount(1+profile.rarity()+study.condition()/40);return stack;}
         var tag=new CompoundTag();tag.putInt("Quality",study.condition());tag.putInt("Score",study.condition());tag.putInt("Rarity",profile.rarity());tag.putString("Matrix",profile.matrix().name());tag.putString("Find",profile.find().name());tag.putLong("Seed",profile.seed());tag.putInt("Strokes",study.strokes());
@@ -71,9 +71,11 @@ public final class ArchaeologyContent {
         if(!salvage)stack.set(DataComponents.ITEM_NAME,Component.literal((study.condition()>=90?"Pristine ":study.condition()>=75?"Fine ":"Worn ")+stack.getHoverName().getString()));
         ArtifactQuality.showRecoveredScore(stack);
         ArtifactModifiers.seal(stack,study);
+        ArtifactQuality.showRecoveredScore(stack);
         return stack;
     }
 }
+
 
 
 

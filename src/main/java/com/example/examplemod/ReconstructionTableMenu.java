@@ -39,7 +39,7 @@ public final class ReconstructionTableMenu extends AbstractContainerMenu {
         var selected=ReconstructionPattern.byId(button==0?1:button-10);
         if(selected!=null){table.pattern(selected.id);broadcastChanges();return true;}
         if(button!=1||!ready())return false;
-        var p=ReconstructionPattern.byId(pattern());var pieces=new ArrayList<ItemStack>();for(int slot:p.slots)pieces.add(container.getItem(slot).copy());
+        var p=ReconstructionPattern.byId(pattern());var pieces=new ArrayList<ItemStack>();for(int slot:p.slots){CreativePickaxeParts.materialize(container.getItem(slot),player.getRandom());pieces.add(container.getItem(slot).copy());}
         var result=ArtifactQuality.assemble(p,pieces);
         for(int slot:p.slots)container.setItem(slot,ItemStack.EMPTY);container.setItem(5,result);container.setChanged();broadcastChanges();return true;
     }
@@ -51,3 +51,4 @@ public final class ReconstructionTableMenu extends AbstractContainerMenu {
         if(stack.isEmpty())slot.setByPlayer(ItemStack.EMPTY);else slot.setChanged();slot.onTake(player,stack);return old;
     }
 }
+

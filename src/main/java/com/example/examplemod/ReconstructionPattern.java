@@ -28,3 +28,4 @@ public enum ReconstructionPattern {
     private static Item item(String id){return BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(ExampleMod.MODID,id));}
     public static ReconstructionPattern byId(int id){for(var pattern:values())if(pattern.id==id)return pattern;return null;}
 }
+
