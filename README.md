@@ -93,8 +93,8 @@ On the **Excavate** tab, insert an artifact and tools, then **pick up the actual
 item onto your cursor**, just like moving an item in
 Minecraft's inventory. Click or drag over the specimen while holding that tool to
 work. Put it back in its field-kit slot and pick up a different tool to switch.
-You can also pick tools up from your inventory or hotbar; clicking the labels only
-shows help. Empty hands and unrelated items do not excavate.
+You can also pick tools up from your inventory or hotbar. Hover over the labels
+for help. Empty hands and unrelated items do not excavate.
 
 - **Hammer:** breaks a broad patch of thick crust. A second strike near delicate
   material can damage it. Holding still makes one strike; move or click again for another.
