@@ -36,7 +36,7 @@ public final class ExcavationVisualRegression {
             var state=new ExcavationScreenView.State(study,rare,inventory,held,hover,storedTools(held),name.equals("empty")?"":rare?"Rare Ancient Artifact":"Ancient Artifact");
             scenes.add(snapshot(name,state,labels,resources,font,assets));
         }
-        for(var find:new ArtifactProfile.Find[]{ArtifactProfile.Find.PICKAXE_HEAD,ArtifactProfile.Find.SWORD_BLADE,ArtifactProfile.Find.AXE_HEAD,ArtifactProfile.Find.RESONANT_CORE}){
+        for(var find:new ArtifactProfile.Find[]{ArtifactProfile.Find.PICKAXE_HEAD,ArtifactProfile.Find.SWORD_BLADE,ArtifactProfile.Find.AXE_HEAD,ArtifactProfile.Find.RESONANT_CORE,ArtifactProfile.Find.PICKAXE_LEFT,ArtifactProfile.Find.PICKAXE_BRIDGE,ArtifactProfile.Find.PICKAXE_RIGHT,ArtifactProfile.Find.TOOL_CONNECTOR,ArtifactProfile.Find.TOOL_HANDLE}){
             var id=ExcavationScreenView.texture("gui/excavation/"+find.path());BufferedImage art;
             try(var input=resources.getResourceOrThrow(id).open()){art=ImageIO.read(input);}
             require(art.getWidth()==128&&art.getHeight()==64,"Component artwork must match board texture coordinates");
@@ -98,7 +98,7 @@ public final class ExcavationVisualRegression {
             var output=new ByteArrayOutputStream();try(var zip=new DeflaterOutputStream(output)){zip.write(new Gson().toJson(root).getBytes(StandardCharsets.UTF_8));}
             System.out.println("EXCAVATION_PREVIEW_Z:"+Base64.getEncoder().encodeToString(output.toByteArray()));
         }
-        System.out.println("EXCAVATION_UI_CHECK: PASS: real drawing plan, 37 study/material/component/inventory states and six clean connected artifact icons, four held-tool highlights with empty kit slots, empty-hand instructions, safe bounds and full grid coverage");
+        System.out.println("EXCAVATION_UI_CHECK: PASS: real drawing plan, 62 study/material/component/inventory states and six clean connected artifact icons, four held-tool highlights with empty kit slots, empty-hand instructions, safe bounds and full grid coverage");
     }
     private static boolean[] storedTools(int held){var tools=new boolean[]{false,true,true,true,true};if(held>0)tools[held]=false;return tools;}
     private static ExcavationStudy copy(ExcavationStudy study){return study.copy();}
@@ -126,7 +126,7 @@ public final class ExcavationVisualRegression {
         var result=new JsonObject();result.addProperty("name",name);result.addProperty("width",320);result.addProperty("height",236);
         result.addProperty("progress",state.study()==null?0:state.study().progress());result.addProperty("condition",state.study()==null?100:state.study().condition());result.add("commands",canvas.commands);return result;
     }
-    private static final class RecordingCanvas implements ExcavationScreenView.Canvas {
+    static final class RecordingCanvas implements ExcavationScreenView.Canvas {
         final JsonArray commands=new JsonArray();final Set<Identifier> textures=new HashSet<>();final BufferedImage font;
         RecordingCanvas(BufferedImage font){this.font=font;}
         @Override public void fill(int x,int y,int w,int h,int color){bounds(x,y,w,h);var c=command("fill",x,y,w,h);c.addProperty("color",color);commands.add(c);}
@@ -145,4 +145,5 @@ public final class ExcavationVisualRegression {
     }
     private static void require(boolean value,String message){if(!value)throw new AssertionError(message);}
 }
+
 

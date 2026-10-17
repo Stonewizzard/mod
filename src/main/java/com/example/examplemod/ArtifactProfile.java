@@ -14,7 +14,7 @@ public record ArtifactProfile(long seed,int rarity,Matrix matrix,Find find) {
         public final String label,texture;public final int depth;
         Matrix(String label,int depth,String texture){this.label=label;this.depth=depth;this.texture=texture;}
     }
-    public enum Find {LEGACY,PICKAXE_HEAD,SWORD_BLADE,AXE_HEAD,RESONANT_CORE,ALLOY;
+    public enum Find {LEGACY,PICKAXE_HEAD,SWORD_BLADE,AXE_HEAD,RESONANT_CORE,ALLOY,PICKAXE_LEFT,PICKAXE_BRIDGE,PICKAXE_RIGHT,TOOL_CONNECTOR,TOOL_HANDLE;
         public String path(){return name().toLowerCase(java.util.Locale.ROOT);}
     }
     public static ArtifactProfile legacy(){return new ArtifactProfile(0,0,Matrix.SANDSTONE,Find.LEGACY);}
@@ -25,14 +25,14 @@ public record ArtifactProfile(long seed,int rarity,Matrix matrix,Find find) {
         int kind=random.nextInt(100);
         int coreChance=rarity>=3?60:rarity==2?30:0;
         int alloyChance=switch(rarity){case 0->45;case 1->25;case 2->15;default->5;};
-        Find find=kind<coreChance?Find.RESONANT_CORE:kind<coreChance+alloyChance?Find.ALLOY:Find.values()[1+random.nextInt(3)];
+        Find find=kind<coreChance?Find.RESONANT_CORE:kind<coreChance+alloyChance?Find.ALLOY:new Find[]{Find.PICKAXE_LEFT,Find.PICKAXE_BRIDGE,Find.PICKAXE_RIGHT,Find.TOOL_CONNECTOR,Find.TOOL_HANDLE,Find.SWORD_BLADE,Find.AXE_HEAD}[random.nextInt(7)];
         return new ArtifactProfile(seed,rarity,matrix,find);
     }
     public String rarityName(){return new String[]{"Common","Uncommon","Rare","Epic","Legendary","Unique"}[rarity];}
     public static ArtifactProfile read(ItemStack stack){
         var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var tag=root.getCompoundOrEmpty(KEY);
         if(tag.getIntOr("Version",0)!=1)return legacy();
-        return new ArtifactProfile(tag.getLongOr("Seed",0),Math.clamp(tag.getIntOr("Rarity",0),0,5),Matrix.values()[Math.clamp(tag.getIntOr("Matrix",0),0,4)],Find.values()[Math.clamp(tag.getIntOr("Find",0),0,5)]);
+        return new ArtifactProfile(tag.getLongOr("Seed",0),Math.clamp(tag.getIntOr("Rarity",0),0,5),Matrix.values()[Math.clamp(tag.getIntOr("Matrix",0),0,4)],Find.values()[Math.clamp(tag.getIntOr("Find",0),0,Find.values().length-1)]);
     }
     public static boolean sealed(ItemStack stack){return stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(KEY).getIntOr("Version",0)==1;}
     public void write(ItemStack stack){
@@ -47,4 +47,5 @@ public record ArtifactProfile(long seed,int rarity,Matrix matrix,Find find) {
         (old.getIntOr("Version",0)==1?legacy():roll(seed,ArchaeologyContent.rarity(stack))).write(stack);
     }
 }
+
 
