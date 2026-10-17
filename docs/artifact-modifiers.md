@@ -29,7 +29,7 @@ Every compatible piece gets one guaranteed roll. Extra attempts are independent 
 
 Contributions add after per-part quality scaling. Aggregate caps are: +600% mining speed, Fortune III, 12-block magnet radius, 100% Silk/smelting chance, +200% durability, +300% mining XP, full removal of each movement penalty and +2.5 blocks of reach. These keep combined rolls bounded; caps can make a combined total grow less than linearly near its limit. Normal tool enchantments remain separate from part rolls. Virtual loot enchantments never alter the actual tool.
 
-Fortune/Silk use native block loot generation. Dynamic block-entity/container drops are left intact. Ability handling stays server-authoritative for drops, XP, Creative rolls and magnetism; speed and native attributes also work on the client for responsive mining.
+Fortune/Silk use native block loot generation. Ender Chest Silk Touch is supported; dynamic block-entity/container drops otherwise stay intact. Ability handling stays server-authoritative for drops, XP, Creative rolls and magnetism; speed and native attributes also work on the client for responsive mining.
 
 ## Creative testing
 

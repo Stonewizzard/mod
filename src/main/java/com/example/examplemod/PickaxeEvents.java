@@ -14,6 +14,7 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -52,8 +53,8 @@ public final class PickaxeEvents {
         var silk=lookup.getOrThrow(Enchantments.SILK_TOUCH);var fortune=lookup.getOrThrow(Enchantments.FORTUNE);
         boolean silkActive=EnchantmentHelper.getItemEnchantmentLevel(silk,tool)>0;
         var virtual=tool.copy();boolean changed=false;
-        // Block entities can have dynamic container drops; leave their native drop generation intact.
-        if(!event.getState().hasBlockEntity()&&tool.isCorrectToolForDrops(event.getState())){
+        // Ender Chest loot has no stored inventory; other block entities can have dynamic drops.
+        if((!event.getState().hasBlockEntity()||event.getState().is(Blocks.ENDER_CHEST))&&tool.isCorrectToolForDrops(event.getState())){
             if(!silkActive&&stats.get(SILK)>0&&random.nextDouble()<stats.get(SILK)){
                 virtual.enchant(silk,1);silkActive=true;changed=true;
             }
