@@ -84,5 +84,12 @@
   "gui.examplemod.excavation.ruined": "Ruined specimen - salvage available",
   "gui.examplemod.excavation.output_full": "Take the previous find first",
   "item.examplemod.legendary_ancient_artifact": "Legendary Ancient Artifact",
-  "item.examplemod.unique_ancient_artifact": "Unique Ancient Artifact"
+  "item.examplemod.unique_ancient_artifact": "Unique Ancient Artifact",
+  "block.examplemod.reconstruction_table": "Reconstruction Table",
+  "container.examplemod.reconstruction_table": "Reconstruction Table",
+  "item.examplemod.pickaxe_left_tip": "Ancient Pickaxe Left Tip",
+  "item.examplemod.pickaxe_head_bridge": "Ancient Pickaxe Head Bridge",
+  "item.examplemod.pickaxe_right_tip": "Ancient Pickaxe Right Tip",
+  "item.examplemod.ancient_tool_connector": "Ancient Tool Connector",
+  "item.examplemod.ancient_tool_handle": "Ancient Tool Handle"
 }

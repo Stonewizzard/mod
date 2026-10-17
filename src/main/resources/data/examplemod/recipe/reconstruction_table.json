@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    " C ",
+    "S S"
+  ],
+  "key": {
+    "P": "#minecraft:planks",
+    "C": "minecraft:crafting_table",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "examplemod:reconstruction_table",
+    "count": 1
+  }
+}

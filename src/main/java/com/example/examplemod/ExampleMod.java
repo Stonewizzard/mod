@@ -142,6 +142,8 @@ public class ExampleMod {
                 output.accept(ARCHAEOLOGY_DRILL.get());
                 output.accept(ARCHAEOLOGY_HAMMER.get());
                 output.accept(MAGNIFYING_GLASS.get());
+                output.accept(ReconstructionContent.TABLE_ITEM.get());
+                ReconstructionContent.pieces().forEach(output::accept);
                 ArchaeologyContent.materials().forEach(output::accept);
                 ArchaeologyContent.tools().forEach(output::accept);
                 output.accept(ArchaeologyContent.SWORD.get());
@@ -174,12 +176,14 @@ public class ExampleMod {
             modEventBus.addListener(SkulkParasiteTests::register);
             modEventBus.addListener(ArchaeologyTableTests::register);
             modEventBus.addListener(ExcavationTests::register);
+            modEventBus.addListener(ReconstructionTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
+        ArchaeologyContent.register();
+        ReconstructionContent.register();
         BLOCKS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
-        ArchaeologyContent.register();
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
         MENUS.register(modEventBus);
@@ -221,6 +225,7 @@ public class ExampleMod {
             event.accept(ANCIENT_ARTIFACT);
             event.accept(RARE_ANCIENT_ARTIFACT);
             ArchaeologyContent.materials().forEach(event::accept);
+            ReconstructionContent.pieces().forEach(event::accept);
         } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
             event.accept(CRUNCHER_SPAWN_EGG);
             event.accept(SKULK_PARASITE_SPAWN_EGG);
@@ -229,6 +234,7 @@ public class ExampleMod {
             event.accept(ANCIENT_GEODE_ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(ARCHAEOLOGY_TABLE_ITEM);
+            event.accept(ReconstructionContent.TABLE_ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ARCHAEOLOGY_DRILL);
             event.accept(ARCHAEOLOGY_HAMMER);
@@ -262,3 +268,4 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
+

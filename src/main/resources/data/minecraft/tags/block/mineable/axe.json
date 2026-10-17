@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "examplemod:archaeology_table"
+    "examplemod:archaeology_table",
+    "examplemod:reconstruction_table"
   ]
 }

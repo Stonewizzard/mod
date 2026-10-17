@@ -74,7 +74,7 @@ public final class ExcavationTests {
                 menu.clicked(2,0,ContainerInput.PICKUP,player);require(helper,menu.studyAction(player,2,CENTER)&&ExcavationStudy.read(table.getItem(0)).depth(CENTER)==0,"Swapping to brush must safely finish the last layer");
                 require(helper,ExcavationStudy.read(table.getItem(0)).condition()==100,"Careful brush finish must preserve condition");
                 var sealed=ArchaeologyContent.specimen(92,2);var finished=finish(ExcavationStudy.read(sealed));finished.write(sealed);
-                int last=0;while(!finished.inclusion(last))last++;final int lastCell=last;
+                int last=0;while(!finished.inclusion(last)||!ExcavationStudy.coveredCell(last))last++;final int lastCell=last;
                 var root=sealed.get(DataComponents.CUSTOM_DATA).copyTag();var tag=root.getCompoundOrEmpty(ExcavationStudy.KEY);var cover=tag.getByteArray("Depths").orElseThrow();cover[lastCell]=1;tag.putByteArray("Depths",cover);root.put(ExcavationStudy.KEY,tag);sealed.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
                 table.setItem(0,sealed);table.setItem(5,new ItemStack(Items.DIRT));
                 helper.runAfterDelay(2,()->{
@@ -177,16 +177,17 @@ public final class ExcavationTests {
         require(helper,ExcavationStudy.radius(4,2)>ExcavationStudy.radius(4,0)&&ArchaeologyContent.cooldown(1,1)<ArchaeologyContent.cooldown(1,0),"Tier effects must include lens reach and drill speed");
         var kinds=new java.util.HashSet<ArtifactProfile.Find>();var matrices=new java.util.HashSet<ArtifactProfile.Matrix>();
         for(int rarity=0;rarity<6;rarity++)for(int seed=0;seed<40;seed++){
-            var stack=ArchaeologyContent.specimen(seed,rarity);var profile=ArtifactProfile.read(stack);kinds.add(profile.find());matrices.add(profile.matrix());
-            require(helper,profile.rarity()==rarity&&ArchaeologyContent.rarity(stack)==rarity&&ArchaeologyTableMenu.accepts(0,stack)&&profile.equals(ArtifactProfile.roll(seed,rarity)),"A specimen must seal its deterministic profile");
-            var a=ExcavationStudy.read(stack);a.work(1,CENTER);a.write(stack);ArtifactProfile.seal(stack,seed+1);
+            long mixedSeed=seed*0x9E3779B97F4A7C15L;
+            var stack=ArchaeologyContent.specimen(mixedSeed,rarity);var profile=ArtifactProfile.read(stack);kinds.add(profile.find());matrices.add(profile.matrix());
+            require(helper,profile.rarity()==rarity&&ArchaeologyContent.rarity(stack)==rarity&&ArchaeologyTableMenu.accepts(0,stack)&&profile.equals(ArtifactProfile.roll(mixedSeed,rarity)),"A specimen must seal its deterministic profile");
+            var a=ExcavationStudy.read(stack);a.work(1,CENTER);a.write(stack);ArtifactProfile.seal(stack,mixedSeed+1);
             require(helper,a.equals(ExcavationStudy.read(stack)),"Reinsertion must preserve progress and cannot reroll contents");
             var safe=finish(a);require(helper,safe.complete()&&safe.condition()==100,"Every rarity and matrix must be finishable with starter tools without damage");
             var reward=ArchaeologyContent.reward(safe);require(helper,!reward.isEmpty(),"Every excavation must recover a component or salvage");
             if(reward.is(ArchaeologyContent.FRAGMENTS.get()))require(helper,!reward.has(DataComponents.CUSTOM_DATA),"Commodity fragments should stack across specimens");
             else require(helper,reward.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty("examplemod:recovered").getIntOr("Quality",-1)==100,"Recovered components must record their quality and provenance");
         }
-        require(helper,kinds.size()==5&&matrices.size()==5,"Seeded variation must exercise all find types and rock matrices");
+        require(helper,kinds.size()==9&&matrices.size()==5,"Seeded variation must exercise all find types and rock matrices");
         var old=new ItemStack(ExampleMod.ANCIENT_ARTIFACT.get());var root=new net.minecraft.nbt.CompoundTag();root.putString("unrelated","keep");var tag=new net.minecraft.nbt.CompoundTag();tag.putInt("Version",1);
         byte[] depths=new byte[ExcavationStudy.CELLS];java.util.Arrays.fill(depths,(byte)1);tag.putByteArray("Depths",depths);tag.putByteArray("Scars",new byte[ExcavationStudy.CELLS]);tag.putInt("Damage",17);root.put(ExcavationStudy.KEY,tag);old.set(DataComponents.CUSTOM_DATA,CustomData.of(root));ArtifactProfile.seal(old,123);
         var migrated=ExcavationStudy.read(old);require(helper,migrated.profile().find()==ArtifactProfile.Find.LEGACY&&migrated.condition()==83&&migrated.depth(CENTER)==1,"Version-one studies must preserve their footprint, condition and cover");migrated.write(old);
@@ -204,4 +205,5 @@ public final class ExcavationTests {
     }
     private static void require(GameTestHelper helper,boolean valid,String message){if(!valid)throw helper.assertionException(message);}
 }
+
 
