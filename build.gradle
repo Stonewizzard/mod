@@ -200,9 +200,12 @@ neoForge.runs.named('sculkRenderCheck') {
 }
 
 
+def nativeInputClasspath = sourceSets.main.compileClasspath
 tasks.register('writeNativeInputClasspath') {
+    inputs.files(nativeInputClasspath)
+    outputs.file(layout.buildDirectory.file('native-input-classpath.txt'))
     doLast {
-        file('build/native-input-classpath.txt').text = sourceSets.main.compileClasspath.asPath
+        outputs.files.singleFile.text = nativeInputClasspath.asPath
     }
 }
 
