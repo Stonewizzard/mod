@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 
-/** Server-side roll/persistence foundation. There are intentionally no ability implementations. */
+/** Server-side rolls and versioned persistence shared by excavation and pickaxe assembly. */
 public final class ArtifactModifiers {
     public static final String KEY="examplemod:part_modifiers";
     public record Definition(String id,int weight,int minimumRarity,int minimumScore,double minimumValue,double maximumValue,String exclusiveGroup){
@@ -17,12 +17,14 @@ public final class ArtifactModifiers {
             if(id==null||!id.matches("[a-z0-9_.-]+:[a-z0-9_./-]+")||weight<=0||minimumRarity<0||minimumRarity>5||minimumScore<0||minimumScore>100||!Double.isFinite(minimumValue)||!Double.isFinite(maximumValue)||minimumValue>maximumValue||exclusiveGroup==null)throw new IllegalArgumentException("Invalid modifier definition: "+id);
         }
     }
-    public record Pool(int rolls,double chance,List<Definition> entries){
+    public record Pool(List<Double> chances,List<Definition> entries){
+        public Pool(int rolls,double chance,List<Definition> entries){this(java.util.Collections.nCopies(rolls,chance),entries);}
         public Pool {
-            entries=List.copyOf(entries);
-            if(rolls<0||rolls>8||!Double.isFinite(chance)||chance<0||chance>1)throw new IllegalArgumentException("Invalid modifier pool");
+            chances=List.copyOf(chances);entries=List.copyOf(entries);
+            if(chances.size()>8||chances.stream().anyMatch(c->!Double.isFinite(c)||c<0||c>1))throw new IllegalArgumentException("Invalid modifier chances");
             var ids=new HashSet<String>();for(var entry:entries)if(!ids.add(entry.id()))throw new IllegalArgumentException("Duplicate modifier: "+entry.id());
         }
+        public int rolls(){return chances.size();}
     }
     /** Raw rolled value and excavation quality stay separate for future effectiveness formulas. */
     public record Roll(String id,double value,double qualityScale){}
@@ -31,7 +33,7 @@ public final class ArtifactModifiers {
         var available=new ArrayList<>(pool.entries().stream().filter(d->profile.rarity()>=d.minimumRarity()&&score>=d.minimumScore()).toList());
         var result=new ArrayList<Roll>();var groups=new HashSet<String>();
         for(int attempt=0;attempt<pool.rolls()&&!available.isEmpty();attempt++){
-            if(random.nextDouble()>=pool.chance())continue;
+            if(random.nextDouble()>=pool.chances().get(attempt))continue;
             long weight=0;for(var d:available)weight+=d.weight();double choice=random.nextDouble()*weight;Definition selected=available.getLast();
             for(var d:available){choice-=d.weight();if(choice<0){selected=d;break;}}
             result.add(new Roll(selected.id(),selected.minimumValue()+random.nextDouble()*(selected.maximumValue()-selected.minimumValue()),Math.clamp(score,0,100)/100.0));
@@ -42,7 +44,10 @@ public final class ArtifactModifiers {
     }
     public static CompoundTag record(ArtifactProfile profile,int score,Pool pool){
         var tag=new CompoundTag();tag.putInt("Version",1);tag.putInt("CatalogRevision",ArtifactModifierCatalog.REVISION);tag.putString("Part",profile.find().name());tag.putLong("Seed",profile.seed());tag.putInt("ExcavationScore",score);
-        var rolls=roll(profile,score,pool);tag.putInt("Count",rolls.size());var entries=new CompoundTag();
+        return writeRolls(tag,roll(profile,score,pool));
+    }
+    public static CompoundTag writeRolls(CompoundTag tag,List<Roll> rolls){
+        tag.putInt("Count",rolls.size());var entries=new CompoundTag();
         for(int i=0;i<rolls.size();i++){var roll=rolls.get(i);var data=new CompoundTag();data.putString("Id",roll.id());data.putDouble("Value",roll.value());data.putDouble("QualityScale",roll.qualityScale());entries.put(Integer.toString(i),data);}
         tag.put("Rolls",entries);return tag;
     }
@@ -51,7 +56,7 @@ public final class ArtifactModifiers {
         if(!study.complete())return;
         var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
         if(root.contains(KEY))return;
-        root.put(KEY,record(study.profile(),study.condition(),ArtifactModifierCatalog.pool(study.profile().find())));
+        root.put(KEY,record(study.profile(),study.condition(),ArtifactModifierCatalog.pool(study.profile().find(),study.profile().rarity())));
         stack.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
     }
     public static void transfer(ItemStack source,ItemStack target){
@@ -60,10 +65,14 @@ public final class ArtifactModifiers {
     }
     /** Unknown future/removed IDs remain stored and readable; no registry lookup destroys old rolls. */
     public static List<Roll> read(ItemStack stack){
-        var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(KEY);if(tag.getIntOr("Version",0)!=1)return List.of();
+        return read(stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(KEY));
+    }
+    public static List<Roll> read(CompoundTag tag){
+        if(tag.getIntOr("Version",0)!=1)return List.of();
         var entries=tag.getCompoundOrEmpty("Rolls");var result=new ArrayList<Roll>();
         for(int i=0;i<Math.clamp(tag.getIntOr("Count",0),0,8);i++){var data=entries.getCompoundOrEmpty(Integer.toString(i));String id=data.getStringOr("Id","");double value=data.getDoubleOr("Value",0),scale=data.getDoubleOr("QualityScale",0);if(!id.isEmpty()&&Double.isFinite(value)&&Double.isFinite(scale))result.add(new Roll(id,value,Math.clamp(scale,0,1)));}
         return List.copyOf(result);
     }
     private ArtifactModifiers(){}
 }
+

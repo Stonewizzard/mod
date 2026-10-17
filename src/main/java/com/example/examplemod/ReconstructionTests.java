@@ -54,7 +54,7 @@ public final class ReconstructionTests {
             table.setItem(5,new ItemStack(Items.DIRT));require(helper,!menu.clickMenuButton(player,1),"A full output must consume nothing");for(int i=0;i<5;i++)require(helper,ItemStack.matches(table.getItem(i),recovered.get(i)),"Blocked assembly must retain every component");table.setItem(5,ItemStack.EMPTY);
             player.snapTo(pos.getX()+30,pos.getY(),pos.getZ());require(helper,!menu.clickMenuButton(player,1),"Remote players must not assemble tools");player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);
             new net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket(41,1).handle(player.connection);
-            var result=table.getItem(5).copy();require(helper,result.is(ArchaeologyContent.PICKAXE.get())&&result.getMaxDamage()==1800,"Assembly must create the usable restored pickaxe with its current fixed stats");
+            var result=table.getItem(5).copy();require(helper,result.is(ArchaeologyContent.PICKAXE.get())&&result.getMaxDamage()==(int)Math.round(1800*(1+PickaxeModifiers.totals(result).get(PickaxeTrait.DURABILITY))),"Assembly must create the usable restored pickaxe with its score-scaled durability");
             var assembly=result.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);require(helper,ArtifactQuality.assemblyScore(result)==92.8&&assembly.getDoubleOr("Score",-1)==92.8&&assembly.getIntOr("ScoreTotal",-1)==464,"The assembled tool must retain its aggregate score");
             for(int i=0;i<5;i++){require(helper,table.getItem(i).isEmpty(),"Successful assembly consumes exactly five pieces");var part=assembly.getCompoundOrEmpty("Parts").getCompoundOrEmpty(ReconstructionPattern.PICKAXE.parts.get(i));require(helper,part.getIntOr("Quality",-1)==scores[i]&&part.getLongOr("Seed",-1)==300+i&&part.getIntOr("Rarity",-1)==i,"The tool must preserve each original part score, seed and rarity for future modifiers");}
             require(helper,!other.clickMenuButton(second,1)&&ItemStack.matches(result,table.getItem(5)),"Two viewers must not duplicate the result");
@@ -106,14 +106,14 @@ public final class ReconstructionTests {
         var rolls=ArtifactModifiers.roll(profile,90,pool);require(helper,rolls.equals(ArtifactModifiers.roll(profile,90,pool))&&rolls.size()==2&&rolls.stream().map(ArtifactModifiers.Roll::id).distinct().count()==2,"Seeded rolls must be deterministic, unique and respect exclusive groups");
         require(helper,ArtifactModifiers.roll(profile,59,pool).isEmpty(),"Modifier entries must respect excavation score gates");
         var lower=ArtifactModifiers.roll(new ArtifactProfile(721,0,ArtifactProfile.Matrix.SHALE,profile.find()),90,pool);require(helper,lower.size()==1&&lower.stream().noneMatch(r->r.id().equals(c.id())),"Per-entry rarity gates must be respected");
-        for(var find:ArtifactProfile.Find.values())require(helper,ArtifactModifierCatalog.pool(find).entries().isEmpty(),"Live modifier pools must remain empty until abilities are designed");
+        for(var find:ArtifactProfile.Find.values())require(helper,ArtifactModifierCatalog.pool(find).entries().isEmpty()!=ArtifactModifierCatalog.pickaxePart(find),"Only pickaxe-compatible parts should have active pools");
         var study=new ExcavationStudy(profile);for(int cell=0;cell<ExcavationStudy.CELLS;cell++)while(study.depth(cell)>1&&!study.complete())study.work(1,cell);for(int cell=0;cell<ExcavationStudy.CELLS;cell++)study.work(2,cell);
         var specimen=ArchaeologyContent.specimen(721,2);var root=specimen.get(DataComponents.CUSTOM_DATA).copyTag();var frozen=ArtifactModifiers.record(profile,90,pool);root.put(ArtifactModifiers.KEY,frozen);specimen.set(DataComponents.CUSTOM_DATA,CustomData.of(root));ArtifactModifiers.seal(specimen,study);
         var piece=ArchaeologyContent.reward(study,specimen);require(helper,ArtifactModifiers.read(piece).equals(rolls),"Recovery must preserve completion-time rolls rather than rerolling after pool edits");
         var result=ArtifactQuality.assemble(ReconstructionPattern.SHOVEL,java.util.List.of(piece,new ItemStack(ReconstructionContent.CONNECTOR.get()),new ItemStack(ReconstructionContent.HANDLE.get())));
         var part=result.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY).getCompoundOrEmpty("Parts").getCompoundOrEmpty("ancient_shovel_head");require(helper,part.getCompoundOrEmpty("Modifiers").equals(frozen),"Assembly must retain every modifier ID, raw value, scale and catalog revision per part");
         var encoded=ItemStack.CODEC.encodeStart(level.registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE),result).getOrThrow();var decoded=ItemStack.CODEC.parse(level.registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE),encoded).getOrThrow();require(helper,ItemStack.matches(result,decoded),"Modifier provenance must survive item serialization");
-        System.out.println("MODIFIER_FOUNDATION_CHECK: PASS: deterministic weighted pools, eligibility, exclusive groups, empty live definitions, completion freeze, recovery/assembly/item-codec persistence");
+        System.out.println("MODIFIER_FOUNDATION_CHECK: PASS: deterministic weighted pools, eligibility, exclusive groups, pickaxe-only live pools, completion freeze, recovery/assembly/item-codec persistence");
     }
     private static void verifyPresentation(GameTestHelper helper){
         var pos=helper.absolutePos(new BlockPos(3,1,3));
@@ -139,4 +139,5 @@ public final class ReconstructionTests {
     }
     private static void require(GameTestHelper helper,boolean valid,String message){if(!valid)throw helper.assertionException(message);}
 }
+
 

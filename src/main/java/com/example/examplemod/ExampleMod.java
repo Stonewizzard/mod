@@ -147,6 +147,7 @@ public class ExampleMod {
                 output.accept(ArchaeologyContent.SWORD.get());
                 output.accept(ArchaeologyContent.MACE.get());
                 output.accept(ArchaeologyContent.SPEAR.get());
+                CreativePickaxeParts.variants().forEach(output::accept);
             }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -165,6 +166,7 @@ public class ExampleMod {
                         net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent.Operation.REPLACE));
         ENTITIES.register(modEventBus);
         SkulkStatus.register(modEventBus);
+        PickaxeEvents.register();
         modEventBus.addListener(ExcavationPayload::register);
 
         // Register the commonSetup method for modloading
@@ -177,6 +179,7 @@ public class ExampleMod {
             modEventBus.addListener(ArchaeologyTableTests::register);
             modEventBus.addListener(ExcavationTests::register);
             modEventBus.addListener(ReconstructionTests::register);
+            modEventBus.addListener(PickaxeModifierTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
@@ -267,5 +270,6 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
+
 
 

@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
 
-/** Quality is retained data for future modifiers, never a current combat/stat multiplier. */
+/** Per-part excavation quality and provenance survive reconstruction. */
 public final class ArtifactQuality {
     public static final String RECOVERED="examplemod:recovered",ASSEMBLY="examplemod:reconstruction";
     public static int score(ItemStack stack){
@@ -18,7 +18,7 @@ public final class ArtifactQuality {
     }
     public static void showRecoveredScore(ItemStack stack){
         int score=score(stack);if(score<0)return;
-        stack.set(DataComponents.LORE,new ItemLore(List.of(Component.literal("Excavation score: "+score+"/100").withStyle(net.minecraft.ChatFormatting.GRAY))));
+        stack.set(DataComponents.LORE,new ItemLore(PickaxeModifiers.pieceLore(stack)));
     }
     public static double average(List<ItemStack> pieces){return pieces.isEmpty()?0:pieces.stream().mapToInt(s->Math.max(0,score(s))).sum()/(double)pieces.size();}
     public static double assemblyScore(ItemStack stack){
@@ -44,7 +44,9 @@ public final class ArtifactQuality {
         record.putInt("Version",1);record.putInt("PartCount",pieces.size());record.putString("Pattern",pattern.key());record.putInt("ScoreTotal",total);record.putDouble("Score",total/(double)pieces.size());record.put("Parts",parts);
         var root=new CompoundTag();root.put(ASSEMBLY,record);result.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
         result.set(DataComponents.LORE,new ItemLore(List.of(Component.literal("Assembly score: "+formatted(total/(double)pieces.size())+"/100").withStyle(net.minecraft.ChatFormatting.GRAY))));
+        PickaxeModifiers.applyToAssembly(result);
         return result;
     }
 }
+
 
