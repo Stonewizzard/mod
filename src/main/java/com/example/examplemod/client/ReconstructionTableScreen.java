@@ -12,10 +12,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public final class ReconstructionTableScreen extends AbstractContainerScreen<ReconstructionTableMenu> {
-    public ReconstructionTableScreen(ReconstructionTableMenu menu,Inventory inventory,Component title){super(menu,inventory,title,320,236);}
+    public ReconstructionTableScreen(ReconstructionTableMenu menu,Inventory inventory,Component title){super(menu,inventory,title,320,242);}
     @Override public void extractBackground(GuiGraphicsExtractor g,int mouseX,int mouseY,float partialTick){
-        boolean[] inserted=new boolean[5];int[] scores=new int[5];for(int i=0;i<5;i++){inserted[i]=ReconstructionTableMenu.accepts(i,menu.getSlot(i).getItem());scores[i]=ArtifactQuality.score(menu.getSlot(i).getItem());}
-        var state=new ReconstructionScreenView.State(menu.pattern()==1,inserted,scores,!menu.getSlot(5).getItem().isEmpty(),menu.previewScore());
+        boolean[] inserted=new boolean[5];int[] scores=new int[5];for(int i=0;i<5;i++){inserted[i]=ReconstructionTableMenu.accepts(menu.pattern(),i,menu.getSlot(i).getItem());scores[i]=ArtifactQuality.score(menu.getSlot(i).getItem());}
+        var state=new ReconstructionScreenView.State(menu.pattern(),inserted,scores,!menu.getSlot(5).getItem().isEmpty(),menu.previewScore(),menu.hasSpareParts());
         ReconstructionScreenView.draw(new ExcavationScreenView.Canvas(){
             @Override public void fill(int x,int y,int w,int h,int color){g.fill(leftPos+x,topPos+y,leftPos+x+w,topPos+y+h,color);}
             @Override public void texture(Identifier id,int x,int y,int w,int h,float u,float v,int sw,int sh,int tw,int th,int color){g.blit(RenderPipelines.GUI_TEXTURED,id,leftPos+x,topPos+y,u,v,w,h,sw,sh,tw,th,color);}
@@ -30,3 +30,4 @@ public final class ReconstructionTableScreen extends AbstractContainerScreen<Rec
         return super.mouseClicked(event,doubleClick);
     }
 }
+

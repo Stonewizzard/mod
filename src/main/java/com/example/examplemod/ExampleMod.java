@@ -128,16 +128,14 @@ public class ExampleMod {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.examplemod")) //The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
+            .icon(() -> SNIFFER_SKULL_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
                 output.accept(SNIFFER_SKULL_ITEM.get()); // Our placeable block also appears in this mod tab.
-                output.accept(EXAMPLE_ITEM.get());
-                output.accept(ANCIENT_ARTIFACT.get());
+                ArchaeologyContent.artifacts().forEach(output::accept);
                 output.accept(CRUNCHER_EGG_ITEM.get());
                 output.accept(CRUNCHER_SPAWN_EGG.get());
                 output.accept(SKULK_PARASITE_SPAWN_EGG.get());
                 output.accept(ANCIENT_GEODE_ITEM.get());
-                output.accept(RARE_ANCIENT_ARTIFACT.get());
                 output.accept(ARCHAEOLOGY_TABLE_ITEM.get());
                 output.accept(ARCHAEOLOGY_DRILL.get());
                 output.accept(ARCHAEOLOGY_HAMMER.get());
@@ -147,6 +145,8 @@ public class ExampleMod {
                 ArchaeologyContent.materials().forEach(output::accept);
                 ArchaeologyContent.tools().forEach(output::accept);
                 output.accept(ArchaeologyContent.SWORD.get());
+                output.accept(ArchaeologyContent.MACE.get());
+                output.accept(ArchaeologyContent.SPEAR.get());
             }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -218,12 +218,11 @@ public class ExampleMod {
 
     // Add the Sniffer Head item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if(event.getTabKey()==CreativeModeTabs.COMBAT){event.accept(ArchaeologyContent.SWORD);}
+        if(event.getTabKey()==CreativeModeTabs.COMBAT){event.accept(ArchaeologyContent.SWORD);event.accept(ArchaeologyContent.MACE);event.accept(ArchaeologyContent.SPEAR);}
         else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(SNIFFER_SKULL_ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-            event.accept(ANCIENT_ARTIFACT);
-            event.accept(RARE_ANCIENT_ARTIFACT);
+            ArchaeologyContent.artifacts().forEach(event::accept);
             ArchaeologyContent.materials().forEach(event::accept);
             ReconstructionContent.pieces().forEach(event::accept);
         } else if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
@@ -268,4 +267,5 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
+
 

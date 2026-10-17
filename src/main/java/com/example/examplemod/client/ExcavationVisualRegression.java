@@ -36,7 +36,7 @@ public final class ExcavationVisualRegression {
             var state=new ExcavationScreenView.State(study,rare,inventory,held,hover,storedTools(held),name.equals("empty")?"":rare?"Rare Ancient Artifact":"Ancient Artifact");
             scenes.add(snapshot(name,state,labels,resources,font,assets));
         }
-        for(var find:new ArtifactProfile.Find[]{ArtifactProfile.Find.PICKAXE_HEAD,ArtifactProfile.Find.SWORD_BLADE,ArtifactProfile.Find.AXE_HEAD,ArtifactProfile.Find.RESONANT_CORE,ArtifactProfile.Find.PICKAXE_LEFT,ArtifactProfile.Find.PICKAXE_BRIDGE,ArtifactProfile.Find.PICKAXE_RIGHT,ArtifactProfile.Find.TOOL_CONNECTOR,ArtifactProfile.Find.TOOL_HANDLE}){
+        for(var find:new ArtifactProfile.Find[]{ArtifactProfile.Find.PICKAXE_HEAD,ArtifactProfile.Find.SWORD_BLADE,ArtifactProfile.Find.AXE_HEAD,ArtifactProfile.Find.RESONANT_CORE,ArtifactProfile.Find.PICKAXE_LEFT,ArtifactProfile.Find.PICKAXE_BRIDGE,ArtifactProfile.Find.PICKAXE_RIGHT,ArtifactProfile.Find.TOOL_CONNECTOR,ArtifactProfile.Find.TOOL_HANDLE,ArtifactProfile.Find.SHOVEL_HEAD,ArtifactProfile.Find.HOE_HEAD,ArtifactProfile.Find.MACE_HEAD,ArtifactProfile.Find.SPEAR_TIP}){
             var id=ExcavationScreenView.texture("gui/excavation/"+find.path());BufferedImage art;
             try(var input=resources.getResourceOrThrow(id).open()){art=ImageIO.read(input);}
             require(art.getWidth()==128&&art.getHeight()==64,"Component artwork must match board texture coordinates");
@@ -128,7 +128,9 @@ public final class ExcavationVisualRegression {
     }
     static final class RecordingCanvas implements ExcavationScreenView.Canvas {
         final JsonArray commands=new JsonArray();final Set<Identifier> textures=new HashSet<>();final BufferedImage font;
-        RecordingCanvas(BufferedImage font){this.font=font;}
+        final int width,height;
+        RecordingCanvas(BufferedImage font){this(font,ExcavationLayout.WIDTH,ExcavationLayout.HEIGHT);}
+        RecordingCanvas(BufferedImage font,int width,int height){this.font=font;this.width=width;this.height=height;}
         @Override public void fill(int x,int y,int w,int h,int color){bounds(x,y,w,h);var c=command("fill",x,y,w,h);c.addProperty("color",color);commands.add(c);}
         @Override public void texture(Identifier id,int x,int y,int w,int h,float u,float v,int sw,int sh,int tw,int th,int color){
             bounds(x,y,w,h);require(u>=0&&v>=0&&u+sw<=tw&&v+sh<=th,"Texture region escaped its asset");
@@ -141,9 +143,10 @@ public final class ExcavationVisualRegression {
             width+=right*8/unit+1;
         }return width;}
         private static JsonObject command(String op,int x,int y,int w,int h){var c=new JsonObject();c.addProperty("op",op);c.addProperty("x",x);c.addProperty("y",y);c.addProperty("w",w);c.addProperty("h",h);return c;}
-        private static void bounds(int x,int y,int w,int h){require(x>=0&&y>=0&&w>=0&&h>=0&&x+w<=ExcavationLayout.WIDTH&&y+h<=ExcavationLayout.HEIGHT,"An excavation control escaped the compact screen: "+x+","+y+" "+w+"x"+h);}
+        private void bounds(int x,int y,int w,int h){require(x>=0&&y>=0&&w>=0&&h>=0&&x+w<=width&&y+h<=height,"An excavation control escaped the compact screen: "+x+","+y+" "+w+"x"+h);}
     }
     private static void require(boolean value,String message){if(!value)throw new AssertionError(message);}
 }
+
 
 

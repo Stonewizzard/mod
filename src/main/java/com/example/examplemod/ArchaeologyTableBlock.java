@@ -29,11 +29,6 @@ public final class ArchaeologyTableBlock extends BaseEntityBlock {
     }
     public static final EnumProperty<Direction> FACING=BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<Part> PART=EnumProperty.create("part",Part.class);
-    private static final VoxelShape SHAPE=Shapes.or(Block.box(0,14,0,16,16,16),
-            Block.box(0,10,1,16,14,3),Block.box(0,10,13,16,14,15),
-            Block.box(1,0,1,3,14,3),Block.box(13,0,1,15,14,3),
-            Block.box(1,0,13,3,14,15),Block.box(13,0,13,15,14,15),
-            Block.box(1,3,3,15,4,13));
 
     public ArchaeologyTableBlock(BlockBehaviour.Properties properties){
         super(properties);registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH).setValue(PART,Part.LEFT));
@@ -79,7 +74,8 @@ public final class ArchaeologyTableBlock extends BaseEntityBlock {
         return state.getValue(PART)==Part.LEFT?new ArchaeologyTableBlockEntity(pos,state):null;
     }
     @Override protected RenderShape getRenderShape(BlockState state){return RenderShape.MODEL;}
-    @Override protected VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){return SHAPE;}
+    @Override protected VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){return WorkshopShapes.archaeology(state.getValue(PART)==Part.RIGHT,state.getValue(FACING));}
     @Override protected BlockState rotate(BlockState state,Rotation rotation){return state.setValue(FACING,rotation.rotate(state.getValue(FACING)));}
     @Override protected BlockState mirror(BlockState state,Mirror mirror){return rotate(state,mirror.getRotation(state.getValue(FACING)));}
 }
+

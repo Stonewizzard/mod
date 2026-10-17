@@ -24,6 +24,7 @@ public final class ArchaeologyTableVisualRegression {
         for(var entry:blockstates.entrySet()){
             var model=entry.getValue().getAsJsonObject().get("model").getAsString().split(":",2)[1];
             var geometry=json(resources,"models/"+model+".json");
+            verifyGeometry(geometry);
             require(geometry.getAsJsonArray("elements").size()>8,"Table geometry must include its top, apron, shelf and legs");
             for(var texture:geometry.getAsJsonObject("textures").entrySet()){
                 String name=texture.getValue().getAsString();
@@ -32,6 +33,8 @@ public final class ArchaeologyTableVisualRegression {
                 }
             }
         }
+        verifyGeometry(json(resources,"models/block/reconstruction_table.json"));
+        verifyGeometry(json(resources,"models/item/archaeology_table.json"));
         for(String item:new String[]{"archaeology_table","archaeology_drill","archaeology_hammer","magnifying_glass"}){
             var definition=json(resources,"items/"+item+".json");
             require(definition.getAsJsonObject("model").get("model").getAsString().equals("examplemod:item/"+item),"Missing item model reference");
@@ -69,6 +72,28 @@ public final class ArchaeologyTableVisualRegression {
         }
         System.out.println("ARCHAEOLOGY_RENDER_CHECK: PASS: eight block variants, packaged models/materials, five flat synchronized slot displays, four rotations, neutral overlays and empty slots");
     }
+    /** Thin wooden faces must keep native pixel density, and duplicate surfaces must not flicker. */
+    private static void verifyGeometry(JsonObject model){
+        var elements=model.getAsJsonArray("elements");
+        for(int i=0;i<elements.size();i++){
+            var element=elements.get(i).getAsJsonObject();var from=element.getAsJsonArray("from");var to=element.getAsJsonArray("to");
+            double[] lengths=new double[3];for(int axis=0;axis<3;axis++)lengths[axis]=to.get(axis).getAsDouble()-from.get(axis).getAsDouble();
+            for(var face:element.getAsJsonObject("faces").entrySet()){
+                String side=face.getKey();int axis=side.equals("up")||side.equals("down")?1:side.equals("east")||side.equals("west")?0:2;
+                int u=axis==0?2:0,v=axis==1?2:1;var uv=face.getValue().getAsJsonObject().getAsJsonArray("uv");
+                for(var value:uv)require(value.getAsDouble()>=0&&value.getAsDouble()<=16,"A table UV escaped its texture tile");
+                require(Math.abs(Math.abs(uv.get(2).getAsDouble()-uv.get(0).getAsDouble())-lengths[u])<.025&&Math.abs(Math.abs(uv.get(3).getAsDouble()-uv.get(1).getAsDouble())-lengths[v])<.025,"A thin table face stretches a complete texture");
+                boolean high=side.equals("up")||side.equals("east")||side.equals("south");double plane=(high?to:from).get(axis).getAsDouble();
+                for(int j=0;j<i;j++){
+                    var other=elements.get(j).getAsJsonObject();if(!other.getAsJsonObject("faces").has(side))continue;var a=other.getAsJsonArray("from");var b=other.getAsJsonArray("to");
+                    if(Math.abs((high?b:a).get(axis).getAsDouble()-plane)>.00001)continue;
+                    double overlapU=Math.min(to.get(u).getAsDouble(),b.get(u).getAsDouble())-Math.max(from.get(u).getAsDouble(),a.get(u).getAsDouble());
+                    double overlapV=Math.min(to.get(v).getAsDouble(),b.get(v).getAsDouble())-Math.max(from.get(v).getAsDouble(),a.get(v).getAsDouble());
+                    require(overlapU<.00001||overlapV<.00001,"Coplanar table surfaces can cause texture flickering");
+                }
+            }
+        }
+    }
     private static Identifier id(String path){return Identifier.fromNamespaceAndPath("examplemod",path);}
     private static JsonObject json(ResourceManager resources,String path) throws Exception {
         try(var input=new InputStreamReader(resources.getResourceOrThrow(id(path)).open(),StandardCharsets.UTF_8)){
@@ -77,3 +102,4 @@ public final class ArchaeologyTableVisualRegression {
     }
     private static void require(boolean condition,String message){if(!condition)throw new AssertionError(message);}
 }
+

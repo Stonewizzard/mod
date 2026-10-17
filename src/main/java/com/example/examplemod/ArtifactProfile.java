@@ -14,10 +14,10 @@ public record ArtifactProfile(long seed,int rarity,Matrix matrix,Find find) {
         public final String label,texture;public final int depth;
         Matrix(String label,int depth,String texture){this.label=label;this.depth=depth;this.texture=texture;}
     }
-    public enum Find {LEGACY,PICKAXE_HEAD,SWORD_BLADE,AXE_HEAD,RESONANT_CORE,ALLOY,PICKAXE_LEFT,PICKAXE_BRIDGE,PICKAXE_RIGHT,TOOL_CONNECTOR,TOOL_HANDLE;
+    public enum Find {LEGACY,PICKAXE_HEAD,SWORD_BLADE,AXE_HEAD,RESONANT_CORE,ALLOY,PICKAXE_LEFT,PICKAXE_BRIDGE,PICKAXE_RIGHT,TOOL_CONNECTOR,TOOL_HANDLE,SHOVEL_HEAD,HOE_HEAD,MACE_HEAD,SPEAR_TIP;
         public String path(){return name().toLowerCase(java.util.Locale.ROOT);}
     }
-    private static final Find[] METAL_FINDS={Find.PICKAXE_LEFT,Find.PICKAXE_BRIDGE,Find.PICKAXE_RIGHT,Find.TOOL_CONNECTOR,Find.TOOL_HANDLE,Find.SWORD_BLADE,Find.AXE_HEAD};
+    private static final Find[] METAL_FINDS={Find.PICKAXE_LEFT,Find.PICKAXE_BRIDGE,Find.PICKAXE_RIGHT,Find.TOOL_CONNECTOR,Find.TOOL_HANDLE,Find.SWORD_BLADE,Find.AXE_HEAD,Find.SHOVEL_HEAD,Find.HOE_HEAD,Find.MACE_HEAD,Find.SPEAR_TIP};
     public static ArtifactProfile legacy(){return new ArtifactProfile(0,0,Matrix.SANDSTONE,Find.LEGACY);}
     public static ArtifactProfile roll(long seed,int rarity){
         rarity=Math.clamp(rarity,0,5);var random=new Random(seed);
@@ -48,5 +48,6 @@ public record ArtifactProfile(long seed,int rarity,Matrix matrix,Find find) {
         (old.getIntOr("Version",0)==1?legacy():roll(seed,ArchaeologyContent.rarity(stack))).write(stack);
     }
 }
+
 
 

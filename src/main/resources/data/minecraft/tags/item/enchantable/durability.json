@@ -8,6 +8,13 @@
     "examplemod:precision_hammer",
     "examplemod:resonant_drill",
     "examplemod:resonant_brush",
-    "examplemod:resonant_hammer"
+    "examplemod:resonant_hammer",
+    "examplemod:restored_ancient_pickaxe",
+    "examplemod:restored_ancient_sword",
+    "examplemod:restored_ancient_axe",
+    "examplemod:restored_ancient_shovel",
+    "examplemod:restored_ancient_hoe",
+    "examplemod:restored_ancient_mace",
+    "examplemod:restored_ancient_spear"
   ]
 }

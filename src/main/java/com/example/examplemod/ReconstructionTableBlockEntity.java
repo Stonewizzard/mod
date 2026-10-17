@@ -25,9 +25,10 @@ public final class ReconstructionTableBlockEntity extends BaseContainerBlockEnti
     @Override protected void setItems(NonNullList<ItemStack> items){this.items=items;}
     @Override protected Component getDefaultName(){return Component.translatable("container.examplemod.reconstruction_table");}
     @Override protected AbstractContainerMenu createMenu(int id,Inventory inventory){return new ReconstructionTableMenu(id,inventory,this);}
-    @Override public boolean canPlaceItem(int slot,ItemStack stack){return ReconstructionTableMenu.accepts(slot,stack);}
+    @Override public boolean canPlaceItem(int slot,ItemStack stack){return ReconstructionTableMenu.accepts(pattern,slot,stack);}
     @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);items=NonNullList.withSize(6,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);pattern=input.read("Pattern",com.mojang.serialization.Codec.INT).filter(v->ReconstructionPattern.byId(v)!=null).orElse(0);}
     @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);ContainerHelper.saveAllItems(output,items);output.putInt("Pattern",pattern);}
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries){return saveCustomOnly(registries);}
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket(){return ClientboundBlockEntityDataPacket.create(this);}
 }
+
