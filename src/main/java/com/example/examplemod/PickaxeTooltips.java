@@ -63,7 +63,9 @@ public final class PickaxeTooltips {
         var data=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactQuality.RECOVERED);
         var lines=new ArrayList<Component>(piece(score,data.getIntOr("Rarity",0),ArtifactModifiers.read(stack)));
         String locked=ComponentWork.locked(stack);if(!locked.isEmpty()){var trait=PickaxeTrait.byId(locked);lines.add(text("Locked: "+(trait==null?locked:label(trait)),0xB7D6F4));}
-        if(ComponentWork.corrupted(stack))lines.add(text("CORRUPTED - final",0xEE8A88));return List.copyOf(lines);
+        if(ComponentWork.corrupted(stack)){
+            lines.add(text("CORRUPTED - final",0xEE8A88));String result=ComponentWork.state(stack).getStringOr("LastAction","");if(!result.isEmpty())lines.add(text(result,MUTED));
+        }return List.copyOf(lines);
     }
     public static List<Component> piece(int score,int rarity,List<ArtifactModifiers.Roll> rolls){
         var lines=new ArrayList<Component>();

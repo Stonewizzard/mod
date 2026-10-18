@@ -22,7 +22,7 @@ public final class ComponentStationScreen extends AbstractContainerScreen<Compon
         var choices=ComponentWork.offers(part);
         for(int i=0;i<choices.size();i++){var roll=choices.get(i);var trait=PickaxeTrait.byId(roll.id());if(trait!=null)offers.add(new ComponentStationView.Row(PickaxeTooltips.label(trait),"+"+PickaxeTooltips.value(trait,roll.value()),roll.scaling(),PickaxeTooltips.magnitude(roll.value()/trait.cap),false,false,ComponentWork.can(ComponentStationKind.UNVEILER,part,i)));}
         boolean valid=ComponentWork.component(part),corrupted=ComponentWork.corrupted(part);String status=valid?ComponentWork.state(part).getStringOr("LastAction",kind.description):"Recovered components only";
-        if(corrupted)status="Corrupted: no more modifications";
+        if(corrupted&&status.equals(kind.description))status="Corrupted: no more modifications";
         return new ComponentStationView.State(kind,valid,Math.max(0,ArtifactQuality.score(part)),corrupted,status,List.copyOf(modifiers),List.copyOf(offers),ComponentWork.can(kind,part,0));
     }
     @Override public void extractBackground(GuiGraphicsExtractor g,int mouseX,int mouseY,float partialTick){

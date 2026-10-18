@@ -151,6 +151,7 @@ public class ExampleMod {
                 output.accept(ArchaeologyContent.SPEAR.get());
                 CreativePickaxeParts.variants().forEach(output::accept);
                 CreativeGrowthTools.variants().forEach(output::accept);
+                CreativeAncientParts.variants().forEach(output::accept);
             }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.

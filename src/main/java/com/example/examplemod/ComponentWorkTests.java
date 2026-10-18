@@ -27,7 +27,7 @@ public final class ComponentWorkTests {
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
         @Override protected MutableComponent typeDescription(){return Component.literal("Ancient offers, permanent locks, terminal corruption and 120% component restoration");}
         @Override public void run(GameTestHelper h){
-            discovery(h);locks(h);corruption(h);restoration(h);
+            discovery(h);locks(h);corruption(h);restoration(h);creative(h);
             System.out.println("COMPONENT_WORK_CHECK: PASS: Epic+ ancient rolls, three fixed legal offers, real excavation recovery, one-time unveiling, permanent lock protection, all nine corruption outcomes and terminal guards, 120% restoration, immutable source quality and assembled provenance");h.succeed();
         }
     }
@@ -88,6 +88,11 @@ public final class ComponentWorkTests {
         var assembly=tool.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY).getCompoundOrEmpty("Parts");for(String id:ReconstructionPattern.PICKAXE.parts)check(h,assembly.getCompoundOrEmpty(id).getIntOr("Score",0)==120&&assembly.getCompoundOrEmpty(id).getCompoundOrEmpty("Customization").getIntOr("Quality",0)==120,"Assembly must remember each part's customization provenance");
         var fixed=tool.copy();for(var kind:ComponentStationKind.values())check(h,!ComponentWork.component(tool)&&!ComponentWork.apply(kind,tool,0,RandomSource.create())&&ItemStack.matches(fixed,tool),"Every workshop must reject finished tools without changing them");
         check(h,ItemStack.matches(tool,roundtrip(h,tool)),"Restored assembled quality and provenance must survive saves");
+    }
+    private static void creative(GameTestHelper h){
+        var examples=CreativeAncientParts.variants();check(h,examples.size()==5,"Creative must provide one guaranteed ancient sample for every live pickaxe component role");
+        var player=h.makeMockServerPlayerInLevel();player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+        for(var example:examples){new net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket(36,example.copy()).handle(player.connection);check(h,ItemStack.matches(player.getMainHandItem(),example)&&ComponentWork.offers(player.getMainHandItem()).size()==3&&ArtifactQuality.score(example)==80,"Actual Creative inventory packets must preserve each sample's fixed offers and restorable quality");}
     }
     static ItemStack ancient(ArtifactProfile.Find find,int rarity){for(long seed=0;seed<1000;seed++){var part=natural(find,100,rarity,seed);if(!ComponentWork.offers(part).isEmpty())return part;}throw new IllegalStateException("No ancient seed found");}
     static ItemStack natural(ArtifactProfile.Find find,int score,int rarity,long seed){var stack=component(find,score,rarity,seed);var root=stack.get(DataComponents.CUSTOM_DATA).copyTag();var profile=new ArtifactProfile(seed,rarity,ArtifactProfile.Matrix.OBSIDIAN,find);root.put(ArtifactModifiers.KEY,ArtifactModifiers.record(profile,score,ArtifactModifierCatalog.pool(find,rarity)));stack.set(DataComponents.CUSTOM_DATA,CustomData.of(root));return stack;}
