@@ -36,7 +36,8 @@ public final class PickaxeModifiers {
                 values.merge(trait,Math.clamp(roll.value(),0,trait.cap)*quality,Double::sum);
             }
         }
-        values.replaceAll((trait,value)->Math.clamp(value,0,trait.cap));return new Bonuses(values);
+        double multiplier=PickaxeProgression.read(stack).multiplier();
+        values.replaceAll((trait,value)->Math.clamp(value*multiplier,0,trait.cap));return new Bonuses(values);
     }
     public static List<Component> pieceLore(ItemStack stack){
         var lore=new ArrayList<Component>();int score=ArtifactQuality.score(stack);if(score<0)return lore;
@@ -52,6 +53,7 @@ public final class PickaxeModifiers {
     }
     public static void applyToAssembly(ItemStack result){
         if(!result.is(ArchaeologyContent.PICKAXE.get()))return;
+        PickaxeProgression.initialize(result);
         var bonuses=totals(result);
         result.set(DataComponents.MAX_DAMAGE,(int)Math.round(1800*(1+bonuses.get(PickaxeTrait.DURABILITY))));
         double reach=bonuses.get(PickaxeTrait.REACH);
@@ -60,9 +62,14 @@ public final class PickaxeModifiers {
             result.set(DataComponents.ATTRIBUTE_MODIFIERS,attributes.withModifierAdded(Attributes.BLOCK_INTERACTION_RANGE,
                 new AttributeModifier(Identifier.fromNamespaceAndPath(ExampleMod.MODID,"pickaxe_reach"),reach,AttributeModifier.Operation.ADD_VALUE),EquipmentSlotGroup.MAINHAND));
         }
-        var lore=new ArrayList<Component>();lore.add(Component.literal("Assembly score: "+ArtifactQuality.formatted(ArtifactQuality.assemblyScore(result))+"/100").withStyle(ChatFormatting.GRAY));
+        updateLore(result);
+    }
+    public static void updateLore(ItemStack result){
+        var bonuses=totals(result);
+        var lore=new ArrayList<Component>(PickaxeProgression.lore(result));lore.add(Component.literal("Assembly score: "+ArtifactQuality.formatted(Math.max(0,ArtifactQuality.assemblyScore(result)))+"/100").withStyle(ChatFormatting.GRAY));
         for(var trait:PickaxeTrait.values())if(bonuses.values().containsKey(trait))lore.add(Component.literal(trait.label+": +"+trait.format(bonuses.get(trait))).withStyle(ChatFormatting.AQUA));
         result.set(DataComponents.LORE,new ItemLore(lore));
     }
     private PickaxeModifiers(){}
 }
+

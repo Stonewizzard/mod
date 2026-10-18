@@ -141,6 +141,7 @@ public class ExampleMod {
                 output.accept(ARCHAEOLOGY_HAMMER.get());
                 output.accept(MAGNIFYING_GLASS.get());
                 output.accept(ReconstructionContent.TABLE_ITEM.get());
+                output.accept(AscenderContent.ITEM.get());
                 ReconstructionContent.pieces().forEach(output::accept);
                 ArchaeologyContent.materials().forEach(output::accept);
                 ArchaeologyContent.tools().forEach(output::accept);
@@ -180,11 +181,13 @@ public class ExampleMod {
             modEventBus.addListener(ExcavationTests::register);
             modEventBus.addListener(ReconstructionTests::register);
             modEventBus.addListener(PickaxeModifierTests::register);
+            modEventBus.addListener(PickaxeAscensionTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
         ArchaeologyContent.register();
         ReconstructionContent.register();
+        AscenderContent.register();
         BLOCKS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
@@ -237,6 +240,7 @@ public class ExampleMod {
         } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(ARCHAEOLOGY_TABLE_ITEM);
             event.accept(ReconstructionContent.TABLE_ITEM);
+            event.accept(AscenderContent.ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ARCHAEOLOGY_DRILL);
             event.accept(ARCHAEOLOGY_HAMMER);
@@ -270,6 +274,7 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
+
 
 
 
