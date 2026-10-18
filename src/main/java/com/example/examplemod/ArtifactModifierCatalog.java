@@ -8,7 +8,7 @@ import static com.example.examplemod.PickaxeTrait.*;
 
 /** All live roll balance in one place. Only the five pickaxe-compatible parts have active pools. */
 public final class ArtifactModifierCatalog {
-    public static final int REVISION=2;
+    public static final int REVISION=3;
     public record Range(double minimum,double maximum){}
     public record Tier(String label,List<Double> chances,Map<PickaxeTrait,Range> ranges){}
     private static Range r(double minimum,double maximum){return new Range(minimum,maximum);}
@@ -51,3 +51,4 @@ public final class ArtifactModifierCatalog {
     }
     private ArtifactModifierCatalog(){}
 }
+

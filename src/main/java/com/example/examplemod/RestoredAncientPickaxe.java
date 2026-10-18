@@ -16,7 +16,11 @@ public final class RestoredAncientPickaxe extends Item {
         var mode=miner instanceof ServerPlayer player?player.gameMode.getGameModeForPlayer():null;
         boolean eligible=(mode==net.minecraft.world.level.GameType.SURVIVAL||mode==net.minecraft.world.level.GameType.ADVENTURE)&&tool.isCorrectToolForDrops(state)&&state.getDestroySpeed(level,pos)>0;
         boolean mined=super.mineBlock(tool,level,state,pos,miner);
-        if(mined&&eligible&&!tool.isEmpty())PickaxeProgression.gain(tool,1);
+        if(mined&&eligible&&!tool.isEmpty()){
+            int before=PickaxeProgression.read(tool).level();PickaxeProgression.gain(tool,1);
+            if(PickaxeProgression.read(tool).level()>before){var player=(ServerPlayer)miner;player.level().playSound(null,player.blockPosition(),net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP,net.minecraft.sounds.SoundSource.PLAYERS,.55F,1.35F);}
+        }
         return mined;
     }
 }
+
