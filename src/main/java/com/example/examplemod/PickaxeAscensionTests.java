@@ -87,6 +87,7 @@ public final class PickaxeAscensionTests {
         for(int i=0;i<ReconstructionPattern.PICKAXE.parts.size();i++){
             String id=ReconstructionPattern.PICKAXE.parts.get(i);var part=parts.getCompoundOrEmpty(id);var record=part.getCompoundOrEmpty("Modifiers");var rolls=new ArrayList<ArtifactModifiers.Roll>();
             for(int j=0;j<2;j++){var trait=traits[i*2+j];rolls.add(new ArtifactModifiers.Roll(trait.id,trait.cap,1));}
+            if(i==0)rolls.add(new ArtifactModifiers.Roll(REACH.id,.5,1));
             part.put("Modifiers",ArtifactModifiers.writeRolls(record,rolls));parts.put(id,part);
         }
         assembly.put("Parts",parts);root.put(ArtifactQuality.ASSEMBLY,assembly);tool.set(DataComponents.CUSTOM_DATA,CustomData.of(root));PickaxeProgression.write(tool,new PickaxeProgression.State(100,0,9));PickaxeModifiers.applyToAssembly(tool);
@@ -107,7 +108,7 @@ public final class PickaxeAscensionTests {
         tool=table.getItem(0);check(h,PickaxeProgression.read(tool).ascensions()==1,"The native block ticker must automatically ascend an eligible tool");for(var cost:costs)check(h,AscensionResources.available(table,cost.item())==3,"Only required quantities must be consumed");
         var copy=tool.copy();ticker.tick(level,pos,table.getBlockState(),table);check(h,ItemStack.matches(copy,table.getItem(0)),"A repeated native tick must not ascend or charge again");
         check(h,!menu.quickMoveStack(player,0).isEmpty()&&table.getItem(0).isEmpty(),"The upgraded tool must shift-click back out");
-        table.setItem(0,copy);var bounds=new net.minecraft.world.phys.AABB(pos).inflate(2);level.getEntitiesOfClass(ItemEntity.class,bounds).forEach(ItemEntity::discard);level.destroyBlock(pos,true);
+        table.setItem(0,copy.copy());var bounds=new net.minecraft.world.phys.AABB(pos).inflate(2);level.getEntitiesOfClass(ItemEntity.class,bounds).forEach(ItemEntity::discard);level.destroyBlock(pos,true);
         var drops=level.getEntitiesOfClass(ItemEntity.class,bounds);int expected=1+1+3*costs.size();check(h,drops.stream().mapToInt(e->e.getItem().getCount()).sum()==expected&&drops.stream().filter(e->ItemStack.matches(copy,e.getItem())).count()==1,"Breaking the Ascender must drop its block, upgraded tool and remaining materials exactly once");
     }
     private static void fill(net.minecraft.world.Container inventory,List<AscensionResources.Requirement> costs,int extra){
