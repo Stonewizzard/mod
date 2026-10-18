@@ -61,6 +61,7 @@ public class ExampleModClient {
     static void checkSculkRendering(net.neoforged.neoforge.data.event.GatherDataEvent.Client event) {
         if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
             try {
+                com.example.examplemod.client.ComponentStationVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.PickaxeTooltipRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.AscenderVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.ReconstructionVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));

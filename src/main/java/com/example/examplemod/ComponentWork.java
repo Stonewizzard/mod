@@ -34,7 +34,7 @@ public final class ComponentWork {
     public static boolean mutable(ItemStack stack){return component(stack)&&!corrupted(stack);}
     public static List<ArtifactModifiers.Roll> offers(ItemStack stack){return AncientModifiers.offers(stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactModifiers.KEY));}
     public static boolean can(ComponentStationKind kind,ItemStack stack,int choice){
-        if(!mutable(stack))return false;var rolls=ArtifactModifiers.read(stack);String lock=locked(stack);
+        if(!mutable(stack)||stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getBooleanOr(CreativePickaxeParts.PENDING,false))return false;var rolls=ArtifactModifiers.read(stack);String lock=locked(stack);
         return switch(kind){
             case UNVEILER->choice>=0&&choice<offers(stack).size()&&rolls.stream().anyMatch(AncientModifiers::ancient)&&AncientModifiers.eligible(find(stack),recovered(stack).getIntOr("Rarity",0),rolls).stream().anyMatch(d->d.id().equals(offers(stack).get(choice).id()));
             case LOCKER->lock.isEmpty()&&choice>=0&&choice<rolls.size()&&!AncientModifiers.ancient(rolls.get(choice))&&PickaxeTrait.byId(rolls.get(choice).id())!=null;

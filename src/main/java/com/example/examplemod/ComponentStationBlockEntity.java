@@ -22,6 +22,10 @@ public final class ComponentStationBlockEntity extends BaseContainerBlockEntity 
     @Override protected void setItems(NonNullList<ItemStack> items){this.items=items;}
     @Override protected Component getDefaultName(){return Component.translatable("block.examplemod."+kind().id);}
     @Override protected AbstractContainerMenu createMenu(int id,Inventory inventory){return new ComponentStationMenu(id,inventory,this);}
+    @Override public void setItem(int slot,ItemStack stack){
+        if(getLevel() instanceof net.minecraft.server.level.ServerLevel server)CreativePickaxeParts.materialize(stack,server.getRandom());
+        super.setItem(slot,stack);
+    }
     @Override public boolean canPlaceItem(int slot,ItemStack stack){return slot==0&&ComponentWork.component(stack);}
     @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);items=NonNullList.withSize(1,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);}
     @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);ContainerHelper.saveAllItems(output,items);}

@@ -187,6 +187,8 @@ public class ExampleMod {
             modEventBus.addListener(PickaxeAscensionTests::register);
             modEventBus.addListener(PickaxeGrowthTests::register);
             modEventBus.addListener(PickaxeLevelSoundTests::register);
+            modEventBus.addListener(ComponentWorkTests::register);
+            modEventBus.addListener(ComponentStationTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered

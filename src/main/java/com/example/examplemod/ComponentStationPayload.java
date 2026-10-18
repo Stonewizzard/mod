@@ -17,6 +17,7 @@ public record ComponentStationPayload(int menuId,int action,ItemStack expected) 
     @Override public Type<? extends CustomPacketPayload> type(){return TYPE;}
     public static void register(RegisterPayloadHandlersEvent event){event.registrar("1").playToServer(TYPE,STREAM_CODEC,ComponentStationPayload::handle);}
     private static void handle(ComponentStationPayload payload,IPayloadContext context){context.enqueueWork(()->{
-        if(context.player() instanceof ServerPlayer player&&player.containerMenu instanceof ComponentStationMenu menu&&menu.containerId==payload.menuId)menu.action(player,payload.action,payload.expected);
+        if(context.player() instanceof ServerPlayer player)dispatch(payload,player);
     });}
+    static void dispatch(ComponentStationPayload payload,ServerPlayer player){if(player.containerMenu instanceof ComponentStationMenu menu&&menu.containerId==payload.menuId)menu.action(player,payload.action,payload.expected);}
 }

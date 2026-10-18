@@ -14,6 +14,7 @@ public final class ComponentStationMenu extends AbstractContainerMenu {
     public ComponentStationMenu(int id,Inventory inventory){this(id,inventory,new SimpleContainer(1));}
     public ComponentStationMenu(int id,Inventory inventory,Container container){
         super(ComponentStationContent.MENU.get(),id);checkContainerSize(container,1);this.container=container;
+        if(container instanceof ComponentStationBlockEntity station&&station.getLevel() instanceof net.minecraft.server.level.ServerLevel server&&CreativePickaxeParts.materialize(container.getItem(0),server.getRandom()))container.setChanged();
         addDataSlot(new DataSlot(){@Override public int get(){return kind().ordinal();}@Override public void set(int value){clientKind=value;}});
         addSlot(new Slot(container,0,27,47){@Override public boolean mayPlace(ItemStack stack){return ComponentWork.component(stack);}@Override public int getMaxStackSize(){return 1;}});
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inventory,9+row*9+col,79+18*col,161+18*row));
