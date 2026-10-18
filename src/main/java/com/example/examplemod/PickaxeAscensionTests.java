@@ -34,13 +34,17 @@ public final class PickaxeAscensionTests {
         @Override protected MutableComponent typeDescription(){return Component.literal("Persistent pickaxe levels and atomic material-based ascensions");}
         @Override public void run(GameTestHelper h){
             verifyMining(h);verifyGates(h);verifyInventory(h);
-            System.out.println("PICKAXE_ASCENSION_CHECK: PASS: actual Survival mining, no Creative XP, all ten gates through level 100, linear bonuses and caps, duplicate-trait costs, atomic consumption, stable damage/enchants/provenance, native inventory packets, save/reload and block drops");h.succeed();
+            System.out.println("PICKAXE_ASCENSION_CHECK: PASS: actual Survival mining, no Creative XP, all ten gates through level 100, linear bonuses and caps, duplicate-trait costs, atomic consumption, stable damage/enchants/provenance, native inventory routing, save/reload and block drops");h.succeed();
         }
     }
     private static void verifyMining(GameTestHelper h){
         var player=h.makeMockServerPlayerInLevel();player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);var pos=h.absolutePos(new BlockPos(3,1,3));player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);
         var tool=tool(50);player.setItemInHand(InteractionHand.MAIN_HAND,tool);h.getLevel().setBlockAndUpdate(pos,Blocks.STONE.defaultBlockState());
         check(h,player.gameMode.destroyBlock(pos)&&PickaxeProgression.read(tool).xp()==1,"Actual successful Survival mining must award one tool XP");
+        boolean[] cancel={true};
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.level.block.BreakBlockEvent event)->{if(cancel[0]&&event.getPos().equals(pos))event.setCanceled(true);});
+        h.getLevel().setBlockAndUpdate(pos,Blocks.STONE.defaultBlockState());
+        check(h,!player.gameMode.destroyBlock(pos)&&PickaxeProgression.read(tool).xp()==1,"Canceled block breaks must award no XP");cancel[0]=false;
         h.getLevel().setBlockAndUpdate(pos,Blocks.DIRT.defaultBlockState());player.gameMode.destroyBlock(pos);check(h,PickaxeProgression.read(tool).xp()==1,"Incorrect mining targets must not grant tool XP");
         player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);h.getLevel().setBlockAndUpdate(pos,Blocks.STONE.defaultBlockState());player.gameMode.destroyBlock(pos);check(h,PickaxeProgression.read(tool).xp()==1,"Creative mining must not level the tool");
         player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);PickaxeProgression.write(tool,new PickaxeProgression.State(9,PickaxeProgression.xpRequired(9)-1,0));
