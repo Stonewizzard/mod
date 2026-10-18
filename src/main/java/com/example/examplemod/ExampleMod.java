@@ -149,6 +149,7 @@ public class ExampleMod {
                 output.accept(ArchaeologyContent.MACE.get());
                 output.accept(ArchaeologyContent.SPEAR.get());
                 CreativePickaxeParts.variants().forEach(output::accept);
+                CreativeGrowthTools.variants().forEach(output::accept);
             }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -182,6 +183,8 @@ public class ExampleMod {
             modEventBus.addListener(ReconstructionTests::register);
             modEventBus.addListener(PickaxeModifierTests::register);
             modEventBus.addListener(PickaxeAscensionTests::register);
+            modEventBus.addListener(PickaxeGrowthTests::register);
+            modEventBus.addListener(PickaxeLevelSoundTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
@@ -274,6 +277,7 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
+
 
 
 

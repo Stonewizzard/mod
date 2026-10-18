@@ -89,9 +89,10 @@ public final class PickaxeEvents {
     public static void tick(PlayerTickEvent.Post event){
         if(!(event.getEntity() instanceof ServerPlayer player))return;
         boolean changed=false;
-        for(int slot=0;slot<player.getInventory().getContainerSize();slot++)changed|=CreativePickaxeParts.materialize(player.getInventory().getItem(slot),player.getRandom());
-        changed|=CreativePickaxeParts.materialize(player.getOffhandItem(),player.getRandom());
-        changed|=CreativePickaxeParts.materialize(player.containerMenu.getCarried(),player.getRandom());
+        for(int slot=0;slot<player.getInventory().getContainerSize();slot++){var stack=player.getInventory().getItem(slot);changed|=CreativePickaxeParts.materialize(stack,player.getRandom());changed|=PickaxeTooltips.refresh(stack);}
+        changed|=CreativePickaxeParts.materialize(player.getOffhandItem(),player.getRandom());changed|=PickaxeTooltips.refresh(player.getOffhandItem());
+        changed|=CreativePickaxeParts.materialize(player.containerMenu.getCarried(),player.getRandom());changed|=PickaxeTooltips.refresh(player.containerMenu.getCarried());
+        if(player.containerMenu!=player.inventoryMenu)for(var slot:player.containerMenu.slots)if(PickaxeTooltips.refresh(slot.getItem())){slot.setChanged();changed=true;}
         if(changed){player.getInventory().setChanged();player.inventoryMenu.broadcastChanges();if(player.containerMenu!=player.inventoryMenu)player.containerMenu.broadcastChanges();}
         if(player.level().getGameTime()%2!=0)return;
         double radius=PickaxeModifiers.totals(player.getMainHandItem()).get(MAGNET);if(radius<=0)return;
@@ -108,3 +109,4 @@ public final class PickaxeEvents {
     }
     private PickaxeEvents(){}
 }
+

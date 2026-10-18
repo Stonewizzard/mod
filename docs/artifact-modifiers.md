@@ -1,6 +1,6 @@
 # Pickaxe modifiers
 
-Newly completed pickaxe parts roll modifiers once, on the server. Each part contributes `raw roll × its excavation score / 100`. A +10% mining-speed roll contributes +5% at score 50 and +0% at score 0. Assembly preserves every part's raw values, score, seed and catalog revision. The assembly's average score is informational and never multiplies the contributions again.
+Newly completed pickaxe parts roll modifiers once, on the server. Each part contributes `raw roll × its excavation score / 100 before growth`. A +10% mining-speed roll contributes +5% at score 50 and +0% at score 0. Assembly preserves every part's raw values, score, seed and catalog revision. The assembly's average score is informational and never multiplies the contributions again.
 
 The five compatible pieces are the left tip, head bridge, right tip, connector and handle. Other equipment has no active modifier effects yet. Completed pickaxe-compatible finds remain usable below 60 condition; a completely ruined find still yields fragments. Existing completed/recovered parts retain their saved rolls, including previously empty records.
 
@@ -14,6 +14,8 @@ The five compatible pieces are the left tip, head bridge, right tip, connector a
 | Unique | 1–4 | 90%, 70%, 35% | +45–120% | +0.70–1.25 levels | strongest ranges |
 
 Every compatible piece gets one guaranteed roll. Extra attempts are independent and can all fail. Duplicate traits and multiple harvest traits (Fortune/Silk/Smelting) on the same piece are excluded. Different pieces have different weights and options; for example, magnetism is available on connectors and handles. Common pieces cannot roll Silk Touch. Even four perfect Common speed rolls total only +48%, below the speed increase of vanilla Efficiency II on a diamond pickaxe.
+
+Each new modifier also rolls an independent **F–S scaling grade**, which controls its ascension and normal-level growth. Existing ungraded modifiers use B. See [pickaxe progression](pickaxe-progression.md) for the grade rates, exact formula, compatibility policy, and six Creative comparison tools.
 
 ## Effects
 
@@ -39,8 +41,9 @@ Moving a resolved piece, storing it, opening a UI or assembling it never rerolls
 
 ## Balance configuration
 
-`ArtifactModifierCatalog.java` contains the six `Tier` entries, every value range and the per-part weight maps. Edit these to add/remove options or rebalance ranges/counts. `PickaxeTrait.java` defines stable IDs, display units and aggregate caps. `PickaxeEvents.java` implements runtime mining/drop/pickup effects; `PickaxeModifiers.java` aggregates scores, applies native components and formats item information.
+`ArtifactModifierCatalog.java` contains the six `Tier` entries, every value range and the per-part weight maps. Edit these to add/remove options or rebalance ranges/counts. `PickaxeTrait.java` defines stable IDs, display units and aggregate caps. `PickaxeEvents.java` implements runtime mining/drop/pickup effects; `PickaxeModifiers.java` aggregates scores and growth and applies native components; `PickaxeTooltips.java` formats item information.
 
 `Tier.chances` specifies one probability per roll attempt; `[1.0, .45, .10]` means one guaranteed roll, a 45% second attempt and a 10% third attempt. Tier ranges and per-part weights are separate. Pool iteration uses enum order so seeds remain stable across JVMs. Definition validation rejects invalid IDs, weights, ranges and duplicate entries.
 
-`examplemod:part_modifiers` remains version 1 with catalog revision 2. Existing records are never overwritten. `examplemod:reconstruction.Parts` retains each part's complete record. Unknown or removed IDs remain stored but have no active effect. Keep IDs stable and increment the catalog revision when changing future rolls; the data format stays compatible with existing saves.
+`examplemod:part_modifiers` remains version 1 with catalog revision 3 and an optional `Scaling` name per roll. Existing records are never overwritten. `examplemod:reconstruction.Parts` retains each part's complete record. Unknown or removed IDs remain stored but have no active effect. Keep IDs stable and increment the catalog revision when changing future rolls; the data format stays compatible with existing saves.
+

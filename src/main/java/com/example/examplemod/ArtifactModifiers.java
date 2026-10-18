@@ -27,7 +27,10 @@ public final class ArtifactModifiers {
         public int rolls(){return chances.size();}
     }
     /** Raw rolled value and excavation quality stay separate for future effectiveness formulas. */
-    public record Roll(String id,double value,double qualityScale){}
+    public record Roll(String id,double value,double qualityScale,ModifierScaling scaling){
+        public Roll(String id,double value,double qualityScale){this(id,value,qualityScale,ModifierScaling.B);}
+        public Roll {if(scaling==null)scaling=ModifierScaling.B;}
+    }
     public static List<Roll> roll(ArtifactProfile profile,int score,Pool pool){
         var random=new Random(profile.seed()^0x6A09E667F3BCC909L^((long)profile.find().ordinal()*0x9E3779B97F4A7C15L));
         var available=new ArrayList<>(pool.entries().stream().filter(d->profile.rarity()>=d.minimumRarity()&&score>=d.minimumScore()).toList());
@@ -36,7 +39,7 @@ public final class ArtifactModifiers {
             if(random.nextDouble()>=pool.chances().get(attempt))continue;
             long weight=0;for(var d:available)weight+=d.weight();double choice=random.nextDouble()*weight;Definition selected=available.getLast();
             for(var d:available){choice-=d.weight();if(choice<0){selected=d;break;}}
-            result.add(new Roll(selected.id(),selected.minimumValue()+random.nextDouble()*(selected.maximumValue()-selected.minimumValue()),Math.clamp(score,0,100)/100.0));
+            result.add(new Roll(selected.id(),selected.minimumValue()+random.nextDouble()*(selected.maximumValue()-selected.minimumValue()),Math.clamp(score,0,100)/100.0,ModifierScaling.roll(profile,selected.id())));
             if(!selected.exclusiveGroup().isEmpty())groups.add(selected.exclusiveGroup());
             String chosen=selected.id();available.removeIf(d->d.id().equals(chosen)||(!d.exclusiveGroup().isEmpty()&&groups.contains(d.exclusiveGroup())));
         }
@@ -48,7 +51,7 @@ public final class ArtifactModifiers {
     }
     public static CompoundTag writeRolls(CompoundTag tag,List<Roll> rolls){
         tag.putInt("Count",rolls.size());var entries=new CompoundTag();
-        for(int i=0;i<rolls.size();i++){var roll=rolls.get(i);var data=new CompoundTag();data.putString("Id",roll.id());data.putDouble("Value",roll.value());data.putDouble("QualityScale",roll.qualityScale());entries.put(Integer.toString(i),data);}
+        for(int i=0;i<rolls.size();i++){var roll=rolls.get(i);var data=new CompoundTag();data.putString("Id",roll.id());data.putDouble("Value",roll.value());data.putDouble("QualityScale",roll.qualityScale());data.putString("Scaling",roll.scaling().name());entries.put(Integer.toString(i),data);}
         tag.put("Rolls",entries);return tag;
     }
     /** Called at completion, with extraction fallback for previously completed artifacts. Never rerolls. */
@@ -70,9 +73,10 @@ public final class ArtifactModifiers {
     public static List<Roll> read(CompoundTag tag){
         if(tag.getIntOr("Version",0)!=1)return List.of();
         var entries=tag.getCompoundOrEmpty("Rolls");var result=new ArrayList<Roll>();
-        for(int i=0;i<Math.clamp(tag.getIntOr("Count",0),0,8);i++){var data=entries.getCompoundOrEmpty(Integer.toString(i));String id=data.getStringOr("Id","");double value=data.getDoubleOr("Value",0),scale=data.getDoubleOr("QualityScale",0);if(!id.isEmpty()&&Double.isFinite(value)&&Double.isFinite(scale))result.add(new Roll(id,value,Math.clamp(scale,0,1)));}
+        for(int i=0;i<Math.clamp(tag.getIntOr("Count",0),0,8);i++){var data=entries.getCompoundOrEmpty(Integer.toString(i));String id=data.getStringOr("Id","");double value=data.getDoubleOr("Value",0),scale=data.getDoubleOr("QualityScale",0);if(!id.isEmpty()&&Double.isFinite(value)&&Double.isFinite(scale))result.add(new Roll(id,value,Math.clamp(scale,0,1),ModifierScaling.read(data.getStringOr("Scaling","B"))));}
         return List.copyOf(result);
     }
     private ArtifactModifiers(){}
 }
+
 
