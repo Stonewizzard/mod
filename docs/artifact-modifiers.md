@@ -17,6 +17,10 @@ Every compatible piece gets one guaranteed roll. Extra attempts are independent 
 
 Each new modifier also rolls an independent **F–S scaling grade**, which controls its ascension and normal-level growth. Existing ungraded modifiers use B. See [pickaxe progression](pickaxe-progression.md) for the grade rates, exact formula, compatibility policy, and six Creative comparison tools.
 
+## Component customization
+
+Epic and higher artifacts can recover an obfuscated ancient roll. The [component workshops](component-workshops.md) provide fixed three-choice unveiling, permanent locks, annulment, scaling rerolls, terminal corruption, and restoration up to 120% quality. These actions apply to recovered pieces, not finished tools. Original extraction provenance remains saved; reconstruction copies the finalized component values.
+
 ## Effects
 
 - **Mining speed:** multiplies native mining speed, including normal Efficiency enchantments.
@@ -45,5 +49,6 @@ Moving a resolved piece, storing it, opening a UI or assembling it never rerolls
 
 `Tier.chances` specifies one probability per roll attempt; `[1.0, .45, .10]` means one guaranteed roll, a 45% second attempt and a 10% third attempt. Tier ranges and per-part weights are separate. Pool iteration uses enum order so seeds remain stable across JVMs. Definition validation rejects invalid IDs, weights, ranges and duplicate entries.
 
-`examplemod:part_modifiers` remains version 1 with catalog revision 3 and an optional `Scaling` name per roll. Existing records are never overwritten. `examplemod:reconstruction.Parts` retains each part's complete record. Unknown or removed IDs remain stored but have no active effect. Keep IDs stable and increment the catalog revision when changing future rolls; the data format stays compatible with existing saves.
+`examplemod:part_modifiers` remains version 1 with catalog revision 4 and an optional `Scaling` name per roll. Existing records are never overwritten. `examplemod:reconstruction.Parts` retains each part's complete record. Unknown or removed IDs remain stored but have no active effect. Keep IDs stable and increment the catalog revision when changing future rolls; the data format stays compatible with existing saves.
+
 

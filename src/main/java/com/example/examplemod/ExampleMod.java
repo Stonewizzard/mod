@@ -142,6 +142,7 @@ public class ExampleMod {
                 output.accept(MAGNIFYING_GLASS.get());
                 output.accept(ReconstructionContent.TABLE_ITEM.get());
                 output.accept(AscenderContent.ITEM.get());
+                ComponentStationContent.STATIONS.forEach(station->output.accept(station.item().get()));
                 ReconstructionContent.pieces().forEach(output::accept);
                 ArchaeologyContent.materials().forEach(output::accept);
                 ArchaeologyContent.tools().forEach(output::accept);
@@ -150,6 +151,7 @@ public class ExampleMod {
                 output.accept(ArchaeologyContent.SPEAR.get());
                 CreativePickaxeParts.variants().forEach(output::accept);
                 CreativeGrowthTools.variants().forEach(output::accept);
+                CreativeAncientParts.variants().forEach(output::accept);
             }).build());
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
@@ -170,6 +172,7 @@ public class ExampleMod {
         SkulkStatus.register(modEventBus);
         PickaxeEvents.register();
         modEventBus.addListener(ExcavationPayload::register);
+        modEventBus.addListener(ComponentStationPayload::register);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -185,12 +188,15 @@ public class ExampleMod {
             modEventBus.addListener(PickaxeAscensionTests::register);
             modEventBus.addListener(PickaxeGrowthTests::register);
             modEventBus.addListener(PickaxeLevelSoundTests::register);
+            modEventBus.addListener(ComponentWorkTests::register);
+            modEventBus.addListener(ComponentStationTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
         ArchaeologyContent.register();
         ReconstructionContent.register();
         AscenderContent.register();
+        ComponentStationContent.register();
         BLOCKS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
@@ -244,6 +250,7 @@ public class ExampleMod {
             event.accept(ARCHAEOLOGY_TABLE_ITEM);
             event.accept(ReconstructionContent.TABLE_ITEM);
             event.accept(AscenderContent.ITEM);
+            ComponentStationContent.STATIONS.forEach(station->event.accept(station.item()));
         } else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ARCHAEOLOGY_DRILL);
             event.accept(ARCHAEOLOGY_HAMMER);
@@ -277,6 +284,7 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
+
 
 
 

@@ -31,7 +31,7 @@ public final class PickaxeModifiers {
         if(!assembly.getStringOr("Pattern","").equals("pickaxe"))return result;
         var growth=root.getCompoundOrEmpty(PickaxeProgression.KEY).getCompoundOrEmpty(PickaxeGrowth.COUNTERS);var parts=assembly.getCompoundOrEmpty("Parts");
         for(String id:ReconstructionPattern.PICKAXE.parts){
-            var part=parts.getCompoundOrEmpty(id);double quality=Math.clamp(part.getIntOr("Score",0),0,100)/100.0;
+            var part=parts.getCompoundOrEmpty(id);double quality=Math.clamp(part.getIntOr("Score",0),0,ComponentWork.MAX_QUALITY)/100.0;
             for(var roll:ArtifactModifiers.read(part.getCompoundOrEmpty("Modifiers"))){
                 var trait=PickaxeTrait.byId(roll.id());if(trait==null)continue;String key=id+"|"+roll.id();
                 result.add(new Contribution(key,trait,roll,quality,Math.clamp(growth.getIntOr(key,0),0,99)));
@@ -63,5 +63,6 @@ public final class PickaxeModifiers {
     }
     private PickaxeModifiers(){}
 }
+
 
 

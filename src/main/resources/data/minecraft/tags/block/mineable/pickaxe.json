@@ -1,6 +1,12 @@
 {
   "replace": false,
   "values": [
-    "examplemod:ascender"
+    "examplemod:ascender",
+    "examplemod:unveiler",
+    "examplemod:anuller",
+    "examplemod:corruptor",
+    "examplemod:modifier_locker",
+    "examplemod:scaling_randomizer",
+    "examplemod:component_restorer"
   ]
 }

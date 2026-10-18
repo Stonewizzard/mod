@@ -13,8 +13,8 @@ import net.minecraft.world.item.component.ItemLore;
 public final class ArtifactQuality {
     public static final String RECOVERED="examplemod:recovered",ASSEMBLY="examplemod:reconstruction";
     public static int score(ItemStack stack){
-        var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(RECOVERED);
-        return tag.contains("Quality")?Math.clamp(tag.getIntOr("Quality",0),0,100):-1;
+        var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var tag=root.getCompoundOrEmpty(RECOVERED);
+        return tag.contains("Quality")?Math.clamp(root.getCompoundOrEmpty(ComponentWork.KEY).getIntOr("Quality",tag.getIntOr("Quality",0)),0,ComponentWork.MAX_QUALITY):-1;
     }
     public static void showRecoveredScore(ItemStack stack){
         int score=score(stack);if(score<0)return;
@@ -23,7 +23,7 @@ public final class ArtifactQuality {
     public static double average(List<ItemStack> pieces){return pieces.isEmpty()?0:pieces.stream().mapToInt(s->Math.max(0,score(s))).sum()/(double)pieces.size();}
     public static double assemblyScore(ItemStack stack){
         var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ASSEMBLY);
-        return tag.getIntOr("Version",0)==1?Math.clamp(tag.getDoubleOr("Score",0),0,100):-1;
+        return tag.getIntOr("Version",0)==1?Math.clamp(tag.getDoubleOr("Score",0),0,ComponentWork.MAX_QUALITY):-1;
     }
     public static String formatted(double score){return String.format(Locale.ROOT,"%.1f",score);}
     public static ItemStack assemble(List<ItemStack> pieces){
@@ -39,6 +39,7 @@ public final class ArtifactQuality {
             data.putString("Item",net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
             var modifiers=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactModifiers.KEY);
             if(!modifiers.isEmpty())data.put("Modifiers",modifiers.copy());
+            var customization=ComponentWork.state(stack);if(!customization.isEmpty())data.put("Customization",customization.copy());
             parts.put(pattern.parts.get(i),data);
         }
         record.putInt("Version",1);record.putInt("PartCount",pieces.size());record.putString("Pattern",pattern.key());record.putInt("ScoreTotal",total);record.putDouble("Score",total/(double)pieces.size());record.put("Parts",parts);
@@ -48,5 +49,6 @@ public final class ArtifactQuality {
         return result;
     }
 }
+
 
 
