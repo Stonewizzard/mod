@@ -33,15 +33,14 @@ public final class PickaxeAscensionTests {
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
         @Override protected MutableComponent typeDescription(){return Component.literal("Persistent pickaxe levels and atomic material-based ascensions");}
         @Override public void run(GameTestHelper h){
-            verifyMining(h);verifyGates(h);verifyInventory(h);
+            verifyMining(h);verifyGates(h);verifyCapsAndSplitStacks(h);verifyInventory(h);
             System.out.println("PICKAXE_ASCENSION_CHECK: PASS: actual Survival mining, no Creative XP, all ten gates through level 100, linear bonuses and caps, duplicate-trait costs, atomic consumption, stable damage/enchants/provenance, native inventory routing, save/reload and block drops");h.succeed();
         }
     }
     private static void verifyMining(GameTestHelper h){
         var player=h.makeMockServerPlayerInLevel();player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);var pos=h.absolutePos(new BlockPos(3,1,3));player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);
         var tool=tool(50);player.setItemInHand(InteractionHand.MAIN_HAND,tool);h.getLevel().setBlockAndUpdate(pos,Blocks.STONE.defaultBlockState());
-        boolean broken=player.gameMode.destroyBlock(pos);System.out.println("ASCENSION_MINING_DEBUG broken="+broken+" class="+tool.getItem().getClass()+" local="+PickaxeProgression.read(tool)+" held="+PickaxeProgression.read(player.getMainHandItem())+" same="+(tool==player.getMainHandItem()));
-        check(h,broken&&PickaxeProgression.read(player.getMainHandItem()).xp()==1,"Actual successful Survival mining must award one tool XP");tool=player.getMainHandItem();
+        check(h,player.gameMode.destroyBlock(pos)&&PickaxeProgression.read(player.getMainHandItem()).xp()==1,"Actual successful Survival mining must award one tool XP");tool=player.getMainHandItem();
         boolean[] cancel={true};
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.level.block.BreakBlockEvent event)->{if(cancel[0]&&event.getPos().equals(pos))event.setCanceled(true);});
         h.getLevel().setBlockAndUpdate(pos,Blocks.STONE.defaultBlockState());
@@ -83,6 +82,19 @@ public final class PickaxeAscensionTests {
             var ops=h.getLevel().registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE);var decoded=ItemStack.CODEC.parse(ops,ItemStack.CODEC.encodeStart(ops,tool).getOrThrow()).getOrThrow();check(h,ItemStack.matches(tool,decoded),"All progression and effective attributes must survive item serialization");
         }
     }
+    private static void verifyCapsAndSplitStacks(GameTestHelper h){
+        var tool=tool(100);var root=tool.get(DataComponents.CUSTOM_DATA).copyTag();var assembly=root.getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);var parts=assembly.getCompoundOrEmpty("Parts");var traits=PickaxeTrait.values();
+        for(int i=0;i<ReconstructionPattern.PICKAXE.parts.size();i++){
+            String id=ReconstructionPattern.PICKAXE.parts.get(i);var part=parts.getCompoundOrEmpty(id);var record=part.getCompoundOrEmpty("Modifiers");var rolls=new ArrayList<ArtifactModifiers.Roll>();
+            for(int j=0;j<2;j++){var trait=traits[i*2+j];rolls.add(new ArtifactModifiers.Roll(trait.id,trait.cap,1));}
+            part.put("Modifiers",ArtifactModifiers.writeRolls(record,rolls));parts.put(id,part);
+        }
+        assembly.put("Parts",parts);root.put(ArtifactQuality.ASSEMBLY,assembly);tool.set(DataComponents.CUSTOM_DATA,CustomData.of(root));PickaxeProgression.write(tool,new PickaxeProgression.State(100,0,9));PickaxeModifiers.applyToAssembly(tool);
+        var inventory=new SimpleContainer(AscenderBlockEntity.SIZE);inventory.setItem(0,tool);var costs=AscensionResources.requirements(tool);fill(inventory,costs,0);
+        check(h,costs.size()==10&&AscensionResources.tryAscend(inventory),"All ten modifier resources, including split pearl stacks, must ascend together");
+        for(var trait:traits)check(h,PickaxeModifiers.totals(tool).get(trait)==trait.cap,"Ascended bonuses must respect every existing trait cap");
+        for(int i=1;i<inventory.getContainerSize();i++)check(h,inventory.getItem(i).isEmpty(),"Split material stacks must be consumed exactly once");
+    }
     private static void verifyInventory(GameTestHelper h){
         var level=h.getLevel();var pos=h.absolutePos(new BlockPos(3,1,4));level.setBlockAndUpdate(pos,AscenderContent.BLOCK.get().defaultBlockState());var table=(AscenderBlockEntity)level.getBlockEntity(pos);
         var player=h.makeMockServerPlayerInLevel();player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);player.getInventory().clearContent();var menu=new AscenderMenu(68,player.getInventory(),table);
@@ -99,7 +111,8 @@ public final class PickaxeAscensionTests {
         var drops=level.getEntitiesOfClass(ItemEntity.class,bounds);int expected=1+1+3*costs.size();check(h,drops.stream().mapToInt(e->e.getItem().getCount()).sum()==expected&&drops.stream().filter(e->ItemStack.matches(copy,e.getItem())).count()==1,"Breaking the Ascender must drop its block, upgraded tool and remaining materials exactly once");
     }
     private static void fill(net.minecraft.world.Container inventory,List<AscensionResources.Requirement> costs,int extra){
-        for(int i=1;i<inventory.getContainerSize();i++)inventory.setItem(i,ItemStack.EMPTY);for(int i=0;i<costs.size();i++){var cost=costs.get(i);inventory.setItem(i+1,new ItemStack(cost.item(),cost.count()+extra));}
+        for(int i=1;i<inventory.getContainerSize();i++)inventory.setItem(i,ItemStack.EMPTY);int slot=1;
+        for(var cost:costs){int remaining=cost.count()+extra;while(remaining>0){var stack=new ItemStack(cost.item());int count=Math.min(remaining,stack.getMaxStackSize());stack.setCount(count);inventory.setItem(slot++,stack);remaining-=count;}}
     }
     private static ItemStack tool(int score){
         var parts=new ArrayList<ItemStack>();

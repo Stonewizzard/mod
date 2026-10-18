@@ -12,9 +12,10 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class RestoredAncientPickaxe extends Item {
     public RestoredAncientPickaxe(Properties properties){super(properties);}
     @Override public boolean mineBlock(ItemStack tool,Level level,BlockState state,BlockPos pos,LivingEntity miner){
-        boolean eligible=miner instanceof ServerPlayer player&&!player.isCreative()&&!player.isSpectator()&&tool.isCorrectToolForDrops(state)&&state.getDestroySpeed(level,pos)>0;
+        // The server game mode is authoritative; GameTest mock players override spectator flags.
+        var mode=miner instanceof ServerPlayer player?player.gameMode.getGameModeForPlayer():null;
+        boolean eligible=(mode==net.minecraft.world.level.GameType.SURVIVAL||mode==net.minecraft.world.level.GameType.ADVENTURE)&&tool.isCorrectToolForDrops(state)&&state.getDestroySpeed(level,pos)>0;
         boolean mined=super.mineBlock(tool,level,state,pos,miner);
-        if(Boolean.getBoolean("examplemod.dropRegressionTests"))System.out.println("ASCENSION_MINING_DEBUG eligible="+eligible+" mined="+mined+" empty="+tool.isEmpty()+" miner="+miner.getClass()+" state="+state);
         if(mined&&eligible&&!tool.isEmpty())PickaxeProgression.gain(tool,1);
         return mined;
     }
