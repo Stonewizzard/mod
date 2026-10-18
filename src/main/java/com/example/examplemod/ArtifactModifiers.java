@@ -47,7 +47,7 @@ public final class ArtifactModifiers {
     }
     public static CompoundTag record(ArtifactProfile profile,int score,Pool pool){
         var tag=new CompoundTag();tag.putInt("Version",1);tag.putInt("CatalogRevision",ArtifactModifierCatalog.REVISION);tag.putString("Part",profile.find().name());tag.putLong("Seed",profile.seed());tag.putInt("ExcavationScore",score);
-        return writeRolls(tag,roll(profile,score,pool));
+        return AncientModifiers.discover(writeRolls(tag,roll(profile,score,pool)),profile,pool);
     }
     public static CompoundTag writeRolls(CompoundTag tag,List<Roll> rolls){
         tag.putInt("Count",rolls.size());var entries=new CompoundTag();
@@ -73,10 +73,11 @@ public final class ArtifactModifiers {
     public static List<Roll> read(CompoundTag tag){
         if(tag.getIntOr("Version",0)!=1)return List.of();
         var entries=tag.getCompoundOrEmpty("Rolls");var result=new ArrayList<Roll>();
-        for(int i=0;i<Math.clamp(tag.getIntOr("Count",0),0,8);i++){var data=entries.getCompoundOrEmpty(Integer.toString(i));String id=data.getStringOr("Id","");double value=data.getDoubleOr("Value",0),scale=data.getDoubleOr("QualityScale",0);if(!id.isEmpty()&&Double.isFinite(value)&&Double.isFinite(scale))result.add(new Roll(id,value,Math.clamp(scale,0,1),ModifierScaling.read(data.getStringOr("Scaling","B"))));}
+        for(int i=0;i<Math.clamp(tag.getIntOr("Count",0),0,8);i++){var data=entries.getCompoundOrEmpty(Integer.toString(i));String id=data.getStringOr("Id","");double value=data.getDoubleOr("Value",0),scale=data.getDoubleOr("QualityScale",0);if(!id.isEmpty()&&Double.isFinite(value)&&Double.isFinite(scale))result.add(new Roll(id,value,Math.clamp(scale,0,1.2),ModifierScaling.read(data.getStringOr("Scaling","B"))));}
         return List.copyOf(result);
     }
     private ArtifactModifiers(){}
 }
+
 
 

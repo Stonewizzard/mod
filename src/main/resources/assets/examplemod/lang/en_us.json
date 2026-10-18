@@ -101,5 +101,11 @@
   "item.examplemod.ancient_mace_head": "Ancient Mace Head",
   "item.examplemod.ancient_spear_tip": "Ancient Spear Tip",
   "block.examplemod.ascender": "Ascender",
-  "container.examplemod.ascender": "Ascender"
+  "container.examplemod.ascender": "Ascender",
+  "block.examplemod.unveiler": "Unveiler",
+  "block.examplemod.anuller": "Anuller",
+  "block.examplemod.corruptor": "Corruptor",
+  "block.examplemod.modifier_locker": "Locker",
+  "block.examplemod.scaling_randomizer": "Scaling Randomizer",
+  "block.examplemod.component_restorer": "Restorer"
 }
