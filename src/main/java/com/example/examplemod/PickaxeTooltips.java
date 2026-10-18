@@ -29,7 +29,7 @@ public final class PickaxeTooltips {
         String result=String.format(Locale.ROOT,"%.3f",value);while(result.endsWith("0"))result=result.substring(0,result.length()-1);if(result.endsWith("."))result=result.substring(0,result.length()-1);return result;
     }
     public static String value(PickaxeTrait trait,double value){return switch(trait.unit){case PERCENT->percent(value);case LEVEL->number(value)+" lv";case BLOCKS->number(value)+" blocks";};}
-    public static String label(PickaxeTrait trait){return switch(trait){case EXPERIENCE->"Mining XP";case AQUATIC->"Underwater mining";case AIRBORNE->"Airborne mining";case SILK->"Silk touch";case SMELTING->"Smelting";default->trait.label;};}
+    public static String label(PickaxeTrait trait){return switch(trait){case EXPERIENCE->"Mining XP";case AQUATIC->"Underwater recovery";case AIRBORNE->"Airborne recovery";case SILK->"Silk touch";case SMELTING->"Smelting";default->trait.label;};}
     private static MutableComponent gradeRange(ModifierScaling low,ModifierScaling high){
         if(low==high)return low.badge();return text("[",MUTED).append(text(low.name(),low.color)).append(text("-",MUTED)).append(text(high.name(),high.color)).append(text("]",MUTED));
     }
@@ -79,7 +79,7 @@ public final class PickaxeTooltips {
     public static boolean refresh(ItemStack stack){
         if(stack.isEmpty())return false;var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
         if(root.getIntOr(REVISION_KEY,0)>=REVISION||root.getBooleanOr(CreativePickaxeParts.PENDING,false))return false;
-        if(PickaxeProgression.supports(stack)){PickaxeModifiers.updateLore(stack);return true;}
+        if(PickaxeProgression.supports(stack)){PickaxeModifiers.applyToAssembly(stack);return true;}
         if(ArtifactQuality.score(stack)>=0&&!ArtifactModifiers.read(stack).isEmpty()){
             boolean part=false;for(var find:CreativePickaxeParts.FINDS)if(stack.is(ReconstructionContent.reward(find))){part=true;break;}
             if(part){stack.set(DataComponents.LORE,new ItemLore(piece(stack)));markCurrent(stack);return true;}

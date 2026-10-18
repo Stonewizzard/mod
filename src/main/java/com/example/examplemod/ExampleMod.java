@@ -182,6 +182,8 @@ public class ExampleMod {
             modEventBus.addListener(ReconstructionTests::register);
             modEventBus.addListener(PickaxeModifierTests::register);
             modEventBus.addListener(PickaxeAscensionTests::register);
+            modEventBus.addListener(PickaxeGrowthTests::register);
+            modEventBus.addListener(PickaxeLevelSoundTests::register);
         }
 
         // Register the Deferred Register to the mod event bus so blocks get registered
@@ -274,6 +276,7 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
+
 
 
 

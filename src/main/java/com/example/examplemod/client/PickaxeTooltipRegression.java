@@ -41,7 +41,6 @@ public final class PickaxeTooltipRegression {
             var bytes=new java.io.ByteArrayOutputStream();try(var zip=new java.util.zip.DeflaterOutputStream(bytes)){zip.write(new com.google.gson.Gson().toJson(export).getBytes(java.nio.charset.StandardCharsets.UTF_8));}
             System.out.println("PICKAXE_TOOLTIP_PREVIEW_Z:"+java.util.Base64.getEncoder().encodeToString(bytes.toByteArray()));
         }
-        for(String name:new String[]{"net.neoforged.neoforge.event.PlayLevelSoundEvent","net.neoforged.neoforge.event.level.PlayLevelSoundEvent"})try{var cls=Class.forName(name);for(var method:cls.getDeclaredMethods())System.out.println("PICKAXE_SOUND_API "+method);}catch(ClassNotFoundException ignored){}
         System.out.println("PICKAXE_TOOLTIP_CHECK: PASS: compact component rows, native font widths, all six grade badges, value/quality colors, zero/gated/mastered cases and explicit non-italic styling");
     }
     private PickaxeTooltipRegression(){}
