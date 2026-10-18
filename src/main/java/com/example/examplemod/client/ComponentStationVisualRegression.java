@@ -13,8 +13,8 @@ public final class ComponentStationVisualRegression {
         int scenes=0;var previews=new com.google.gson.JsonArray();
         for(var kind:ComponentStationKind.values())for(int phase=0;phase<4;phase++){
             boolean filled=phase>0,corrupted=phase==3;var rows=new ArrayList<ComponentStationView.Row>();var offers=new ArrayList<ComponentStationView.Row>();
-            for(int i=0;i<8&&filled;i++){var trait=PickaxeTrait.values()[i];rows.add(new ComponentStationView.Row(PickaxeTooltips.label(trait),"+"+PickaxeTooltips.value(trait,trait.cap),ModifierScaling.values()[i%6],0xFFD369,i==7,phase==2&&i==0,kind==ComponentStationKind.LOCKER&&phase==1));}
-            for(int i=0;i<3&&filled;i++)offers.add(new ComponentStationView.Row(new String[]{"Mining speed","Underwater recovery","Block reach"}[i],new String[]{"+120%","+85%","+1 blocks"}[i],ModifierScaling.values()[3+i],0xCF9AFF,false,false,!corrupted));
+            for(int i=0;i<8&&filled;i++){var trait=PickaxeTrait.values()[i];rows.add(new ComponentStationView.Row(PickaxeTooltips.label(trait),"T"+(i+1)+" +"+PickaxeTooltips.value(trait,trait.cap),ModifierScaling.values()[i%6],0xFFD369,i==7,phase==2&&i==0,kind==ComponentStationKind.LOCKER&&phase==1));}
+            for(int i=0;i<3&&filled;i++)offers.add(new ComponentStationView.Row(new String[]{"Mining speed","Underwater recovery","Block reach"}[i],new String[]{"T1 +120%","T4 +85%","T12 +1 blocks"}[i],ModifierScaling.values()[3+i],0xCF9AFF,false,false,!corrupted));
             boolean enabled=filled&&!corrupted&&!(kind==ComponentStationKind.RESTORER&&phase==2);
             var state=new ComponentStationView.State(kind,filled,phase==2?120:80,corrupted,corrupted?"Corrupted: no more modifications":kind.description,List.copyOf(rows),List.copyOf(offers),enabled);
             var canvas=new ExcavationVisualRegression.RecordingCanvas(font,320,242);ComponentStationView.draw(canvas,state,0);scenes++;

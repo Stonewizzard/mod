@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.function.ToIntFunction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -12,9 +13,35 @@ import net.minecraft.world.item.component.CustomData;
 /** Server-side rolls and versioned persistence shared by excavation and pickaxe assembly. */
 public final class ArtifactModifiers {
     public static final String KEY="examplemod:part_modifiers";
-    public record Definition(String id,int weight,int minimumRarity,int minimumScore,double minimumValue,double maximumValue,String exclusiveGroup){
+    public record Definition(String id, int weight, int minimumRarity, int minimumScore,
+                             List<ModifierTier> tiers, String exclusiveGroup) {
+        /** Single-band definitions remain useful for fixed rewards and extension code. */
+        public Definition(String id, int weight, int minimumRarity, int minimumScore,
+                          double minimumValue, double maximumValue, String exclusiveGroup) {
+            this(id, weight, minimumRarity, minimumScore,
+                List.of(new ModifierTier("flat", 1, minimumValue, maximumValue, List.of(1,1,1,1,1,1))), exclusiveGroup);
+        }
         public Definition {
-            if(id==null||!id.matches("[a-z0-9_.-]+:[a-z0-9_./-]+")||weight<=0||minimumRarity<0||minimumRarity>5||minimumScore<0||minimumScore>100||!Double.isFinite(minimumValue)||!Double.isFinite(maximumValue)||minimumValue>maximumValue||exclusiveGroup==null)throw new IllegalArgumentException("Invalid modifier definition: "+id);
+            tiers = List.copyOf(tiers);
+            if (id == null || !id.matches("[a-z0-9_.-]+:[a-z0-9_./-]+") || weight <= 0
+                    || minimumRarity < 0 || minimumRarity > 5 || minimumScore < 0 || minimumScore > 100
+                    || tiers.isEmpty() || exclusiveGroup == null) {
+                throw new IllegalArgumentException("Invalid modifier definition: " + id);
+            }
+            var ids = new HashSet<String>();
+            var ranks = new HashSet<Integer>();
+            for (var tier : tiers) {
+                if (!ids.add(tier.id()) || !ranks.add(tier.rank()))
+                    throw new IllegalArgumentException("Duplicate modifier tier: " + id + "/" + tier.id());
+            }
+        }
+        public boolean eligible(int rarity, int score) {
+            return rarity >= minimumRarity && score >= minimumScore && tiers.stream().anyMatch(t -> t.weight(rarity) > 0);
+        }
+        public boolean contains(Roll roll, int rarity) {
+            return rarity >= minimumRarity && id.equals(roll.id()) && tiers.stream().anyMatch(t -> t.weight(rarity) > 0
+                && t.id().equals(roll.tierId()) && t.rank() == roll.tierRank()
+                && roll.value() >= t.minimum() && roll.value() <= t.maximum());
         }
     }
     public record Pool(List<Double> chances,List<Definition> entries){
@@ -27,19 +54,47 @@ public final class ArtifactModifiers {
         public int rolls(){return chances.size();}
     }
     /** Raw rolled value and excavation quality stay separate for future effectiveness formulas. */
-    public record Roll(String id,double value,double qualityScale,ModifierScaling scaling){
-        public Roll(String id,double value,double qualityScale){this(id,value,qualityScale,ModifierScaling.B);}
-        public Roll {if(scaling==null)scaling=ModifierScaling.B;}
+    public record Roll(String id, double value, double qualityScale, ModifierScaling scaling, String tierId, int tierRank) {
+        public Roll(String id, double value, double qualityScale) { this(id,value,qualityScale,ModifierScaling.B); }
+        /** Old saved rolls and hand-authored comparison tools have no invented tier. */
+        public Roll(String id, double value, double qualityScale, ModifierScaling scaling) { this(id,value,qualityScale,scaling,"",0); }
+        public Roll {
+            if (scaling == null) scaling = ModifierScaling.B;
+            if (tierId == null || tierId.isEmpty() || tierRank < 1) { tierId = ""; tierRank = 0; }
+        }
+        public Roll withValue(double value) { return new Roll(id,value,qualityScale,scaling,tierId,tierRank); }
+        public Roll withScaling(ModifierScaling grade) { return new Roll(id,value,qualityScale,grade,tierId,tierRank); }
+        public Roll withQuality(double quality) { return new Roll(id,value,quality,scaling,tierId,tierRank); }
+    }
+    /** Shared by natural discoveries, unveiling, and corruption additions. */
+    public static Roll sample(Definition definition, ArtifactProfile profile, double quality, Random random) {
+        var tier = weighted(definition.tiers(), t -> t.weight(profile.rarity()), random);
+        double value = tier.minimum() + random.nextDouble() * (tier.maximum() - tier.minimum());
+        return new Roll(definition.id(), value, Math.clamp(quality,0,1.2), ModifierScaling.roll(profile,definition.id()), tier.id(), tier.rank());
+    }
+    static <T> T weighted(List<T> choices, ToIntFunction<T> weight, Random random) {
+        long total = 0;
+        for (var choice : choices) total = Math.addExact(total, weight.applyAsInt(choice));
+        if (total <= 0) throw new IllegalArgumentException("No eligible weighted choices");
+        double draw = random.nextDouble() * total;
+        T last = null;
+        for (var choice : choices) {
+            int amount = weight.applyAsInt(choice);
+            if (amount <= 0) continue;
+            last = choice;
+            draw -= amount;
+            if (draw < 0) return choice;
+        }
+        return last;
     }
     public static List<Roll> roll(ArtifactProfile profile,int score,Pool pool){
         var random=new Random(profile.seed()^0x6A09E667F3BCC909L^((long)profile.find().ordinal()*0x9E3779B97F4A7C15L));
-        var available=new ArrayList<>(pool.entries().stream().filter(d->profile.rarity()>=d.minimumRarity()&&score>=d.minimumScore()).toList());
+        var available=new ArrayList<>(pool.entries().stream().filter(d->d.eligible(profile.rarity(),score)).toList());
         var result=new ArrayList<Roll>();var groups=new HashSet<String>();
         for(int attempt=0;attempt<pool.rolls()&&!available.isEmpty();attempt++){
             if(random.nextDouble()>=pool.chances().get(attempt))continue;
-            long weight=0;for(var d:available)weight+=d.weight();double choice=random.nextDouble()*weight;Definition selected=available.getLast();
-            for(var d:available){choice-=d.weight();if(choice<0){selected=d;break;}}
-            result.add(new Roll(selected.id(),selected.minimumValue()+random.nextDouble()*(selected.maximumValue()-selected.minimumValue()),Math.clamp(score,0,100)/100.0,ModifierScaling.roll(profile,selected.id())));
+            var selected=weighted(available,Definition::weight,random);
+            result.add(sample(selected,profile,Math.clamp(score,0,100)/100.0,random));
             if(!selected.exclusiveGroup().isEmpty())groups.add(selected.exclusiveGroup());
             String chosen=selected.id();available.removeIf(d->d.id().equals(chosen)||(!d.exclusiveGroup().isEmpty()&&groups.contains(d.exclusiveGroup())));
         }
@@ -51,7 +106,7 @@ public final class ArtifactModifiers {
     }
     public static CompoundTag writeRolls(CompoundTag tag,List<Roll> rolls){
         tag.putInt("Count",rolls.size());var entries=new CompoundTag();
-        for(int i=0;i<rolls.size();i++){var roll=rolls.get(i);var data=new CompoundTag();data.putString("Id",roll.id());data.putDouble("Value",roll.value());data.putDouble("QualityScale",roll.qualityScale());data.putString("Scaling",roll.scaling().name());entries.put(Integer.toString(i),data);}
+        for(int i=0;i<rolls.size();i++){var roll=rolls.get(i);var data=new CompoundTag();data.putString("Id",roll.id());data.putDouble("Value",roll.value());data.putDouble("QualityScale",roll.qualityScale());data.putString("Scaling",roll.scaling().name());if(!roll.tierId().isEmpty()){data.putString("ValueTier",roll.tierId());data.putInt("TierRank",roll.tierRank());}entries.put(Integer.toString(i),data);}
         tag.put("Rolls",entries);return tag;
     }
     /** Called at completion, with extraction fallback for previously completed artifacts. Never rerolls. */
@@ -73,7 +128,7 @@ public final class ArtifactModifiers {
     public static List<Roll> read(CompoundTag tag){
         if(tag.getIntOr("Version",0)!=1)return List.of();
         var entries=tag.getCompoundOrEmpty("Rolls");var result=new ArrayList<Roll>();
-        for(int i=0;i<Math.clamp(tag.getIntOr("Count",0),0,8);i++){var data=entries.getCompoundOrEmpty(Integer.toString(i));String id=data.getStringOr("Id","");double value=data.getDoubleOr("Value",0),scale=data.getDoubleOr("QualityScale",0);if(!id.isEmpty()&&Double.isFinite(value)&&Double.isFinite(scale))result.add(new Roll(id,value,Math.clamp(scale,0,1.2),ModifierScaling.read(data.getStringOr("Scaling","B"))));}
+        for(int i=0;i<Math.clamp(tag.getIntOr("Count",0),0,8);i++){var data=entries.getCompoundOrEmpty(Integer.toString(i));String id=data.getStringOr("Id","");double value=data.getDoubleOr("Value",0),scale=data.getDoubleOr("QualityScale",0);if(!id.isEmpty()&&Double.isFinite(value)&&Double.isFinite(scale))result.add(new Roll(id,value,Math.clamp(scale,0,1.2),ModifierScaling.read(data.getStringOr("Scaling","B")),data.getStringOr("ValueTier",""),data.getIntOr("TierRank",0)));}
         return List.copyOf(result);
     }
     private ArtifactModifiers(){}

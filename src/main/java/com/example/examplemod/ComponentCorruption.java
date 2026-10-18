@@ -19,9 +19,17 @@ public final class ComponentCorruption {
         var targets=targets(selected,stack,rolls);int index=targets.isEmpty()?-1:targets.get(random.nextInt(targets.size()));
         String message;
         switch(selected){
-            case STRONGER,WEAKER->{var old=rolls.get(index);var trait=PickaxeTrait.byId(old.id());double value=Math.min(trait.cap,old.value()*(selected==Outcome.STRONGER?1.25:.75));rolls.set(index,new ArtifactModifiers.Roll(old.id(),value,old.qualityScale(),old.scaling()));message=selected==Outcome.STRONGER?"Corruption strengthened a modifier":"Corruption weakened a modifier";}
-            case HIGHER_GRADE,LOWER_GRADE->{var old=rolls.get(index);int step=selected==Outcome.HIGHER_GRADE?1:-1;var grade=ModifierScaling.values()[old.scaling().ordinal()+step];rolls.set(index,new ArtifactModifiers.Roll(old.id(),old.value(),old.qualityScale(),grade));message=selected==Outcome.HIGHER_GRADE?"Corruption raised a scaling grade":"Corruption lowered a scaling grade";}
-            case ADD->{var choices=AncientModifiers.eligible(ComponentWork.find(stack),ComponentWork.recovered(stack).getIntOr("Rarity",0),rolls);var entry=choices.get(random.nextInt(choices.size()));int rarity=ComponentWork.recovered(stack).getIntOr("Rarity",0);var profile=new ArtifactProfile(random.nextLong(),rarity,ArtifactProfile.Matrix.SHALE,ComponentWork.find(stack));rolls.add(new ArtifactModifiers.Roll(entry.id(),entry.minimumValue()+random.nextDouble()*(entry.maximumValue()-entry.minimumValue()),Math.max(0,ArtifactQuality.score(stack))/100.0,ModifierScaling.roll(profile,entry.id())));message="Corruption added a modifier";}
+            case STRONGER,WEAKER->{var old=rolls.get(index);var trait=PickaxeTrait.byId(old.id());double value=Math.min(trait.cap,old.value()*(selected==Outcome.STRONGER?1.25:.75));rolls.set(index,old.withValue(value));message=selected==Outcome.STRONGER?"Corruption strengthened a modifier":"Corruption weakened a modifier";}
+            case HIGHER_GRADE,LOWER_GRADE->{var old=rolls.get(index);int step=selected==Outcome.HIGHER_GRADE?1:-1;var grade=ModifierScaling.values()[old.scaling().ordinal()+step];rolls.set(index,old.withScaling(grade));message=selected==Outcome.HIGHER_GRADE?"Corruption raised a scaling grade":"Corruption lowered a scaling grade";}
+            case ADD->{
+                int rarity=ComponentWork.recovered(stack).getIntOr("Rarity",0);
+                var choices=AncientModifiers.eligible(ComponentWork.find(stack),rarity,rolls);
+                var sampler=new java.util.Random(random.nextLong());
+                var entry=ArtifactModifiers.weighted(choices,ArtifactModifiers.Definition::weight,sampler);
+                var profile=new ArtifactProfile(random.nextLong(),rarity,ArtifactProfile.Matrix.SHALE,ComponentWork.find(stack));
+                rolls.add(ArtifactModifiers.sample(entry,profile,Math.max(0,ArtifactQuality.score(stack))/100.0,sampler));
+                message="Corruption added a modifier";
+            }
             case REMOVE->{rolls.remove(index);message="Corruption removed an unlocked modifier";}
             case RESTORE->{state.putInt("Quality",Math.min(ComponentWork.MAX_QUALITY,ArtifactQuality.score(stack)+10));message="Corruption improved quality";}
             case FRACTURE->{state.putInt("Quality",Math.max(0,ArtifactQuality.score(stack)-10));message="Corruption damaged quality";}

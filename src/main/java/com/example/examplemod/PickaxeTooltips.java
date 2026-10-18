@@ -13,7 +13,7 @@ import net.minecraft.world.item.component.ItemLore;
 /** Shared styled components: compact labels, separate value colors, and no inherited lore italics. */
 public final class PickaxeTooltips {
     public static final String REVISION_KEY="examplemod:pickaxe_tooltip_revision";
-    public static final int REVISION=3;
+    public static final int REVISION=4;
     public static final int LABEL=0xB9C5CD,MUTED=0x788B98,TEAL=0x77D5CB,GOLD=0xFFD369;
     public record Stat(PickaxeTrait trait,double value,ModifierScaling low,ModifierScaling high){}
     public record ToolView(PickaxeProgression.State progression,double score,List<Stat> stats){}
@@ -25,6 +25,7 @@ public final class PickaxeTooltips {
     }
     public static int qualityColor(double score){return score>100?GOLD:score<40?0xF18F86:score<70?0xE8C978:score<90?0x8ED879:0x70DACA;}
     public static String percent(double value){return number(value*100)+"%";}
+    public static String tierPrefix(ArtifactModifiers.Roll roll){return roll.tierRank()>0?"T"+roll.tierRank()+" ":"";}
     private static String number(double value){
         String result=String.format(Locale.ROOT,"%.3f",value);while(result.endsWith("0"))result=result.substring(0,result.length()-1);if(result.endsWith("."))result=result.substring(0,result.length()-1);return result;
     }
@@ -70,12 +71,12 @@ public final class PickaxeTooltips {
     public static List<Component> piece(int score,int rarity,List<ArtifactModifiers.Roll> rolls){
         var lines=new ArrayList<Component>();
         int tierColor=new int[]{0xC1CBD0,0x8ED879,0x73BAF4,0xCF9AFF,0xFFD369,0xFF8BAB}[Math.clamp(rarity,0,5)];
-        lines.add(text(ArtifactModifierCatalog.tier(rarity).label()+" part",tierColor).append(text("   Quality ",LABEL)).append(text(score+"%",qualityColor(score))));
+        lines.add(text(ArtifactModifierCatalog.rarity(rarity).label()+" part",tierColor).append(text("   Quality ",LABEL)).append(text(score+"%",qualityColor(score))));
         for(var roll:rolls){
             if(AncientModifiers.ancient(roll)){lines.add(text("Ancient ",LABEL).append(text("forgotten runes",0xB69BE8).withStyle(style->style.withObfuscated(true))));continue;}
             var trait=PickaxeTrait.byId(roll.id());if(trait==null)continue;double effective=roll.value()*score/100.0;var grade=roll.scaling();
             lines.add(text(label(trait)+"  ",LABEL).append(text("+"+value(trait,effective),magnitude(effective/trait.cap))).append(text("  ",MUTED)).append(grade.badge()));
-            lines.add(text("  Base ",MUTED).append(text("+"+value(trait,roll.value()),magnitude(roll.value()/trait.cap))).append(text("  Lv ",MUTED)).append(text("+"+percent(grade.levelGrowth),grade.color)).append(text("  Asc ",MUTED)).append(text("+"+percent(grade.ascensionGrowth),grade.color)));
+            lines.add(text("  Base ",MUTED).append(text("+"+value(trait,roll.value()),magnitude(roll.value()/trait.cap))).append(text(roll.tierRank()>0?"  T"+roll.tierRank():"",TEAL)).append(text("  Lv ",MUTED)).append(text("+"+percent(grade.levelGrowth),grade.color)).append(text("  Asc ",MUTED)).append(text("+"+percent(grade.ascensionGrowth),grade.color)));
         }
         return List.copyOf(lines);
     }

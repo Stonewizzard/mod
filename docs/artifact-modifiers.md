@@ -4,16 +4,18 @@ Newly completed pickaxe parts roll modifiers once, on the server. Each part cont
 
 The five compatible pieces are the left tip, head bridge, right tip, connector and handle. Other equipment has no active modifier effects yet. Completed pickaxe-compatible finds remain usable below 60 condition; a completely ruined find still yields fragments. Existing completed/recovered parts retain their saved rolls, including previously empty records.
 
-| Artifact | Modifier count | Extra-roll chances | Mining speed per speed roll | Fortune per Fortune roll | New options |
-| --- | --- | --- | --- | --- | --- |
-| Common | 1 | none | +4–12% | +0.10–0.35 levels | speed, durability, Fortune, XP |
-| Uncommon | 1–2 | 20% | +8–22% | +0.20–0.55 levels | magnetism, underwater and airborne mining |
-| Rare | 1–3 | 45%, 10% | +12–40% | +0.30–0.75 levels | Silk Touch chance, reach |
-| Epic | 1–3 | 65%, 25% | +20–65% | +0.40–0.90 levels | smelting chance |
-| Legendary | 1–4 | 80%, 50%, 15% | +30–90% | +0.55–1.10 levels | stronger ranges |
-| Unique | 1–4 | 90%, 70%, 35% | +45–120% | +0.70–1.25 levels | strongest ranges |
+| Artifact | Modifier count | Extra-roll chances | Available modifier families |
+| --- | --- | --- | --- |
+| Common | 1 | none | speed, durability, Fortune, XP |
+| Uncommon | 1–2 | 20% | adds magnetism, underwater and airborne recovery |
+| Rare | 1–3 | 45%, 10% | adds Silk Touch chance and block reach |
+| Epic | 1–3 | 65%, 25% | adds smelting chance |
+| Legendary | 1–4 | 80%, 50%, 15% | all role-eligible families |
+| Unique | 1–4 | 90%, 70%, 35% | all role-eligible families |
 
-Every compatible piece gets one guaranteed roll. Extra attempts are independent and can all fail. Duplicate traits and multiple harvest traits (Fortune/Silk/Smelting) on the same piece are excluded. Different pieces have different weights and options; for example, magnetism is available on connectors and handles. Common pieces cannot roll Silk Touch. Even four perfect Common speed rolls total only +48%, below the speed increase of vanilla Efficiency II on a diamond pickaxe.
+Every compatible piece gets one guaranteed roll. Extra attempts are independent and can all fail. Duplicate traits and multiple harvest traits (Fortune/Silk/Smelting) on the same piece are excluded. Different pieces have different family weights and options; magnetism is available on connectors and handles. Common pieces cannot roll Silk Touch.
+
+Each modifier family now owns **weighted value tiers**, with its own number of bands and per-rarity weights. Common Mining speed is 94% T6 (+4–12%), 5% T5 (+12–22%), and 1% T4 (+22–40%), conditional on selecting speed. Legendary can roll every speed band, with better average strength. Higher artifact rarity no longer forces a fixed higher minimum value. See [modifier value tiers](modifier-value-tiers.md) for all speed probabilities, editable definitions, and save compatibility.
 
 Each new modifier also rolls an independent **F–S scaling grade**, which controls its ascension and normal-level growth. Existing ungraded modifiers use B. See [pickaxe progression](pickaxe-progression.md) for the grade rates, exact formula, compatibility policy, and six Creative comparison tools.
 
@@ -45,10 +47,10 @@ Moving a resolved piece, storing it, opening a UI or assembling it never rerolls
 
 ## Balance configuration
 
-`ArtifactModifierCatalog.java` contains the six `Tier` entries, every value range and the per-part weight maps. Edit these to add/remove options or rebalance ranges/counts. `PickaxeTrait.java` defines stable IDs, display units and aggregate caps. `PickaxeEvents.java` implements runtime mining/drop/pickup effects; `PickaxeModifiers.java` aggregates scores and growth and applies native components; `PickaxeTooltips.java` formats item information.
+`ArtifactModifierCatalog.java` contains the six artifact rarity entries, each family's independent value-tier list and per-rarity weights, and the per-part family weight maps. Edit these to add/remove options or rebalance ranges/counts. `PickaxeTrait.java` defines stable IDs, display units and aggregate caps. `PickaxeEvents.java` implements runtime mining/drop/pickup effects; `PickaxeModifiers.java` aggregates scores and growth and applies native components; `PickaxeTooltips.java` formats item information.
 
-`Tier.chances` specifies one probability per roll attempt; `[1.0, .45, .10]` means one guaranteed roll, a 45% second attempt and a 10% third attempt. Tier ranges and per-part weights are separate. Pool iteration uses enum order so seeds remain stable across JVMs. Definition validation rejects invalid IDs, weights, ranges and duplicate entries.
+`Rarity.chances` specifies one probability per roll attempt; `[1.0, .45, .10]` means one guaranteed roll, a 45% second attempt and a 10% third attempt. Modifier value-tier weights and per-part family weights are separate. Pool iteration uses enum order so seeds remain stable across JVMs. Definition validation rejects invalid IDs, weights, ranges and duplicate entries.
 
-`examplemod:part_modifiers` remains version 1 with catalog revision 4 and an optional `Scaling` name per roll. Existing records are never overwritten. `examplemod:reconstruction.Parts` retains each part's complete record. Unknown or removed IDs remain stored but have no active effect. Keep IDs stable and increment the catalog revision when changing future rolls; the data format stays compatible with existing saves.
+`examplemod:part_modifiers` remains version 1 with catalog revision 5 and optional `Scaling`, `ValueTier`, and `TierRank` fields per roll. Existing records are never overwritten. `examplemod:reconstruction.Parts` retains each part's complete record. Unknown modifier IDs remain stored but have no active effect. Unknown tier IDs remain preserved; an existing known modifier keeps its saved value. Old untiered rolls remain untiered. Keep IDs stable and increment the catalog revision when changing future rolls; the data format stays compatible with existing saves.
 
 
