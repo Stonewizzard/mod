@@ -29,9 +29,8 @@ displayName="${mod_name}" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 
-# A file name (in the root of the mod JAR) containing a logo for display
-logoFile="sniffer_head_logo.png"
-logoBlur=false
+# Square mod icon in the root of the mod JAR (NeoForge 26.3 metadata).
+iconFile="sniffer_head_logo.png"
 
 # A text field displayed in the mod UI
 #credits="" #optional
@@ -86,4 +85,5 @@ Example mod description.
 # stop your mod loading on the server for example.
 #[features.${mod_id}]
 #openGLVersion="[3.2,)"
+
 

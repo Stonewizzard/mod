@@ -25,7 +25,7 @@ public final class ArchaeologyContent {
     public static final DeferredItem<Item> PRECISION_DRILL=tool("precision_drill",768),PRECISION_BRUSH=tool("precision_brush",256),PRECISION_HAMMER=tool("precision_hammer",640),PRECISION_LENS=lens("precision_lens");
     public static final DeferredItem<Item> RESONANT_DRILL=tool("resonant_drill",1536),RESONANT_BRUSH=tool("resonant_brush",512),RESONANT_HAMMER=tool("resonant_hammer",1280),RESONANT_LENS=lens("resonant_lens");
     public static final DeferredItem<Item> SWORD=ExampleMod.ITEMS.registerSimpleItem("restored_ancient_sword",p->p.sword(ToolMaterial.DIAMOND,3,-2.4F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
-    public static final DeferredItem<Item> PICKAXE=ExampleMod.ITEMS.registerSimpleItem("restored_ancient_pickaxe",p->p.pickaxe(ToolMaterial.DIAMOND,1,-2.8F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> PICKAXE=ExampleMod.ITEMS.registerItem("restored_ancient_pickaxe",RestoredAncientPickaxe::new,p->p.pickaxe(ToolMaterial.DIAMOND,1,-2.8F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
     public static final DeferredItem<Item> AXE=ExampleMod.ITEMS.registerSimpleItem("restored_ancient_axe",p->p.axe(ToolMaterial.DIAMOND,5,-3F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
     public static final DeferredItem<Item> SHOVEL=ExampleMod.ITEMS.registerSimpleItem("restored_ancient_shovel",p->p.shovel(ToolMaterial.DIAMOND,1.5F,-3F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
     public static final DeferredItem<Item> HOE=ExampleMod.ITEMS.registerSimpleItem("restored_ancient_hoe",p->p.hoe(ToolMaterial.DIAMOND,-3,0).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
@@ -75,6 +75,7 @@ public final class ArchaeologyContent {
         return stack;
     }
 }
+
 
 
 

@@ -61,6 +61,7 @@ public class ExampleModClient {
     static void checkSculkRendering(net.neoforged.neoforge.data.event.GatherDataEvent.Client event) {
         if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
             try {
+                com.example.examplemod.client.AscenderVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.ReconstructionVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.ExcavationVisualRegression.run(
                         event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
@@ -83,8 +84,10 @@ public class ExampleModClient {
     static void registerTableScreen(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event){
         event.register(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),com.example.examplemod.client.ArchaeologyTableScreen::new);
         event.register(ReconstructionContent.MENU.get(),com.example.examplemod.client.ReconstructionTableScreen::new);
+        event.register(AscenderContent.MENU.get(),com.example.examplemod.client.AscenderScreen::new);
     }
 }
+
 
 
 

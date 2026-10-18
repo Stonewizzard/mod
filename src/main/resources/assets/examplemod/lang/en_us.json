@@ -99,5 +99,7 @@
   "item.examplemod.ancient_shovel_head": "Ancient Shovel Head",
   "item.examplemod.ancient_hoe_head": "Ancient Hoe Head",
   "item.examplemod.ancient_mace_head": "Ancient Mace Head",
-  "item.examplemod.ancient_spear_tip": "Ancient Spear Tip"
+  "item.examplemod.ancient_spear_tip": "Ancient Spear Tip",
+  "block.examplemod.ascender": "Ascender",
+  "container.examplemod.ascender": "Ascender"
 }
