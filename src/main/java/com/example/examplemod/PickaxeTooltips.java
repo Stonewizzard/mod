@@ -52,7 +52,7 @@ public final class PickaxeTooltips {
             int filled=10*p.xp()/PickaxeProgression.xpRequired(p.level());
             lines.add(text("[",MUTED).append(text("|".repeat(filled),TEAL)).append(text("|".repeat(10-filled),0x3D535F)).append(text("] ",MUTED)).append(text(p.xp()+"/"+PickaxeProgression.xpRequired(p.level())+" XP",LABEL)));
         }
-        lines.add(text("Excavation quality  ",LABEL).append(text(number(view.score())+"%",qualityColor(view.score()))));
+        lines.add(text("Assembly quality  ",LABEL).append(text(number(view.score())+"%",qualityColor(view.score()))));
         lines.add(text("",MUTED));lines.add(text("MODIFIERS",MUTED));
         if(view.stats().isEmpty())lines.add(text("No effective bonuses",MUTED));
         for(var stat:view.stats())lines.add(text(label(stat.trait())+"  ",LABEL).append(text("+"+value(stat.trait(),stat.value()),magnitude(stat.value()/stat.trait().cap))).append(text("  ",MUTED)).append(gradeRange(stat.low(),stat.high())));
@@ -70,20 +70,21 @@ public final class PickaxeTooltips {
         for(var roll:rolls){
             var trait=PickaxeTrait.byId(roll.id());if(trait==null)continue;double effective=roll.value()*score/100.0;var grade=roll.scaling();
             lines.add(text(label(trait)+"  ",LABEL).append(text("+"+value(trait,effective),magnitude(effective/trait.cap))).append(text("  ",MUTED)).append(grade.badge()));
-            lines.add(text("  Base ",MUTED).append(text("+"+value(trait,roll.value()),LABEL)).append(text("  Lv ",MUTED)).append(text("+"+percent(grade.levelGrowth),grade.color)).append(text("  Asc ",MUTED)).append(text("+"+percent(grade.ascensionGrowth),grade.color)));
+            lines.add(text("  Base ",MUTED).append(text("+"+value(trait,roll.value()),magnitude(roll.value()/trait.cap))).append(text("  Lv ",MUTED)).append(text("+"+percent(grade.levelGrowth),grade.color)).append(text("  Asc ",MUTED)).append(text("+"+percent(grade.ascensionGrowth),grade.color)));
         }
         return List.copyOf(lines);
     }
     public static void markCurrent(ItemStack stack){var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();root.putInt(REVISION_KEY,REVISION);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(root));}
     /** One-time refresh for owned old items; no seeds, rolls, quality, or earned levels change. */
     public static boolean refresh(ItemStack stack){
-        if(stack.isEmpty())return false;var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
+        if(stack.isEmpty())return false;
+        boolean tool=PickaxeProgression.supports(stack),part=false;
+        if(!tool)for(var find:CreativePickaxeParts.FINDS)if(stack.is(ReconstructionContent.reward(find))){part=true;break;}
+        if(!tool&&!part)return false;
+        var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
         if(root.getIntOr(REVISION_KEY,0)>=REVISION||root.getBooleanOr(CreativePickaxeParts.PENDING,false))return false;
-        if(PickaxeProgression.supports(stack)){PickaxeModifiers.applyToAssembly(stack);return true;}
-        if(ArtifactQuality.score(stack)>=0&&!ArtifactModifiers.read(stack).isEmpty()){
-            boolean part=false;for(var find:CreativePickaxeParts.FINDS)if(stack.is(ReconstructionContent.reward(find))){part=true;break;}
-            if(part){stack.set(DataComponents.LORE,new ItemLore(piece(stack)));markCurrent(stack);return true;}
-        }
+        if(tool){PickaxeModifiers.applyToAssembly(stack);return true;}
+        if(ArtifactQuality.score(stack)>=0){stack.set(DataComponents.LORE,new ItemLore(piece(stack)));markCurrent(stack);return true;}
         return false;
     }
     private PickaxeTooltips(){}

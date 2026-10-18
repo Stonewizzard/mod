@@ -26,7 +26,7 @@ public final class PickaxeGrowthTests {
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
         @Override protected MutableComponent typeDescription(){return Component.literal("Per-roll grades, additive growth and compatible saved tools");}
         @Override public void run(GameTestHelper h){
-            verifyGrades(h);verifyAscensions(h);verifyLevels(h);verifyLegacy(h);
+            verifyGrades(h);verifyAscensions(h);verifyLevels(h);verifyLegacy(h);verifyCreative(h);
             System.out.println("PICKAXE_GROWTH_CHECK: PASS: independent F-S grade rolls and tier weights, per-roll quality and grades, all 99 normal levels, 1-3 distinct selections, non-compounding formulas, no XP-only/gated growth, native stat refresh, stable future growth after serialization and legacy B migration");h.succeed();
         }
     }
@@ -88,16 +88,22 @@ public final class PickaxeGrowthTests {
         check(h,PickaxeProgression.read(tool).level()==30&&PickaxeProgression.read(tool).ascensions()==2&&growth(tool).isEmpty()&&assembly(tool).equals(frozen),"Tooltip refresh must not reroll grades, retroactively grant growth, or reset earned progress");
         var refreshed=tool.copy();check(h,!PickaxeTooltips.refresh(tool)&&ItemStack.matches(refreshed,tool),"Presentation migration must happen once");
         check(h,ItemStack.matches(tool,roundtrip(h,tool)),"Legacy data and refreshed styles must survive item serialization");
+        root=tool.get(DataComponents.CUSTOM_DATA).copyTag();root.remove(PickaxeTooltips.REVISION_KEY);tool.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
+        var player=h.makeMockServerPlayerInLevel();var inventory=new net.minecraft.world.SimpleContainer(AscenderBlockEntity.SIZE);inventory.setItem(0,tool);player.containerMenu=new AscenderMenu(79,player.getInventory(),inventory);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.tick.PlayerTickEvent.Post(player));
+        check(h,tool.get(DataComponents.CUSTOM_DATA).copyTag().getIntOr(PickaxeTooltips.REVISION_KEY,0)==PickaxeTooltips.REVISION&&assembly(tool).equals(frozen),"Open-container items must get the same safe one-time presentation refresh as player inventory items");
     }
-    static ItemStack tool(ModifierScaling grade,int score,long seed){
-        var pieces=new ArrayList<ItemStack>();var traits=new PickaxeTrait[]{SPEED,DURABILITY,SILK,REACH};
-        for(int i=0;i<CreativePickaxeParts.FINDS.size();i++){
-            var find=CreativePickaxeParts.FINDS.get(i);var piece=new ItemStack(ReconstructionContent.reward(find));var root=new CompoundTag();var data=new CompoundTag();data.putInt("Quality",score);data.putInt("Rarity",5);root.put(ArtifactQuality.RECOVERED,data);
-            var profile=new ArtifactProfile(seed+i,5,ArtifactProfile.Matrix.SHALE,find);var record=ArtifactModifiers.record(profile,score,new ArtifactModifiers.Pool(0,0,List.of()));var rolls=i<4?List.of(new ArtifactModifiers.Roll(traits[i].id,i==3?.4:.2,score/100.0,grade)):List.<ArtifactModifiers.Roll>of();
-            root.put(ArtifactModifiers.KEY,ArtifactModifiers.writeRolls(record,rolls));piece.set(DataComponents.CUSTOM_DATA,CustomData.of(root));pieces.add(piece);
+    private static void verifyCreative(GameTestHelper h){
+        var tools=CreativeGrowthTools.variants();var player=h.makeMockServerPlayerInLevel();var pos=h.absolutePos(new BlockPos(3,1,5));player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);check(h,tools.size()==6,"Creative must offer one comparison tool per scaling grade");
+        for(int i=0;i<tools.size();i++){
+            var tool=tools.get(i);var state=PickaxeProgression.read(tool);var grade=ModifierScaling.values()[i];check(h,state.level()==9&&state.xp()==PickaxeProgression.xpRequired(9)-1&&PickaxeModifiers.contributions(tool).stream().allMatch(c->c.roll().scaling()==grade),"Comparison tools must have a consistent grade and be one mined block from an ascension gate");
+            player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);new net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket(36,tool.copy()).handle(player.connection);
+            check(h,ItemStack.matches(player.getMainHandItem(),tool),"A real Creative inventory packet must preserve each comparison tool's grade and saved progress");
+            player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);h.getLevel().setBlockAndUpdate(pos,net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());player.gameMode.destroyBlock(pos);
+            check(h,PickaxeProgression.read(player.getMainHandItem()).level()==10&&!growth(player.getMainHandItem()).isEmpty(),"One native Survival mining action must level an acquired comparison tool and grant grade-scaled growth");
         }
-        var tool=ArtifactQuality.assemble(pieces);var root=tool.get(DataComponents.CUSTOM_DATA).copyTag();var progression=root.getCompoundOrEmpty(PickaxeProgression.KEY);progression.putLong("GrowthSeed",seed);root.put(PickaxeProgression.KEY,progression);tool.set(DataComponents.CUSTOM_DATA,CustomData.of(root));return tool;
     }
+    static ItemStack tool(ModifierScaling grade,int score,long seed){return CreativeGrowthTools.create(grade,score,seed);}
     private static CompoundTag growth(ItemStack tool){return tool.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty(PickaxeProgression.KEY).getCompoundOrEmpty(PickaxeGrowth.COUNTERS);}
     private static CompoundTag assembly(ItemStack tool){return tool.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);}
     private static ItemStack roundtrip(GameTestHelper h,ItemStack tool){var ops=h.getLevel().registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE);return ItemStack.CODEC.parse(ops,ItemStack.CODEC.encodeStart(ops,tool).getOrThrow()).getOrThrow();}
