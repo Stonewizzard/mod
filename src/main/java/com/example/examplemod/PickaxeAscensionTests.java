@@ -40,7 +40,8 @@ public final class PickaxeAscensionTests {
     private static void verifyMining(GameTestHelper h){
         var player=h.makeMockServerPlayerInLevel();player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);var pos=h.absolutePos(new BlockPos(3,1,3));player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);
         var tool=tool(50);player.setItemInHand(InteractionHand.MAIN_HAND,tool);h.getLevel().setBlockAndUpdate(pos,Blocks.STONE.defaultBlockState());
-        check(h,player.gameMode.destroyBlock(pos)&&PickaxeProgression.read(tool).xp()==1,"Actual successful Survival mining must award one tool XP");
+        boolean broken=player.gameMode.destroyBlock(pos);System.out.println("ASCENSION_MINING_DEBUG broken="+broken+" class="+tool.getItem().getClass()+" local="+PickaxeProgression.read(tool)+" held="+PickaxeProgression.read(player.getMainHandItem())+" same="+(tool==player.getMainHandItem()));
+        check(h,broken&&PickaxeProgression.read(player.getMainHandItem()).xp()==1,"Actual successful Survival mining must award one tool XP");tool=player.getMainHandItem();
         boolean[] cancel={true};
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.level.block.BreakBlockEvent event)->{if(cancel[0]&&event.getPos().equals(pos))event.setCanceled(true);});
         h.getLevel().setBlockAndUpdate(pos,Blocks.STONE.defaultBlockState());
