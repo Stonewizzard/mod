@@ -39,7 +39,7 @@ public final class ComponentWorkTests {
                 check(h,tag.equals(ArtifactModifiers.record(profile,100,pool))&&rolls.size()==ArtifactModifiers.roll(profile,100,pool).size(),"Ancient discovery must be deterministic and replace one roll without inflating modifier counts");
                 long count=rolls.stream().filter(AncientModifiers::ancient).count();check(h,count<=1,"A component can have at most one hidden ancient roll");
                 if(count==1){hidden++;var choices=AncientModifiers.offers(tag);check(h,rarity>=3&&choices.size()==3&&choices.stream().map(ArtifactModifiers.Roll::id).distinct().count()==3,"Ancient slots must be Epic+ and offer three different modifiers");
-                    var eligible=AncientModifiers.eligible(find,rarity,rolls);for(var choice:choices)check(h,eligible.stream().anyMatch(d->d.id().equals(choice.id())&&choice.value()>=d.minimumValue()&&choice.value()<=d.maximumValue()),"Unveiling must respect part roles, tier ranges and harvest exclusivity");
+                    var eligible=AncientModifiers.eligible(find,rarity,rolls);for(var choice:choices)check(h,eligible.stream().anyMatch(d->d.contains(choice,profile.rarity())),"Unveiling must respect part roles, weighted value tiers and harvest exclusivity");
                 }
             }
             check(h,rarity<3?hidden==0:hidden>15&&hidden<170,"Only Epic and higher may discover ancient modifiers, without guaranteeing them");

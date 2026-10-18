@@ -49,7 +49,7 @@ public final class PickaxeModifierTests {
                 var profile=new ArtifactProfile(i*0x9E3779B97F4A7C15L,rarity,ArtifactProfile.Matrix.SHALE,find);var pool=ArtifactModifierCatalog.pool(find,rarity);var rolls=ArtifactModifiers.roll(profile,100,pool);
                 check(h,rolls.equals(ArtifactModifiers.roll(profile,100,pool)),"Identical sealed seeds must produce identical rolls");check(h,!rolls.isEmpty(),"Every eligible pickaxe part must get at least one modifier");
                 min=Math.min(min,rolls.size());max=Math.max(max,rolls.size());counts.add(rolls.size());int harvest=0;var unique=new HashSet<String>();
-                for(var roll:rolls){var trait=PickaxeTrait.byId(roll.id());seen.add(trait);var range=ArtifactModifierCatalog.tier(rarity).ranges().get(trait);check(h,range!=null&&roll.value()>=range.minimum()&&roll.value()<=range.maximum()&&unique.add(roll.id()),"Rolls must stay in the tier's range and contain no duplicate traits");if(trait==FORTUNE||trait==SILK||trait==SMELTING)harvest++;}
+                for(var roll:rolls){var trait=PickaxeTrait.byId(roll.id());seen.add(trait);check(h,pool.entries().stream().anyMatch(d->d.contains(roll,profile.rarity()))&&unique.add(roll.id()),"Rolls must stay in an eligible value tier and contain no duplicate traits");if(trait==FORTUNE||trait==SILK||trait==SMELTING)harvest++;}
                 check(h,harvest<=1,"Harvest traits must be mutually exclusive on one piece");
             }
             check(h,min==1&&max==new int[]{1,2,3,3,4,4}[rarity],"Higher tiers may roll extra modifiers without guaranteeing them");

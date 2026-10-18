@@ -31,10 +31,9 @@ public final class AncientModifiers {
     public static List<ArtifactModifiers.Roll> alternatives(ArtifactProfile profile,List<ArtifactModifiers.Roll> existing,long seed){
         var available=new ArrayList<>(eligible(profile.find(),profile.rarity(),existing));var random=new Random(seed);var result=new ArrayList<ArtifactModifiers.Roll>();
         while(result.size()<3&&!available.isEmpty()){
-            int total=available.stream().mapToInt(ArtifactModifiers.Definition::weight).sum();int choice=random.nextInt(total),index=0;
-            while(choice>=available.get(index).weight()){choice-=available.get(index).weight();index++;}
-            var entry=available.remove(index);long rollSeed=random.nextLong();var gradeProfile=new ArtifactProfile(rollSeed,profile.rarity(),profile.matrix(),profile.find());
-            result.add(new ArtifactModifiers.Roll(entry.id(),entry.minimumValue()+random.nextDouble()*(entry.maximumValue()-entry.minimumValue()),1,ModifierScaling.roll(gradeProfile,entry.id())));
+            var entry=ArtifactModifiers.weighted(available,ArtifactModifiers.Definition::weight,random);available.remove(entry);
+            var gradeProfile=new ArtifactProfile(random.nextLong(),profile.rarity(),profile.matrix(),profile.find());
+            result.add(ArtifactModifiers.sample(entry,gradeProfile,1,random));
         }
         return List.copyOf(result);
     }

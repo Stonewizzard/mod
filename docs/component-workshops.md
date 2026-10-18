@@ -19,7 +19,7 @@ The five **Ancient Test …** Creative components have guaranteed hidden rolls, 
 
 When a new eligible component is recovered from an **Epic, Legendary, or Unique** artifact, one normal roll may become an inactive ancient slot. Initial probabilities are **25%, 35%, and 50%**, respectively. Lower rarities never roll one. This replaces a modifier rather than adding to the rarity's modifier count. Each part can have at most one hidden slot. Previously sealed records retain their original modifiers.
 
-Ancient rolls use Minecraft's real obfuscated text in item information. The Unveiler shows **three distinct modifier choices**, each with its own raw value and grade. Choices respect that part's existing modifier pool, rarity ranges, duplicate restrictions, and harvest exclusivity. The currently active pools are the five pickaxe-compatible component roles; other recovered components can be restored/corrupted, and their modifier actions use whatever pools are configured for them later.
+Ancient rolls use Minecraft's real obfuscated text in item information. The Unveiler shows **three distinct modifier choices**, each with its own raw value and grade. Choices respect that part's existing modifier pool, weighted value tiers, duplicate restrictions, and harvest exclusivity. Each new offer saves its own value tier, shown separately from its F–S grade; existing offers keep their original values. See [modifier value tiers](modifier-value-tiers.md). The currently active pools are the five pickaxe-compatible component roles; other recovered components can be restored/corrupted, and their modifier actions use whatever pools are configured for them later.
 
 Offers are generated and saved when the ancient slot is discovered. Moving the component, reopening a screen, changing stations, or saving/reloading never rerolls them. One choice permanently replaces the hidden slot and consumes its offers. Annulment of the hidden slot removes its offers too. Unveil before assembly: these stations cannot edit completed equipment, and an unresolved ancient roll has no active effect.
 
@@ -53,7 +53,7 @@ A raw +10% roll on a 120% component contributes +12% before normal level/ascensi
 
 ## Implementation and validation
 
-- `AncientModifiers`: discovery chances, legal alternatives, and saved offer data inside `examplemod:part_modifiers` (version 1, catalog revision 4).
+- `AncientModifiers`: discovery chances, legal alternatives, and saved offer data inside `examplemod:part_modifiers` (version 1, catalog revision 5).
 - `ComponentWork`: component validation, permanent lock/corruption guards, mutation actions, current quality, and version 1 `examplemod:component_work` metadata.
 - `ComponentCorruption`: editable outcome weights and eligibility; direct roll mutations always skip the lock.
 - `ComponentStationKind` / `ComponentStationContent`: six prototype blocks sharing a container/menu implementation.
