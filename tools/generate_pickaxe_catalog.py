@@ -74,6 +74,7 @@ Percentage bands and caps below show actual percentages. Fortune uses fractional
   pool='Universal' if r['utility'] else r['influence']+' exclusive' if r['exclusive'] else 'Pickaxe head'+(' ('+r['influence']+' tag)' if r['influence']!='NONE' else '')
   bands='; '.join('T%d %g–%g [%s]'%(t['rank'],t['minimum'],t['maximum'],','.join(map(str,t['weights']))) for t in r['tiers'])
   handler={'UTILITY':'SharedToolEffects','ATTRIBUTE':'PickaxeModifiers','SPEED':'PickaxeEvents / MiningConditions','LOOT':'MiningLootEffects','COLLECTION':'PickaxeEvents / MiningCollectionEffects','TRANSFORM':'MiningLootEffects','AREA':'MiningAreaEffects','PLACE':'MiningPlacementEffects','STATUS':'MiningStatusEffects','CHARGE':'MiningChargeEffects','PROGRESSION':'RestoredAncientPickaxe'}[r['family']]
+  if r['key'] in ['DURABILITY','RESERVE']:handler='PickaxeModifiers'
   display=lambda v:('%g%%'%(v*100)) if r['unit']=='PERCENT' else ('%g'%v)
   shown_bands='; '.join('T%d %s–%s [%s]'%(t['rank'],display(t['minimum']),display(t['maximum']),','.join(map(str,t['weights']))) for t in r['tiers'])
   docs.append('| %d | `%s` **%s** | %s; %s; %d | %s `%s` | %s | %s%s | %s %s | %s |\n'%(i,r['id'],r['label'],pool,rarity[r['minimumRarity']],r['weight'],r['description'],handler,shown_bands,r['growth'].title(),': '+r['milestones'] if r['milestones'] else '',display(r['cap']),'' if r['unit']=='PERCENT' else r['unit'].lower(),r['resource'].lower()))
