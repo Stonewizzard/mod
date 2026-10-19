@@ -9,8 +9,11 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import static com.example.examplemod.PickaxeTrait.*;
 
 final class MiningCollectionEffects {
-    private record Shield(WeakReference<ItemEntity> item,long expiry,boolean previous){}
-    private static final List<Shield> SHIELDS=new ArrayList<>();
+    private static final Map<ItemEntity,Long> SHIELDS=new WeakHashMap<>();
+    static void protect(net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent event){
+        if(!(event.getEntity() instanceof ItemEntity item))return;Long expiry=SHIELDS.get(item);
+        if(expiry!=null&&item.level().getGameTime()<expiry)event.setInvulnerable(true);
+    }
     static void collect(MiningContext c){
         int before=c.event.getDrops().stream().mapToInt(e->e.getItem().getCount()).sum();
         PickaxeEvents.collect(c.event.getDrops(),c.player,c.get(PHASEBOUND));
@@ -27,7 +30,7 @@ final class MiningCollectionEffects {
         }
         if(c.primary&&c.chance(SPOILS_SHIELD))for(var drop:c.event.getDrops()){
             if(SHIELDS.size()>=2048)break;
-            SHIELDS.add(new Shield(new WeakReference<>(drop),c.now+(3+2*c.stage(SPOILS_SHIELD))*20,drop.isInvulnerable()));drop.setInvulnerable(true);
+            SHIELDS.put(drop,c.now+(3+2*c.stage(SPOILS_SHIELD))*20);
         }
         if(c.primary&&c.perk(COMPACTOR,100,0))compact(c.player,c.stage(COMPACTOR));
     }
@@ -36,14 +39,9 @@ final class MiningCollectionEffects {
         if(stage>=1)pairs.add(new Item[]{Items.RAW_COPPER,Items.RAW_COPPER_BLOCK});
         if(stage>=2){pairs.add(new Item[]{Items.COAL,Items.COAL_BLOCK});pairs.add(new Item[]{Items.REDSTONE,Items.REDSTONE_BLOCK});pairs.add(new Item[]{Items.LAPIS_LAZULI,Items.LAPIS_BLOCK});}
         if(stage>=3){pairs.add(new Item[]{Items.DIAMOND,Items.DIAMOND_BLOCK});pairs.add(new Item[]{Items.EMERALD,Items.EMERALD_BLOCK});}
-        for(var pair:pairs)if(SharedToolEffects.consume(p,pair[0],9)){var output=new ItemStack(pair[1]);p.getInventory().add(output);if(!output.isEmpty())p.drop(output,false);break;}
+        for(var pair:pairs)if(SharedToolEffects.consume(p,pair[0],9)){var output=new ItemStack(pair[1]);p.getInventory().add(output);if(!output.isEmpty())p.level().addFreshEntity(new ItemEntity(p.level(),p.getX(),p.getY()+.5,p.getZ(),output));break;}
     }
-    static void expiry(ServerTickEvent.Post event){
-        for(var iterator=SHIELDS.iterator();iterator.hasNext();){var shield=iterator.next();var item=shield.item().get();
-            if(item==null||item.isRemoved()){iterator.remove();continue;}
-            if(item.level().getGameTime()>=shield.expiry()){item.setInvulnerable(shield.previous());iterator.remove();}
-        }
-    }
-    static void stop(){for(var s:SHIELDS){var e=s.item().get();if(e!=null)e.setInvulnerable(s.previous());}SHIELDS.clear();}
+    static void expiry(ServerTickEvent.Post event){SHIELDS.entrySet().removeIf(e->e.getKey().isRemoved()||e.getKey().level().getGameTime()>=e.getValue());}
+    static void stop(){SHIELDS.clear();}
     private MiningCollectionEffects(){}
 }

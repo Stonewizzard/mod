@@ -32,6 +32,7 @@ public final class PickaxeEvents {
         NeoForge.EVENT_BUS.addListener(SharedToolEffects::anvil);
         NeoForge.EVENT_BUS.addListener(SharedToolEffects::xp);
         NeoForge.EVENT_BUS.addListener(MiningCollectionEffects::expiry);
+        NeoForge.EVENT_BUS.addListener(MiningCollectionEffects::protect);
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent event)->MiningCollectionEffects.stop());
     }
     public static void speed(PlayerEvent.BreakSpeed event){

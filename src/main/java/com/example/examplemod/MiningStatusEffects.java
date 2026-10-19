@@ -43,7 +43,7 @@ final class MiningStatusEffects {
         if(mobs.isEmpty()||!c.perk(trait,200,cost))return;
         for(var mob:mobs.stream().limit(16).toList()){
             if(effect!=null)mob.addEffect(new MobEffectInstance(effect,(trait==SHULKER_PULSE?1+stage:3+stage)*20,0));
-            else{var delta=mob.position().subtract(c.player.position());if(delta.horizontalDistanceSqr()>.01)mob.knockback(.4+.1*stage,-delta.x,-delta.z);}
+            else{var delta=mob.position().subtract(c.player.position());if(delta.horizontalDistanceSqr()>.01)mob.knockback(.4+.1*stage,-delta.x,-delta.z,c.player.damageSources().playerAttack(c.player),0);}
             if(trait==GHAST_BREATH)mob.igniteForSeconds(2+stage);
         }
     }

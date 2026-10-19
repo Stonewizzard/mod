@@ -21,10 +21,10 @@ final class MiningConditions {
     static boolean lava(Level level,BlockPos pos){for(var p:BlockPos.betweenClosed(pos.offset(-2,-1,-2),pos.offset(2,1,2)))if(level.hasChunkAt(p)&&level.getFluidState(p).is(FluidTags.LAVA))return true;return false;}
     static boolean still(Player p){return p.getDeltaMovement().horizontalDistanceSqr()<.0025;}
     static double extra(Player player,BlockPos pos,BlockState state,ItemStack tool,PickaxeModifiers.Bonuses stats){
-        String id=id(state);var level=player.level();long time=level.getDayTime()%24000;double extra=0;
+        String id=id(state);var level=player.level();int light=level.getMaxLocalRawBrightness(pos);double extra=0;
         if(stone(id))extra+=stats.get(STRATUM_SPEED);if(ore(state))extra+=stats.get(VEIN_SPEED);if(soft(id))extra+=stats.get(SOFT_ROCK);
         if(pos.getY()<0)extra+=stats.get(DEEP_SPEED);
-        if(time<12000&&level.canSeeSky(pos.above()))extra+=stats.get(SUN_SPEED);if(time>=13000&&time<=23000)extra+=stats.get(NIGHT_SPEED);
+        if(light>=12&&level.canSeeSky(pos.above()))extra+=stats.get(SUN_SPEED);if(light<8)extra+=stats.get(NIGHT_SPEED);
         if(player.isInWater()||level.isRainingAt(player.blockPosition()))extra+=stats.get(WET_SPEED);
         if(level.dimension()==Level.NETHER||stats.get(HEAT_SPEED)>0&&lava(level,pos))extra+=stats.get(HEAT_SPEED);
         if(still(player))extra+=stats.get(STEADY_SPEED);

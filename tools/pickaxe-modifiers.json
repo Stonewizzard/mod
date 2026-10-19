@@ -80,6 +80,19 @@
           200,
           250
         ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.9,
+        "maximum": 1.2,
+        "weights": [
+          0,
+          0,
+          0,
+          10,
+          100,
+          250
+        ]
       }
     ],
     "growth": "NUMERIC",
@@ -153,6 +166,19 @@
           300,
           300
         ]
+      },
+      {
+        "rank": 1,
+        "minimum": 1.1,
+        "maximum": 1.25,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
       }
     ],
     "growth": "NUMERIC",
@@ -213,6 +239,19 @@
           300,
           350
         ]
+      },
+      {
+        "rank": 1,
+        "minimum": 4.5,
+        "maximum": 6.0,
+        "weights": [
+          0,
+          0,
+          1,
+          20,
+          100,
+          200
+        ]
       }
     ],
     "growth": "NUMERIC",
@@ -259,6 +298,19 @@
           270,
           450,
           450
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.5,
+        "maximum": 0.85,
+        "weights": [
+          0,
+          0,
+          1,
+          30,
+          100,
+          250
         ]
       }
     ],
@@ -331,6 +383,19 @@
           30,
           220,
           300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.5,
+        "maximum": 0.65,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
           300
         ]
       }
@@ -419,6 +484,19 @@
           200,
           250
         ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.8,
+        "maximum": 1.0,
+        "weights": [
+          0,
+          0,
+          0,
+          10,
+          100,
+          250
+        ]
       }
     ],
     "growth": "NUMERIC",
@@ -478,6 +556,19 @@
           180,
           300,
           350
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.6,
+        "maximum": 0.85,
+        "weights": [
+          0,
+          0,
+          1,
+          20,
+          100,
+          200
         ]
       }
     ],
@@ -539,6 +630,19 @@
           300,
           350
         ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.6,
+        "maximum": 0.85,
+        "weights": [
+          0,
+          0,
+          1,
+          20,
+          100,
+          200
+        ]
       }
     ],
     "growth": "NUMERIC",
@@ -599,6 +703,19 @@
           300,
           350
         ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.8,
+        "maximum": 1.0,
+        "weights": [
+          0,
+          0,
+          1,
+          20,
+          100,
+          200
+        ]
       }
     ],
     "growth": "NUMERIC",
@@ -646,6 +763,19 @@
           350,
           450
         ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.55,
+        "maximum": 0.75,
+        "weights": [
+          0,
+          0,
+          0,
+          5,
+          50,
+          150
+        ]
       }
     ],
     "growth": "NUMERIC",
@@ -692,6 +822,19 @@
           0,
           250,
           400
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.5,
+        "maximum": 0.8,
+        "weights": [
+          0,
+          0,
+          0,
+          0,
+          50,
+          150
         ]
       }
     ],
@@ -2003,7 +2146,7 @@
     "unit": "PERCENT",
     "cap": 2,
     "family": "SPEED",
-    "description": "Increases mining speed while nighttime.",
+    "description": "Increases mining speed in low ambient light (below eight), including dark caves.",
     "minimumRarity": 0,
     "weight": 20,
     "influence": "NONE",
@@ -5946,7 +6089,7 @@
     "unit": "PERK",
     "cap": 1,
     "family": "COLLECTION",
-    "description": "Protects only your final mined drops against damage temporarily, then restores their previous invulnerability.",
+    "description": "Temporarily prevents damage to your final mined drops via the native invulnerability-check event; underlying entity flags remain unchanged.",
     "minimumRarity": 2,
     "weight": 12,
     "influence": "NONE",

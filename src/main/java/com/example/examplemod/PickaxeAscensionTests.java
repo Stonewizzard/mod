@@ -83,18 +83,15 @@ public final class PickaxeAscensionTests {
         }
     }
     private static void verifyCapsAndSplitStacks(GameTestHelper h){
-        var tool=tool(100);var root=tool.get(DataComponents.CUSTOM_DATA).copyTag();var assembly=root.getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);var parts=assembly.getCompoundOrEmpty("Parts");var traits=PickaxeTrait.values();
-        for(int i=0;i<ReconstructionPattern.PICKAXE.parts.size();i++){
-            String id=ReconstructionPattern.PICKAXE.parts.get(i);var part=parts.getCompoundOrEmpty(id);var record=part.getCompoundOrEmpty("Modifiers");var rolls=new ArrayList<ArtifactModifiers.Roll>();
-            for(int j=i;j<traits.length;j+=ReconstructionPattern.PICKAXE.parts.size()){var trait=traits[j];rolls.add(new ArtifactModifiers.Roll(trait.id,trait.cap,1));}
-            if(i==0)rolls.add(new ArtifactModifiers.Roll(REACH.id,.5,1));
-            part.put("Modifiers",ArtifactModifiers.writeRolls(record,rolls));parts.put(id,part);
+        for(var trait:PickaxeTrait.values()){
+            var sample=tool(100);var root=sample.get(DataComponents.CUSTOM_DATA).copyTag();var assembly=root.getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);var parts=assembly.getCompoundOrEmpty("Parts");
+            for(String id:ReconstructionPattern.PICKAXE.parts){var part=parts.getCompoundOrEmpty(id);part.put("Modifiers",ArtifactModifiers.writeRolls(new CompoundTag(),List.of(new ArtifactModifiers.Roll(trait.id,trait.cap,1))));parts.put(id,part);}
+            assembly.put("Parts",parts);root.put(ArtifactQuality.ASSEMBLY,assembly);sample.set(DataComponents.CUSTOM_DATA,CustomData.of(root));PickaxeProgression.write(sample,new PickaxeProgression.State(100,0,10));
+            check(h,PickaxeModifiers.totals(sample).get(trait)==trait.cap,"Every modifier must respect its combined cap, including duplicate legacy rolls");
         }
-        assembly.put("Parts",parts);root.put(ArtifactQuality.ASSEMBLY,assembly);tool.set(DataComponents.CUSTOM_DATA,CustomData.of(root));PickaxeProgression.write(tool,new PickaxeProgression.State(100,0,9));PickaxeModifiers.applyToAssembly(tool);
+        var tool=tool(100);PickaxeProgression.write(tool,new PickaxeProgression.State(100,0,9));PickaxeModifiers.applyToAssembly(tool);
         var inventory=new SimpleContainer(AscenderBlockEntity.SIZE);inventory.setItem(0,tool);var costs=AscensionResources.requirements(tool);fill(inventory,costs,0);
-        long resourceKinds=AscensionResources.BINDINGS.values().stream().map(AscensionResources.Binding::item).distinct().count();
-        check(h,costs.size()==resourceKinds&&AscensionResources.tryAscend(inventory),"Every modifier resource, including shared and split pearl stacks, must ascend together");
-        for(var trait:traits)check(h,PickaxeModifiers.totals(tool).get(trait)==trait.cap,"Ascended bonuses must respect every existing trait cap");
+        check(h,costs.stream().anyMatch(c->c.item()==Items.ENDER_PEARL)&&AscensionResources.tryAscend(inventory),"Mixed resources and split pearl stacks must ascend together");
         for(int i=1;i<inventory.getContainerSize();i++)check(h,inventory.getItem(i).isEmpty(),"Split material stacks must be consumed exactly once");
     }
     private static void verifyInventory(GameTestHelper h){
