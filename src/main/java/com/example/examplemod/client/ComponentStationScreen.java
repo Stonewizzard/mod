@@ -29,9 +29,12 @@ public final class ComponentStationScreen extends AbstractContainerScreen<Compon
                 var target=ModifierInfluence.CHOICES.get(i);
                 String label=influence==target?"Reroll "+target.label:target.label;
                 String detail=influence==ModifierInfluence.NONE?"Assign permanently":influence==target?"Same influence":"Cannot change";
-                offers.add(new ComponentStationView.Row(label,detail,ModifierScaling.B,target.color,false,false,ComponentWork.can(kind,part,i)));
+                boolean enabled=ComponentWork.can(kind,part,i);
+                if(valid&&!corrupted&&influence==ModifierInfluence.NONE&&!enabled)detail=ArtifactModifierCatalog.pickaxePart(ComponentWork.find(part))?"Locked conflict":"Unavailable";
+                offers.add(new ComponentStationView.Row(label,detail,ModifierScaling.B,target.color,false,false,enabled));
             }
             if(valid&&!corrupted)status=!ComponentInfluences.known(part)?"Unknown influence":influence==ModifierInfluence.NONE?"Permanent choice; locks are preserved":influence.label+" is permanent; reroll within it";
+            if(valid&&!corrupted&&!ArtifactModifierCatalog.pickaxePart(ComponentWork.find(part)))status="Use a pickaxe component";
         }
         if(corrupted&&status.equals(kind.description))status="Corrupted: no more modifications";
         return new ComponentStationView.State(kind,valid,Math.max(0,ArtifactQuality.score(part)),corrupted,status,List.copyOf(modifiers),List.copyOf(offers),ComponentWork.can(kind,part,0),influence);
