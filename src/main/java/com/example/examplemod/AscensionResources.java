@@ -19,17 +19,7 @@ public final class AscensionResources {
     public static final Map<PickaxeTrait,Binding> BINDINGS=bindings();
     private static Map<PickaxeTrait,Binding> bindings(){
         var map=new EnumMap<PickaxeTrait,Binding>(PickaxeTrait.class);
-        map.put(PickaxeTrait.SPEED,new Binding(Items.REDSTONE,2));
-        map.put(PickaxeTrait.FORTUNE,new Binding(Items.LAPIS_LAZULI,2));
-        map.put(PickaxeTrait.MAGNET,new Binding(Items.IRON_INGOT,2));
-        map.put(PickaxeTrait.SILK,new Binding(Items.STRING,2));
-        map.put(PickaxeTrait.DURABILITY,new Binding(Items.COPPER_INGOT,2));
-        map.put(PickaxeTrait.EXPERIENCE,new Binding(Items.AMETHYST_SHARD,2));
-        map.put(PickaxeTrait.AQUATIC,new Binding(Items.PRISMARINE_SHARD,2));
-        map.put(PickaxeTrait.AIRBORNE,new Binding(Items.FEATHER,2));
-        map.put(PickaxeTrait.REACH,new Binding(Items.ENDER_PEARL,1));
-        map.put(PickaxeTrait.SMELTING,new Binding(Items.BLAZE_POWDER,2));
-        map.put(PickaxeTrait.PHASEBOUND,new Binding(Items.ENDER_PEARL,2));
+        for(var trait:PickaxeTrait.values())map.put(trait,ModifierDefinitions.resource(trait));
         if(map.size()!=PickaxeTrait.values().length)throw new IllegalStateException("Every pickaxe trait needs an ascension resource");
         return Map.copyOf(map);
     }

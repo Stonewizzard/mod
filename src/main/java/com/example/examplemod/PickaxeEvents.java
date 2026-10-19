@@ -29,11 +29,15 @@ public final class PickaxeEvents {
         NeoForge.EVENT_BUS.addListener(PickaxeEvents::speed);
         NeoForge.EVENT_BUS.addListener(PickaxeEvents::drops);
         NeoForge.EVENT_BUS.addListener(PickaxeEvents::tick);
+        NeoForge.EVENT_BUS.addListener(SharedToolEffects::anvil);
+        NeoForge.EVENT_BUS.addListener(SharedToolEffects::xp);
+        NeoForge.EVENT_BUS.addListener(MiningCollectionEffects::expiry);
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent event)->MiningCollectionEffects.stop());
     }
     public static void speed(PlayerEvent.BreakSpeed event){
         var player=event.getEntity();var held=player.getMainHandItem();if(!held.is(ArchaeologyContent.PICKAXE.get())||!held.isCorrectToolForDrops(event.getState()))return;
-        var stats=PickaxeModifiers.totals(held);
-        event.setNewSpeed((float)(event.getNewSpeed()*speedMultiplier(stats,player.isEyeInFluid(FluidTags.WATER),player.getAttributeValue(Attributes.SUBMERGED_MINING_SPEED),player.onGround())));
+        var stats=PickaxeModifiers.totals(held);var pos=event.getPosition().orElse(player.blockPosition());
+        event.setNewSpeed((float)(event.getNewSpeed()*(1+MiningConditions.extra(player,pos,event.getState(),held,stats))*speedMultiplier(stats,player.isEyeInFluid(FluidTags.WATER),player.getAttributeValue(Attributes.SUBMERGED_MINING_SPEED),player.onGround())));
     }
     public static double speedMultiplier(PickaxeModifiers.Bonuses stats,boolean underwater,double submergedMultiplier,boolean grounded){
         double factor=1+stats.get(SPEED);
@@ -48,19 +52,20 @@ public final class PickaxeEvents {
     }
     public static void drops(BlockDropsEvent event){
         var tool=event.getTool();if(!(event.getBreaker() instanceof ServerPlayer player)||!tool.is(ArchaeologyContent.PICKAXE.get()))return;
-        var level=event.getLevel();var random=level.getRandom();var stats=PickaxeModifiers.totals(tool);
+        if(!tool.isCorrectToolForDrops(event.getState()))return;
+        var c=new MiningContext(event,player);var level=event.getLevel();var random=level.getRandom();var stats=c.stats;
         var lookup=level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
         var silk=lookup.getOrThrow(Enchantments.SILK_TOUCH);var fortune=lookup.getOrThrow(Enchantments.FORTUNE);
         boolean silkActive=EnchantmentHelper.getItemEnchantmentLevel(silk,tool)>0;
         var virtual=tool.copy();boolean changed=false;
         // Ender Chest loot has no stored inventory; other block entities can have dynamic drops.
         if((!event.getState().hasBlockEntity()||event.getState().is(Blocks.ENDER_CHEST))&&tool.isCorrectToolForDrops(event.getState())){
-            if(!silkActive&&stats.get(SILK)>0&&random.nextDouble()<stats.get(SILK)){
+            if(!silkActive&&MiningLootEffects.silk(c)>0&&random.nextDouble()<MiningLootEffects.silk(c)){
                 virtual.enchant(silk,1);silkActive=true;changed=true;
             }
             if(!silkActive){
                 int base=EnchantmentHelper.getItemEnchantmentLevel(fortune,tool);
-                int target=Math.max(base,Math.min(3,base+stochastic(random,stats.get(FORTUNE))));
+                int target=Math.max(base,Math.min(3,base+stochastic(random,MiningLootEffects.fortune(c))));
                 if(target>base){virtual.enchant(fortune,target);changed=true;}
             }
             if(changed){
@@ -68,21 +73,26 @@ public final class PickaxeEvents {
                 event.getDrops().clear();for(var stack:replacements)if(!stack.isEmpty())event.getDrops().add(new ItemEntity(level,event.getPos().getX()+.5,event.getPos().getY()+.5,event.getPos().getZ()+.5,stack));
             }
         }
-        double smeltingXp=0;
-        if(!silkActive&&stats.get(SMELTING)>0){
+        c.silk=silkActive;double smeltingXp=0;double smeltChance=silkActive?0:MiningLootEffects.smeltChance(c);
+        if(!silkActive&&smeltChance>0&&!event.getState().hasBlockEntity()){
             for(var drop:new ArrayList<>(event.getDrops())){
-                if(random.nextDouble()>=stats.get(SMELTING))continue;
+                if(random.nextDouble()>=smeltChance)continue;
                 var inputStack=drop.getItem().copy();inputStack.setCount(1);var input=new SingleRecipeInput(inputStack);
                 var recipe=level.getServer().getRecipeManager().getRecipeFor(RecipeType.SMELTING,input,level);if(recipe.isEmpty())continue;
                 var result=recipe.get().value().assemble(input);if(result.isEmpty())continue;
                 int count=Math.min(4096,drop.getItem().getCount()*result.getCount());smeltingXp+=recipe.get().value().experience()*drop.getItem().getCount();
-                event.getDrops().remove(drop);
+                event.getDrops().remove(drop);c.smelted++;
                 while(count>0){int size=Math.min(count,result.getMaxStackSize());var stack=result.copy();stack.setCount(size);event.getDrops().add(new ItemEntity(level,drop.getX(),drop.getY(),drop.getZ(),stack));count-=size;}
             }
         }
-        event.setDroppedExperience(silkActive?0:stochastic(random,(event.getDroppedExperience()+smeltingXp)*(1+stats.get(EXPERIENCE))));
-        collect(event.getDrops(),player,stats.get(PHASEBOUND));
+        MiningLootEffects.bonus(c);
+        MiningLootEffects.experience(c,smeltingXp);
+        MiningChargeEffects.breaks(c);
+        MiningCollectionEffects.collect(c);
         for(var drop:event.getDrops())markMinedDrop(drop,player);
+        MiningStatusEffects.apply(c);
+        MiningPlacementEffects.apply(c);
+        MiningAreaEffects.apply(c);
     }
     /** Only this mining event's final drops qualify; full inventories leave the remainder in the world. */
     static void collect(List<ItemEntity> drops,ServerPlayer player,double chance){
@@ -108,6 +118,9 @@ public final class PickaxeEvents {
         changed|=CreativePickaxeParts.materialize(player.containerMenu.getCarried(),player.getRandom());changed|=PickaxeTooltips.refresh(player.containerMenu.getCarried());
         if(player.containerMenu!=player.inventoryMenu)for(var slot:player.containerMenu.slots)if(PickaxeTooltips.refresh(slot.getItem())){slot.setChanged();changed=true;}
         if(changed){player.getInventory().setChanged();player.inventoryMenu.broadcastChanges();if(player.containerMenu!=player.inventoryMenu)player.containerMenu.broadcastChanges();}
+        SharedToolEffects.tick(player,player.getMainHandItem());
+        MiningChargeEffects.movement(player,player.getMainHandItem());
+        MiningStatusEffects.tick(player,player.getMainHandItem());
         if(player.level().getGameTime()%2!=0)return;
         double radius=PickaxeModifiers.totals(player.getMainHandItem()).get(MAGNET);if(radius<=0)return;
         attract(player,radius);
