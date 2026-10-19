@@ -107,5 +107,6 @@
   "block.examplemod.corruptor": "Corruptor",
   "block.examplemod.modifier_locker": "Locker",
   "block.examplemod.scaling_randomizer": "Scaling Randomizer",
-  "block.examplemod.component_restorer": "Restorer"
+  "block.examplemod.component_restorer": "Restorer",
+  "block.examplemod.influencer": "Influencer"
 }

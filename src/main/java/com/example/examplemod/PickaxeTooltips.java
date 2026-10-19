@@ -13,7 +13,7 @@ import net.minecraft.world.item.component.ItemLore;
 /** Shared styled components: compact labels, separate value colors, and no inherited lore italics. */
 public final class PickaxeTooltips {
     public static final String REVISION_KEY="examplemod:pickaxe_tooltip_revision";
-    public static final int REVISION=4;
+    public static final int REVISION=5;
     public static final int LABEL=0xB9C5CD,MUTED=0x788B98,TEAL=0x77D5CB,GOLD=0xFFD369;
     public record Stat(PickaxeTrait trait,double value,ModifierScaling low,ModifierScaling high){}
     public record ToolView(PickaxeProgression.State progression,double score,List<Stat> stats){}
@@ -54,7 +54,7 @@ public final class PickaxeTooltips {
             lines.add(text("[",MUTED).append(text("|".repeat(filled),TEAL)).append(text("|".repeat(10-filled),0x3D535F)).append(text("] ",MUTED)).append(text(p.xp()+"/"+PickaxeProgression.xpRequired(p.level())+" XP",LABEL)));
         }
         lines.add(text("Assembly quality  ",LABEL).append(text(number(view.score())+"%",qualityColor(view.score()))));
-        lines.add(text("",MUTED));lines.add(text("MODIFIERS",MUTED));
+        lines.add(text("MODIFIERS",MUTED));
         if(view.stats().isEmpty())lines.add(text("No effective bonuses",MUTED));
         for(var stat:view.stats())lines.add(text(label(stat.trait())+"  ",LABEL).append(text("+"+value(stat.trait(),stat.value()),magnitude(stat.value()/stat.trait().cap))).append(text("  ",MUTED)).append(gradeRange(stat.low(),stat.high())));
         return List.copyOf(lines);
@@ -63,6 +63,7 @@ public final class PickaxeTooltips {
         int score=ArtifactQuality.score(stack);if(score<0)return List.of();
         var data=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactQuality.RECOVERED);
         var lines=new ArrayList<Component>(piece(score,data.getIntOr("Rarity",0),ArtifactModifiers.read(stack)));
+        var influence=ComponentInfluences.current(stack);lines.add(1,text(!ComponentInfluences.known(stack)?"Unknown influence":influence==ModifierInfluence.NONE?"Uninfluenced":influence.label+" influence (permanent)",influence.color));
         String locked=ComponentWork.locked(stack);if(!locked.isEmpty()){var trait=PickaxeTrait.byId(locked);lines.add(text("Locked: "+(trait==null?locked:label(trait)),0xB7D6F4));}
         if(ComponentWork.corrupted(stack)){
             lines.add(text("CORRUPTED - final",0xEE8A88));String result=ComponentWork.state(stack).getStringOr("LastAction","");if(!result.isEmpty())lines.add(text(result,MUTED));
@@ -75,7 +76,8 @@ public final class PickaxeTooltips {
         for(var roll:rolls){
             if(AncientModifiers.ancient(roll)){lines.add(text("Ancient ",LABEL).append(text("forgotten runes",0xB69BE8).withStyle(style->style.withObfuscated(true))));continue;}
             var trait=PickaxeTrait.byId(roll.id());if(trait==null)continue;double effective=roll.value()*score/100.0;var grade=roll.scaling();
-            lines.add(text(label(trait)+"  ",LABEL).append(text("+"+value(trait,effective),magnitude(effective/trait.cap))).append(text("  ",MUTED)).append(grade.badge()));
+            var line=text(label(trait)+"  ",LABEL).append(text("+"+value(trait,effective),magnitude(effective/trait.cap))).append(text("  ",MUTED)).append(grade.badge());
+            var tag=ArtifactModifierCatalog.spec(trait).influence();if(tag!=ModifierInfluence.NONE)line.append(text(" ["+tag.label+"]",tag.color));lines.add(line);
             lines.add(text("  Base ",MUTED).append(text("+"+value(trait,roll.value()),magnitude(roll.value()/trait.cap))).append(text(roll.tierRank()>0?"  T"+roll.tierRank():"",TEAL)).append(text("  Lv ",MUTED)).append(text("+"+percent(grade.levelGrowth),grade.color)).append(text("  Asc ",MUTED)).append(text("+"+percent(grade.ascensionGrowth),grade.color)));
         }
         return List.copyOf(lines);
@@ -95,4 +97,3 @@ public final class PickaxeTooltips {
     }
     private PickaxeTooltips(){}
 }
-

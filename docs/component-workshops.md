@@ -1,6 +1,6 @@
 # Component workshops
 
-These are six **prototype blocks**, available in the mod's Creative tab and Functional Blocks. They deliberately have **no recipes or processing costs** and use plain vanilla-textured cubes. Their operations are separated from their blocks so later rituals and multiblocks can reuse the same rules.
+These are seven **prototype blocks**, available in the mod's Creative tab and Functional Blocks. They deliberately have **no recipes or processing costs** and use plain vanilla-textured cubes. Their operations are separated from their blocks so later rituals and multiblocks can reuse the same rules.
 
 Every station has one input slot and the normal player inventory. Place a **recovered component** in the slot, click the desired action, and take the same component back out. Shift-click works both ways. Unexcavated artifacts, fragments, finished pickaxes, other completed equipment, and unrelated items are rejected. Block inventories save normally; breaking a station returns its block and input once.
 
@@ -12,8 +12,11 @@ Every station has one input slot and the normal player inventory. Place a **reco
 | Locker | Choose one revealed modifier to protect permanently. The lock cannot be moved or replaced. |
 | Scaling Randomizer | Reroll the grade of every revealed, unlocked modifier, preserving IDs and raw values. Rerolls may retain an existing grade. |
 | Restorer | Add 10 quality points per action, capped at 120%. |
+| Influencer | Permanently choose Nether or End and reroll unlocked modifiers toward that influence. Later rerolls retain that same influence. |
 
 The five **Ancient Test …** Creative components have guaranteed hidden rolls, two ordinary modifiers, and 80% quality. They provide a quick way to test choices, locks, annulment, rerolls, restoration, and corruption. Their three offers are intentionally fixed. The existing Random Test components still get fresh rolls when acquired.
+
+The Influencer is the only way to assign influence; tagged modifiers alone do not assign one. Its assignment cannot be removed or switched. See [influences](influences.md) for matching weights, exclusive modifiers, locks, and the End-only Phasebound ability.
 
 ## Ancient modifiers
 
@@ -29,7 +32,7 @@ A lock protects the selected modifier's **identity, raw rolled value, and scalin
 
 Quality belongs to the **whole component**, so restoring quality or a corruption quality change affects the component's effectiveness, including its locked roll. This does not alter the protected roll's stored values.
 
-Corruption always marks the component **Corrupted**, even when the secondary result is unchanged. All six stations then reject further actions, including unveiling, locking, restoration, and another corruption. Corrupted components can still be assembled into equipment. The result is shown in the station and on the component.
+Corruption always marks the component **Corrupted**, even when the secondary result is unchanged. All seven stations then reject further actions, including unveiling, locking, restoration, and another corruption. Corrupted components can still be assembled into equipment. The result is shown in the station and on the component.
 
 | Corruption outcome | Relative weight | Result |
 | --- | ---: | --- |
@@ -53,10 +56,10 @@ A raw +10% roll on a 120% component contributes +12% before normal level/ascensi
 
 ## Implementation and validation
 
-- `AncientModifiers`: discovery chances, legal alternatives, and saved offer data inside `examplemod:part_modifiers` (version 1, catalog revision 5).
+- `AncientModifiers`: discovery chances, legal alternatives, and saved offer data inside `examplemod:part_modifiers` (version 1, catalog revision 6).
 - `ComponentWork`: component validation, permanent lock/corruption guards, mutation actions, current quality, and version 1 `examplemod:component_work` metadata.
 - `ComponentCorruption`: editable outcome weights and eligibility; direct roll mutations always skip the lock.
-- `ComponentStationKind` / `ComponentStationContent`: six prototype blocks sharing a container/menu implementation.
+- `ComponentStationKind` / `ComponentStationContent`: seven prototype blocks sharing a container/menu implementation.
 - `ComponentStationPayload`: server-authored operations bound to the active menu and the exact input snapshot. Wrong/ranged/stale/replayed requests do nothing, including two-viewer races.
 - `ComponentWorkTests`, `ComponentStationTests`, and `ComponentStationVisualRegression`: natural discovery/recovery, fixed offers, lock invariants, all corruption outcomes, terminal guards, 120% assembly, Creative acquisition, native packet codecs/routing, save/load, block drops, and UI bounds.
 

@@ -22,8 +22,19 @@ public final class ComponentStationScreen extends AbstractContainerScreen<Compon
         var choices=ComponentWork.offers(part);
         for(int i=0;i<choices.size();i++){var roll=choices.get(i);var trait=PickaxeTrait.byId(roll.id());if(trait!=null)offers.add(new ComponentStationView.Row(PickaxeTooltips.label(trait),PickaxeTooltips.tierPrefix(roll)+"+"+PickaxeTooltips.value(trait,roll.value()),roll.scaling(),PickaxeTooltips.magnitude(roll.value()/trait.cap),false,false,ComponentWork.can(ComponentStationKind.UNVEILER,part,i)));}
         boolean valid=ComponentWork.component(part),corrupted=ComponentWork.corrupted(part);String status=valid?ComponentWork.state(part).getStringOr("LastAction",kind.description):"Recovered components only";
+        var influence=ComponentInfluences.current(part);
+        if(kind==ComponentStationKind.INFLUENCER){
+            offers.clear();
+            for(int i=0;i<ModifierInfluence.CHOICES.size();i++){
+                var target=ModifierInfluence.CHOICES.get(i);
+                String label=influence==target?"Reroll "+target.label:target.label;
+                String detail=influence==ModifierInfluence.NONE?"Assign permanently":influence==target?"Same influence":"Cannot change";
+                offers.add(new ComponentStationView.Row(label,detail,ModifierScaling.B,target.color,false,false,ComponentWork.can(kind,part,i)));
+            }
+            if(valid&&!corrupted)status=!ComponentInfluences.known(part)?"Unknown influence":influence==ModifierInfluence.NONE?"Permanent choice; locks are preserved":influence.label+" is permanent; reroll within it";
+        }
         if(corrupted&&status.equals(kind.description))status="Corrupted: no more modifications";
-        return new ComponentStationView.State(kind,valid,Math.max(0,ArtifactQuality.score(part)),corrupted,status,List.copyOf(modifiers),List.copyOf(offers),ComponentWork.can(kind,part,0));
+        return new ComponentStationView.State(kind,valid,Math.max(0,ArtifactQuality.score(part)),corrupted,status,List.copyOf(modifiers),List.copyOf(offers),ComponentWork.can(kind,part,0),influence);
     }
     @Override public void extractBackground(GuiGraphicsExtractor g,int mouseX,int mouseY,float partialTick){
         var state=state();ComponentStationView.draw(new ExcavationScreenView.Canvas(){

@@ -88,10 +88,16 @@ public final class ArtifactModifiers {
         return last;
     }
     public static List<Roll> roll(ArtifactProfile profile,int score,Pool pool){
+        return roll(profile,score,pool,List.of());
+    }
+    static List<Roll> roll(ArtifactProfile profile,int score,Pool pool,List<Roll> protectedRolls){
         var random=new Random(profile.seed()^0x6A09E667F3BCC909L^((long)profile.find().ordinal()*0x9E3779B97F4A7C15L));
         var available=new ArrayList<>(pool.entries().stream().filter(d->d.eligible(profile.rarity(),score)).toList());
-        var result=new ArrayList<Roll>();var groups=new HashSet<String>();
-        for(int attempt=0;attempt<pool.rolls()&&!available.isEmpty();attempt++){
+        if(protectedRolls.size()>pool.rolls())throw new IllegalArgumentException("Too many protected rolls");
+        var result=new ArrayList<>(protectedRolls);var groups=new HashSet<String>();var fixedIds=new HashSet<String>();
+        for(var fixed:protectedRolls){fixedIds.add(fixed.id());for(var entry:pool.entries())if(entry.id().equals(fixed.id())&&!entry.exclusiveGroup().isEmpty())groups.add(entry.exclusiveGroup());}
+        available.removeIf(d->fixedIds.contains(d.id())||!d.exclusiveGroup().isEmpty()&&groups.contains(d.exclusiveGroup()));
+        for(int attempt=protectedRolls.size();attempt<pool.rolls()&&!available.isEmpty();attempt++){
             if(random.nextDouble()>=pool.chances().get(attempt))continue;
             var selected=weighted(available,Definition::weight,random);
             result.add(sample(selected,profile,Math.clamp(score,0,100)/100.0,random));
@@ -101,8 +107,13 @@ public final class ArtifactModifiers {
         return List.copyOf(result);
     }
     public static CompoundTag record(ArtifactProfile profile,int score,Pool pool){
+        return record(profile,score,pool,ModifierInfluence.NONE,List.of());
+    }
+    static CompoundTag record(ArtifactProfile profile,int score,Pool pool,ModifierInfluence influence,List<Roll> protectedRolls){
         var tag=new CompoundTag();tag.putInt("Version",1);tag.putInt("CatalogRevision",ArtifactModifierCatalog.REVISION);tag.putString("Part",profile.find().name());tag.putLong("Seed",profile.seed());tag.putInt("ExcavationScore",score);
-        return AncientModifiers.discover(writeRolls(tag,roll(profile,score,pool)),profile,pool);
+        if(influence!=ModifierInfluence.NONE)tag.putString("Influence",influence.id);
+        var protectedIds=new HashSet<String>();for(var fixed:protectedRolls)protectedIds.add(fixed.id());
+        return AncientModifiers.discover(writeRolls(tag,roll(profile,score,pool,protectedRolls)),profile,pool,influence,protectedIds);
     }
     public static CompoundTag writeRolls(CompoundTag tag,List<Roll> rolls){
         tag.putInt("Count",rolls.size());var entries=new CompoundTag();
@@ -133,6 +144,3 @@ public final class ArtifactModifiers {
     }
     private ArtifactModifiers(){}
 }
-
-
-

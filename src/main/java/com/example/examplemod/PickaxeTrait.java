@@ -13,7 +13,8 @@ public enum PickaxeTrait {
     AQUATIC("aquatic","Underwater penalty removed",Unit.PERCENT,1),
     AIRBORNE("steady_hands","Airborne penalty removed",Unit.PERCENT,1),
     REACH("long_reach","Block reach",Unit.BLOCKS,2.5),
-    SMELTING("smelter","Smelting chance",Unit.PERCENT,1);
+    SMELTING("smelter","Smelting chance",Unit.PERCENT,1),
+    PHASEBOUND("phasebound","Phase collection",Unit.PERCENT,1);
     public enum Unit {PERCENT,LEVEL,BLOCKS}
     public final String id,label;
     public final Unit unit;

@@ -7,12 +7,13 @@ import static com.example.examplemod.PickaxeTrait.*;
 
 /** Editable family weights, per-family value tiers, and artifact rarity rules. */
 public final class ArtifactModifierCatalog {
-    public static final int REVISION = 5;
+    public static final int REVISION = 6;
     public record Rarity(String label, List<Double> chances) {
         public Rarity { chances = List.copyOf(chances); }
     }
-    public record Spec(int minimumRarity, List<ModifierTier> tiers) {
-        public Spec { tiers = List.copyOf(tiers); }
+    public record Spec(int minimumRarity, List<ModifierTier> tiers, ModifierInfluence influence, boolean influenceOnly) {
+        public Spec(int minimumRarity, List<ModifierTier> tiers) { this(minimumRarity,tiers,ModifierInfluence.NONE,false); }
+        public Spec { tiers = List.copyOf(tiers); if(influence==null || influenceOnly && influence==ModifierInfluence.NONE) throw new IllegalArgumentException("Influence-only modifiers need an influence tag"); }
     }
     private static final List<Rarity> RARITIES = List.of(
         new Rarity("Common", List.of(1.0)),
@@ -30,6 +31,9 @@ public final class ArtifactModifierCatalog {
     }
     private static Spec spec(int minimumRarity, ModifierTier... tiers) {
         return new Spec(minimumRarity, List.of(tiers));
+    }
+    private static Spec tagged(ModifierInfluence influence, boolean exclusive, int minimumRarity, ModifierTier... tiers) {
+        return new Spec(minimumRarity,List.of(tiers),influence,exclusive);
     }
     private static final Map<PickaxeTrait, Spec> SPECS = Map.ofEntries(
         Map.entry(SPEED, spec(0,
@@ -77,47 +81,54 @@ public final class ArtifactModifierCatalog {
             t(3, .10, .25, 0, 0, 950, 700, 450, 300),
             t(2, .25, .50, 0, 0, 49, 270, 450, 450),
             t(1, .50, .85, 0, 0, 1, 30, 100, 250))),
-        Map.entry(REACH, spec(2,
+        Map.entry(REACH, tagged(ModifierInfluence.END, false, 2,
             t(4, .15, .35, 0, 0, 650, 400, 250, 150),
             t(3, .35, .55, 0, 0, 300, 400, 350, 300),
             t(2, .55, .80, 0, 0, 49, 180, 300, 350),
             t(1, .80, 1.00, 0, 0, 1, 20, 100, 200))),
-        Map.entry(SMELTING, spec(3,
+        Map.entry(SMELTING, tagged(ModifierInfluence.NETHER, false, 3,
             t(3, .15, .35, 0, 0, 0, 850, 600, 400),
             t(2, .35, .55, 0, 0, 0, 145, 350, 450),
-            t(1, .55, .75, 0, 0, 0, 5, 50, 150)))
+            t(1, .55, .75, 0, 0, 0, 5, 50, 150))),
+        Map.entry(PHASEBOUND, tagged(ModifierInfluence.END, true, 4,
+            t(3, .10, .25, 0, 0, 0, 0, 700, 450),
+            t(2, .25, .50, 0, 0, 0, 0, 250, 400),
+            t(1, .50, .80, 0, 0, 0, 0, 50, 150)))
     );
 
     /** Family frequency is independent of how many tiers a modifier has. */
     public static Map<PickaxeTrait, Integer> weights(ArtifactProfile.Find part) {
         return switch (part) {
-            case PICKAXE_LEFT -> Map.of(SPEED,32,FORTUNE,30,DURABILITY,12,EXPERIENCE,15,SILK,8,SMELTING,8);
-            case PICKAXE_BRIDGE -> Map.of(SPEED,24,DURABILITY,30,EXPERIENCE,18,FORTUNE,14,SILK,8,SMELTING,10);
-            case PICKAXE_RIGHT -> Map.of(FORTUNE,30,SPEED,28,DURABILITY,14,EXPERIENCE,18,SILK,12,SMELTING,12);
-            case TOOL_CONNECTOR -> Map.of(DURABILITY,26,EXPERIENCE,22,MAGNET,28,FORTUNE,10,REACH,12,AQUATIC,10,SMELTING,8);
-            case TOOL_HANDLE -> Map.of(SPEED,24,DURABILITY,24,EXPERIENCE,14,MAGNET,22,AQUATIC,18,AIRBORNE,18,REACH,14);
+            case PICKAXE_LEFT -> Map.of(SPEED,32,FORTUNE,30,DURABILITY,12,EXPERIENCE,15,SILK,8,SMELTING,8,PHASEBOUND,8);
+            case PICKAXE_BRIDGE -> Map.of(SPEED,24,DURABILITY,30,EXPERIENCE,18,FORTUNE,14,SILK,8,SMELTING,10,PHASEBOUND,8);
+            case PICKAXE_RIGHT -> Map.of(FORTUNE,30,SPEED,28,DURABILITY,14,EXPERIENCE,18,SILK,12,SMELTING,12,PHASEBOUND,12);
+            case TOOL_CONNECTOR -> Map.of(DURABILITY,26,EXPERIENCE,22,MAGNET,28,FORTUNE,10,REACH,12,AQUATIC,10,SMELTING,8,PHASEBOUND,8);
+            case TOOL_HANDLE -> Map.of(SPEED,24,DURABILITY,24,EXPERIENCE,14,MAGNET,22,AQUATIC,18,AIRBORNE,18,REACH,14,PHASEBOUND,8);
             default -> Map.of();
         };
     }
     public static Rarity rarity(int rarity) { return RARITIES.get(Math.clamp(rarity, 0, 5)); }
     public static Spec spec(PickaxeTrait trait) { return SPECS.get(trait); }
+    public static ModifierInfluence tag(String id) { var trait=PickaxeTrait.byId(id); var spec=trait==null?null:SPECS.get(trait); return spec==null?null:spec.influence(); }
     public static boolean pickaxePart(ArtifactProfile.Find part) { return !weights(part).isEmpty(); }
     public static ArtifactModifiers.Pool pool(ArtifactProfile.Find part) { return pool(part, 0); }
     public static ArtifactModifiers.Pool pool(ArtifactProfile.Find part, int rarity) {
+        return pool(part,rarity,ModifierInfluence.NONE);
+    }
+    public static ArtifactModifiers.Pool pool(ArtifactProfile.Find part, int rarity, ModifierInfluence influence) {
+        java.util.Objects.requireNonNull(influence);
         var weights = weights(part);
         var definitions = new ArrayList<ArtifactModifiers.Definition>();
         // Enum order keeps seeded results stable across JVM launches.
         for (var trait : PickaxeTrait.values()) {
             var spec = SPECS.get(trait);
             var weight = weights.get(trait);
-            if (spec == null || weight == null) continue;
+            if (spec == null || weight == null || !influence.allows(spec.influence(),spec.influenceOnly())) continue;
             String group = trait == SILK || trait == FORTUNE || trait == SMELTING ? "harvest" : "";
-            var definition = new ArtifactModifiers.Definition(trait.id, weight, spec.minimumRarity(), 0, spec.tiers(), group);
+            var definition = new ArtifactModifiers.Definition(trait.id, influence.weight(weight,spec.influence()), spec.minimumRarity(), 0, spec.tiers(), group);
             if (definition.eligible(rarity, 100)) definitions.add(definition);
         }
         return new ArtifactModifiers.Pool(definitions.isEmpty() ? List.of() : rarity(rarity).chances(), definitions);
     }
     private ArtifactModifierCatalog() {}
 }
-
-

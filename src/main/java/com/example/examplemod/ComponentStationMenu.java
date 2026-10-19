@@ -26,8 +26,8 @@ public final class ComponentStationMenu extends AbstractContainerMenu {
     public boolean action(Player player,int action,ItemStack expected){
         if(!(player instanceof net.minecraft.server.level.ServerPlayer)||player.containerMenu!=this||!stillValid(player)||!(container instanceof ComponentStationBlockEntity))return false;
         var part=container.getItem(0);if(!ItemStack.matches(part,expected))return false;
-        var kind=kind();int choice=kind==ComponentStationKind.UNVEILER?action-10:kind==ComponentStationKind.LOCKER?action-20:0;
-        if(kind==ComponentStationKind.UNVEILER?(action<10||action>12):kind==ComponentStationKind.LOCKER?(action<20||action>27):action!=0)return false;
+        var kind=kind();int choice=kind==ComponentStationKind.UNVEILER?action-10:kind==ComponentStationKind.LOCKER?action-20:kind==ComponentStationKind.INFLUENCER?action-30:0;
+        if(kind==ComponentStationKind.UNVEILER?(action<10||action>12):kind==ComponentStationKind.LOCKER?(action<20||action>27):kind==ComponentStationKind.INFLUENCER?(choice<0||choice>=ModifierInfluence.CHOICES.size()):action!=0)return false;
         if(!ComponentWork.apply(kind,part,choice,player.getRandom()))return false;container.setChanged();broadcastChanges();return true;
     }
     @Override public ItemStack quickMoveStack(Player player,int index){

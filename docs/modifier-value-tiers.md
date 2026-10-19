@@ -48,6 +48,7 @@ A Common left tip has Mining speed family weight 32 out of 89. Its chance to rol
 | Block reach | 4 | Rare |
 | Silk Touch chance | 3 | Rare |
 | Smelting chance | 3 | Epic |
+| Phase collection | 3 | Legendary, matching End influence required |
 
 Each family's bands and weights are explicit in the catalog. The per-component role pools still apply. Fortune, Silk Touch, and Smelting remain mutually exclusive on one piece. All bands of an eligible family remain possible on Legendary and Unique artifacts.
 
@@ -69,11 +70,11 @@ means T6, +4–12%, with weights for Common, Uncommon, Rare, Epic, Legendary, Un
 
 `ModifierTier` keeps a stable tier ID separate from its display rank. The convenience helper above generates ID `t6`; use the full constructor when a different stable ID is useful. Do not reuse an existing tier ID for a different concept. Definition validation rejects duplicate tier IDs/ranks, invalid ranges, negative weights, and wrong rarity-weight lengths. Zero-weight bands may remain defined for later balancing. A family with no eligible bands is excluded entirely. Weight totals use 64-bit arithmetic.
 
-Natural excavation, Creative random parts, ancient unveiling offers, and corruption-added modifiers all use the same tier sampler. Existing grade, quality, runtime-cap, and extra-modifier rules remain separate. This change adds no new modifier abilities.
+Natural excavation, Creative random parts, ancient unveiling offers, and corruption-added modifiers all use the same tier sampler. Existing grade, quality, runtime-cap, and extra-modifier rules remain separate. Influence-aware callers also apply the optional tag and influence-only gates before family selection; see [influences](influences.md).
 
 ## Saves, customization, and presentation
 
-Catalog revision 5 adds optional `ValueTier` and `TierRank` to each version-1 modifier roll. The original raw value, quality scale, scaling grade, tier ID, and displayed tier rank are saved. Loading does not look up the current catalog to reinterpret an old value.
+Catalog revision 6 adds optional `ValueTier` and `TierRank` to each version-1 modifier roll. The original raw value, quality scale, scaling grade, tier ID, and displayed tier rank are saved. Loading does not look up the current catalog to reinterpret an old value.
 
 - Existing pieces and assembled tools are never rerolled.
 - Old rolls without tier metadata stay unclassified; they are not silently assigned tiers.
