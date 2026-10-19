@@ -39,7 +39,7 @@ final class MiningStatusEffects {
     private static void buff(MiningContext c,Holder<MobEffect> effect,int ticks){c.player.addEffect(new MobEffectInstance(effect,ticks,0));}
     private static void pulse(MiningContext c,PickaxeTrait trait,Holder<MobEffect> effect,int cost){
         if(c.get(trait)<=0)return;int stage=c.stage(trait);double radius=3+stage;
-        var mobs=c.level.getEntitiesOfClass(Monster.class,c.player.getBoundingBox().inflate(radius),m->m.isAlive()&&m.distanceToSqr(c.player)<=radius*radius);
+        var mobs=c.level.getEntitiesOfClass(net.minecraft.world.entity.Mob.class,c.player.getBoundingBox().inflate(radius),m->m instanceof net.minecraft.world.entity.monster.Enemy&&m.isAlive()&&m.distanceToSqr(c.player)<=radius*radius);
         if(mobs.isEmpty()||!c.perk(trait,200,cost))return;
         for(var mob:mobs.stream().limit(16).toList()){
             if(effect!=null)mob.addEffect(new MobEffectInstance(effect,(trait==SHULKER_PULSE?1+stage:3+stage)*20,0));
@@ -63,7 +63,7 @@ final class MiningStatusEffects {
             var target=new Vec3(state.getDoubleOr("SafeX",p.getX()),state.getDoubleOr("SafeY",p.getY()),state.getDoubleOr("SafeZ",p.getZ()));
             // Rescue distance may exceed normal blink range, but both endpoints must be in this dimension.
             var pos=BlockPos.containing(target);
-            if(level.hasChunkAt(pos)&&level.getWorldBorder().isWithinBounds(pos)&&level.getBlockState(pos.below()).isSolidRender()&&level.noCollision(p,p.getBoundingBox().move(target.subtract(p.position())))){
+            if(level.hasChunkAt(pos)&&level.getWorldBorder().isWithinBounds(pos)&&level.getFluidState(pos).isEmpty()&&level.getBlockState(pos.below()).isSolidRender()&&level.noCollision(p,p.getBoundingBox().move(target.subtract(p.position())))){
                 MiningRuntime.spend(tool,20);p.teleportTo(target.x,target.y,target.z);p.fallDistance=0;
             }
         }

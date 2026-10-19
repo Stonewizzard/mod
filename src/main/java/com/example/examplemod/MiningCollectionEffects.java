@@ -11,7 +11,7 @@ import static com.example.examplemod.PickaxeTrait.*;
 final class MiningCollectionEffects {
     private static final Map<ItemEntity,Long> SHIELDS=new WeakHashMap<>();
     static void protect(net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent event){
-        if(!(event.getEntity() instanceof ItemEntity item))return;Long expiry=SHIELDS.get(item);
+        if(!(event.getEntity() instanceof ItemEntity item)||item.level().isClientSide())return;Long expiry=SHIELDS.get(item);
         if(expiry!=null&&item.level().getGameTime()<expiry)event.setInvulnerable(true);
     }
     static void collect(MiningContext c){

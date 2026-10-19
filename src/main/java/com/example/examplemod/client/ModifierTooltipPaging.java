@@ -25,7 +25,7 @@ public final class ModifierTooltipPaging {
     }
     public static void scroll(ScreenEvent.MouseScrolled.Pre event){
         var minecraft=Minecraft.getInstance();
-        boolean shift=InputConstants.isKeyDown(minecraft.getWindow(),InputConstants.KEY_LSHIFT)||InputConstants.isKeyDown(minecraft.getWindow(),InputConstants.KEY_RSHIFT);
+        boolean shift=InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)||InputConstants.isKeyDown(InputConstants.KEY_RSHIFT);
         if(!shift||System.nanoTime()-lastTooltip>200000000L||hovered.isEmpty())return;
         int pages=PickaxeTooltips.pages(PickaxeTooltips.view(hovered));if(pages<=1)return;
         page=Math.floorMod(page+(event.getScrollDeltaY()>0?-1:1),pages);event.setCanceled(true);

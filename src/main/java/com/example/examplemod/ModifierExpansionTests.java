@@ -110,7 +110,28 @@ public final class ModifierExpansionTests {
         p.getInventory().clearContent();p.getInventory().setItem(5,new ItemStack(Items.IRON_NUGGET,18));MiningCollectionEffects.compact(p,0);
         check(h,p.getInventory().countItem(Items.IRON_NUGGET)==9&&p.getInventory().countItem(Items.IRON_INGOT)==1,"Compaction must consume exactly nine ingredients");
         var named=new ItemStack(Items.IRON_NUGGET,9);named.set(DataComponents.CUSTOM_NAME,Component.literal("Keep me"));p.getInventory().clearContent();p.getInventory().setItem(5,named);MiningCollectionEffects.compact(p,0);check(h,p.getInventory().countItem(Items.IRON_INGOT)==0,"Compaction must never consume named or customized ingredients");
+        var ward=tool(100,Map.of(SPOILS_SHIELD,1.0),ModifierScaling.B);
+        var protectedDrops=drop(h,p,pos,Blocks.STONE,ward,new ItemStack(Items.COBBLESTONE),0);var protectedItem=protectedDrops.getDrops().getFirst();
+        var protection=new net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent(protectedItem,p.damageSources().generic(),false);NeoForge.EVENT_BUS.post(protection);
+        check(h,protection.isInvulnerable()&&!protectedItem.isInvulnerable(),"Spoils Ward must protect native damage checks without permanently changing entity flags");
+        MiningCollectionEffects.stop();protection=new net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent(protectedItem,p.damageSources().generic(),false);NeoForge.EVENT_BUS.post(protection);check(h,!protection.isInvulnerable(),"Clearing temporary protection must leave native damage behavior intact");
+        var utility=tool(100,Map.of(ANVIL_THRIFT,.5,MENDING_BOOST,1.0),ModifierScaling.B);utility.setDamageValue(100);p.setItemInHand(InteractionHand.MAIN_HAND,utility);
+        var anvil=new net.neoforged.neoforge.event.AnvilUpdateEvent(utility,new ItemStack(Items.IRON_INGOT,4),null,utility.copy(),10,4,p);NeoForge.EVENT_BUS.post(anvil);
+        check(h,anvil.getXpCost()==5&&anvil.getMaterialCost()==2,"Frugal Repairs must change real native anvil event costs");
+        var orb=new net.minecraft.world.entity.ExperienceOrb(h.getLevel(),p.getX(),p.getY(),p.getZ(),5);NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.PlayerXpEvent.PickupXp(p,orb));
+        check(h,utility.getDamageValue()==95,"Mending Affinity must repair the held tool through native XP pickup");
+        placement(h,p,pos);
         area(h,p,pos);
+    }
+    private static void placement(GameTestHelper h,ServerPlayer p,BlockPos origin){
+        var tool=tool(100,Map.of(RECLAMATION,0.0),ModifierScaling.B);p.getInventory().clearContent();p.getInventory().setItem(5,new ItemStack(Items.COBBLESTONE,4));p.setItemInHand(InteractionHand.MAIN_HAND,tool);
+        var drops=new ArrayList<ItemEntity>();var e=new BlockDropsEvent(h.getLevel(),origin,Blocks.STONE.defaultBlockState(),null,drops,p,tool);var c=new MiningContext(e,p);var target=origin.west(2);h.getLevel().setBlockAndUpdate(target,Blocks.AIR.defaultBlockState());
+        boolean[] cancel={true};NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.level.BlockEvent.EntityPlaceEvent event)->{if(cancel[0]&&event.getPos().equals(target))event.setCanceled(true);});
+        check(h,!MiningPlacementEffects.place(c,target,Blocks.COBBLESTONE,Items.COBBLESTONE,false)&&h.getLevel().getBlockState(target).isAir()&&p.getInventory().countItem(Items.COBBLESTONE)==4,"Canceled utility placement must restore the world and consume no material");cancel[0]=false;
+        check(h,MiningPlacementEffects.place(c,target,Blocks.COBBLESTONE,Items.COBBLESTONE,false)&&p.getInventory().countItem(Items.COBBLESTONE)==3,"Successful utility placement must consume exactly one inventory item");
+        h.getLevel().setBlockAndUpdate(target,Blocks.CHEST.defaultBlockState());check(h,!MiningPlacementEffects.place(c,target,Blocks.COBBLESTONE,Items.COBBLESTONE,false),"Utility placement must never overwrite a block entity");
+        var chargeTool=tool(100,Map.of(CHARGE_BATTERY,1.0),ModifierScaling.B);boolean[] blockDrops={true};NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGH,(BlockDropsEvent event)->{if(blockDrops[0]&&event.getPos().equals(origin))event.setCanceled(true);});
+        drop(h,p,origin,Blocks.STONE,chargeTool,new ItemStack(Items.COBBLESTONE),0);blockDrops[0]=false;check(h,MiningRuntime.charge(chargeTool)==0,"Canceled drops must not run late modifier side effects");
     }
     private static void area(GameTestHelper h,ServerPlayer p,BlockPos pos){
         p.getInventory().clearContent();var tool=tool(100,Map.of(VEIN_MINER,1.0,CHARGE_BATTERY,1.0),ModifierScaling.B);p.setItemInHand(InteractionHand.MAIN_HAND,tool);p.setShiftKeyDown(true);
