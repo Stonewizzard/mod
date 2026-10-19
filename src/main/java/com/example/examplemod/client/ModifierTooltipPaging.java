@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
-import org.lwjgl.glfw.GLFW;
 
 /** Compact eight-stat pages, browsable without opening a separate workbench. */
 public final class ModifierTooltipPaging {
@@ -26,7 +25,7 @@ public final class ModifierTooltipPaging {
     }
     public static void scroll(ScreenEvent.MouseScrolled.Pre event){
         var minecraft=Minecraft.getInstance();
-        boolean shift=InputConstants.isKeyDown(minecraft.getWindow(),GLFW.GLFW_KEY_LEFT_SHIFT)||InputConstants.isKeyDown(minecraft.getWindow(),GLFW.GLFW_KEY_RIGHT_SHIFT);
+        boolean shift=InputConstants.isKeyDown(minecraft.getWindow(),InputConstants.KEY_LSHIFT)||InputConstants.isKeyDown(minecraft.getWindow(),InputConstants.KEY_RSHIFT);
         if(!shift||System.nanoTime()-lastTooltip>200000000L||hovered.isEmpty())return;
         int pages=PickaxeTooltips.pages(PickaxeTooltips.view(hovered));if(pages<=1)return;
         page=Math.floorMod(page+(event.getScrollDeltaY()>0?-1:1),pages);event.setCanceled(true);

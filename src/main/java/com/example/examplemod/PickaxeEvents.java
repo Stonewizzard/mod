@@ -27,7 +27,7 @@ public final class PickaxeEvents {
     private static final String MAGNET_OWNER="examplemod:mined_by",MAGNET_UNTIL="examplemod:magnet_until";
     public static void register(){
         NeoForge.EVENT_BUS.addListener(PickaxeEvents::speed);
-        NeoForge.EVENT_BUS.addListener(PickaxeEvents::drops);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,PickaxeEvents::drops);
         NeoForge.EVENT_BUS.addListener(PickaxeEvents::tick);
         NeoForge.EVENT_BUS.addListener(SharedToolEffects::anvil);
         NeoForge.EVENT_BUS.addListener(SharedToolEffects::xp);
