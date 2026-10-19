@@ -27,13 +27,13 @@ public final class ComponentStationScreen extends AbstractContainerScreen<Compon
             offers.clear();
             for(int i=0;i<ModifierInfluence.CHOICES.size();i++){
                 var target=ModifierInfluence.CHOICES.get(i);
-                String label=influence==target?"Reroll "+target.label:target.label;
-                String detail=influence==ModifierInfluence.NONE?"Assign permanently":influence==target?"Same influence":"Cannot change";
+                String label=influence==target?target.label+" (applied)":target.label;
+                String detail=influence==ModifierInfluence.NONE?"Assign permanently":influence==target?"One use completed":"Cannot change";
                 boolean enabled=ComponentWork.can(kind,part,i);
                 if(valid&&!corrupted&&influence==ModifierInfluence.NONE&&!enabled)detail=ArtifactModifierCatalog.pickaxePart(ComponentWork.find(part))?"Locked conflict":"Unavailable";
                 offers.add(new ComponentStationView.Row(label,detail,ModifierScaling.B,target.color,false,false,enabled));
             }
-            if(valid&&!corrupted)status=!ComponentInfluences.known(part)?"Unknown influence":influence==ModifierInfluence.NONE?"Permanent choice; locks are preserved":influence.label+" is permanent; reroll within it";
+            if(valid&&!corrupted)status=!ComponentInfluences.known(part)?"Unknown influence":influence==ModifierInfluence.NONE?"One use per piece; preserves its lock":influence.label+" influence already applied";
             if(valid&&!corrupted&&!ArtifactModifierCatalog.pickaxePart(ComponentWork.find(part)))status="Use a pickaxe component";
         }
         if(corrupted&&status.equals(kind.description))status="Corrupted: no more modifications";

@@ -7,7 +7,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 
-/** Assignment is exclusively an Influencer action. An assigned influence is permanent. */
+/** Assignment is exclusively a one-time Influencer action. An assigned influence is permanent. */
 public final class ComponentInfluences {
     public static final String FIELD="Influence";
     public static ModifierInfluence current(ItemStack stack) {
@@ -21,7 +21,7 @@ public final class ComponentInfluences {
         if(target==null || target==ModifierInfluence.NONE || !ComponentWork.mutable(stack) || !known(stack)
                 || stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getBooleanOr(CreativePickaxeParts.PENDING,false))return false;
         var current=current(stack);
-        if(current!=ModifierInfluence.NONE && current!=target)return false;
+        if(current!=ModifierInfluence.NONE)return false;
         var find=ComponentWork.find(stack);
         if(!ArtifactModifierCatalog.pickaxePart(find))return false;
         int rarity=ComponentWork.recovered(stack).getIntOr("Rarity",0);
@@ -33,7 +33,7 @@ public final class ComponentInfluences {
         // Preserve unknown locks and reject an initial assignment that would conflict with one.
         return fixed.size()==1 && pool.entries().stream().anyMatch(d->d.id().equals(locked));
     }
-    static CompoundTag reroll(ItemStack stack,ModifierInfluence target,RandomSource random) {
+    static CompoundTag assign(ItemStack stack,ModifierInfluence target,RandomSource random) {
         if(!can(stack,target))throw new IllegalArgumentException("Invalid influence assignment");
         var recovered=ComponentWork.recovered(stack);
         int rarity=recovered.getIntOr("Rarity",0);

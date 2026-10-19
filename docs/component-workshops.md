@@ -12,11 +12,11 @@ Every station has one input slot and the normal player inventory. Place a **reco
 | Locker | Choose one revealed modifier to protect permanently. The lock cannot be moved or replaced. |
 | Scaling Randomizer | Reroll the grade of every revealed, unlocked modifier, preserving IDs and raw values. Rerolls may retain an existing grade. |
 | Restorer | Add 10 quality points per action, capped at 120%. |
-| Influencer | Permanently choose Nether or End and reroll unlocked modifiers toward that influence. Later rerolls retain that same influence. |
+| Influencer | Permanently choose Nether or End and reroll unlocked modifiers toward that influence. Usable only once per piece, including for the same influence. |
 
 The five **Ancient Test …** Creative components have guaranteed hidden rolls, two ordinary modifiers, and 80% quality. They provide a quick way to test choices, locks, annulment, rerolls, restoration, and corruption. Their three offers are intentionally fixed. The existing Random Test components still get fresh rolls when acquired.
 
-The Influencer is the only way to assign influence; tagged modifiers alone do not assign one. Its assignment cannot be removed or switched. See [influences](influences.md) for matching weights, exclusive modifiers, locks, and the End-only Phasebound ability.
+The Influencer is the only way to assign influence; tagged modifiers alone do not assign one. Its assignment cannot be repeated, removed, or switched; annulment does not reset it. See [influences](influences.md) for matching weights, exclusive modifiers, locks, and the End-only Phasebound ability.
 
 ## Ancient modifiers
 

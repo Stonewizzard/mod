@@ -56,7 +56,7 @@ public final class ComponentWork {
             case SCALER->{int rarity=recovered(stack).getIntOr("Rarity",0);var find=find(stack);for(int i=0;i<rolls.size();i++){var old=rolls.get(i);if(!old.id().equals(lock)&&PickaxeTrait.byId(old.id())!=null){var profile=new ArtifactProfile(random.nextLong(),rarity,ArtifactProfile.Matrix.SHALE,find);rolls.set(i,old.withScaling(ModifierScaling.roll(profile,old.id())));}}message="Unlocked scaling grades rerolled";}
             case RESTORER->{int quality=Math.min(MAX_QUALITY,ArtifactQuality.score(stack)+RESTORE_STEP);state.putInt("Quality",quality);message="Quality restored to "+quality+"%";}
             case CORRUPTOR->{message=ComponentCorruption.apply(stack,state,rolls,random);state.putBoolean("Corrupted",true);}
-            case INFLUENCER->{var target=ModifierInfluence.choice(choice);record=ComponentInfluences.reroll(stack,target,random);rolls.clear();rolls.addAll(ArtifactModifiers.read(record));state.putString(ComponentInfluences.FIELD,target.id);message=target.label+" influence: unlocked modifiers rerolled";}
+            case INFLUENCER->{var target=ModifierInfluence.choice(choice);record=ComponentInfluences.assign(stack,target,random);rolls.clear();rolls.addAll(ArtifactModifiers.read(record));state.putString(ComponentInfluences.FIELD,target.id);message=target.label+" influence applied permanently";}
             default->throw new IllegalStateException("Unknown station");
         }
         if(rolls.stream().noneMatch(AncientModifiers::ancient))record.remove(AncientModifiers.OFFERS);

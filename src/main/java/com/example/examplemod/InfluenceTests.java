@@ -35,7 +35,7 @@ public final class InfluenceTests {
         @Override protected MutableComponent typeDescription(){return Component.literal("Permanent influence assignment, themed weighted pools and Phasebound mining");}
         @Override public void run(GameTestHelper h){
             defaults(h);pools(h);assignment(h);locks(h);unveiling(h);phasebound(h);
-            System.out.println("INFLUENCE_CHECK: PASS: uninfluenced natural/Creative parts, optional tags, sixfold matching weights, zero foreign/exclusive leaks, permanent assignment, immutable quality/provenance/locks, influenced offers/corruption/saves/assembly, Phasebound native drops and full/partial inventories");
+            System.out.println("INFLUENCE_CHECK: PASS: uninfluenced natural/Creative parts, optional tags, sixfold matching weights, zero foreign/exclusive leaks, single-use permanent assignment, no repeat/switch/annulment reset, immutable quality/provenance/locks, influenced offers/corruption/saves/assembly, Phasebound native drops and full/partial inventories");
             h.succeed();
         }
     }
@@ -92,8 +92,8 @@ public final class InfluenceTests {
             var before=part.copy();
             check(h,!ComponentWork.apply(ComponentStationKind.INFLUENCER,part,1,RandomSource.create(i))&&ItemStack.matches(before,part),"An assigned influence must never change, even with a fresh request");
             check(h,!ComponentWork.apply(ComponentStationKind.INFLUENCER,part,-1,RandomSource.create(i))&&ItemStack.matches(before,part),"No uninfluence action exists");
-            check(h,ComponentWork.apply(ComponentStationKind.INFLUENCER,part,0,RandomSource.create(i*911L)),"Same-influence rerolls must remain available");
-            check(h,ArtifactQuality.score(part)==120&&ComponentWork.recovered(part).equals(source),"Repeated rerolls must preserve quality and original provenance");
+            check(h,!ComponentWork.apply(ComponentStationKind.INFLUENCER,part,0,RandomSource.create(i*911L))&&ItemStack.matches(before,part),"The same influence must never be rerolled after the one-time application");
+            check(h,ArtifactQuality.score(part)==120&&ComponentWork.recovered(part).equals(source),"Rejected repeated requests must preserve quality and original provenance");
             validate(h,ModifierInfluence.NETHER,5,ArtifactModifiers.read(part),ComponentWork.offers(part));
         }
         check(h,ItemStack.matches(part,roundtrip(h,part)),"Permanent influence and fixed choices must survive native item saves");
@@ -101,7 +101,7 @@ public final class InfluenceTests {
         while(ComponentWork.can(ComponentStationKind.ANULLER,annulled,0))ComponentWork.apply(ComponentStationKind.ANULLER,annulled,0,RandomSource.create(7));
         check(h,ArtifactModifiers.read(annulled).isEmpty()&&ComponentInfluences.current(annulled)==ModifierInfluence.NETHER
             &&!ComponentWork.apply(ComponentStationKind.INFLUENCER,annulled,1,RandomSource.create())
-            &&ComponentWork.apply(ComponentStationKind.INFLUENCER,annulled,0,RandomSource.create(8)),"Annulment of every modifier must not clear or change the permanent influence");
+            &&!ComponentWork.apply(ComponentStationKind.INFLUENCER,annulled,0,RandomSource.create(8)),"Annulment of every modifier must not clear, change, or reset the permanent influence");
         for(int seed=0;seed<120;seed++){
             var corrupted=part.copy();ComponentWork.apply(ComponentStationKind.CORRUPTOR,corrupted,0,RandomSource.create(seed*719L));
             validate(h,ModifierInfluence.NETHER,5,ArtifactModifiers.read(corrupted),ComponentWork.offers(corrupted));
@@ -116,7 +116,9 @@ public final class InfluenceTests {
         var before=conflicting.copy();check(h,!ComponentWork.apply(ComponentStationKind.INFLUENCER,conflicting,1,RandomSource.create())&&ItemStack.matches(before,conflicting),"A foreign locked modifier must block an initial incompatible assignment");
         var fixed=ArtifactModifiers.read(conflicting).getFirst();
         for(int i=0;i<80;i++){
-            check(h,ComponentWork.apply(ComponentStationKind.INFLUENCER,conflicting,0,RandomSource.create(i*991L))&&ArtifactModifiers.read(conflicting).contains(fixed),"Rerolls and ancient replacement must never alter or hide the locked roll");
+            var independent=conflicting.copy();
+            check(h,ComponentWork.apply(ComponentStationKind.INFLUENCER,independent,0,RandomSource.create(i*991L))&&ArtifactModifiers.read(independent).contains(fixed),"Initial assignment and ancient replacement must never alter or hide the locked roll");
+            var assigned=independent.copy();check(h,!ComponentWork.apply(ComponentStationKind.INFLUENCER,independent,0,RandomSource.create(i+1))&&ItemStack.matches(assigned,independent),"A locked part must not bypass the one-use limit");
         }
         var neutral=component(ArtifactProfile.Find.PICKAXE_LEFT,0,List.of(new ArtifactModifiers.Roll(SPEED.id,.1,.8,ModifierScaling.A,"t6",6)));
         ComponentWork.apply(ComponentStationKind.LOCKER,neutral,0,RandomSource.create());
