@@ -82,8 +82,24 @@ public final class ModifierExpansionTests {
             var ops=h.getLevel().registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE);
             var decoded=ItemStack.CODEC.parse(ops,ItemStack.CODEC.encodeStart(ops,tool).getOrThrow()).getOrThrow();check(h,ItemStack.matches(tool,decoded),"All equipment must retain modifiers and attributes through native saves");
         }
+        worstCaseAscension(h);
         var ordinary=new ItemStack(Items.DIAMOND_SWORD);check(h,SharedToolEffects.damage(ordinary,10,player)==10,"Ordinary equipment must not acquire reconstructed tool effects");
         var repair=tool(100,Map.of(SELF_REPAIR,2.0,RAIN_REPAIR,2.0,METAL_MAINTENANCE,20.0),ModifierScaling.B);repair.setDamageValue(100);MiningRuntime.repair(repair,20);check(h,repair.getDamageValue()==80,"Utility repairs must reduce damage without changing maximum durability");
+    }
+    private static void worstCaseAscension(GameTestHelper h){
+        var parts=new ArrayList<>(parts(ReconstructionPattern.PICKAXE,100,Map.of(),ModifierScaling.B));
+        var end=Arrays.stream(PickaxeTrait.values()).filter(t->ArtifactModifierCatalog.spec(t).influenceOnly()&&ArtifactModifierCatalog.spec(t).influence()==ModifierInfluence.END).toList();
+        var utility=Arrays.stream(PickaxeTrait.values()).filter(t->t.utility).toList();
+        for(int i=0;i<5;i++){
+            var pool=i<3?end:utility;var rolls=new ArrayList<ArtifactModifiers.Roll>();
+            for(int j=0;j<5;j++){var trait=pool.get((i*5+j)%pool.size());var tier=ArtifactModifierCatalog.spec(trait).tiers().getLast();rolls.add(new ArtifactModifiers.Roll(trait.id,tier.minimum(),1,ModifierScaling.B,tier.id(),tier.rank()));}
+            set(parts.get(i),rolls);
+        }
+        var tool=ArtifactQuality.assemble(parts);PickaxeProgression.write(tool,new PickaxeProgression.State(100,0,9));var costs=AscensionResources.requirements(tool);
+        var inventory=new net.minecraft.world.SimpleContainer(AscenderBlockEntity.SIZE);inventory.setItem(0,tool);int slot=1;
+        for(var cost:costs){int left=cost.count();while(left>0){var stack=new ItemStack(cost.item());int count=Math.min(stack.getMaxStackSize(),left);stack.setCount(count);check(h,slot<inventory.getContainerSize(),"The Ascender must fit every material stack of a 25-modifier End build at its final gate");inventory.setItem(slot++,stack);left-=count;}}
+        check(h,slot-1>18&&AscensionResources.tryAscend(inventory)&&PickaxeProgression.read(tool).mastered(),"An End-heavy build must fit and complete its final ascension using real native pearl stack limits");
+        for(int i=1;i<inventory.getContainerSize();i++)check(h,inventory.getItem(i).isEmpty(),"Worst-case ascension must consume each split stack exactly once");
     }
     private static void gameplay(GameTestHelper h){
         var p=h.makeMockServerPlayerInLevel();p.setGameMode(GameType.SURVIVAL);var pos=h.absolutePos(new BlockPos(3,1,3));p.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);

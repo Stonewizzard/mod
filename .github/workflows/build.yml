@@ -32,7 +32,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Verify sniffer head death drops in Minecraft
+      - name: Verify Minecraft gameplay regressions
         timeout-minutes: 10
         run: ./gradlew runGameTestServer
 

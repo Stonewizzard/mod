@@ -167,6 +167,8 @@ Percentage bands and caps below show actual percentages. Fortune uses fractional
 
 ## Testing a build
 
+The prototype Ascender now has 24 material slots, enough for a current maximum-roll End-heavy build at the final gate (including pearls that stack to 16). Existing stored items keep their slot indices.
+
 The existing Creative entries supply random parts at 0%, 50% and 100% quality using the correct component pools. Recover or grab the three pickaxe head pieces plus a connector and handle, inspect their rolls, and assemble them at the Reconstruction Table. Crouch when mining to enable area perks. Resonance appears on the tool tooltip when charged. Hold Shift and scroll over the tooltip to browse every eight-modifier page; numeric bonuses show their effective value, while milestone perks show their current stage. The component stations continue to operate on pieces, never on assembled tools. An influenced handle or connector still uses only its neutral universal pool; current influence-only effects belong to pickaxe head pieces. Existing sealed parts retain their old rolls.
 
 Charge processing order is XP conversion, loot consumers (Spoils Discharge, Temporal Echo, Endstone Alchemy), generators (battery, gems, furnace, magma, alternating chain), Haste/repair/allied sharing, collection rewards, combat and mobility, placement, and finally area mining. An earlier spender may leave too little charge for a later effect. Conditional speed bonuses sum to at most +800%, separately from the +600% base-speed cap and native penalty recovery.

@@ -97,9 +97,9 @@ public final class PickaxeAscensionTests {
     private static void verifyInventory(GameTestHelper h){
         var level=h.getLevel();var pos=h.absolutePos(new BlockPos(3,1,4));level.setBlockAndUpdate(pos,AscenderContent.BLOCK.get().defaultBlockState());var table=(AscenderBlockEntity)level.getBlockEntity(pos);
         var player=h.makeMockServerPlayerInLevel();player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);player.getInventory().clearContent();var menu=new AscenderMenu(68,player.getInventory(),table);
-        check(h,menu.slots.size()==55&&menu.getSlot(0).getMaxStackSize()==1&&!menu.getSlot(0).mayPlace(new ItemStack(Items.DIAMOND_PICKAXE))&&!menu.getSlot(1).mayPlace(new ItemStack(Items.DIRT)),"Ascender slots must reject wrong tools and unrelated materials");
+        check(h,menu.slots.size()==AscenderBlockEntity.SIZE+36&&menu.getSlot(0).getMaxStackSize()==1&&!menu.getSlot(0).mayPlace(new ItemStack(Items.DIAMOND_PICKAXE))&&!menu.getSlot(1).mayPlace(new ItemStack(Items.DIRT)),"Ascender slots must reject wrong tools and unrelated materials");
         var tool=tool(100);PickaxeProgression.gain(tool,Integer.MAX_VALUE);player.getInventory().setItem(9,tool);
-        var entering=tool.copy();check(h,!menu.quickMoveStack(player,19).isEmpty()&&ItemStack.matches(table.getItem(0),entering),"Shift-click must route a restored tool into its single slot");tool=table.getItem(0);
+        var entering=tool.copy();check(h,!menu.quickMoveStack(player,AscenderBlockEntity.SIZE).isEmpty()&&ItemStack.matches(table.getItem(0),entering),"Shift-click must route a restored tool into its single slot");tool=table.getItem(0);
         var costs=AscensionResources.requirements(tool);fill(table,costs,3);var saved=table.saveWithFullMetadata(level.registryAccess());var restored=BlockEntity.loadStatic(pos,table.getBlockState(),saved,level.registryAccess());
         check(h,restored instanceof AscenderBlockEntity,"Ascender inventory must reload");for(int i=0;i<table.getContainerSize();i++)check(h,ItemStack.matches(table.getItem(i),((AscenderBlockEntity)restored).getItem(i)),"Saving must retain all materials and tool data");
         var ticker=AscenderContent.BLOCK.get().getTicker(level,table.getBlockState(),AscenderContent.ENTITY.get());check(h,ticker!=null,"The actual block must register a server ticker");ticker.tick(level,pos,table.getBlockState(),table);

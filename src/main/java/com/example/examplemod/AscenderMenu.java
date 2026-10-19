@@ -9,13 +9,13 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public final class AscenderMenu extends AbstractContainerMenu {
-    public static final int STORAGE_X=16,STORAGE_Y=92,PLAYER_X=79,PLAYER_Y=161,HOTBAR_Y=219;
+    public static final int STORAGE_COLUMNS=8,STORAGE_X=16,STORAGE_Y=92,PLAYER_X=79,PLAYER_Y=161,HOTBAR_Y=219;
     private final Container container;
     public AscenderMenu(int id,Inventory inventory){this(id,inventory,new SimpleContainer(AscenderBlockEntity.SIZE));}
     public AscenderMenu(int id,Inventory inventory,Container container){
         super(AscenderContent.MENU.get(),id);checkContainerSize(container,AscenderBlockEntity.SIZE);this.container=container;
         addSlot(new Slot(container,0,18,44){@Override public boolean mayPlace(ItemStack stack){return accepts(0,stack);}@Override public int getMaxStackSize(){return 1;}});
-        for(int i=0;i<18;i++){final int slot=i+1;addSlot(new Slot(container,slot,STORAGE_X+(i%6)*18,STORAGE_Y+(i/6)*18){@Override public boolean mayPlace(ItemStack stack){return accepts(slot,stack);}});}
+        for(int i=0;i<AscenderBlockEntity.SIZE-1;i++){final int slot=i+1;addSlot(new Slot(container,slot,STORAGE_X+(i%STORAGE_COLUMNS)*18,STORAGE_Y+(i/STORAGE_COLUMNS)*18){@Override public boolean mayPlace(ItemStack stack){return accepts(slot,stack);}});}
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inventory,9+row*9+col,PLAYER_X+18*col,PLAYER_Y+18*row));
         for(int col=0;col<9;col++)addSlot(new Slot(inventory,col,PLAYER_X+18*col,HOTBAR_Y));
     }
