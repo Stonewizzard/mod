@@ -138,15 +138,11 @@ public final class InfluenceTests {
             }
             check(h,found,"Influenced parts must still be able to discover ancient choices");
         }
-        boolean tagged=false;
-        for(int seed=0;seed<400&&!tagged;seed++){
-            var part=ComponentWorkTests.natural(ArtifactProfile.Find.PICKAXE_RIGHT,80,5,seed);
-            var choices=ComponentWork.offers(part);
-            for(int i=0;i<choices.size();i++)if(choices.get(i).id().equals(SMELTING.id)){
-                check(h,ComponentWork.apply(ComponentStationKind.UNVEILER,part,i,RandomSource.create())&&ComponentInfluences.current(part)==ModifierInfluence.NONE,"Unveiling a tagged modifier must not assign influence");tagged=true;break;
-            }
-        }
-        check(h,tagged,"The no-automatic-assignment check must actually unveil a tagged modifier");
+        var part=component(ArtifactProfile.Find.PICKAXE_RIGHT,5,List.of(new ArtifactModifiers.Roll(AncientModifiers.ID,0,.8)));
+        var root=part.get(DataComponents.CUSTOM_DATA).copyTag();var record=root.getCompoundOrEmpty(ArtifactModifiers.KEY);var choices=new CompoundTag();choices.putInt("Version",1);
+        var offered=List.of(new ArtifactModifiers.Roll(SMELTING.id,.3,1,ModifierScaling.B,"t3",3),new ArtifactModifiers.Roll(SPEED.id,.2,1,ModifierScaling.B,"t5",5),new ArtifactModifiers.Roll(EXPERIENCE.id,.3,1,ModifierScaling.B,"t4",4));
+        record.put(AncientModifiers.OFFERS,ArtifactModifiers.writeRolls(choices,offered));root.put(ArtifactModifiers.KEY,record);part.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
+        check(h,ComponentWork.apply(ComponentStationKind.UNVEILER,part,0,RandomSource.create())&&ArtifactModifiers.read(part).getFirst().id().equals(SMELTING.id)&&ComponentInfluences.current(part)==ModifierInfluence.NONE,"Unveiling a saved tagged modifier must not assign influence");
     }
     private static void phasebound(GameTestHelper h){
         var player=h.makeMockServerPlayerInLevel();player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
