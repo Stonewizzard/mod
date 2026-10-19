@@ -2,7 +2,7 @@
 """The JSON catalog is the balance source; regenerate Java and the reference after editing."""
 import json,pathlib,csv,io
 ROOT=pathlib.Path(__file__).resolve().parents[1]
-ROWS=json.loads((ROOT/'tools/pickaxe-modifiers.json').read_text())
+ROWS=json.loads((ROOT/'tools/pickaxe-modifiers.json').read_text(encoding="utf-8"))
 JAVA=ROOT/'src/main/java/com/example/examplemod'
 def q(s):return json.dumps(s)
 def generate():
@@ -106,7 +106,7 @@ if __name__=='__main__':
  stale=[]
  for path,content in generate():
   if '--check' in sys.argv:
-   if not path.exists() or path.read_text()!=content:stale.append(str(path.relative_to(ROOT)))
-  else:path.parent.mkdir(parents=True,exist_ok=True);path.write_text(content)
+   if not path.exists() or path.read_text(encoding="utf-8")!=content:stale.append(str(path.relative_to(ROOT)))
+  else:path.parent.mkdir(parents=True,exist_ok=True);path.write_text(content,encoding="utf-8")
  if stale:raise SystemExit('Stale generated files: '+', '.join(stale))
  print('Validated 100 ordinary + 10 Nether-exclusive + 10 End-exclusive modifiers.')
