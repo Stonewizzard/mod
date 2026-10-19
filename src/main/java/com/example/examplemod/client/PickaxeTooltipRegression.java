@@ -18,10 +18,12 @@ public final class PickaxeTooltipRegression {
         for(int level:new int[]{3,10,100}){
             var stats=new ArrayList<PickaxeTooltips.Stat>();
             for(var trait:PickaxeTrait.values())stats.add(new PickaxeTooltips.Stat(trait,trait.cap*.55,ModifierScaling.C,ModifierScaling.S));
-            scenes.put("tool_"+level,PickaxeTooltips.tool(new PickaxeTooltips.ToolView(new PickaxeProgression.State(level,14,level==100?10:0),87,stats)));
+            var view=new PickaxeTooltips.ToolView(new PickaxeProgression.State(level,14,level==100?10:0),87,stats);
+            for(int page=0;page<PickaxeTooltips.pages(view);page++)scenes.put("tool_"+level+"_page_"+page,PickaxeTooltips.tool(view,page));
         }
         scenes.put("zero_quality",PickaxeTooltips.tool(new PickaxeTooltips.ToolView(new PickaxeProgression.State(1,0,0),0,List.of())));
         for(var grade:ModifierScaling.values())scenes.put("part_"+grade,PickaxeTooltips.piece(50,5,List.of(new ArtifactModifiers.Roll(PickaxeTrait.SPEED.id,1.124,0.5,grade,"t1",1),new ArtifactModifiers.Roll(PickaxeTrait.REACH.id,1,.5,grade,"future_t12",12),new ArtifactModifiers.Roll(PickaxeTrait.SILK.id,.7,.5,grade,"t1",1),new ArtifactModifiers.Roll(PickaxeTrait.DURABILITY.id,.6,.5,grade,"t1",1))));
+        for(var grade:ModifierScaling.values())scenes.put("milestone_part_"+grade,PickaxeTooltips.piece(50,5,List.of(new ArtifactModifiers.Roll(PickaxeTrait.VEIN_MINER.id,1,.5,grade,"t1",1),new ArtifactModifiers.Roll(PickaxeTrait.VOID_ANCHOR.id,1,.5,grade,"t1",1))));
         scenes.put("legacy_part",PickaxeTooltips.piece(80,3,List.of(new ArtifactModifiers.Roll(PickaxeTrait.SPEED.id,.5,.8,ModifierScaling.B))));
         var export=new com.google.gson.JsonObject();var jsonScenes=new com.google.gson.JsonArray();
         for(var scene:scenes.entrySet()){

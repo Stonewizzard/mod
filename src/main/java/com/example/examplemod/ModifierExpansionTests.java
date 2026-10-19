@@ -26,14 +26,14 @@ import static com.example.examplemod.PickaxeTrait.*;
 public final class ModifierExpansionTests {
     public static void register(RegisterGameTestsEvent event){
         var env=event.registerEnvironment(Identifier.fromNamespaceAndPath(ExampleMod.MODID,"modifier_expansion_environment"));
-        for(int i=0;i<3;i++)event.registerTest(Identifier.fromNamespaceAndPath(ExampleMod.MODID,"modifier_expansion_"+i),new Test(new TestData<>(env,Level.OVERWORLD,Identifier.fromNamespaceAndPath(ExampleMod.MODID,"empty_drop_test"),600,0,true,Rotation.NONE,false,1,1,false,0),i));
+        for(int i=0;i<4;i++)event.registerTest(Identifier.fromNamespaceAndPath(ExampleMod.MODID,"modifier_expansion_"+i),new Test(new TestData<>(env,Level.OVERWORLD,Identifier.fromNamespaceAndPath(ExampleMod.MODID,"empty_drop_test"),600,0,true,Rotation.NONE,false,1,1,false,0),i));
     }
     private static final class Test extends GameTestInstance {
         final int mode;Test(TestData<Holder<TestEnvironmentDefinition<?>>> data,int mode){super(data);this.mode=mode;}
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
         @Override protected MutableComponent typeDescription(){return Component.literal("120-modifier component and runtime integration");}
         @Override public void run(GameTestHelper h){
-            if(mode==0)catalog(h);else if(mode==1)equipment(h);else gameplay(h);
+            if(mode==0)catalog(h);else if(mode==1)equipment(h);else if(mode==2)gameplay(h);else effects(h);
             System.out.println("MODIFIER_EXPANSION_CHECK_"+mode+": PASS");h.succeed();
         }
     }
@@ -122,6 +122,35 @@ public final class ModifierExpansionTests {
         check(h,utility.getDamageValue()==95,"Mending Affinity must repair the held tool through native XP pickup");
         placement(h,p,pos);
         area(h,p,pos);
+    }
+    private static void effects(GameTestHelper h){
+        var p=h.makeMockServerPlayerInLevel();p.setGameMode(GameType.SURVIVAL);var pos=h.absolutePos(new BlockPos(3,1,3));p.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);
+        record Buff(PickaxeTrait trait,Block block,Holder<net.minecraft.world.effect.MobEffect> effect){}
+        for(var test:List.of(new Buff(NIGHT_SIGHT,Blocks.STONE,net.minecraft.world.effect.MobEffects.NIGHT_VISION),new Buff(MINERS_SPRINT,Blocks.DIAMOND_ORE,net.minecraft.world.effect.MobEffects.SPEED),new Buff(STONE_SKIN,Blocks.STONE,net.minecraft.world.effect.MobEffects.RESISTANCE),new Buff(ABSORPTION,Blocks.DIAMOND_ORE,net.minecraft.world.effect.MobEffects.ABSORPTION),new Buff(SOFT_LANDING,Blocks.STONE,net.minecraft.world.effect.MobEffects.SLOW_FALLING))){
+            p.removeAllEffects();p.setOnGround(false);drop(h,p,pos,test.block(),tool(100,Map.of(test.trait(),1.0),ModifierScaling.B),new ItemStack(Items.COBBLESTONE),0);
+            check(h,p.hasEffect(test.effect()),"Each mining status perk must actually apply its native effect");
+        }
+        p.removeAllEffects();h.getLevel().setBlockAndUpdate(pos.north(),Blocks.LAVA.defaultBlockState());
+        drop(h,p,pos,Blocks.STONE,tool(100,Map.of(FIRE_WARD,1.0),ModifierScaling.B),new ItemStack(Items.COBBLESTONE),0);check(h,p.hasEffect(net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE),"Fire Ward must detect real nearby lava");h.getLevel().setBlockAndUpdate(pos.north(),Blocks.AIR.defaultBlockState());
+        var heart=tool(100,Map.of(BASALT_HEART,1.0),ModifierScaling.B);heart.setDamageValue(30);drop(h,p,pos,Blocks.BASALT,heart,new ItemStack(Items.BASALT),0);check(h,heart.getDamageValue()==29,"Basalt Heart must repair a real tool");
+        var cleanse=tool(100,Map.of(SOUL_CLEANSE,1.0),ModifierScaling.S);PickaxeProgression.write(cleanse,new PickaxeProgression.State(100,0,10));
+        var ailments=List.of(net.minecraft.world.effect.MobEffects.POISON,net.minecraft.world.effect.MobEffects.WITHER,net.minecraft.world.effect.MobEffects.SLOWNESS,net.minecraft.world.effect.MobEffects.WEAKNESS);
+        for(var effect:ailments)p.addEffect(new net.minecraft.world.effect.MobEffectInstance(effect,400,0));drop(h,p,pos,Blocks.SOUL_SAND,cleanse,new ItemStack(Items.SOUL_SAND),0);
+        check(h,ailments.stream().noneMatch(p::hasEffect),"Ascended Soul Cleanse must remove all four listed ailments");
+        var hostile=h.spawn(net.minecraft.world.entity.EntityTypes.ZOMBIE,new BlockPos(4,2,3));hostile.setNoAi(true);
+        var passive=h.spawn(net.minecraft.world.entity.EntityTypes.COW,new BlockPos(2,2,3));passive.setNoAi(true);
+        for(var test:List.of(new Buff(ECHO_CHAMBER,Blocks.DIAMOND_ORE,net.minecraft.world.effect.MobEffects.SLOWNESS),new Buff(QUARRY_MARK,Blocks.DIAMOND_ORE,net.minecraft.world.effect.MobEffects.GLOWING),new Buff(DUST_CLOUD,Blocks.GRAVEL,net.minecraft.world.effect.MobEffects.WEAKNESS),new Buff(SHULKER_PULSE,Blocks.STONE,net.minecraft.world.effect.MobEffects.LEVITATION))){
+            hostile.removeAllEffects();passive.removeAllEffects();var tool=tool(100,Map.of(test.trait(),1.0),ModifierScaling.B);MiningRuntime.addCharge(tool,100);drop(h,p,pos,test.block(),tool,new ItemStack(Items.COBBLESTONE),0);
+            check(h,hostile.hasEffect(test.effect())&&!passive.hasEffect(test.effect())&&!p.hasEffect(test.effect()),"Hostile pulses must affect enemies while excluding animals and players");
+        }
+        var breath=tool(100,Map.of(GHAST_BREATH,1.0),ModifierScaling.B);MiningRuntime.addCharge(breath,100);drop(h,p,pos,Blocks.STONE,breath,new ItemStack(Items.COBBLESTONE),0);
+        check(h,hostile.isOnFire()&&!passive.isOnFire()&&MiningRuntime.charge(breath)==95,"Ghast Breath must ignite only hostile targets and pay its charge cost");hostile.discard();passive.discard();
+        var destination=p.position().add(0,0,2);var floor=BlockPos.containing(destination).below();h.getLevel().setBlockAndUpdate(floor,Blocks.STONE.defaultBlockState());h.getLevel().setBlockAndUpdate(floor.above(),Blocks.AIR.defaultBlockState());h.getLevel().setBlockAndUpdate(floor.above(2),Blocks.AIR.defaultBlockState());
+        check(h,MiningStatusEffects.safeTeleport(p,destination)&&p.position().distanceToSqr(destination)<.01,"Blink destinations must actually move the server player");
+        h.getLevel().setBlockAndUpdate(floor.above(),Blocks.STONE.defaultBlockState());check(h,!MiningStatusEffects.safeTeleport(p,destination),"Blink must reject collision-filled destinations");h.getLevel().setBlockAndUpdate(floor.above(),Blocks.AIR.defaultBlockState());
+        var anchor=tool(100,Map.of(VOID_ANCHOR,1.0),ModifierScaling.B);MiningRuntime.addCharge(anchor,20);String dimension=h.getLevel().dimension().identifier().toString();
+        MiningRuntime.edit(anchor,t->{t.putString("SafeDimension",dimension);t.putDouble("SafeX",destination.x);t.putDouble("SafeY",destination.y);t.putDouble("SafeZ",destination.z);});p.setItemInHand(InteractionHand.MAIN_HAND,anchor);p.setOnGround(false);p.snapTo(p.getX(),h.getLevel().getMinY()-3,p.getZ());MiningStatusEffects.tick(p,anchor);
+        check(h,p.position().distanceToSqr(destination)<.01&&MiningRuntime.charge(anchor)==0,"Void Anchor must rescue to its safe same-dimension position and consume twenty charge");
     }
     private static void placement(GameTestHelper h,ServerPlayer p,BlockPos origin){
         var tool=tool(100,Map.of(RECLAMATION,0.0),ModifierScaling.B);p.getInventory().clearContent();p.getInventory().setItem(5,new ItemStack(Items.COBBLESTONE,4));p.setItemInHand(InteractionHand.MAIN_HAND,tool);

@@ -85,7 +85,7 @@ public final class PickaxeAscensionTests {
     private static void verifyCapsAndSplitStacks(GameTestHelper h){
         for(var trait:PickaxeTrait.values()){
             var sample=tool(100);var root=sample.get(DataComponents.CUSTOM_DATA).copyTag();var assembly=root.getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);var parts=assembly.getCompoundOrEmpty("Parts");
-            for(String id:ReconstructionPattern.PICKAXE.parts){var part=parts.getCompoundOrEmpty(id);part.put("Modifiers",ArtifactModifiers.writeRolls(new CompoundTag(),List.of(new ArtifactModifiers.Roll(trait.id,trait.cap,1))));parts.put(id,part);}
+            for(String id:ReconstructionPattern.PICKAXE.parts){var part=parts.getCompoundOrEmpty(id);part.put("Modifiers",ArtifactModifiers.writeRolls(part.getCompoundOrEmpty("Modifiers").copy(),List.of(new ArtifactModifiers.Roll(trait.id,trait.cap,1))));parts.put(id,part);}
             assembly.put("Parts",parts);root.put(ArtifactQuality.ASSEMBLY,assembly);sample.set(DataComponents.CUSTOM_DATA,CustomData.of(root));PickaxeProgression.write(sample,new PickaxeProgression.State(100,0,10));
             check(h,PickaxeModifiers.totals(sample).get(trait)==trait.cap,"Combined cap mismatch for "+trait+": got "+PickaxeModifiers.totals(sample).get(trait)+", expected "+trait.cap);
         }

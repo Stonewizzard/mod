@@ -15,7 +15,7 @@ public final class ModifierTooltipPaging {
     private static int page;
     private static long lastTooltip;
     public static void tooltip(ItemTooltipEvent event){
-        var stack=event.getItemStack();if(PickaxeModifiers.pattern(stack)==null||event.getEntity()==null)return;
+        var stack=event.getItemStack();if(PickaxeModifiers.pattern(stack)==null||event.getEntity()==null){lastTooltip=0;return;}
         if(!ItemStack.isSameItemSameComponents(hovered,stack)){hovered=stack.copy();page=0;}
         lastTooltip=System.nanoTime();
         var lore=stack.getOrDefault(DataComponents.LORE,ItemLore.EMPTY).lines();

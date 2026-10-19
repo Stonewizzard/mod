@@ -30,6 +30,7 @@ public final class PickaxeTooltips {
         String result=String.format(Locale.ROOT,"%.3f",value);while(result.endsWith("0"))result=result.substring(0,result.length()-1);if(result.endsWith("."))result=result.substring(0,result.length()-1);return result;
     }
     public static String value(PickaxeTrait trait,double value){return switch(trait.unit){case PERCENT->percent(value);case LEVEL->number(value)+" lv";case BLOCKS->number(value)+" blocks";case POINTS->number(value);case PERK->"Milestone perk";};}
+    public static String baseValue(ArtifactModifiers.Roll roll){var trait=PickaxeTrait.byId(roll.id());return trait==null?"Unknown":trait.growth==PickaxeTrait.Growth.MILESTONE?"Ascension perk":tierPrefix(roll)+"+"+value(trait,roll.value());}
     public static String label(PickaxeTrait trait){return switch(trait){case EXPERIENCE->"Mining XP";case AQUATIC->"Underwater recovery";case AIRBORNE->"Airborne recovery";case SILK->"Silk touch";case SMELTING->"Smelting";default->trait.label;};}
     private static MutableComponent gradeRange(ModifierScaling low,ModifierScaling high){
         if(low==high)return low.badge();return text("[",MUTED).append(text(low.name(),low.color)).append(text("-",MUTED)).append(text(high.name(),high.color)).append(text("]",MUTED));
@@ -45,10 +46,10 @@ public final class PickaxeTooltips {
     }
     public static List<Component> tool(ItemStack stack){return tool(stack,0);}
     public static List<Component> tool(ItemStack stack,int page){
-        var lines=new ArrayList<>(tool(view(stack),page));
+        var view=view(stack);var lines=new ArrayList<>(tool(view,page));
         if(!PickaxeProgression.supports(stack)){lines.remove(1);lines.set(0,text("Reconstructed tool",TEAL));}
         for(int i=0;i<lines.size();i++)if(lines.get(i).getString().contains("Perk")){
-            String label=lines.get(i).getString();for(var trait:PickaxeTrait.values())if(trait.growth==PickaxeTrait.Growth.MILESTONE&&label.startsWith(label(trait)+"  ")){lines.set(i,text(label.replace("Perk","Stage "+stageText(stack,trait)),TEAL));break;}
+            String label=lines.get(i).getString();for(var trait:PickaxeTrait.values())if(trait.growth==PickaxeTrait.Growth.MILESTONE&&label.startsWith(label(trait)+"  ")){var stat=view.stats().stream().filter(v->v.trait()==trait).findFirst().orElseThrow();lines.set(i,text(label(trait)+"  ",LABEL).append(text("Stage "+stageText(stack,trait),TEAL)).append(text("  ",MUTED)).append(gradeRange(stat.low(),stat.high())));break;}
         }
         if(MiningRuntime.charge(stack)>0)lines.add(text("Resonance  ",LABEL).append(text(MiningRuntime.charge(stack)+"/100",TEAL)));
         return List.copyOf(lines);
@@ -105,7 +106,7 @@ public final class PickaxeTooltips {
     /** One-time refresh for owned old items; no seeds, rolls, quality, or earned levels change. */
     public static boolean refresh(ItemStack stack){
         if(stack.isEmpty())return false;
-        boolean tool=PickaxeModifiers.pattern(stack)!=null,part=false;
+        boolean tool=PickaxeProgression.supports(stack)||PickaxeModifiers.pattern(stack)!=null,part=false;
         if(!tool)for(var find:CreativePickaxeParts.FINDS)if(stack.is(ReconstructionContent.reward(find))){part=true;break;}
         if(!tool&&!part)return false;
         var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();

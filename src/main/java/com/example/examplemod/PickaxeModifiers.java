@@ -25,7 +25,17 @@ public final class PickaxeModifiers {
         public double base(){return Math.clamp(roll.value(),0,trait.cap)*quality;}
         public double value(int ascensions){return trait.growth==PickaxeTrait.Growth.MILESTONE?base():base()*(1+ascensions*roll.scaling().ascensionGrowth+levelHits*roll.scaling().levelGrowth);}
     }
-    public static List<Contribution> contributions(ItemStack stack){
+    private record Cached(CustomData source,List<Contribution> contributions,Bonuses totals,int ascensions){}
+    private static final Map<ItemStack,Cached> CACHE=java.util.Collections.synchronizedMap(new java.util.WeakHashMap<>());
+    private static Cached cached(ItemStack stack){
+        var data=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY);var cached=CACHE.get(stack);
+        if(cached!=null&&cached.source()==data)return cached;
+        var contributions=readContributions(stack);var values=new EnumMap<PickaxeTrait,Double>(PickaxeTrait.class);int ascensions=PickaxeProgression.read(stack).ascensions();
+        for(var c:contributions)values.merge(c.trait(),c.value(ascensions),Double::sum);
+        values.replaceAll((trait,value)->Math.clamp(value,0,trait.cap));cached=new Cached(data,contributions,new Bonuses(values),ascensions);CACHE.put(stack,cached);return cached;
+    }
+    public static List<Contribution> contributions(ItemStack stack){return stack.isEmpty()?List.of():cached(stack).contributions();}
+    private static List<Contribution> readContributions(ItemStack stack){
         var result=new ArrayList<Contribution>();var pattern=pattern(stack);if(pattern==null)return result;
         var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var assembly=root.getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);
         if(!assembly.getStringOr("Pattern","").equals(pattern.key()))return result;
@@ -41,23 +51,22 @@ public final class PickaxeModifiers {
     }
     public static ReconstructionPattern pattern(ItemStack stack){
         String key=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY).getStringOr("Pattern","");
+        if(key.isEmpty())return null;
         for(var p:ReconstructionPattern.values())if(p.key().equals(key)&&stack.is(p.output()))return p;return null;
     }
     /** Stage is controlled by the strongest nonzero-quality copy, never by a dormant zero-score piece. */
     public static int stage(ItemStack stack,PickaxeTrait trait){
-        int result=0,asc=PickaxeProgression.supports(stack)?PickaxeProgression.read(stack).ascensions():0;
+        int result=0,asc=PickaxeProgression.supports(stack)?cached(stack).ascensions():0;
         for(var c:contributions(stack))if(c.trait()==trait&&c.base()>0){int offset=c.roll().scaling().ordinal()<=1?1:c.roll().scaling().ordinal()>=4?-1:0;
             int stage=(asc>=3+offset?1:0)+(asc>=6+offset?1:0)+(asc>=9+offset?1:0);result=Math.max(result,stage);}
         return result;
     }
     public static Bonuses totals(ItemStack stack){
-        var values=new EnumMap<PickaxeTrait,Double>(PickaxeTrait.class);int ascensions=PickaxeProgression.read(stack).ascensions();
-        for(var contribution:contributions(stack))values.merge(contribution.trait(),contribution.value(ascensions),Double::sum);
-        values.replaceAll((trait,value)->Math.clamp(value,0,trait.cap));return new Bonuses(values);
+        return stack.isEmpty()?new Bonuses(Map.of()):cached(stack).totals();
     }
     public static List<Component> pieceLore(ItemStack stack){return PickaxeTooltips.piece(stack);}
     public static void applyToAssembly(ItemStack result){
-        if(pattern(result)==null)return;
+        if(pattern(result)==null){if(PickaxeProgression.supports(result)){PickaxeProgression.initialize(result);updateLore(result);}return;}
         PickaxeProgression.initialize(result);
         var bonuses=totals(result);
         result.set(DataComponents.MAX_DAMAGE,(int)Math.round(1800*(1+bonuses.get(PickaxeTrait.DURABILITY))+bonuses.get(PickaxeTrait.RESERVE)));

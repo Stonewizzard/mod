@@ -63,7 +63,7 @@ Resonance is per-tool charge (0–100), saved separately from immutable parts. P
 
 ## Complete catalog
 
-Units in bands/caps are raw: percentage modifiers use fractions (`.10 = 10%`); Fortune uses native enchantment levels; range uses blocks; point modifiers use their stated units. Each modifier has its own number of tiers.
+Percentage bands and caps below show actual percentages. Fortune uses fractional native enchantment levels; range uses blocks; point modifiers use their stated units. The JSON and CSV retain raw fractions (`.10 = 10%`) for code and balance tooling. Each modifier has its own number of tiers.
 
 | # | ID / name | Pool; minimum artifact rarity; family weight | Effect and implementation | Value tiers: range `[C,U,R,E,L,X weights]` | Growth / milestones | Total cap | Ascension material |
 |---|---|---|---|---|---|---:|---|
@@ -73,8 +73,10 @@ Units in bands/caps are raw: percentage modifiers use fractions (`.10 = 10%`); F
  for i,r in enumerate(ROWS,1):
   pool='Universal' if r['utility'] else r['influence']+' exclusive' if r['exclusive'] else 'Pickaxe head'+(' ('+r['influence']+' tag)' if r['influence']!='NONE' else '')
   bands='; '.join('T%d %g–%g [%s]'%(t['rank'],t['minimum'],t['maximum'],','.join(map(str,t['weights']))) for t in r['tiers'])
-  handler={'UTILITY':'SharedToolEffects','ATTRIBUTE':'PickaxeModifiers','SPEED':'MiningConditions','LOOT':'MiningLootEffects','COLLECTION':'MiningCollectionEffects','TRANSFORM':'MiningLootEffects','AREA':'MiningAreaEffects','PLACE':'MiningPlacementEffects','STATUS':'MiningStatusEffects','CHARGE':'MiningChargeEffects','PROGRESSION':'RestoredAncientPickaxe'}[r['family']]
-  docs.append('| %d | `%s` **%s** | %s; %s; %d | %s `%s` | %s | %s%s | %g %s | %s |\n'%(i,r['id'],r['label'],pool,rarity[r['minimumRarity']],r['weight'],r['description'],handler,bands,r['growth'].title(),': '+r['milestones'] if r['milestones'] else '',r['cap'],r['unit'].lower(),r['resource'].lower()))
+  handler={'UTILITY':'SharedToolEffects','ATTRIBUTE':'PickaxeModifiers','SPEED':'PickaxeEvents / MiningConditions','LOOT':'MiningLootEffects','COLLECTION':'PickaxeEvents / MiningCollectionEffects','TRANSFORM':'MiningLootEffects','AREA':'MiningAreaEffects','PLACE':'MiningPlacementEffects','STATUS':'MiningStatusEffects','CHARGE':'MiningChargeEffects','PROGRESSION':'RestoredAncientPickaxe'}[r['family']]
+  display=lambda v:('%g%%'%(v*100)) if r['unit']=='PERCENT' else ('%g'%v)
+  shown_bands='; '.join('T%d %s–%s [%s]'%(t['rank'],display(t['minimum']),display(t['maximum']),','.join(map(str,t['weights']))) for t in r['tiers'])
+  docs.append('| %d | `%s` **%s** | %s; %s; %d | %s `%s` | %s | %s%s | %s %s | %s |\n'%(i,r['id'],r['label'],pool,rarity[r['minimumRarity']],r['weight'],r['description'],handler,shown_bands,r['growth'].title(),': '+r['milestones'] if r['milestones'] else '',display(r['cap']),'' if r['unit']=='PERCENT' else r['unit'].lower(),r['resource'].lower()))
   writer.writerow([r['id'],r['label'],pool,rarity[r['minimumRarity']],r['weight'],r['description'],handler,bands,r['growth'],r['milestones'],r['cap'],r['unit'],r['resource'].lower()])
  docs.append('''
 ## Interaction examples and practical limits
@@ -85,6 +87,12 @@ Units in bands/caps are raw: percentage modifiers use fractions (`.10 = 10%`); F
 - Broadhead + Lightbearer + Careful Mason builds a lit tunnel while consuming fewer of your own torches. Crouching enables area effects; standing mining remains precise.
 - Planted Stance + Precision Silk favors deliberate excavation; Mining Rhythm + Alternating Current favors moving through mixed strata.
 - Spoils Ward protects mined drops temporarily and restores their previous invulnerability, including if you stop holding the tool.
+
+## Testing a build
+
+The existing Creative entries supply random parts at 0%, 50% and 100% quality using the correct component pools. Recover or grab the three pickaxe head pieces plus a connector and handle, inspect their rolls, and assemble them at the Reconstruction Table. Crouch when mining to enable area perks. Resonance appears on the tool tooltip when charged. Hold Shift and scroll over the tooltip to browse every eight-modifier page; numeric bonuses show their effective value, while milestone perks show their current stage. The component stations continue to operate on pieces, never on assembled tools. An influenced handle or connector still uses only its neutral universal pool; current influence-only effects belong to pickaxe head pieces. Existing sealed parts retain their old rolls.
+
+Charge processing order is XP conversion, loot consumers (Spoils Discharge, Temporal Echo, Endstone Alchemy), generators (battery, gems, furnace, magma, alternating chain), Haste/repair/allied sharing, collection rewards, combat and mobility, placement, and finally area mining. An earlier spender may leave too little charge for a later effect. Conditional speed bonuses sum to at most +800%, separately from the +600% base-speed cap and native penalty recovery.
 
 There is no recursive area mining, player targeting, arbitrary thrown-item vacuuming, container-loot copying, XP duplication, free inventory conversion or permanent drop invulnerability. Destructive area perks are deliberately bounded; transformations and bonus drops are disabled for Silk Touch and secondary breaks. Fortune remains native capped III. Tooltips show only effective modifiers; shared equipment uses a general-tool header rather than fake pickaxe progression. Numeric caps constrain combined builds, so multiple large rolls can saturate a stat. This is an initial balance pass intended for later tuning.
 ''')
