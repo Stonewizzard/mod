@@ -87,7 +87,7 @@ public final class PickaxeAscensionTests {
             var sample=tool(100);var root=sample.get(DataComponents.CUSTOM_DATA).copyTag();var assembly=root.getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);var parts=assembly.getCompoundOrEmpty("Parts");
             for(String id:ReconstructionPattern.PICKAXE.parts){var part=parts.getCompoundOrEmpty(id);part.put("Modifiers",ArtifactModifiers.writeRolls(new CompoundTag(),List.of(new ArtifactModifiers.Roll(trait.id,trait.cap,1))));parts.put(id,part);}
             assembly.put("Parts",parts);root.put(ArtifactQuality.ASSEMBLY,assembly);sample.set(DataComponents.CUSTOM_DATA,CustomData.of(root));PickaxeProgression.write(sample,new PickaxeProgression.State(100,0,10));
-            check(h,PickaxeModifiers.totals(sample).get(trait)==trait.cap,"Every modifier must respect its combined cap, including duplicate legacy rolls");
+            check(h,PickaxeModifiers.totals(sample).get(trait)==trait.cap,"Combined cap mismatch for "+trait+": got "+PickaxeModifiers.totals(sample).get(trait)+", expected "+trait.cap);
         }
         var tool=tool(100);PickaxeProgression.write(tool,new PickaxeProgression.State(100,0,9));PickaxeModifiers.applyToAssembly(tool);
         var inventory=new SimpleContainer(AscenderBlockEntity.SIZE);inventory.setItem(0,tool);var costs=AscensionResources.requirements(tool);fill(inventory,costs,0);

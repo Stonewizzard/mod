@@ -9,7 +9,14 @@ final class MiningContext {
     final BlockDropsEvent event;final ServerPlayer player;final ServerLevel level;final ItemStack tool;
     final PickaxeModifiers.Bonuses stats;final boolean primary,ore,gem;final long now;final String block;
     boolean silk;int smelted;
-    MiningContext(BlockDropsEvent event,ServerPlayer player){this.event=event;this.player=player;this.level=event.getLevel();this.tool=event.getTool();this.stats=PickaxeModifiers.totals(tool);this.primary=!MiningRuntime.secondary(player.getUUID());this.now=level.getGameTime();this.block=MiningConditions.id(event.getState());this.ore=MiningConditions.ore(event.getState());this.gem=MiningConditions.gem(block);}
+    MiningContext(BlockDropsEvent event,ServerPlayer player){this.event=event;this.player=player;this.level=event.getLevel();this.tool=liveTool(event.getTool(),player);this.stats=PickaxeModifiers.totals(tool);this.primary=!MiningRuntime.secondary(player.getUUID());this.now=level.getGameTime();this.block=MiningConditions.id(event.getState());this.ore=MiningConditions.ore(event.getState());this.gem=MiningConditions.gem(block);}
+    /** Native block loot receives a pre-damage tool copy. Persist charge/cooldowns on the matching live held tool. */
+    private static ItemStack liveTool(ItemStack snapshot,ServerPlayer player){
+        var held=player.getMainHandItem();if(!held.is(snapshot.getItem()))return snapshot;
+        var a=held.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);
+        var b=snapshot.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);
+        return !a.isEmpty()&&a.equals(b)?held:snapshot;
+    }
     double get(PickaxeTrait trait){return stats.get(trait);}
     int stage(PickaxeTrait trait){return PickaxeModifiers.stage(tool,trait);}
     boolean chance(PickaxeTrait trait){double value=get(trait);return primary&&value>0&&player.getRandom().nextDouble()<Math.min(1,value);}

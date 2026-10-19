@@ -43,13 +43,21 @@ public final class PickaxeTooltips {
         }
         return new ToolView(PickaxeProgression.read(stack),Math.max(0,ArtifactQuality.assemblyScore(stack)),List.copyOf(stats));
     }
-    public static List<Component> tool(ItemStack stack){
-        var lines=new ArrayList<>(tool(view(stack)));
+    public static List<Component> tool(ItemStack stack){return tool(stack,0);}
+    public static List<Component> tool(ItemStack stack,int page){
+        var lines=new ArrayList<>(tool(view(stack),page));
         if(!PickaxeProgression.supports(stack)){lines.remove(1);lines.set(0,text("Reconstructed tool",TEAL));}
+        for(int i=0;i<lines.size();i++)if(lines.get(i).getString().contains("Perk")){
+            String label=lines.get(i).getString();for(var trait:PickaxeTrait.values())if(trait.growth==PickaxeTrait.Growth.MILESTONE&&label.startsWith(label(trait)+"  ")){lines.set(i,text(label.replace("Perk","Stage "+stageText(stack,trait)),TEAL));break;}
+        }
         if(MiningRuntime.charge(stack)>0)lines.add(text("Resonance  ",LABEL).append(text(MiningRuntime.charge(stack)+"/100",TEAL)));
         return List.copyOf(lines);
     }
-    public static List<Component> tool(ToolView view){
+    private static String stageText(ItemStack stack,PickaxeTrait trait){return PickaxeModifiers.stage(stack,trait)+"/3";}
+    public static int pages(ToolView view){return Math.max(1,(view.stats().size()+7)/8);}
+    public static List<Component> tool(ToolView view){return tool(view,0);}
+    public static List<Component> tool(ToolView view,int page){
+        int pages=pages(view);page=Math.floorMod(page,pages);
         var p=view.progression();var lines=new ArrayList<Component>();
         lines.add(text("Level ",LABEL).append(text(p.level()+"/100",GOLD)).append(text("   Ascension ",LABEL)).append(text(p.ascensions()+"/10",0xCF9AFF)));
         if(p.mastered())lines.add(text("Mastered",GOLD));
@@ -61,7 +69,8 @@ public final class PickaxeTooltips {
         lines.add(text("Assembly quality  ",LABEL).append(text(number(view.score())+"%",qualityColor(view.score()))));
         lines.add(text("MODIFIERS",MUTED));
         if(view.stats().isEmpty())lines.add(text("No effective bonuses",MUTED));
-        for(var stat:view.stats())lines.add(text(label(stat.trait())+"  ",LABEL).append(text((stat.trait().growth==PickaxeTrait.Growth.MILESTONE?"Perk":"+"+value(stat.trait(),stat.value())),magnitude(stat.value()/stat.trait().cap))).append(text("  ",MUTED)).append(gradeRange(stat.low(),stat.high())));
+        for(var stat:view.stats().subList(Math.min(page*8,view.stats().size()),Math.min((page+1)*8,view.stats().size())))lines.add(text(label(stat.trait())+"  ",LABEL).append(text((stat.trait().growth==PickaxeTrait.Growth.MILESTONE?"Perk":"+"+value(stat.trait(),stat.value())),magnitude(stat.value()/stat.trait().cap))).append(text("  ",MUTED)).append(gradeRange(stat.low(),stat.high())));
+        if(pages>1)lines.add(text("Bonuses "+(page+1)+"/"+pages+"  Shift + wheel",MUTED));
         return List.copyOf(lines);
     }
     public static List<Component> piece(ItemStack stack){

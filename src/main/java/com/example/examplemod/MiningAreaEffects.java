@@ -35,7 +35,7 @@ final class MiningAreaEffects {
     static boolean valid(MiningContext c,BlockPos pos){
         if(!c.level.hasChunkAt(pos)||!c.level.getWorldBorder().isWithinBounds(pos)||!c.level.mayInteract(c.player,pos)||pos.distSqr(c.event.getPos())>100)return false;
         if(pos.distToCenterSqr(c.player.getX(),c.player.getY(),c.player.getZ())>Math.pow(c.player.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.BLOCK_INTERACTION_RANGE)+2,2))return false;
-        var state=c.level.getBlockState(pos);return !state.isAir()&&!state.hasBlockEntity()&&state.getDestroySpeed(c.level,pos)>0&&c.tool.isCorrectToolForDrops(state);
+        var state=c.level.getBlockState(pos);return !state.isAir()&&!state.hasBlockEntity()&&state.getDestroySpeed(c.level,pos)>0&&(!state.requiresCorrectToolForDrops()||c.tool.isCorrectToolForDrops(state));
     }
     private static void connected(MiningContext c,Set<BlockPos> targets,BlockPos origin,int max,boolean mixed){
         var seen=new HashSet<BlockPos>();var queue=new ArrayDeque<BlockPos>();queue.add(origin);seen.add(origin);int added=0;

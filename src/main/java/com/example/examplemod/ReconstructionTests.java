@@ -54,7 +54,7 @@ public final class ReconstructionTests {
             table.setItem(5,new ItemStack(Items.DIRT));require(helper,!menu.clickMenuButton(player,1),"A full output must consume nothing");for(int i=0;i<5;i++)require(helper,ItemStack.matches(table.getItem(i),recovered.get(i)),"Blocked assembly must retain every component");table.setItem(5,ItemStack.EMPTY);
             player.snapTo(pos.getX()+30,pos.getY(),pos.getZ());require(helper,!menu.clickMenuButton(player,1),"Remote players must not assemble tools");player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);
             new net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket(41,1).handle(player.connection);
-            var result=table.getItem(5).copy();require(helper,result.is(ArchaeologyContent.PICKAXE.get())&&result.getMaxDamage()==(int)Math.round(1800*(1+PickaxeModifiers.totals(result).get(PickaxeTrait.DURABILITY))),"Assembly must create the usable restored pickaxe with its score-scaled durability");
+            var result=table.getItem(5).copy();require(helper,result.is(ArchaeologyContent.PICKAXE.get())&&result.getMaxDamage()==(int)Math.round(1800*(1+PickaxeModifiers.totals(result).get(PickaxeTrait.DURABILITY))+PickaxeModifiers.totals(result).get(PickaxeTrait.RESERVE)),"Assembly must create the usable restored pickaxe with its score-scaled durability");
             var assembly=result.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);require(helper,ArtifactQuality.assemblyScore(result)==92.8&&assembly.getDoubleOr("Score",-1)==92.8&&assembly.getIntOr("ScoreTotal",-1)==464,"The assembled tool must retain its aggregate score");
             for(int i=0;i<5;i++){require(helper,table.getItem(i).isEmpty(),"Successful assembly consumes exactly five pieces");var part=assembly.getCompoundOrEmpty("Parts").getCompoundOrEmpty(ReconstructionPattern.PICKAXE.parts.get(i));require(helper,part.getIntOr("Quality",-1)==scores[i]&&part.getLongOr("Seed",-1)==300+i&&part.getIntOr("Rarity",-1)==i,"The tool must preserve each original part score, seed and rarity for future modifiers");}
             require(helper,!other.clickMenuButton(second,1)&&ItemStack.matches(result,table.getItem(5)),"Two viewers must not duplicate the result");
@@ -139,5 +139,3 @@ public final class ReconstructionTests {
     }
     private static void require(GameTestHelper helper,boolean valid,String message){if(!valid)throw helper.assertionException(message);}
 }
-
-

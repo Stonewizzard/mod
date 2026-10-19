@@ -36,7 +36,7 @@ public final class PickaxeEvents {
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent event)->MiningCollectionEffects.stop());
     }
     public static void speed(PlayerEvent.BreakSpeed event){
-        var player=event.getEntity();var held=player.getMainHandItem();if(!held.is(ArchaeologyContent.PICKAXE.get())||!held.isCorrectToolForDrops(event.getState()))return;
+        var player=event.getEntity();var held=player.getMainHandItem();if(!held.is(ArchaeologyContent.PICKAXE.get())||event.getState().requiresCorrectToolForDrops()&&!held.isCorrectToolForDrops(event.getState()))return;
         var stats=PickaxeModifiers.totals(held);var pos=event.getPosition().orElse(player.blockPosition());
         event.setNewSpeed((float)(event.getNewSpeed()*(1+MiningConditions.extra(player,pos,event.getState(),held,stats))*speedMultiplier(stats,player.isEyeInFluid(FluidTags.WATER),player.getAttributeValue(Attributes.SUBMERGED_MINING_SPEED),player.onGround())));
     }
@@ -53,7 +53,7 @@ public final class PickaxeEvents {
     }
     public static void drops(BlockDropsEvent event){
         var tool=event.getTool();if(!(event.getBreaker() instanceof ServerPlayer player)||!tool.is(ArchaeologyContent.PICKAXE.get()))return;
-        if(!tool.isCorrectToolForDrops(event.getState()))return;
+        if(event.getState().requiresCorrectToolForDrops()&&!tool.isCorrectToolForDrops(event.getState()))return;
         var c=new MiningContext(event,player);var level=event.getLevel();var random=level.getRandom();var stats=c.stats;
         var lookup=level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
         var silk=lookup.getOrThrow(Enchantments.SILK_TOUCH);var fortune=lookup.getOrThrow(Enchantments.FORTUNE);
