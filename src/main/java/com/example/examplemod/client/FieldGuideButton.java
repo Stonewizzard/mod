@@ -1,6 +1,7 @@
 package com.example.examplemod.client;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -18,6 +19,7 @@ class FieldGuideButton extends Button {
     }
     @Override public void extractContents(GuiGraphicsExtractor graphics,int mouseX,int mouseY,float partialTick){
         FieldGuideView.drawControl(canvas.apply(graphics),control,isHoveredOrFocused());
+        if(isHovered())graphics.requestCursor(active?CursorTypes.POINTING_HAND:CursorTypes.NOT_ALLOWED);
         if(!control.icon().isEmpty()){
             var item=BuiltInRegistries.ITEM.getValue(Identifier.parse(control.icon()));
             if(item!=null&&item!=Items.AIR)graphics.item(new ItemStack(item),getX()+3,getY()+1);

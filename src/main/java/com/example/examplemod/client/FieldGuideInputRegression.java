@@ -42,7 +42,7 @@ final class FieldGuideInputRegression {
             // Datagen has no Minecraft instance: keep its native validation and press callback,
             // and skip only that audio lookup. Production uses the unmodified native method.
             @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){
-                if(!active||!visible||!isValidClickButton(event.button())||!isMouseOver(event.x(),event.y()))return false;
+                if(!active||!visible||!isValidClickButton(new MouseButtonInfo(event.button(),0))||!isMouseOver(event.x(),event.y()))return false;
                 onClick(event,doubleClick);return true;
             }
         });}

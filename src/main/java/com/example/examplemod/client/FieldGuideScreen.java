@@ -29,6 +29,7 @@ public final class FieldGuideScreen extends Screen {
     };}
     private void rebuildButtons(){
         String focused=getFocused() instanceof FieldGuideButton b?b.control.id():"";
+        if(getFocused() instanceof FieldGuideButton)setFocused(null);
         for(var button:buttons)removeWidget(button);buttons.clear();
         for(var control:FieldGuideView.controls(canvas(null),navigation)){
             var button=new FieldGuideButton(control,left,top,()->{
