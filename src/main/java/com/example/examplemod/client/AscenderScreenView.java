@@ -17,19 +17,19 @@ public final class AscenderScreenView {
             c.text(status,16,68,p.needsAscension()?0xff286341:0xff505050);
         }else c.text("Insert a pickaxe",45,48,0xff606060);
         c.text("Materials",16,80,0xff404040);
-        for(int i=0;i<18;i++)slot(c,AscenderMenu.STORAGE_X+(i%6)*18,AscenderMenu.STORAGE_Y+(i/6)*18);
-        c.fill(135,30,1,114,0xff909090);c.text("Ascension materials",145,30,0xff404040);
+        for(int i=0;i<com.example.examplemod.AscenderBlockEntity.SIZE-1;i++)slot(c,AscenderMenu.STORAGE_X+(i%AscenderMenu.STORAGE_COLUMNS)*18,AscenderMenu.STORAGE_Y+(i/AscenderMenu.STORAGE_COLUMNS)*18);
+        c.fill(166,30,1,114,0xff909090);c.text("Ascension materials",176,30,0xff404040);
         if(state.hasTool()){
             var p=state.progression();
-            if(p.mastered())c.text("Fully ascended",145,48,0xff286341);
+            if(p.mastered())c.text("Fully ascended",176,48,0xff286341);
             else {
                 for(int i=0;i<state.costs().size();i++){
                     var cost=state.costs().get(i);String amount=cost.available()+"/"+cost.count();
-                    c.text(fit(c,cost.name(),112),145,45+i*10,0xff404040);c.text(amount,309-c.textWidth(amount),45+i*10,cost.available()>=cost.count()?0xff286341:0xff90442c);
+                    c.text(fit(c,cost.name(),78),176,43+i*8,0xff404040);c.text(amount,309-c.textWidth(amount),43+i*8,cost.available()>=cost.count()?0xff286341:0xff90442c);
                 }
-                if(state.costs().isEmpty())c.text("No rolled modifiers",145,48,0xff606060);
+                if(state.costs().isEmpty())c.text("No rolled modifiers",176,48,0xff606060);
             }
-        }else c.text("Costs appear here",145,48,0xff606060);
+        }else c.text("Costs appear here",176,48,0xff606060);
         c.text("Inventory",AscenderMenu.PLAYER_X,150,0xff404040);
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)slot(c,AscenderMenu.PLAYER_X+18*col,AscenderMenu.PLAYER_Y+18*row);
         for(int col=0;col<9;col++)slot(c,AscenderMenu.PLAYER_X+18*col,AscenderMenu.HOTBAR_Y);

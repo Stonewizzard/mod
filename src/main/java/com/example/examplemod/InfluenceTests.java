@@ -79,7 +79,10 @@ public final class InfluenceTests {
             if(ArtifactModifiers.roll(profile,100,ArtifactModifierCatalog.pool(find,5,ModifierInfluence.NETHER)).getFirst().id().equals(SMELTING.id))nether++;
             if(ArtifactModifiers.roll(profile,100,ArtifactModifierCatalog.pool(find,5,ModifierInfluence.END)).getFirst().id().equals(PHASEBOUND.id))end++;
         }
-        check(h,nether>ordinary*2.5&&Math.abs(nether/(double)n-72.0/174)<.025&&Math.abs(end/(double)n-72.0/174)<.025,
+        var np=ArtifactModifierCatalog.pool(find,5,ModifierInfluence.NETHER);var ep=ArtifactModifierCatalog.pool(find,5,ModifierInfluence.END);
+        double expectedNether=np.entries().stream().filter(d->d.id().equals(SMELTING.id)).findFirst().orElseThrow().weight()/(double)np.entries().stream().mapToInt(ArtifactModifiers.Definition::weight).sum();
+        double expectedEnd=ep.entries().stream().filter(d->d.id().equals(PHASEBOUND.id)).findFirst().orElseThrow().weight()/(double)ep.entries().stream().mapToInt(ArtifactModifiers.Definition::weight).sum();
+        check(h,nether>ordinary*2.5&&Math.abs(nether/(double)n-expectedNether)<.015&&Math.abs(end/(double)n-expectedEnd)<.015,
             "Observed themed rolls must follow boosted relative weights without becoming guaranteed");
     }
     private static void assignment(GameTestHelper h){

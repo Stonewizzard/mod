@@ -12,6 +12,9 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Verify generated modifier catalog
+        run: python3 tools/generate_pickaxe_catalog.py --check
+
       - name: Setup JDK 25
         uses: actions/setup-java@v4
         with:
@@ -29,7 +32,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Verify sniffer head death drops in Minecraft
+      - name: Verify Minecraft gameplay regressions
         timeout-minutes: 10
         run: ./gradlew runGameTestServer
 
@@ -38,6 +41,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Verify generated modifier catalog
+        run: python3 tools/generate_pickaxe_catalog.py --check
 
       - name: Setup JDK 25
         uses: actions/setup-java@v4

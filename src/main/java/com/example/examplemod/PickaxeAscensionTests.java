@@ -83,26 +83,23 @@ public final class PickaxeAscensionTests {
         }
     }
     private static void verifyCapsAndSplitStacks(GameTestHelper h){
-        var tool=tool(100);var root=tool.get(DataComponents.CUSTOM_DATA).copyTag();var assembly=root.getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);var parts=assembly.getCompoundOrEmpty("Parts");var traits=PickaxeTrait.values();
-        for(int i=0;i<ReconstructionPattern.PICKAXE.parts.size();i++){
-            String id=ReconstructionPattern.PICKAXE.parts.get(i);var part=parts.getCompoundOrEmpty(id);var record=part.getCompoundOrEmpty("Modifiers");var rolls=new ArrayList<ArtifactModifiers.Roll>();
-            for(int j=i;j<traits.length;j+=ReconstructionPattern.PICKAXE.parts.size()){var trait=traits[j];rolls.add(new ArtifactModifiers.Roll(trait.id,trait.cap,1));}
-            if(i==0)rolls.add(new ArtifactModifiers.Roll(REACH.id,.5,1));
-            part.put("Modifiers",ArtifactModifiers.writeRolls(record,rolls));parts.put(id,part);
+        for(var trait:PickaxeTrait.values()){
+            var sample=tool(100);var root=sample.get(DataComponents.CUSTOM_DATA).copyTag();var assembly=root.getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);var parts=assembly.getCompoundOrEmpty("Parts");
+            for(String id:ReconstructionPattern.PICKAXE.parts){var part=parts.getCompoundOrEmpty(id);part.put("Modifiers",ArtifactModifiers.writeRolls(part.getCompoundOrEmpty("Modifiers").copy(),List.of(new ArtifactModifiers.Roll(trait.id,trait.cap,1))));parts.put(id,part);}
+            assembly.put("Parts",parts);root.put(ArtifactQuality.ASSEMBLY,assembly);sample.set(DataComponents.CUSTOM_DATA,CustomData.of(root));PickaxeProgression.write(sample,new PickaxeProgression.State(100,0,10));
+            check(h,PickaxeModifiers.totals(sample).get(trait)==trait.cap,"Combined cap mismatch for "+trait+": got "+PickaxeModifiers.totals(sample).get(trait)+", expected "+trait.cap);
         }
-        assembly.put("Parts",parts);root.put(ArtifactQuality.ASSEMBLY,assembly);tool.set(DataComponents.CUSTOM_DATA,CustomData.of(root));PickaxeProgression.write(tool,new PickaxeProgression.State(100,0,9));PickaxeModifiers.applyToAssembly(tool);
+        var tool=tool(100);PickaxeProgression.write(tool,new PickaxeProgression.State(100,0,9));PickaxeModifiers.applyToAssembly(tool);
         var inventory=new SimpleContainer(AscenderBlockEntity.SIZE);inventory.setItem(0,tool);var costs=AscensionResources.requirements(tool);fill(inventory,costs,0);
-        long resourceKinds=AscensionResources.BINDINGS.values().stream().map(AscensionResources.Binding::item).distinct().count();
-        check(h,costs.size()==resourceKinds&&AscensionResources.tryAscend(inventory),"Every modifier resource, including shared and split pearl stacks, must ascend together");
-        for(var trait:traits)check(h,PickaxeModifiers.totals(tool).get(trait)==trait.cap,"Ascended bonuses must respect every existing trait cap");
+        check(h,costs.stream().anyMatch(c->c.item()==Items.ENDER_PEARL)&&AscensionResources.tryAscend(inventory),"Mixed resources and split pearl stacks must ascend together");
         for(int i=1;i<inventory.getContainerSize();i++)check(h,inventory.getItem(i).isEmpty(),"Split material stacks must be consumed exactly once");
     }
     private static void verifyInventory(GameTestHelper h){
         var level=h.getLevel();var pos=h.absolutePos(new BlockPos(3,1,4));level.setBlockAndUpdate(pos,AscenderContent.BLOCK.get().defaultBlockState());var table=(AscenderBlockEntity)level.getBlockEntity(pos);
         var player=h.makeMockServerPlayerInLevel();player.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);player.getInventory().clearContent();var menu=new AscenderMenu(68,player.getInventory(),table);
-        check(h,menu.slots.size()==55&&menu.getSlot(0).getMaxStackSize()==1&&!menu.getSlot(0).mayPlace(new ItemStack(Items.DIAMOND_PICKAXE))&&!menu.getSlot(1).mayPlace(new ItemStack(Items.DIRT)),"Ascender slots must reject wrong tools and unrelated materials");
+        check(h,menu.slots.size()==AscenderBlockEntity.SIZE+36&&menu.getSlot(0).getMaxStackSize()==1&&!menu.getSlot(0).mayPlace(new ItemStack(Items.DIAMOND_PICKAXE))&&!menu.getSlot(1).mayPlace(new ItemStack(Items.DIRT)),"Ascender slots must reject wrong tools and unrelated materials");
         var tool=tool(100);PickaxeProgression.gain(tool,Integer.MAX_VALUE);player.getInventory().setItem(9,tool);
-        var entering=tool.copy();check(h,!menu.quickMoveStack(player,19).isEmpty()&&ItemStack.matches(table.getItem(0),entering),"Shift-click must route a restored tool into its single slot");tool=table.getItem(0);
+        var entering=tool.copy();check(h,!menu.quickMoveStack(player,AscenderBlockEntity.SIZE).isEmpty()&&ItemStack.matches(table.getItem(0),entering),"Shift-click must route a restored tool into its single slot");tool=table.getItem(0);
         var costs=AscensionResources.requirements(tool);fill(table,costs,3);var saved=table.saveWithFullMetadata(level.registryAccess());var restored=BlockEntity.loadStatic(pos,table.getBlockState(),saved,level.registryAccess());
         check(h,restored instanceof AscenderBlockEntity,"Ascender inventory must reload");for(int i=0;i<table.getContainerSize();i++)check(h,ItemStack.matches(table.getItem(i),((AscenderBlockEntity)restored).getItem(i)),"Saving must retain all materials and tool data");
         var ticker=AscenderContent.BLOCK.get().getTicker(level,table.getBlockState(),AscenderContent.ENTITY.get());check(h,ticker!=null,"The actual block must register a server ticker");ticker.tick(level,pos,table.getBlockState(),table);

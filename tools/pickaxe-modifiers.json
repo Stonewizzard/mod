@@ -1,0 +1,6903 @@
+[
+  {
+    "key": "SPEED",
+    "id": "mining_speed",
+    "label": "Mining speed",
+    "unit": "PERCENT",
+    "cap": 6,
+    "family": "SPEED",
+    "description": "Always increases correct-tool mining speed.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.04,
+    "maximum": 1.2,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 6,
+        "minimum": 0.04,
+        "maximum": 0.12,
+        "weights": [
+          940,
+          650,
+          350,
+          150,
+          100,
+          50
+        ]
+      },
+      {
+        "rank": 5,
+        "minimum": 0.12,
+        "maximum": 0.22,
+        "weights": [
+          50,
+          280,
+          400,
+          200,
+          150,
+          100
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.22,
+        "maximum": 0.4,
+        "weights": [
+          10,
+          65,
+          220,
+          300,
+          200,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.4,
+        "maximum": 0.65,
+        "weights": [
+          0,
+          5,
+          28,
+          250,
+          250,
+          200
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.65,
+        "maximum": 0.9,
+        "weights": [
+          0,
+          0,
+          2,
+          90,
+          200,
+          250
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.9,
+        "maximum": 1.2,
+        "weights": [
+          0,
+          0,
+          0,
+          10,
+          100,
+          250
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "FORTUNE",
+    "id": "fortune",
+    "label": "Fortune",
+    "unit": "LEVEL",
+    "cap": 3,
+    "family": "LOOT",
+    "description": "Adds stochastically rounded native Fortune levels, capped at III.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.1,
+    "maximum": 1.25,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.1,
+        "maximum": 0.35,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.35,
+        "maximum": 0.6,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.6,
+        "maximum": 0.9,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.9,
+        "maximum": 1.1,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 1.1,
+        "maximum": 1.25,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "MAGNET",
+    "id": "magnetized",
+    "label": "Magnetized",
+    "unit": "BLOCKS",
+    "cap": 12,
+    "family": "COLLECTION",
+    "description": "Pulls only your freshly mined drops toward you, never thrown items.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.75,
+    "maximum": 6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.75,
+        "maximum": 1.75,
+        "weights": [
+          0,
+          900,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 1.75,
+        "maximum": 3.0,
+        "weights": [
+          0,
+          95,
+          300,
+          400,
+          350,
+          300
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 3.0,
+        "maximum": 4.5,
+        "weights": [
+          0,
+          5,
+          49,
+          180,
+          300,
+          350
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 4.5,
+        "maximum": 6.0,
+        "weights": [
+          0,
+          0,
+          1,
+          20,
+          100,
+          200
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "IRON_INGOT"
+  },
+  {
+    "key": "SILK",
+    "id": "silk_touch",
+    "label": "Silk touch",
+    "unit": "PERCENT",
+    "cap": 1,
+    "family": "LOOT",
+    "description": "Chance to generate native Silk Touch loot; exclusive with the base Fortune and Smelter families.",
+    "minimumRarity": 2,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.1,
+    "maximum": 0.85,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 3,
+        "minimum": 0.1,
+        "maximum": 0.25,
+        "weights": [
+          0,
+          0,
+          950,
+          700,
+          450,
+          300
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.25,
+        "maximum": 0.5,
+        "weights": [
+          0,
+          0,
+          49,
+          270,
+          450,
+          450
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.5,
+        "maximum": 0.85,
+        "weights": [
+          0,
+          0,
+          1,
+          30,
+          100,
+          250
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "STRING"
+  },
+  {
+    "key": "DURABILITY",
+    "id": "reinforced",
+    "label": "Reinforced",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "UTILITY",
+    "description": "Increases maximum durability on any reconstructed tool.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 0.05,
+    "maximum": 0.65,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.05,
+        "maximum": 0.12,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.12,
+        "maximum": 0.25,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.25,
+        "maximum": 0.4,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.4,
+        "maximum": 0.5,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.5,
+        "maximum": 0.65,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COPPER_INGOT"
+  },
+  {
+    "key": "EXPERIENCE",
+    "id": "scholar",
+    "label": "Scholar",
+    "unit": "PERCENT",
+    "cap": 3,
+    "family": "LOOT",
+    "description": "Increases block and furnace experience; suppressed by Silk Touch.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.05,
+    "maximum": 1,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 6,
+        "minimum": 0.05,
+        "maximum": 0.15,
+        "weights": [
+          940,
+          650,
+          350,
+          150,
+          100,
+          50
+        ]
+      },
+      {
+        "rank": 5,
+        "minimum": 0.15,
+        "maximum": 0.25,
+        "weights": [
+          50,
+          280,
+          400,
+          200,
+          150,
+          100
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.25,
+        "maximum": 0.4,
+        "weights": [
+          10,
+          65,
+          220,
+          300,
+          200,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.4,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          5,
+          28,
+          250,
+          250,
+          200
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.6,
+        "maximum": 0.8,
+        "weights": [
+          0,
+          0,
+          2,
+          90,
+          200,
+          250
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.8,
+        "maximum": 1.0,
+        "weights": [
+          0,
+          0,
+          0,
+          10,
+          100,
+          250
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "AMETHYST_SHARD"
+  },
+  {
+    "key": "AQUATIC",
+    "id": "aquatic",
+    "label": "Aquatic",
+    "unit": "PERCENT",
+    "cap": 1,
+    "family": "SPEED",
+    "description": "Recovers a fraction of the underwater mining penalty.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.1,
+    "maximum": 0.85,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.1,
+        "maximum": 0.25,
+        "weights": [
+          0,
+          900,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.25,
+        "maximum": 0.4,
+        "weights": [
+          0,
+          95,
+          300,
+          400,
+          350,
+          300
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.4,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          5,
+          49,
+          180,
+          300,
+          350
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.6,
+        "maximum": 0.85,
+        "weights": [
+          0,
+          0,
+          1,
+          20,
+          100,
+          200
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "AIRBORNE",
+    "id": "steady_hands",
+    "label": "Steady hands",
+    "unit": "PERCENT",
+    "cap": 1,
+    "family": "SPEED",
+    "description": "Recovers a fraction of the airborne mining penalty.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.1,
+    "maximum": 0.85,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.1,
+        "maximum": 0.25,
+        "weights": [
+          0,
+          900,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.25,
+        "maximum": 0.4,
+        "weights": [
+          0,
+          95,
+          300,
+          400,
+          350,
+          300
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.4,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          5,
+          49,
+          180,
+          300,
+          350
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.6,
+        "maximum": 0.85,
+        "weights": [
+          0,
+          0,
+          1,
+          20,
+          100,
+          200
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "FEATHER"
+  },
+  {
+    "key": "REACH",
+    "id": "long_reach",
+    "label": "Long reach",
+    "unit": "BLOCKS",
+    "cap": 2.5,
+    "family": "ATTRIBUTE",
+    "description": "Adds native block interaction range in the main hand.",
+    "minimumRarity": 2,
+    "weight": 20,
+    "influence": "END",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.15,
+    "maximum": 1,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.15,
+        "maximum": 0.35,
+        "weights": [
+          0,
+          0,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.35,
+        "maximum": 0.55,
+        "weights": [
+          0,
+          0,
+          300,
+          400,
+          350,
+          300
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.55,
+        "maximum": 0.8,
+        "weights": [
+          0,
+          0,
+          49,
+          180,
+          300,
+          350
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.8,
+        "maximum": 1.0,
+        "weights": [
+          0,
+          0,
+          1,
+          20,
+          100,
+          200
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "ENDER_PEARL"
+  },
+  {
+    "key": "SMELTING",
+    "id": "smelter",
+    "label": "Smelter",
+    "unit": "PERCENT",
+    "cap": 1,
+    "family": "LOOT",
+    "description": "Chance to apply the real furnace recipe to each drop, preserving recipe counts and XP.",
+    "minimumRarity": 3,
+    "weight": 20,
+    "influence": "NETHER",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.15,
+    "maximum": 0.75,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 3,
+        "minimum": 0.15,
+        "maximum": 0.35,
+        "weights": [
+          0,
+          0,
+          0,
+          850,
+          600,
+          400
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.35,
+        "maximum": 0.55,
+        "weights": [
+          0,
+          0,
+          0,
+          145,
+          350,
+          450
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.55,
+        "maximum": 0.75,
+        "weights": [
+          0,
+          0,
+          0,
+          5,
+          50,
+          150
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "PHASEBOUND",
+    "id": "phasebound",
+    "label": "Phasebound",
+    "unit": "PERCENT",
+    "cap": 1,
+    "family": "COLLECTION",
+    "description": "Chance to put final mined drops directly into your inventory; overflow remains in the world.",
+    "minimumRarity": 4,
+    "weight": 20,
+    "influence": "END",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 0.1,
+    "maximum": 0.8,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 3,
+        "minimum": 0.1,
+        "maximum": 0.25,
+        "weights": [
+          0,
+          0,
+          0,
+          0,
+          700,
+          450
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.25,
+        "maximum": 0.5,
+        "weights": [
+          0,
+          0,
+          0,
+          0,
+          250,
+          400
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.5,
+        "maximum": 0.8,
+        "weights": [
+          0,
+          0,
+          0,
+          0,
+          50,
+          150
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "ENDER_PEARL"
+  },
+  {
+    "key": "UNBREAKING",
+    "id": "unbreaking",
+    "label": "Hardwearing",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "UTILITY",
+    "description": "Chance to prevent each durability point before native Unbreaking.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 0.03,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0624,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0624,
+        "maximum": 0.1056,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1056,
+        "maximum": 0.1596,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.1596,
+        "maximum": 0.2244,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2244,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COPPER_INGOT"
+  },
+  {
+    "key": "RESERVE",
+    "id": "reserve",
+    "label": "Deep reserves",
+    "unit": "POINTS",
+    "cap": 1200,
+    "family": "UTILITY",
+    "description": "Adds flat maximum durability, after the Reinforced multiplier.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 40,
+    "maximum": 360,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 40,
+        "maximum": 78.4,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 78.4,
+        "maximum": 129.6,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 129.6,
+        "maximum": 193.6,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 193.6,
+        "maximum": 270.4,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 270.4,
+        "maximum": 360,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COPPER_INGOT"
+  },
+  {
+    "key": "SELF_REPAIR",
+    "id": "self_repair",
+    "label": "Self repair",
+    "unit": "POINTS",
+    "cap": 10,
+    "family": "UTILITY",
+    "description": "Repairs this held tool every ten seconds.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 0.2,
+    "maximum": 3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.2,
+        "maximum": 0.704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.704,
+        "maximum": 1.32,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 1.32,
+        "maximum": 2.104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 2.104,
+        "maximum": 3.0,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COPPER_INGOT"
+  },
+  {
+    "key": "MENDING_BOOST",
+    "id": "mending_boost",
+    "label": "Mending affinity",
+    "unit": "PERCENT",
+    "cap": 3,
+    "family": "UTILITY",
+    "description": "Repairs extra durability on XP pickup without consuming additional player XP.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 0.1,
+    "maximum": 1,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.1,
+        "maximum": 0.262,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.262,
+        "maximum": 0.46,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.46,
+        "maximum": 0.712,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.712,
+        "maximum": 1.0,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COPPER_INGOT"
+  },
+  {
+    "key": "ANVIL_THRIFT",
+    "id": "anvil_thrift",
+    "label": "Frugal repairs",
+    "unit": "PERCENT",
+    "cap": 0.6,
+    "family": "UTILITY",
+    "description": "Reduces anvil level and material costs on nonempty repairs; costs never fall below one.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 0.03,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.03,
+        "maximum": 0.0786,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0786,
+        "maximum": 0.138,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.138,
+        "maximum": 0.2136,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2136,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COPPER_INGOT"
+  },
+  {
+    "key": "METAL_MAINTENANCE",
+    "id": "metal_maintenance",
+    "label": "Nugget maintenance",
+    "unit": "POINTS",
+    "cap": 60,
+    "family": "UTILITY",
+    "description": "While crouching, consumes an iron nugget every ten seconds to repair durability.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 3,
+    "maximum": 20,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 3,
+        "maximum": 6.06,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 6.06,
+        "maximum": 9.8,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 9.8,
+        "maximum": 14.56,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 14.56,
+        "maximum": 20,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COPPER_INGOT"
+  },
+  {
+    "key": "RAIN_REPAIR",
+    "id": "rain_repair",
+    "label": "Rain tempered",
+    "unit": "POINTS",
+    "cap": 12,
+    "family": "UTILITY",
+    "description": "Repairs every ten seconds while exposed to rain or submerged.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 0.2,
+    "maximum": 4,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.2,
+        "maximum": 0.884,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.884,
+        "maximum": 1.72,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 1.72,
+        "maximum": 2.784,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 2.784,
+        "maximum": 4.0,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COPPER_INGOT"
+  },
+  {
+    "key": "SWIFT_GRIP",
+    "id": "swift_grip",
+    "label": "Lightweight grip",
+    "unit": "PERCENT",
+    "cap": 0.15,
+    "family": "ATTRIBUTE",
+    "description": "Adds main-hand movement speed as a fraction of base speed.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 0.01,
+    "maximum": 0.06,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.01,
+        "maximum": 0.016,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.016,
+        "maximum": 0.024,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.024,
+        "maximum": 0.034,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.034,
+        "maximum": 0.046,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.046,
+        "maximum": 0.06,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "IRON_INGOT"
+  },
+  {
+    "key": "STEADY_GRIP",
+    "id": "steady_grip",
+    "label": "Braced grip",
+    "unit": "PERCENT",
+    "cap": 0.3,
+    "family": "ATTRIBUTE",
+    "description": "Adds main-hand knockback resistance.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 0.02,
+    "maximum": 0.12,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.02,
+        "maximum": 0.032,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.032,
+        "maximum": 0.048,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.048,
+        "maximum": 0.068,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.068,
+        "maximum": 0.092,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.092,
+        "maximum": 0.12,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "IRON_INGOT"
+  },
+  {
+    "key": "GUARD",
+    "id": "guard",
+    "label": "Guarded grip",
+    "unit": "POINTS",
+    "cap": 6,
+    "family": "ATTRIBUTE",
+    "description": "Adds main-hand armor points.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 0.2,
+    "maximum": 2,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.2,
+        "maximum": 0.416,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.416,
+        "maximum": 0.704,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.704,
+        "maximum": 1.064,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 1.064,
+        "maximum": 1.496,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 1.496,
+        "maximum": 2.0,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "IRON_INGOT"
+  },
+  {
+    "key": "VIGOR",
+    "id": "vigor",
+    "label": "Vital grip",
+    "unit": "POINTS",
+    "cap": 6,
+    "family": "ATTRIBUTE",
+    "description": "Adds main-hand maximum health points; two points equal one heart.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": true,
+    "minimum": 0.2,
+    "maximum": 2,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.2,
+        "maximum": 0.524,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.524,
+        "maximum": 0.92,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.92,
+        "maximum": 1.424,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 1.424,
+        "maximum": 2.0,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "IRON_INGOT"
+  },
+  {
+    "key": "STRATUM_SPEED",
+    "id": "stratum_speed",
+    "label": "Stonecutter",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while common stone.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "VEIN_SPEED",
+    "id": "vein_speed",
+    "label": "Ore runner",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while ores.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "SOFT_ROCK",
+    "id": "soft_rock",
+    "label": "Sediment cutter",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while sand, gravel, clay or dirt.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "DEEP_SPEED",
+    "id": "deep_speed",
+    "label": "Deep delver",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while blocks below Y=0.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "SUN_SPEED",
+    "id": "sun_speed",
+    "label": "Sunstruck",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while daylight with open sky.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "NIGHT_SPEED",
+    "id": "night_speed",
+    "label": "Night shift",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed in low ambient light (below eight), including dark caves.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "WET_SPEED",
+    "id": "wet_speed",
+    "label": "Water cooled",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while rain or water.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "HEAT_SPEED",
+    "id": "heat_speed",
+    "label": "Heat tempered",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while the Nether or within two blocks of lava.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "STEADY_SPEED",
+    "id": "steady_speed",
+    "label": "Planted stance",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while standing still.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "RHYTHM_SPEED",
+    "id": "rhythm_speed",
+    "label": "Mining rhythm",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while up to five consecutive breaks less than three seconds apart.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "DIVERSITY_SPEED",
+    "id": "diversity_speed",
+    "label": "Varied strata",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while switching to a different block within three seconds.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "FRAGILE_SPEED",
+    "id": "fragile_speed",
+    "label": "Last legs",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while less than 25% durability remaining.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "CALIBRATED_SPEED",
+    "id": "calibrated_speed",
+    "label": "Calibrated edge",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "SPEED",
+    "description": "Increases mining speed while more than 75% durability remaining.",
+    "minimumRarity": 0,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 5,
+        "minimum": 0.03,
+        "maximum": 0.0984,
+        "weights": [
+          950,
+          700,
+          400,
+          200,
+          120,
+          60
+        ]
+      },
+      {
+        "rank": 4,
+        "minimum": 0.0984,
+        "maximum": 0.1896,
+        "weights": [
+          45,
+          250,
+          350,
+          250,
+          180,
+          120
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1896,
+        "maximum": 0.3036,
+        "weights": [
+          5,
+          49,
+          220,
+          300,
+          250,
+          220
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.3036,
+        "maximum": 0.4404,
+        "weights": [
+          0,
+          1,
+          30,
+          220,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4404,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          0,
+          30,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "REDSTONE"
+  },
+  {
+    "key": "ORE_FORTUNE",
+    "id": "ore_fortune",
+    "label": "Prospector",
+    "unit": "LEVEL",
+    "cap": 2,
+    "family": "LOOT",
+    "description": "Adds fractional native Fortune levels on any ore; combined Fortune remains capped at III.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.05,
+    "maximum": 0.75,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.05,
+        "maximum": 0.176,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.176,
+        "maximum": 0.33,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.33,
+        "maximum": 0.526,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.526,
+        "maximum": 0.75,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "GEM_FORTUNE",
+    "id": "gem_fortune",
+    "label": "Gem cutter",
+    "unit": "LEVEL",
+    "cap": 2,
+    "family": "LOOT",
+    "description": "Adds fractional native Fortune levels on diamond, emerald or lapis ores; combined Fortune remains capped at III.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.05,
+    "maximum": 0.75,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.05,
+        "maximum": 0.176,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.176,
+        "maximum": 0.33,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.33,
+        "maximum": 0.526,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.526,
+        "maximum": 0.75,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "REDSTONE_FORTUNE",
+    "id": "redstone_fortune",
+    "label": "Redstone savant",
+    "unit": "LEVEL",
+    "cap": 2,
+    "family": "LOOT",
+    "description": "Adds fractional native Fortune levels on redstone ores; combined Fortune remains capped at III.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.05,
+    "maximum": 0.75,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.05,
+        "maximum": 0.176,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.176,
+        "maximum": 0.33,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.33,
+        "maximum": 0.526,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.526,
+        "maximum": 0.75,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "COAL_FORTUNE",
+    "id": "coal_fortune",
+    "label": "Coal splitter",
+    "unit": "LEVEL",
+    "cap": 2,
+    "family": "LOOT",
+    "description": "Adds fractional native Fortune levels on coal ores; combined Fortune remains capped at III.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.05,
+    "maximum": 0.75,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.05,
+        "maximum": 0.176,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.176,
+        "maximum": 0.33,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.33,
+        "maximum": 0.526,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.526,
+        "maximum": 0.75,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "METAL_FORTUNE",
+    "id": "metal_fortune",
+    "label": "Metal splitter",
+    "unit": "LEVEL",
+    "cap": 2,
+    "family": "LOOT",
+    "description": "Adds fractional native Fortune levels on iron, copper or gold ores; combined Fortune remains capped at III.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.05,
+    "maximum": 0.75,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.05,
+        "maximum": 0.176,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.176,
+        "maximum": 0.33,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.33,
+        "maximum": 0.526,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.526,
+        "maximum": 0.75,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "DEEP_XP",
+    "id": "deep_xp",
+    "label": "Deep knowledge",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "LOOT",
+    "description": "Additional mining XP below Y=0.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.05,
+    "maximum": 0.8,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.05,
+        "maximum": 0.185,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.185,
+        "maximum": 0.35,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.35,
+        "maximum": 0.56,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.56,
+        "maximum": 0.8,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "ORE_XP",
+    "id": "ore_xp",
+    "label": "Ore knowledge",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "LOOT",
+    "description": "Additional mining XP on ores.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.05,
+    "maximum": 0.8,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.05,
+        "maximum": 0.185,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.185,
+        "maximum": 0.35,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.35,
+        "maximum": 0.56,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.56,
+        "maximum": 0.8,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "CHAIN_XP",
+    "id": "chain_xp",
+    "label": "Experienced rhythm",
+    "unit": "PERCENT",
+    "cap": 2,
+    "family": "LOOT",
+    "description": "Additional mining XP during a consecutive mining chain.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.05,
+    "maximum": 0.8,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.05,
+        "maximum": 0.185,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.185,
+        "maximum": 0.35,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.35,
+        "maximum": 0.56,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.56,
+        "maximum": 0.8,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "XP_CONDENSER",
+    "id": "xp_condenser",
+    "label": "Experience condenser",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "LOOT",
+    "description": "Banks half of mining XP and releases the bank on every fifth primary break, conserving total XP.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Release interval 5/4/3/2 breaks.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "DROP_DUPLICATION",
+    "id": "drop_duplication",
+    "label": "Echoing spoils",
+    "unit": "PERCENT",
+    "cap": 0.2,
+    "family": "LOOT",
+    "description": "Chance to copy one final, non-Silk, non-container drop stack, up to eight extra items.",
+    "minimumRarity": 3,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.005,
+    "maximum": 0.08,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 3,
+        "minimum": 0.005,
+        "maximum": 0.02975,
+        "weights": [
+          0,
+          0,
+          0,
+          700,
+          450,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.02975,
+        "maximum": 0.05375,
+        "weights": [
+          0,
+          0,
+          0,
+          250,
+          400,
+          450
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.05375,
+        "maximum": 0.08,
+        "weights": [
+          0,
+          0,
+          0,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "GEM_ECHO",
+    "id": "gem_echo",
+    "label": "Gem echo",
+    "unit": "PERCENT",
+    "cap": 0.5,
+    "family": "LOOT",
+    "description": "Chance for one extra matching gem; five-second cooldown.",
+    "minimumRarity": 2,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.2,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0524,
+        "weights": [
+          0,
+          0,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0524,
+        "maximum": 0.092,
+        "weights": [
+          0,
+          0,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.092,
+        "maximum": 0.1424,
+        "weights": [
+          0,
+          0,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.1424,
+        "maximum": 0.2,
+        "weights": [
+          0,
+          0,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "LUCKY_REFUND",
+    "id": "lucky_refund",
+    "label": "Lucky edge",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "LOOT",
+    "description": "Chance to repair two durability after an ore break.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.03,
+        "maximum": 0.0786,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0786,
+        "maximum": 0.138,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.138,
+        "maximum": 0.2136,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2136,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "GRAVEL_SIFTER",
+    "id": "gravel_sifter",
+    "label": "Gravel sifter",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "TRANSFORM",
+    "description": "Chance: Converts a gravel drop into flint. Disabled by Silk Touch and on secondary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0704,
+        "maximum": 0.132,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.132,
+        "maximum": 0.2104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2104,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COAL"
+  },
+  {
+    "key": "SAND_GLASS",
+    "id": "sand_glass",
+    "label": "Vitrifier",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "TRANSFORM",
+    "description": "Chance: Converts sand drops into glass. Disabled by Silk Touch and on secondary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0704,
+        "maximum": 0.132,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.132,
+        "maximum": 0.2104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2104,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COAL"
+  },
+  {
+    "key": "CLAY_FIRING",
+    "id": "clay_firing",
+    "label": "Clay kiln",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "TRANSFORM",
+    "description": "Chance: Converts clay balls into bricks. Disabled by Silk Touch and on secondary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0704,
+        "maximum": 0.132,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.132,
+        "maximum": 0.2104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2104,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COAL"
+  },
+  {
+    "key": "STONE_SMOOTHER",
+    "id": "stone_smoother",
+    "label": "Stone smoother",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "TRANSFORM",
+    "description": "Chance: Converts cobblestone into stone. Disabled by Silk Touch and on secondary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0704,
+        "maximum": 0.132,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.132,
+        "maximum": 0.2104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2104,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COAL"
+  },
+  {
+    "key": "DEEPSLATE_POLISHER",
+    "id": "deepslate_polisher",
+    "label": "Slate polisher",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "TRANSFORM",
+    "description": "Chance: Converts cobbled deepslate into polished deepslate. Disabled by Silk Touch and on secondary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0704,
+        "maximum": 0.132,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.132,
+        "maximum": 0.2104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2104,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COAL"
+  },
+  {
+    "key": "METAL_NUGGETS",
+    "id": "metal_nuggets",
+    "label": "Metal filings",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "TRANSFORM",
+    "description": "Chance: Adds one iron or gold nugget after mining the corresponding ore. Disabled by Silk Touch and on secondary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0704,
+        "maximum": 0.132,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.132,
+        "maximum": 0.2104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2104,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COAL"
+  },
+  {
+    "key": "FOSSIL_DUST",
+    "id": "fossil_dust",
+    "label": "Fossil dust",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "TRANSFORM",
+    "description": "Chance: Adds one bone meal when mining calcite or tuff. Disabled by Silk Touch and on secondary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0704,
+        "maximum": 0.132,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.132,
+        "maximum": 0.2104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2104,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COAL"
+  },
+  {
+    "key": "SALVAGE_STRING",
+    "id": "salvage_string",
+    "label": "Web salvage",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "TRANSFORM",
+    "description": "Chance: Adds one string when cutting cobweb. Disabled by Silk Touch and on secondary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0704,
+        "maximum": 0.132,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.132,
+        "maximum": 0.2104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2104,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COAL"
+  },
+  {
+    "key": "PRISMATIC_SHARDS",
+    "id": "prismatic_shards",
+    "label": "Prismatic salvage",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "TRANSFORM",
+    "description": "Chance: Adds an amethyst shard when breaking an amethyst cluster. Disabled by Silk Touch and on secondary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0704,
+        "maximum": 0.132,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.132,
+        "maximum": 0.2104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2104,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COAL"
+  },
+  {
+    "key": "MOSS_GARDENER",
+    "id": "moss_gardener",
+    "label": "Moss salvage",
+    "unit": "PERCENT",
+    "cap": 0.75,
+    "family": "TRANSFORM",
+    "description": "Chance: Adds bone meal when mining moss. Disabled by Silk Touch and on secondary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.3,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0704,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0704,
+        "maximum": 0.132,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.132,
+        "maximum": 0.2104,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2104,
+        "maximum": 0.3,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COAL"
+  },
+  {
+    "key": "VEIN_MINER",
+    "id": "vein_miner",
+    "label": "Vein miner",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Mines Connected same-type ore blocks. Native breaks consume durability and respect break-event cancellation. Shared budget: twelve extra blocks.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Extra block limit 2/4/6/8.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "GOLD_INGOT"
+  },
+  {
+    "key": "TUNNELER",
+    "id": "tunneler",
+    "label": "Tunneler",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Mines A straight line behind the mined block. Crouch to activate. Native breaks consume durability and respect break-event cancellation. Shared budget: twelve extra blocks.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Depth 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "GOLD_INGOT"
+  },
+  {
+    "key": "BROADHEAD",
+    "id": "broadhead",
+    "label": "Broadhead",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Mines A plane perpendicular to your view. Crouch to activate. Native breaks consume durability and respect break-event cancellation. Shared budget: twelve extra blocks.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Extra block limit 2/4/6/8.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "GOLD_INGOT"
+  },
+  {
+    "key": "STAIRMAKER",
+    "id": "stairmaker",
+    "label": "Stairmaker",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Mines A descending staircase ahead. Crouch to activate. Native breaks consume durability and respect break-event cancellation. Shared budget: twelve extra blocks.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Steps 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "GOLD_INGOT"
+  },
+  {
+    "key": "SURFACE_SCRAPER",
+    "id": "surface_scraper",
+    "label": "Surface scraper",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Mines Nearby matching sediment blocks. Native breaks consume durability and respect break-event cancellation. Shared budget: twelve extra blocks.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Extra block limit 2/4/6/8.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "GOLD_INGOT"
+  },
+  {
+    "key": "GRAVEL_VACUUM",
+    "id": "gravel_vacuum",
+    "label": "Gravel vacuum",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Mines The gravel or sand column above the break. Native breaks consume durability and respect break-event cancellation. Shared budget: twelve extra blocks.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Height 2/4/6/8.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "GOLD_INGOT"
+  },
+  {
+    "key": "ORE_BRANCH",
+    "id": "ore_branch",
+    "label": "Branching veins",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Mines Adjacent ores, even of different types. Native breaks consume durability and respect break-event cancellation. Shared budget: twelve extra blocks.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Extra block limit 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "GOLD_INGOT"
+  },
+  {
+    "key": "CRYSTAL_HARVEST",
+    "id": "crystal_harvest",
+    "label": "Crystal sweep",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Mines Nearby mature amethyst clusters; budding amethyst is never targeted. Native breaks consume durability and respect break-event cancellation. Shared budget: twelve extra blocks.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Extra block limit 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "GOLD_INGOT"
+  },
+  {
+    "key": "OBSIDIAN_CHISEL",
+    "id": "obsidian_chisel",
+    "label": "Obsidian chisel",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Mines Adjacent matching obsidian blocks. Native breaks consume durability and respect break-event cancellation. Shared budget: twelve extra blocks.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Extra block limit 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "GOLD_INGOT"
+  },
+  {
+    "key": "TIMBER_SUPPORT",
+    "id": "timber_support",
+    "label": "Support mason",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "PLACE",
+    "description": "Places inventory cobblestone below the mined cell when it is unsupported. Placement events can cancel; resources are consumed only on success.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Cooldown 8/6/4/2 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "COBBLESTONE"
+  },
+  {
+    "key": "LIGHTBEARER",
+    "id": "lightbearer",
+    "label": "Lightbearer",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "PLACE",
+    "description": "Places an inventory torch in the mined cell when light is low. Placement events can cancel; resources are consumed only on success.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Cooldown 8/6/4/2 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "COBBLESTONE"
+  },
+  {
+    "key": "LAVA_CORK",
+    "id": "lava_cork",
+    "label": "Lava cork",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "PLACE",
+    "description": "Consumes cobblestone to plug one adjacent exposed lava cell. Placement events can cancel; resources are consumed only on success.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Cooldown 8/6/4/2 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "COBBLESTONE"
+  },
+  {
+    "key": "WATER_CORK",
+    "id": "water_cork",
+    "label": "Water cork",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "PLACE",
+    "description": "Consumes cobblestone to plug one adjacent exposed water cell. Placement events can cancel; resources are consumed only on success.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Cooldown 8/6/4/2 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "COBBLESTONE"
+  },
+  {
+    "key": "BRIDGEWORK",
+    "id": "bridgework",
+    "label": "Bridgework",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "PLACE",
+    "description": "While crouching, places inventory cobblestone directly beneath your feet. Placement events can cancel; resources are consumed only on success.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Cooldown 8/6/4/2 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "COBBLESTONE"
+  },
+  {
+    "key": "ECOLOGIST",
+    "id": "ecologist",
+    "label": "Green thumb",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "PLACE",
+    "description": "Consumes bone meal to turn nearby exposed dirt into grass, never replacing other blocks. Placement events can cancel; resources are consumed only on success.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Cooldown 8/6/4/2 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "COBBLESTONE"
+  },
+  {
+    "key": "NIGHT_SIGHT",
+    "id": "night_sight",
+    "label": "Night sight",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Grants ten seconds of night vision on a primary break.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Effect duration/radius grows at milestone stages; ten-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "MINERS_SPRINT",
+    "id": "miners_sprint",
+    "label": "Prospector sprint",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Grants three seconds of Speed I after an ore break.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Effect duration/radius grows at milestone stages; ten-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "STONE_SKIN",
+    "id": "stone_skin",
+    "label": "Stone skin",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Grants three seconds of Resistance I after a stone break.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Effect duration/radius grows at milestone stages; ten-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "FIRE_WARD",
+    "id": "fire_ward",
+    "label": "Fire ward",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Grants three seconds of fire resistance after mining near lava.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Effect duration/radius grows at milestone stages; ten-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "ABSORPTION",
+    "id": "absorption",
+    "label": "Gem ward",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Grants four seconds of Absorption I after a gem ore break.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Effect duration/radius grows at milestone stages; ten-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "SOFT_LANDING",
+    "id": "soft_landing",
+    "label": "Soft landing",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Grants three seconds of Slow Falling after an airborne break.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Effect duration/radius grows at milestone stages; ten-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "ECHO_CHAMBER",
+    "id": "echo_chamber",
+    "label": "Echo chamber",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Slows nearby hostile mobs after an ore break; never targets players or animals.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Effect duration/radius grows at milestone stages; ten-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "QUARRY_MARK",
+    "id": "quarry_mark",
+    "label": "Quarry mark",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Makes nearby hostile mobs glow after an ore break.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Effect duration/radius grows at milestone stages; ten-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "FALLING_STAR",
+    "id": "falling_star",
+    "label": "Desperate pulse",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "At less than four hearts, knocks nearby hostile mobs away after mining.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Effect duration/radius grows at milestone stages; ten-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "OXYGEN",
+    "id": "oxygen",
+    "label": "Air pockets",
+    "unit": "POINTS",
+    "cap": 100,
+    "family": "STATUS",
+    "description": "Restores air ticks on underwater primary breaks.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 5,
+    "maximum": 40,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 5,
+        "maximum": 11.3,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 11.3,
+        "maximum": 19.0,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 19.0,
+        "maximum": 28.8,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 28.8,
+        "maximum": 40,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "HUNGER_SAVER",
+    "id": "hunger_saver",
+    "label": "Miner sustenance",
+    "unit": "PERCENT",
+    "cap": 0.4,
+    "family": "STATUS",
+    "description": "Chance to restore one food point; ten-second cooldown.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.01,
+    "maximum": 0.15,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.01,
+        "maximum": 0.0352,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0352,
+        "maximum": 0.066,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.066,
+        "maximum": 0.1052,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.1052,
+        "maximum": 0.15,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "RECOIL_STEP",
+    "id": "recoil_step",
+    "label": "Recoil step",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Crouch mining steps you safely backward into loaded, collision-free space; ten-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Distance 1/1.5/2/2.5 blocks.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "CHARGE_BATTERY",
+    "id": "charge_battery",
+    "label": "Resonant battery",
+    "unit": "POINTS",
+    "cap": 5,
+    "family": "CHARGE",
+    "description": "Generates resonance on primary breaks; capacity 100.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.2,
+    "maximum": 2,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.2,
+        "maximum": 0.524,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.524,
+        "maximum": 0.92,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.92,
+        "maximum": 1.424,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 1.424,
+        "maximum": 2.0,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "AMETHYST_SHARD"
+  },
+  {
+    "key": "OVERCHARGE",
+    "id": "overcharge",
+    "label": "Overcharge",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "CHARGE",
+    "description": "Consumes four resonance on a primary break for temporary Haste I; ten-second cooldown.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Haste duration 2/3/4/5 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "AMETHYST_SHARD"
+  },
+  {
+    "key": "GEM_BATTERY",
+    "id": "gem_battery",
+    "label": "Gem battery",
+    "unit": "POINTS",
+    "cap": 12,
+    "family": "CHARGE",
+    "description": "Generates extra resonance on gem ore breaks.",
+    "minimumRarity": 2,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 5,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 1,
+        "maximum": 1.72,
+        "weights": [
+          0,
+          0,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 1.72,
+        "maximum": 2.6,
+        "weights": [
+          0,
+          0,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 2.6,
+        "maximum": 3.72,
+        "weights": [
+          0,
+          0,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 3.72,
+        "maximum": 5,
+        "weights": [
+          0,
+          0,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "AMETHYST_SHARD"
+  },
+  {
+    "key": "KINETIC_BATTERY",
+    "id": "kinetic_battery",
+    "label": "Kinetic battery",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "CHARGE",
+    "description": "Moving at least one block while holding the tool generates one resonance, at most once every three seconds.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Charge gain 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "AMETHYST_SHARD"
+  },
+  {
+    "key": "XP_BATTERY",
+    "id": "xp_battery",
+    "label": "Experience battery",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "CHARGE",
+    "description": "Converts one point of the current mining XP into resonance, never generates XP.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Charge gain 1/2/3/4 per XP consumed.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "AMETHYST_SHARD"
+  },
+  {
+    "key": "SURGE_DISCHARGE",
+    "id": "surge_discharge",
+    "label": "Quarry discharge",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Spends five resonance to mine a cross around a primary break. Shared area budget applies.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Extra blocks 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "GOLD_INGOT"
+  },
+  {
+    "key": "LOOT_DISCHARGE",
+    "id": "loot_discharge",
+    "label": "Spoils discharge",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "LOOT",
+    "description": "Spends three resonance to duplicate up to four items from one final drop; non-Silk, five-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Extra item limit 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "RESTORATIVE_DISCHARGE",
+    "id": "restorative_discharge",
+    "label": "Mending discharge",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "CHARGE",
+    "description": "Spends four resonance to repair the tool; ten-second cooldown.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Durability restored 2/4/6/8.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "AMETHYST_SHARD"
+  },
+  {
+    "key": "AURA_DISCHARGE",
+    "id": "aura_discharge",
+    "label": "Shared momentum",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "CHARGE",
+    "description": "Spends six resonance to grant Haste I to nearby allied players; ten-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Radius 3/4/5/6 blocks; duration 2/3/4/5 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "AMETHYST_SHARD"
+  },
+  {
+    "key": "RECIPROCAL_CHAIN",
+    "id": "reciprocal_chain",
+    "label": "Alternating current",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "CHARGE",
+    "description": "Alternating ore and stone breaks within three seconds generates resonance.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Charge gain 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "AMETHYST_SHARD"
+  },
+  {
+    "key": "XP_SIPHON",
+    "id": "xp_siphon",
+    "label": "Knowledge siphon",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "LOOT",
+    "description": "Grants mining XP directly, suppressing its orbs; this bypasses vanilla orb-based Mending.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Instant collection; no numeric upgrade.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "RALLY_MINING",
+    "id": "rally_mining",
+    "label": "Apprentice resonance",
+    "unit": "PERCENT",
+    "cap": 1,
+    "family": "PROGRESSION",
+    "description": "Chance to grant one extra tool XP after a valid primary break; ascension gates still apply.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.4,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.03,
+        "maximum": 0.0966,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0966,
+        "maximum": 0.178,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.178,
+        "maximum": 0.2816,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.2816,
+        "maximum": 0.4,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "AMETHYST_SHARD"
+  },
+  {
+    "key": "RECLAMATION",
+    "id": "reclamation",
+    "label": "Careful mason",
+    "unit": "PERCENT",
+    "cap": 0.5,
+    "family": "PLACE",
+    "description": "Chance not to consume the material for a successful utility placement; you must still own it.",
+    "minimumRarity": 1,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.02,
+    "maximum": 0.25,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.02,
+        "maximum": 0.0614,
+        "weights": [
+          0,
+          850,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.0614,
+        "maximum": 0.112,
+        "weights": [
+          0,
+          130,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.112,
+        "maximum": 0.1764,
+        "weights": [
+          0,
+          19,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.1764,
+        "maximum": 0.25,
+        "weights": [
+          0,
+          1,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "COBBLESTONE"
+  },
+  {
+    "key": "PRECISION_SILK",
+    "id": "precision_silk",
+    "label": "Precision silk",
+    "unit": "PERCENT",
+    "cap": 1,
+    "family": "LOOT",
+    "description": "Silk Touch chance while standing still. Shares the base harvest exclusion group.",
+    "minimumRarity": 2,
+    "weight": 20,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 0.03,
+    "maximum": 0.6,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 4,
+        "minimum": 0.03,
+        "maximum": 0.1326,
+        "weights": [
+          0,
+          0,
+          650,
+          400,
+          250,
+          150
+        ]
+      },
+      {
+        "rank": 3,
+        "minimum": 0.1326,
+        "maximum": 0.258,
+        "weights": [
+          0,
+          0,
+          280,
+          350,
+          300,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.258,
+        "maximum": 0.4176,
+        "weights": [
+          0,
+          0,
+          65,
+          200,
+          300,
+          300
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.4176,
+        "maximum": 0.6,
+        "weights": [
+          0,
+          0,
+          5,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "LAPIS_LAZULI"
+  },
+  {
+    "key": "COMPACTOR",
+    "id": "compactor",
+    "label": "Pocket press",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "COLLECTION",
+    "description": "Converts nine plain inventory ingredients into one block or ingot after mining; never processes named or component-bearing ingredients.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Raw iron/gold; then copper; then coal/redstone/lapis; then diamonds/emeralds. Five-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "IRON_INGOT"
+  },
+  {
+    "key": "SPOILS_SHIELD",
+    "id": "spoils_shield",
+    "label": "Spoils ward",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "COLLECTION",
+    "description": "Temporarily prevents damage to your final mined drops via the native invulnerability-check event; underlying entity flags remain unchanged.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Protection 3/5/7/9 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "IRON_INGOT"
+  },
+  {
+    "key": "DUST_CLOUD",
+    "id": "dust_cloud",
+    "label": "Choking dust",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Mining sediment weakens nearby hostile mobs for three seconds; ten-second cooldown.",
+    "minimumRarity": 2,
+    "weight": 12,
+    "influence": "NONE",
+    "exclusive": false,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Radius 3/4/5/6; duration 3/4/5/6 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          1000,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "PRISMARINE_SHARD"
+  },
+  {
+    "key": "PYROCLASTIC",
+    "id": "pyroclastic",
+    "label": "Pyroclastic",
+    "unit": "PERCENT",
+    "cap": 1,
+    "family": "LOOT",
+    "description": "High smelting chance; successful furnace processing also increases furnace XP.",
+    "minimumRarity": 3,
+    "weight": 10,
+    "influence": "NETHER",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 0.3,
+    "maximum": 0.85,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 3,
+        "minimum": 0.3,
+        "maximum": 0.4815,
+        "weights": [
+          0,
+          0,
+          0,
+          700,
+          450,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.4815,
+        "maximum": 0.6575,
+        "weights": [
+          0,
+          0,
+          0,
+          250,
+          400,
+          450
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.6575,
+        "maximum": 0.85,
+        "weights": [
+          0,
+          0,
+          0,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "CINDER_CHAIN",
+    "id": "cinder_chain",
+    "label": "Cinder chain",
+    "unit": "POINTS",
+    "cap": 10,
+    "family": "CHARGE",
+    "description": "Successful smelting generates resonance.",
+    "minimumRarity": 3,
+    "weight": 10,
+    "influence": "NETHER",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 4,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 3,
+        "minimum": 1,
+        "maximum": 1.99,
+        "weights": [
+          0,
+          0,
+          0,
+          700,
+          450,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 1.99,
+        "maximum": 2.95,
+        "weights": [
+          0,
+          0,
+          0,
+          250,
+          400,
+          450
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 2.95,
+        "maximum": 4,
+        "weights": [
+          0,
+          0,
+          0,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "SOUL_FURNACE",
+    "id": "soul_furnace",
+    "label": "Soul furnace",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "LOOT",
+    "description": "Spends one player XP to smelt all eligible drops of a primary break; never overrides Silk Touch.",
+    "minimumRarity": 3,
+    "weight": 10,
+    "influence": "NETHER",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Furnace XP multiplier 1/1.2/1.4/1.6.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "BASALT_HEART",
+    "id": "basalt_heart",
+    "label": "Basalt heart",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Nether stone breaks grant Resistance I and repair durability; ten-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 10,
+    "influence": "NETHER",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Repair 1/2/3/4; duration 2/3/4/5 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "MAGMA_RESERVOIR",
+    "id": "magma_reservoir",
+    "label": "Magma reservoir",
+    "unit": "POINTS",
+    "cap": 10,
+    "family": "CHARGE",
+    "description": "Mining near lava generates resonance.",
+    "minimumRarity": 3,
+    "weight": 10,
+    "influence": "NETHER",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 4,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 3,
+        "minimum": 1,
+        "maximum": 1.99,
+        "weights": [
+          0,
+          0,
+          0,
+          700,
+          450,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 1.99,
+        "maximum": 2.95,
+        "weights": [
+          0,
+          0,
+          0,
+          250,
+          400,
+          450
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 2.95,
+        "maximum": 4,
+        "weights": [
+          0,
+          0,
+          0,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "SOUL_CLEANSE",
+    "id": "soul_cleanse",
+    "label": "Soul cleanse",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Mining soul sand or soul soil removes Poison, Wither, Slowness or Weakness; ten-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 10,
+    "influence": "NETHER",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Removes 1/2/3/4 effects.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "PIGLIN_PURSE",
+    "id": "piglin_purse",
+    "label": "Piglin purse",
+    "unit": "PERCENT",
+    "cap": 1,
+    "family": "TRANSFORM",
+    "description": "Chance for one extra gold nugget on gold ores; never triggers on Silk Touch.",
+    "minimumRarity": 3,
+    "weight": 10,
+    "influence": "NETHER",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 0.1,
+    "maximum": 0.5,
+    "milestones": "",
+    "tiers": [
+      {
+        "rank": 3,
+        "minimum": 0.1,
+        "maximum": 0.232,
+        "weights": [
+          0,
+          0,
+          0,
+          700,
+          450,
+          250
+        ]
+      },
+      {
+        "rank": 2,
+        "minimum": 0.232,
+        "maximum": 0.36,
+        "weights": [
+          0,
+          0,
+          0,
+          250,
+          400,
+          450
+        ]
+      },
+      {
+        "rank": 1,
+        "minimum": 0.36,
+        "maximum": 0.5,
+        "weights": [
+          0,
+          0,
+          0,
+          50,
+          150,
+          300
+        ]
+      }
+    ],
+    "growth": "NUMERIC",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "GHAST_BREATH",
+    "id": "ghast_breath",
+    "label": "Ghast breath",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Spends five resonance to knock away and ignite nearby hostile mobs; ten-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 10,
+    "influence": "NETHER",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Radius 3/4/5/6; fire 2/3/4/5 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "EMBERLIGHT",
+    "id": "emberlight",
+    "label": "Emberlight",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "PLACE",
+    "description": "Spends two resonance to create a soul torch in a dark mined cell; placement events still apply.",
+    "minimumRarity": 3,
+    "weight": 10,
+    "influence": "NETHER",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Cooldown 8/6/4/2 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "INFERNAL_ECHO",
+    "id": "infernal_echo",
+    "label": "Infernal echo",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "AREA",
+    "description": "Spends four resonance to break additional connected Nether ores; shared area limit applies.",
+    "minimumRarity": 3,
+    "weight": 10,
+    "influence": "NETHER",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Extra blocks 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "BLAZE_POWDER"
+  },
+  {
+    "key": "CHORUS_HOP",
+    "id": "chorus_hop",
+    "label": "Chorus hop",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Spends four resonance to safely teleport forward when crouch mining; ten-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "END",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Distance 2/3/4/5 blocks.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "ENDER_PEARL"
+  },
+  {
+    "key": "ENDER_DISPATCH",
+    "id": "ender_dispatch",
+    "label": "Ender dispatch",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "COLLECTION",
+    "description": "After Phasebound, sends overflow drops to your Ender Chest; full storage leaves exact remainders in world.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "END",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Overflow chance 25/50/75/100% times quality.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "ENDER_PEARL"
+  },
+  {
+    "key": "REPULSOR",
+    "id": "repulsor",
+    "label": "Repulsor",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Knocks nearby hostile mobs away after an ore break; ten-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "END",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Radius 3/4/5/6; strength grows by stage.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "ENDER_PEARL"
+  },
+  {
+    "key": "ENTANGLEMENT",
+    "id": "entanglement",
+    "label": "Entanglement",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "CHARGE",
+    "description": "Spends two resonance to give one resonance to a nearby allied player's reconstructed pickaxe; ten-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "END",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Sharing radius 3/4/5/6.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "ENDER_PEARL"
+  },
+  {
+    "key": "TEMPORAL_ECHO",
+    "id": "temporal_echo",
+    "label": "Temporal echo",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "LOOT",
+    "description": "Spends three resonance to prime a duplicate of one item on the next primary break within ten seconds; non-Silk only.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "END",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Duplicate count 1/2/3/4; five-second cooldown.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "ENDER_PEARL"
+  },
+  {
+    "key": "SHULKER_PULSE",
+    "id": "shulker_pulse",
+    "label": "Shulker pulse",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Spends five resonance to levitate nearby hostile mobs; ten-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "END",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Radius 3/4/5/6; duration 1/2/3/4 seconds.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "ENDER_PEARL"
+  },
+  {
+    "key": "ENDSTONE_ALCHEMY",
+    "id": "endstone_alchemy",
+    "label": "Endstone alchemy",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "TRANSFORM",
+    "description": "Spends five resonance for a 15% chance of one pearl when mining End Stone; ten-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "END",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Pearl chance 15/20/25/30%.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "ENDER_PEARL"
+  },
+  {
+    "key": "VOID_ANCHOR",
+    "id": "void_anchor",
+    "label": "Void anchor",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "STATUS",
+    "description": "Spends twenty resonance to return you to the last safe position recorded while holding this tool in this dimension; sixty-second cooldown.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "END",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Void rescue; no numeric upgrade.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "ENDER_PEARL"
+  },
+  {
+    "key": "DIMENSIONAL_BATTERY",
+    "id": "dimensional_battery",
+    "label": "Dimensional battery",
+    "unit": "PERK",
+    "cap": 1,
+    "family": "CHARGE",
+    "description": "Successful Phasebound collection generates resonance once per primary break.",
+    "minimumRarity": 3,
+    "weight": 12,
+    "influence": "END",
+    "exclusive": true,
+    "utility": false,
+    "minimum": 1,
+    "maximum": 1,
+    "milestones": "Charge gain 1/2/3/4.",
+    "tiers": [
+      {
+        "rank": 1,
+        "minimum": 1,
+        "maximum": 1,
+        "weights": [
+          0,
+          0,
+          0,
+          1000,
+          1000,
+          1000
+        ]
+      }
+    ],
+    "growth": "MILESTONE",
+    "resource": "ENDER_PEARL"
+  }
+]

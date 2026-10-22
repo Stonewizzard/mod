@@ -24,14 +24,14 @@ public final class ArchaeologyContent {
     public static final DeferredItem<Item> FRAGMENTS=ExampleMod.ITEMS.registerSimpleItem("ancient_fragments");
     public static final DeferredItem<Item> PRECISION_DRILL=tool("precision_drill",768),PRECISION_BRUSH=tool("precision_brush",256),PRECISION_HAMMER=tool("precision_hammer",640),PRECISION_LENS=lens("precision_lens");
     public static final DeferredItem<Item> RESONANT_DRILL=tool("resonant_drill",1536),RESONANT_BRUSH=tool("resonant_brush",512),RESONANT_HAMMER=tool("resonant_hammer",1280),RESONANT_LENS=lens("resonant_lens");
-    public static final DeferredItem<Item> SWORD=ExampleMod.ITEMS.registerSimpleItem("restored_ancient_sword",p->p.sword(ToolMaterial.DIAMOND,3,-2.4F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> SWORD=ExampleMod.ITEMS.registerItem("restored_ancient_sword",RestoredAncientTool::new,p->p.sword(ToolMaterial.DIAMOND,3,-2.4F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
     public static final DeferredItem<Item> PICKAXE=ExampleMod.ITEMS.registerItem("restored_ancient_pickaxe",RestoredAncientPickaxe::new,p->p.pickaxe(ToolMaterial.DIAMOND,1,-2.8F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
-    public static final DeferredItem<Item> AXE=ExampleMod.ITEMS.registerSimpleItem("restored_ancient_axe",p->p.axe(ToolMaterial.DIAMOND,5,-3F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
-    public static final DeferredItem<Item> SHOVEL=ExampleMod.ITEMS.registerSimpleItem("restored_ancient_shovel",p->p.shovel(ToolMaterial.DIAMOND,1.5F,-3F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
-    public static final DeferredItem<Item> HOE=ExampleMod.ITEMS.registerSimpleItem("restored_ancient_hoe",p->p.hoe(ToolMaterial.DIAMOND,-3,0).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
-    public static final DeferredItem<net.minecraft.world.item.MaceItem> MACE=ExampleMod.ITEMS.registerItem("restored_ancient_mace",net.minecraft.world.item.MaceItem::new,p->p.durability(1800).attributes(net.minecraft.world.item.MaceItem.createAttributes()).component(DataComponents.TOOL,net.minecraft.world.item.MaceItem.createToolProperties()).component(DataComponents.WEAPON,new net.minecraft.world.item.component.Weapon(1)).enchantable(15).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> AXE=ExampleMod.ITEMS.registerItem("restored_ancient_axe",RestoredAncientTool::new,p->p.axe(ToolMaterial.DIAMOND,5,-3F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> SHOVEL=ExampleMod.ITEMS.registerItem("restored_ancient_shovel",RestoredAncientTool::new,p->p.shovel(ToolMaterial.DIAMOND,1.5F,-3F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> HOE=ExampleMod.ITEMS.registerItem("restored_ancient_hoe",RestoredAncientTool::new,p->p.hoe(ToolMaterial.DIAMOND,-3,0).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
+    public static final DeferredItem<net.minecraft.world.item.MaceItem> MACE=ExampleMod.ITEMS.registerItem("restored_ancient_mace",RestoredAncientMace::new,p->p.durability(1800).attributes(net.minecraft.world.item.MaceItem.createAttributes()).component(DataComponents.TOOL,net.minecraft.world.item.MaceItem.createToolProperties()).component(DataComponents.WEAPON,new net.minecraft.world.item.component.Weapon(1)).enchantable(15).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
     // Same kinetic timing/range parameters as the native diamond spear.
-    public static final DeferredItem<Item> SPEAR=ExampleMod.ITEMS.registerSimpleItem("restored_ancient_spear",p->p.spear(ToolMaterial.DIAMOND,1.05F,1.075F,.5F,3F,10F,6.5F,5.1F,10F,4.6F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
+    public static final DeferredItem<Item> SPEAR=ExampleMod.ITEMS.registerItem("restored_ancient_spear",RestoredAncientTool::new,p->p.spear(ToolMaterial.DIAMOND,1.05F,1.075F,.5F,3F,10F,6.5F,5.1F,10F,4.6F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
     private static DeferredItem<Item> part(String id){return ExampleMod.ITEMS.registerSimpleItem(id,p->p.stacksTo(1).rarity(Rarity.UNCOMMON));}
     private static DeferredItem<Item> tool(String id,int life){return ExampleMod.ITEMS.registerSimpleItem(id,p->p.durability(life).enchantable(12).repairable(Items.IRON_INGOT));}
     private static DeferredItem<Item> lens(String id){return ExampleMod.ITEMS.registerSimpleItem(id,p->p.stacksTo(1));}
@@ -75,8 +75,3 @@ public final class ArchaeologyContent {
         return stack;
     }
 }
-
-
-
-
-

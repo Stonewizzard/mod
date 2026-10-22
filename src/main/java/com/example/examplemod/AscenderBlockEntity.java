@@ -14,7 +14,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 public final class AscenderBlockEntity extends BaseContainerBlockEntity {
-    public static final int SIZE=19;
+    public static final int SIZE=25;
     private NonNullList<ItemStack> items=NonNullList.withSize(SIZE,ItemStack.EMPTY);
     public AscenderBlockEntity(BlockPos pos,BlockState state){super(AscenderContent.ENTITY.get(),pos,state);}
     public static void tick(Level level,BlockPos pos,BlockState state,AscenderBlockEntity ascender){

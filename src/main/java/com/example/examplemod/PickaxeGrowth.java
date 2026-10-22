@@ -11,7 +11,7 @@ import net.minecraft.world.item.component.CustomData;
 public final class PickaxeGrowth {
     public static final String COUNTERS="LevelGrowth";
     public static void awardLevel(ItemStack tool,int newLevel){
-        var candidates=new ArrayList<>(PickaxeModifiers.contributions(tool).stream().filter(c->c.base()>0).toList());
+        var candidates=new ArrayList<>(PickaxeModifiers.contributions(tool).stream().filter(c->c.base()>0&&c.trait().growth==PickaxeTrait.Growth.NUMERIC).toList());
         if(candidates.isEmpty())return;
         var root=tool.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
         var progression=root.getCompoundOrEmpty(PickaxeProgression.KEY).copy();

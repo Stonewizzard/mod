@@ -187,6 +187,7 @@ public class ExampleMod {
             modEventBus.addListener(PickaxeModifierTests::register);
             modEventBus.addListener(ModifierTierTests::register);
             modEventBus.addListener(InfluenceTests::register);
+            modEventBus.addListener(ModifierExpansionTests::register);
             modEventBus.addListener(PickaxeAscensionTests::register);
             modEventBus.addListener(PickaxeGrowthTests::register);
             modEventBus.addListener(PickaxeLevelSoundTests::register);
@@ -286,9 +287,3 @@ public class ExampleMod {
         LOGGER.info("HELLO from server starting");
     }
 }
-
-
-
-
-
-
