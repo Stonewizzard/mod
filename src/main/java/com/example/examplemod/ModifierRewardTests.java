@@ -16,7 +16,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import static com.example.examplemod.PickaxeTrait.*;
 
-/** Native reward benchmarks and read-only appraisal/inventory regressions. */
+/** Native reward benchmarks and guidebook and migration regressions. */
 public final class ModifierRewardTests {
     public static void register(RegisterGameTestsEvent event){
         var env=event.registerEnvironment(Identifier.fromNamespaceAndPath(ExampleMod.MODID,"modifier_rewards_environment"));
@@ -25,8 +25,8 @@ public final class ModifierRewardTests {
     private static final class Test extends GameTestInstance {
         final int mode;Test(TestData<Holder<TestEnvironmentDefinition<?>>> data,int mode){super(data);this.mode=mode;}
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
-        @Override protected MutableComponent typeDescription(){return Component.literal("Rewarding builds and read-only Appraisal Table");}
-        @Override public void run(GameTestHelper h){if(mode==0)balance(h);else if(mode==1)appraisal(h);else runtime(h);System.out.println("MODIFIER_REWARDS_CHECK_"+mode+": PASS");h.succeed();}
+        @Override protected MutableComponent typeDescription(){return Component.literal("Rewarding builds and searchable field guide");}
+        @Override public void run(GameTestHelper h){if(mode==0)balance(h);else if(mode==1)guidebook(h);else runtime(h);System.out.println("MODIFIER_REWARDS_CHECK_"+mode+": PASS");h.succeed();}
     }
     private static ItemStack tool(int quality,Map<PickaxeTrait,Double> traits){return ModifierExpansionTests.tool(quality,traits,ModifierScaling.S);}
     private static void balance(GameTestHelper h){
@@ -42,8 +42,8 @@ public final class ModifierRewardTests {
             double expected=8*(1+2*quality/100.0)*(1+2*quality/100.0);
             check(h,Math.abs(event.getNewSpeed()-expected)<.001,"Quality and base modifier power must remain independent and predictable");
             if(quality==100)check(h,event.getNewSpeed()>vanilla*2,"An attainable unenchanted 100%-quality speed build must beat Efficiency V Netherite by over twofold");
-            AppraisalReport.read(item);PickaxeTooltips.refresh(item);check(h,item.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY).equals(saved),"Reward refresh and appraisal must not rewrite any recovered raw roll or source record");
-            check(h,PickaxeTooltips.tool(item).size()<=5,"The actual item tooltip must stay compact");
+            FieldGuide.entries();PickaxeTooltips.refresh(item);check(h,item.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY).equals(saved),"Reward refresh and reading definitions must not rewrite any recovered raw roll or source record");
+            check(h,PickaxeTooltips.tool(item).size()<=16,"Item tooltip pages must retain actual values within their row budget");
         }
         var bare=tool(100,Map.of());bare.enchant(efficiency,5);player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,bare);var boosted=new PlayerEvent.BreakSpeed(player,Blocks.STONE.defaultBlockState(),bare.getDestroySpeed(Blocks.STONE.defaultBlockState())+26,pos);PickaxeEvents.speed(boosted);
         check(h,boosted.getNewSpeed()==102,"The quality core must multiply, rather than replace, native Efficiency speed");
@@ -58,30 +58,41 @@ public final class ModifierRewardTests {
         check(h,advanced>normal*1.5,"Fortune modifiers must deliver substantially more native loot than Fortune III on the same ore");
         System.out.println("REWARD_BENCHMARK: unenchanted speed build=72; Efficiency V restored core=102; Efficiency V Netherite=35; Fortune modified="+advanced+", vanilla III="+normal);
     }
-    private static void appraisal(GameTestHelper h){
-        var level=h.getLevel();var pos=h.absolutePos(new BlockPos(3,1,3));var p=h.makeMockServerPlayerInLevel();p.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);level.setBlockAndUpdate(pos,AppraisalContent.BLOCK.get().defaultBlockState());
-        var table=(AppraisalTableBlockEntity)level.getBlockEntity(pos);var menu=new AppraisalMenu(81,p.getInventory(),table);p.containerMenu=menu;
-        check(h,menu.slots.size()==37&&menu.getSlot(0).getMaxStackSize()==1&&!menu.getSlot(0).mayPlace(new ItemStack(Items.DIRT)),"Appraisal needs one restricted input and a normal player inventory");
-        for(var sample:List.of(tool(100,Map.of(SPEED,.3,VEIN_MINER,1.0)),ComponentWorkTests.component(ArtifactProfile.Find.PICKAXE_LEFT,80,5,91),ArchaeologyContent.specimen(5,4),ComponentWorkTests.ancient(ArtifactProfile.Find.PICKAXE_LEFT,3))){
-            p.getInventory().clearContent();var before=sample.copy();p.getInventory().setItem(9,sample);check(h,!menu.quickMoveStack(p,1).isEmpty()&&ItemStack.matches(before,table.getItem(0)),"Inspection shift-click must preserve the exact input");
-            var report=AppraisalReport.read(table.getItem(0));check(h,!report.entries().isEmpty()&&ItemStack.matches(before,table.getItem(0)),"Repeated appraisal must never roll, unveil or otherwise mutate an item");
-            var data=table.saveWithFullMetadata(level.registryAccess());var restored=net.minecraft.world.level.block.entity.BlockEntity.loadStatic(pos,table.getBlockState(),data,level.registryAccess());check(h,restored instanceof AppraisalTableBlockEntity t&&ItemStack.matches(before,t.getItem(0)),"Full inspection input must survive native block saves");
-            if(ArchaeologyContent.artifacts().stream().anyMatch(before::is))check(h,report.entries().size()==1,"Raw specimens must not expose hidden rewards or modifiers");
-            check(h,!menu.quickMoveStack(p,0).isEmpty()&&table.getItem(0).isEmpty(),"The inspected item must return normally without consuming or changing it");
+    private static void guidebook(GameTestHelper h){
+        var entries=FieldGuide.entries();check(h,entries.size()==147&&entries.stream().filter(e->e.category()==FieldGuide.Category.MODIFIERS).count()==120,"The field guide must include all 27 chapters and all 120 modifier definitions");
+        for(var category:FieldGuide.Category.values())check(h,!FieldGuide.search("",category,FieldGuide.Group.ALL).isEmpty(),"Every guide category must contain articles");
+        for(var entry:entries){
+            for(var link:entry.links())check(h,FieldGuide.entry(link)!=null,"Every related-article link must resolve");
+            var icon=net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(Identifier.parse(entry.icon()));check(h,icon!=null&&icon!=Items.AIR,"Every guide icon must refer to a registered item");
         }
-        for(var trait:PickaxeTrait.values()){
-            var single=ComponentWorkTests.component(trait.utility?ArtifactProfile.Find.TOOL_HANDLE:ArtifactProfile.Find.PICKAXE_LEFT,50,5,71);var root=single.get(DataComponents.CUSTOM_DATA).copyTag();var record=root.getCompoundOrEmpty(ArtifactModifiers.KEY);
-            var band=ArtifactModifierCatalog.spec(trait).tiers().getLast();root.put(ArtifactModifiers.KEY,ArtifactModifiers.writeRolls(record,List.of(new ArtifactModifiers.Roll(trait.id,band.maximum(),.5,ModifierScaling.S,band.id(),band.rank()))));single.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
-            var saved=single.copy();var detail=AppraisalReport.read(single);
-            check(h,detail.entries().size()==2&&detail.entries().get(1).lines().contains(ModifierDescriptions.description(trait))&&ItemStack.matches(saved,single),"Every one of the 120 modifier descriptions must be reachable without modifying its component");
-        }
-        p.snapTo(pos.getX()+30,pos.getY(),pos.getZ());check(h,!menu.stillValid(p),"Appraisal must use the native table distance check");p.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);
+        for(var trait:PickaxeTrait.values())check(h,FieldGuide.entry(trait.id).paragraphs().contains(ModifierDescriptions.description(trait)),"Every modifier must use its actual generated gameplay description");
+        check(h,FieldGuide.search("MaGnEt",FieldGuide.Category.MODIFIERS,FieldGuide.Group.ALL).stream().anyMatch(e->e.id().equals(MAGNET.id)),"Search must match case-insensitive partial modifier names");
+        check(h,FieldGuide.search("wither rose",FieldGuide.Category.CREATURES,FieldGuide.Group.ALL).stream().anyMatch(e->e.id().equals("crunchers")),"Search must match multiple words in article text");
+        check(h,FieldGuide.search("zzzznotpresentzzzz",null,FieldGuide.Group.ALL).isEmpty(),"No-match searches must return an empty result set");
+        for(var entry:FieldGuide.search("",FieldGuide.Category.MODIFIERS,FieldGuide.Group.NETHER))check(h,ArtifactModifierCatalog.spec(PickaxeTrait.byId(entry.id())).influence()==ModifierInfluence.NETHER,"Topic filters must not leak foreign modifier definitions");
+        var nav=new FieldGuideNavigation();nav.query("wither rose");nav.category(FieldGuide.Category.CREATURES);String selected=nav.selected().id();nav.open("cruncher_egg");check(h,nav.selected().id().equals("cruncher_egg")&&nav.query().isEmpty(),"Related navigation must open articles outside a prior search");nav.back();check(h,nav.query().equals("wither rose")&&nav.category()==FieldGuide.Category.CREATURES&&nav.selected().id().equals(selected),"Back must restore the query, category and prior article");
+        nav.query("");nav.category(FieldGuide.Category.MODIFIERS);nav.listPage(10000);check(h,nav.listPage()<nav.listPages(),"Result pagination must stay bounded");nav.query("zzzznotpresentzzzz");check(h,nav.selected()==null&&nav.listPage()==0,"A no-results search must clear a stale article selection");
+        var recipeInput=net.minecraft.world.item.crafting.CraftingInput.of(2,2,List.of(new ItemStack(Items.BOOK),ItemStack.EMPTY,ItemStack.EMPTY,new ItemStack(Items.PAPER)));
+        var recipe=h.getLevel().getServer().getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,recipeInput,h.getLevel());
+        check(h,recipe.isPresent()&&recipe.get().value().assemble(recipeInput).is(FieldGuideContent.BOOK.get()),"A book and paper must craft the field guide in the normal inventory grid");
+        var oldRecipe=net.minecraft.world.item.crafting.CraftingInput.of(3,3,List.of(ItemStack.EMPTY,new ItemStack(Items.PAPER),new ItemStack(Items.GLASS),new ItemStack(Items.OAK_PLANKS),new ItemStack(Items.OAK_PLANKS),new ItemStack(Items.OAK_PLANKS),new ItemStack(Items.STICK),ItemStack.EMPTY,new ItemStack(Items.STICK)));
+        check(h,h.getLevel().getServer().getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,oldRecipe,h.getLevel()).isEmpty(),"The retired Appraisal Table recipe must be absent");
+        var p=h.makeMockServerPlayerInLevel();var book=new ItemStack(FieldGuideContent.BOOK.get());book.set(DataComponents.CUSTOM_NAME,Component.literal("My notes"));var copy=book.copy();p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,book);
+        check(h,book.getItem().use(h.getLevel(),p,net.minecraft.world.InteractionHand.MAIN_HAND)==net.minecraft.world.InteractionResult.SUCCESS&&ItemStack.matches(book,copy),"Reading must not consume or mutate the book on the dedicated server");
+        check(h,FieldGuideContent.isGuide(new ItemStack(LegacyAppraisalContent.ITEM.get()))&&!(LegacyAppraisalContent.ITEM.get() instanceof BlockItem),"An old table item must open the guide and must no longer place a table");
+        var level=h.getLevel();var pos=h.absolutePos(new BlockPos(3,1,3));level.setBlockAndUpdate(pos,LegacyAppraisalContent.BLOCK.get().defaultBlockState());var old=(LegacyAppraisalBlockEntity)level.getBlockEntity(pos);var stored=tool(100,Map.of(SPEED,.3,VEIN_MINER,1.0));old.setItem(0,stored.copy());
+        var saved=old.saveWithFullMetadata(level.registryAccess());var decoded=net.minecraft.world.level.block.entity.BlockEntity.loadStatic(pos,old.getBlockState(),saved,level.registryAccess());check(h,decoded instanceof LegacyAppraisalBlockEntity legacy&&ItemStack.matches(stored,legacy.getItem(0)),"Old table saves must retain their exact stored item");
+        LegacyAppraisalBlockEntity.tick(level,pos,old.getBlockState(),old);check(h,level.getBlockEntity(pos) instanceof net.minecraft.world.level.block.entity.BarrelBlockEntity,"Existing tables must retire into ordinary barrels");var barrel=(net.minecraft.world.level.block.entity.BarrelBlockEntity)level.getBlockEntity(pos);
+        check(h,ItemStack.matches(stored,barrel.getItem(0))&&barrel.getItem(1).is(FieldGuideContent.BOOK.get()),"Retirement must preserve the exact stored tool and supply one guide");LegacyAppraisalBlockEntity.tick(level,pos,old.getBlockState(),old);int count=0;for(int i=0;i<barrel.getContainerSize();i++)count+=barrel.getItem(i).getCount();check(h,count==2,"Repeated retired-table ticks must not duplicate items");
         var part=ComponentWorkTests.component(ArtifactProfile.Find.PICKAXE_LEFT,100,5,33);check(h,ComponentWork.apply(ComponentStationKind.INFLUENCER,part,0,p.getRandom()),"Test influence must assign normally");
-        check(h,!part.has(DataComponents.CUSTOM_MODEL_DATA)&&part.getHoverName().getStyle().getColor().getValue()==ModifierInfluence.NETHER.color,"Nether influence must color the name without changing icon data");
-        check(h,PickaxeTooltips.piece(part).size()<=3&&PickaxeTooltips.piece(part).stream().noneMatch(c->c.getString().contains("Uninfluenced")||c.getString().contains("influence")),"Influence must not add tooltip clutter");
-        var end=ComponentWorkTests.component(ArtifactProfile.Find.PICKAXE_LEFT,100,5,34);end.set(DataComponents.CUSTOM_NAME,Component.literal("My heirloom"));check(h,ComponentWork.apply(ComponentStationKind.INFLUENCER,end,1,p.getRandom())&&end.getHoverName().getString().equals("My heirloom")&&!end.has(DataComponents.CUSTOM_MODEL_DATA),"End influence must preserve player custom names and icon data");
-        table.setItem(0,part.copy());var bounds=new net.minecraft.world.phys.AABB(pos).inflate(2);level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,bounds).forEach(net.minecraft.world.entity.item.ItemEntity::discard);level.destroyBlock(pos,true);
-        var drops=level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,bounds);check(h,drops.stream().mapToInt(e->e.getItem().getCount()).sum()==2&&drops.stream().anyMatch(e->ItemStack.matches(part,e.getItem())),"Breaking the Appraisal Table returns its block and exact input once");
+        check(h,!part.has(DataComponents.CUSTOM_MODEL_DATA)&&part.getHoverName().getStyle().getColor().getValue()==ModifierInfluence.NETHER.color,"Influence must color names without changing icon data");
+        check(h,PickaxeTooltips.piece(part).stream().noneMatch(c->c.getString().contains("Uninfluenced")||c.getString().contains("Appraisal")),"Item tooltips must not retain removed-table instructions or influence clutter");
+        for(var roll:ArtifactModifiers.read(part)){var trait=PickaxeTrait.byId(roll.id());if(trait!=null)check(h,PickaxeTooltips.piece(part).stream().anyMatch(c->c.getString().startsWith(PickaxeTooltips.label(trait)+"  ")),"Recovered components must show their own rolled modifier values again");}
+        var other=new ItemStack(ReconstructionContent.SHOVEL_HEAD.get());var recovered=new net.minecraft.nbt.CompoundTag();recovered.putInt("Quality",88);var oldRoot=new net.minecraft.nbt.CompoundTag();oldRoot.put(ArtifactQuality.RECOVERED,recovered);oldRoot.putInt(PickaxeTooltips.REVISION_KEY,7);other.set(DataComponents.CUSTOM_DATA,CustomData.of(oldRoot));other.set(DataComponents.LORE,new net.minecraft.world.item.component.ItemLore(List.of(Component.literal("Inspect at an Appraisal Table"))));
+        check(h,PickaxeTooltips.refresh(other)&&ArtifactQuality.score(other)==88&&other.get(DataComponents.LORE).lines().stream().noneMatch(c->c.getString().contains("Appraisal")),"Old presentation must migrate for every component role, including non-pickaxe heads");
+        var emptyPos=pos.east(2);level.setBlockAndUpdate(emptyPos,LegacyAppraisalContent.BLOCK.get().defaultBlockState());var empty=(LegacyAppraisalBlockEntity)level.getBlockEntity(emptyPos);LegacyAppraisalBlockEntity.tick(level,emptyPos,empty.getBlockState(),empty);
+        check(h,level.getBlockEntity(emptyPos) instanceof net.minecraft.world.level.block.entity.BarrelBlockEntity emptyBarrel&&emptyBarrel.getItem(0).is(FieldGuideContent.BOOK.get())&&emptyBarrel.getItem(1).isEmpty(),"An empty old table must retire safely with exactly one guide");
+
     }
     private static void runtime(GameTestHelper h){
         var p=h.makeMockServerPlayerInLevel();var pos=h.absolutePos(new BlockPos(3,1,3));p.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);var item=tool(100,Map.of(SOUL_FURNACE,1.0));p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,item);

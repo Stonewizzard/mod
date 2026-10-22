@@ -26,7 +26,7 @@
   "item.examplemod.magnifying_glass": "Magnifying Glass",
   "gui.examplemod.artifact": "Artifact",
   "gui.examplemod.field_kit": "Field Kit",
-  "gui.examplemod.table_slot.0": "Artifact — Sniffer or Cruncher finds",
+  "gui.examplemod.table_slot.0": "Artifact \u2014 Sniffer or Cruncher finds",
   "gui.examplemod.table_slot.1": "Archaeology Drill",
   "gui.examplemod.table_slot.2": "Brush",
   "gui.examplemod.table_slot.3": "Archaeology Hammer",
@@ -109,6 +109,6 @@
   "block.examplemod.scaling_randomizer": "Scaling Randomizer",
   "block.examplemod.component_restorer": "Restorer",
   "block.examplemod.influencer": "Influencer",
-  "block.examplemod.appraisal_table": "Appraisal Table",
-  "container.examplemod.appraisal_table": "Appraisal Table"
+  "item.examplemod.ancient_field_guide": "Ancient Field Guide",
+  "item.examplemod.appraisal_table": "Ancient Field Guide"
 }

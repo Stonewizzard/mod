@@ -25,6 +25,9 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 public class ExampleModClient {
     public ExampleModClient(ModContainer container) {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.InfluenceNameAnimation::tooltip);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.FieldGuideClient::open);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::tooltip);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::scroll);
         // Allows NeoForge to create a config screen for this mod's configs.
         // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
         // Do not forget to add translations for your config options to the en_us.json file.
@@ -62,7 +65,7 @@ public class ExampleModClient {
     static void checkSculkRendering(net.neoforged.neoforge.data.event.GatherDataEvent.Client event) {
         if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
             try {
-                com.example.examplemod.client.AppraisalVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
+                com.example.examplemod.client.FieldGuideVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.ComponentStationVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.PickaxeTooltipRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.AscenderVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
@@ -89,7 +92,6 @@ public class ExampleModClient {
         event.register(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),com.example.examplemod.client.ArchaeologyTableScreen::new);
         event.register(ReconstructionContent.MENU.get(),com.example.examplemod.client.ReconstructionTableScreen::new);
         event.register(AscenderContent.MENU.get(),com.example.examplemod.client.AscenderScreen::new);
-        event.register(AppraisalContent.MENU.get(),com.example.examplemod.client.AppraisalScreen::new);
         event.register(ComponentStationContent.MENU.get(),com.example.examplemod.client.ComponentStationScreen::new);
     }
 }

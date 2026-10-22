@@ -311,10 +311,12 @@ the mob's UUID, name, health, equipment, variants and other attribute modifiers.
 
 
 
-## Reconstructed tool rewards and appraisal
+## Ancient Field Guide and tool information
 
-Use the **Appraisal Table** to inspect recovered parts and finished tools. It explains each modifier's conditions, current effect, value tiers, scaling, caps, sources and ascension cost. Craft it with three planks, two sticks, paper and glass; [the table guide](docs/APPRAISAL_TABLE.md) has the pattern and controls.
+Craft a normal book and one paper together to get the **Ancient Field Guide**. Right-click to browse categories, search the full mod reference and read all 120 modifier definitions. The guide includes getting started, creatures, artifacts, excavation, reconstruction, progression and component stations. Articles have related links, Back navigation and paged text.
 
-Reconstructed pickaxes have a quality-scaled mining/resonance core and substantially stronger modifier rewards. Fortune can add above the native Fortune III enchantment. Existing saved parts keep their raw rolls and provenance. Tooltips are compact; Nether and End influence appear through animated name colors while inventory icons stay unchanged.
+Rolled modifier values, grades, tiers and quality remain on recovered-component tooltips. Reconstructed tools show their effective bonuses; hold Shift and scroll to browse every modifier page. Nether and End influence use animated name colors while icons retain their normal appearance.
 
-See [all 120 modifiers](docs/PICKAXE_MODIFIERS.md) and [the individual reward review](docs/MODIFIER_REWARD_REVIEW.md). Artifact acquisition chances are unchanged.
+The Appraisal Table is retired. Existing placed tables convert to ordinary barrels containing their stored item and a guidebook; existing table items open the guide. The old recipe and creative entry are removed.
+
+See [the field guide](docs/FIELD_GUIDE.md), [all 120 modifiers](docs/PICKAXE_MODIFIERS.md) and [the reward review](docs/MODIFIER_REWARD_REVIEW.md).

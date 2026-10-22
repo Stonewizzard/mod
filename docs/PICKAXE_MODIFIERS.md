@@ -29,7 +29,7 @@ A perk activates with its combined quality-adjusted chance, capped at 100%, and 
 
 Crouch to enable area mining. All area effects share at most **64 extra native breaks** per primary break within a loaded 16-block range. No recursion, extra tool XP, primary bonus drops or charge generation from secondary breaks. Secondary loot still uses native Fortune, Silk, furnace recipes and the five material conversions. Block entities, claims, canceled events, unbreakable blocks, wrong tools, unloaded chunks and the world border are respected. Utility placement consumes owned materials only after a successful cancellable placement. Silk disables duplication, bonus drops and furnace conversions.
 
-Use the **Appraisal Table** for live values, sources, stage effects, growth, caps and ascension materials. Tooltips show a compact summary. Appraisal is read-only and does not reveal sealed ancient rune choices or roll unopened artifacts.
+Use the **Ancient Field Guide** for searchable modifier definitions, stage effects, growth, caps and ascension materials. Actual effective values, grades, tiers and quality remain on item tooltips. Hold Shift and scroll to browse tool modifier pages. The book never reads or rolls unopened artifacts or reveals hidden ancient choices.
 
 ## Complete catalog
 
