@@ -203,7 +203,6 @@ public class ExampleMod {
         AscenderContent.register();
         ComponentStationContent.register();
         FieldGuideContent.register();
-        LegacyAppraisalContent.register();
         BLOCKS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);

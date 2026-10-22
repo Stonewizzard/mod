@@ -1,10 +1,14 @@
 # Ancient Field Guide
 
-Craft a normal book and one paper together, or find the guide in the creative tab. Right-click to read. Search words match titles, article text, modifier IDs and keywords. Categories and modifier topics narrow the index. List arrows browse results; article arrows turn pages. Mouse wheel scrolls the page under the pointer. Related-entry buttons and Back navigate between articles. Escape closes the book. The current search and page are remembered for the play session.
+Craft a normal book and one paper together, or find the guide in the creative tab. Right-click to read. Home opens an illustrated contents page. Pick a category, then an article. Modifiers has a separate topic index. Search always looks through the entire guide, including article text, modifier IDs and keywords. Clear search with its X. Read across both pages; arrows and mouse wheel turn reading spreads or list pages. Related links sit below articles. Back restores the previous view and search; Escape closes the book. Your place is remembered for the play session. Native Minecraft buttons support primary mouse clicks and keyboard focus/activation.
 
 Actual rolled values, scaling grades, value tiers and quality remain on item tooltips. Hold Shift and scroll over a reconstructed tool tooltip to browse its modifier pages. The book explains definitions and systems without reading or changing an item.
 
-The retired Appraisal Table is removed from crafting and creative lists. Existing placed tables become ordinary barrels holding their stored item and a field guide. Existing table items open the book. This preserves old stored tools while removing the workstation.
+The Appraisal Table and its remaining compatibility registrations are removed.
+
+## Design references
+
+The category-first contents and page navigation were informed by [Lexica Botania](https://botaniamod.net/lexicon.html) and [Materials and You](https://slimeknights.github.io/docs/books/1.20/materials-and-you/). The book interface and 32-pixel teal/brass field-guide icon are original assets; no dependency or copied book textures are required.
 
 ## Contents
 
@@ -48,7 +52,7 @@ Start with a Sniffer. Expose ancient debris on a walkable surface for it to inve
 
 Use the Archaeology Table to excavate finds, then the Reconstruction Table to assemble components. Your excavation quality affects every modifier that the component contributes.
 
-Search the box above for an item, creature, modifier or keyword. Select a category on the left; the Modifiers category also has a topic filter. Choose an entry, turn its pages and follow its related-entry buttons.
+Use Contents to choose a category, or search all entries from any page. The modifier reference has a topic index. Open an entry to read across both pages; follow the links underneath or use Back to return.
 
 This book contains general knowledge. Your item tooltips show the values actually rolled on your own components and tools. Unread ancient runes stay hidden until you unveil them.
 
@@ -58,9 +62,9 @@ This book contains general knowledge. Your item tooltips show the values actuall
 
 Right-click the guide to open it. Craft one using a normal book and one paper in any crafting grid. The book is also available in the Ancient Discoveries creative tab.
 
-Search matches titles, descriptions, keywords and modifier IDs. All search words must match an entry. Clear the search and choose All to return to the full index.
+The Home button opens Contents. Choose a category, then an article. Modifiers first opens a topic index so you can browse mining, loot, resonance, universal parts or either influence.
 
-The left arrows change the list of results. The right arrows turn the current article page. Mouse-wheel scrolling works over either page. Related-entry buttons open linked articles; Back returns to your previous view.
+Search always looks through the entire guide: titles, descriptions, keywords and modifier IDs. All search words must match. The X beside search clears it. Page arrows and mouse-wheel scrolling browse lists or reading spreads. Related links are directly underneath each article; Back restores your previous view, including a search.
 
 Escape or the close button closes the book. Reading never consumes the book, changes equipment or rolls an artifact. The last page and search are remembered during the current play session.
 

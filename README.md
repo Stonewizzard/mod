@@ -313,10 +313,10 @@ the mob's UUID, name, health, equipment, variants and other attribute modifiers.
 
 ## Ancient Field Guide and tool information
 
-Craft a normal book and one paper together to get the **Ancient Field Guide**. Right-click to browse categories, search the full mod reference and read all 120 modifier definitions. The guide includes getting started, creatures, artifacts, excavation, reconstruction, progression and component stations. Articles have related links, Back navigation and paged text.
+Craft a normal book and one paper together to get the **Ancient Field Guide**. Right-click for an illustrated contents page, browse categories and modifier topics, or search every entry. Read articles across a two-page spread with direct related links and Home/Back controls. The guide includes all 120 modifier definitions. The guide includes getting started, creatures, artifacts, excavation, reconstruction, progression and component stations. Articles have related links, Back navigation and paged text.
 
 Rolled modifier values, grades, tiers and quality remain on recovered-component tooltips. Reconstructed tools show their effective bonuses; hold Shift and scroll to browse every modifier page. Nether and End influence use animated name colors while icons retain their normal appearance.
 
-The Appraisal Table is retired. Existing placed tables convert to ordinary barrels containing their stored item and a guidebook; existing table items open the guide. The old recipe and creative entry are removed.
+The Appraisal Table and its remaining compatibility registrations have been removed. The portable guide has its own teal-and-brass pixel-art book icon.
 
 See [the field guide](docs/FIELD_GUIDE.md), [all 120 modifiers](docs/PICKAXE_MODIFIERS.md) and [the reward review](docs/MODIFIER_REWARD_REVIEW.md).
