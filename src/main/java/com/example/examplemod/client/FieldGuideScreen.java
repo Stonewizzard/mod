@@ -15,7 +15,7 @@ public final class FieldGuideScreen extends Screen {
     public FieldGuideScreen(FieldGuideNavigation navigation){super(Component.literal("Ancient Field Guide"));this.navigation=navigation;}
     @Override protected void init(){
         left=(width-FieldGuideView.WIDTH)/2;top=(height-FieldGuideView.HEIGHT)/2;
-        search=new EditBox(font,left+15,top+33,290,16,Component.literal("Search field guide"));search.setMaxLength(128);search.setValue(navigation.query());search.setHint(Component.literal("Search the guide..."));search.setResponder(value->{if(!syncing)navigation.query(value);});addRenderableWidget(search);setInitialFocus(search);
+        search=new EditBox(font,left+15,top+33,270,16,Component.literal("Search field guide"));search.setMaxLength(128);search.setValue(navigation.query());search.setHint(Component.literal("Search the guide..."));search.setResponder(value->{if(!syncing)navigation.query(value);});addRenderableWidget(search);setInitialFocus(search);
     }
     private ExcavationScreenView.Canvas canvas(GuiGraphicsExtractor g){return new ExcavationScreenView.Canvas(){
         @Override public void fill(int x,int y,int w,int h,int color){g.fill(left+x,top+y,left+x+w,top+y+h,color);}
@@ -36,7 +36,7 @@ public final class FieldGuideScreen extends Screen {
         if(hit>=FieldGuideView.LINK){int i=hit-FieldGuideView.LINK;var entry=navigation.selected();if(entry!=null&&i<entry.links().size())navigation.open(entry.links().get(i));}
         else if(hit>=FieldGuideView.ROW)navigation.selectRow(hit-FieldGuideView.ROW);
         else if(hit>=FieldGuideView.TAB){int i=hit-FieldGuideView.TAB;navigation.category(i==0?null:FieldGuide.Category.values()[i-1]);}
-        else switch(hit){case FieldGuideView.LIST_PREV->navigation.listPage(-1);case FieldGuideView.LIST_NEXT->navigation.listPage(1);case FieldGuideView.ARTICLE_PREV->{if(!navigation.related())navigation.turnPage(-1,FieldGuideView.pages(canvas(null),navigation.selected()));}case FieldGuideView.ARTICLE_NEXT->{if(!navigation.related())navigation.turnPage(1,FieldGuideView.pages(canvas(null),navigation.selected()));}case FieldGuideView.BACK->navigation.back();case FieldGuideView.LINKS->navigation.related(!navigation.related());case FieldGuideView.GROUP->navigation.nextGroup();default->{}}
+        else switch(hit){case FieldGuideView.LIST_PREV->navigation.listPage(-1);case FieldGuideView.LIST_NEXT->navigation.listPage(1);case FieldGuideView.ARTICLE_PREV->{if(!navigation.related())navigation.turnPage(-1,FieldGuideView.pages(canvas(null),navigation.selected()));}case FieldGuideView.ARTICLE_NEXT->{if(!navigation.related())navigation.turnPage(1,FieldGuideView.pages(canvas(null),navigation.selected()));}case FieldGuideView.BACK->navigation.back();case FieldGuideView.LINKS->navigation.related(!navigation.related());case FieldGuideView.GROUP->navigation.nextGroup();case FieldGuideView.CLEAR->navigation.query("");default->{}}
         synchronizeSearch();return true;
     }
     @Override public boolean mouseScrolled(double mouseX,double mouseY,double scrollX,double scrollY){
