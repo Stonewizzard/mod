@@ -5,9 +5,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import java.util.*;
 import net.minecraft.client.gui.components.events.*;
 import net.minecraft.client.input.*;
-import net.minecraft.client.sounds.SoundManager;
 
-/** Dispatches actual 26.3 SDL mouse events through native widgets, not homemade hitbox checks. */
+/** Uses native SDL button validation, press callbacks and container dispatch without a live audio engine. */
 final class FieldGuideInputRegression {
     static void run(ExcavationScreenView.Canvas measure){
         require(InputConstants.MOUSE_BUTTON_LEFT==1,"Guide clicks must use SDL primary button 1");
@@ -29,7 +28,7 @@ final class FieldGuideInputRegression {
             f.click("clear",1);require(f.nav.query().isEmpty()&&f.nav.page()==FieldGuideNavigation.Page.HOME,"Clear-search button must return to contents");
             f.click("close",1);require(f.closed,"Native close control must activate");
         }
-        System.out.println("FIELD_GUIDE_INPUT_CHECK: PASS: real native Button.mouseClicked and container dispatch; SDL primary, zero/right rejection, category/topic/entry/link/Home/Back/Close/Clear, reading and index pagination at three screen origins");
+        System.out.println("FIELD_GUIDE_INPUT_CHECK: PASS: native Button click validation/press callbacks and container dispatch (audio omitted in headless datagen); SDL primary, zero/right rejection, category/topic/entry/link/Home/Back/Close/Clear, reading and index pagination at three screen origins");
     }
     private static final class Fixture extends AbstractContainerEventHandler {
         final FieldGuideNavigation nav=new FieldGuideNavigation();final List<GuiEventListener> children=new ArrayList<>();
@@ -38,7 +37,15 @@ final class FieldGuideInputRegression {
         @Override public List<? extends GuiEventListener> children(){return children;}
         void refresh(){children.clear();for(var control:FieldGuideView.controls(measure,nav))children.add(new FieldGuideButton(control,left,top,()->{
             if(control.id().equals("close"))closed=true;else FieldGuideView.activate(control.id(),nav,measure);
-        },g->measure){@Override public void playDownSound(SoundManager sounds){}});}
+        },g->measure){
+            // AbstractWidget.mouseClicked asks the live Minecraft singleton for its audio engine.
+            // Datagen has no Minecraft instance: keep its native validation and press callback,
+            // and skip only that audio lookup. Production uses the unmodified native method.
+            @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){
+                if(!active||!visible||!isValidClickButton(event.button())||!isMouseOver(event.x(),event.y()))return false;
+                onClick(event,doubleClick);return true;
+            }
+        });}
         void click(String id,int button){
             var widget=children.stream().map(e->(FieldGuideButton)e).filter(e->e.control.id().equals(id)).findFirst().orElseThrow();
             mouseClicked(new MouseButtonEvent(widget.getX()+widget.getWidth()/2.0,widget.getY()+widget.getHeight()/2.0,new MouseButtonInfo(button,0)),false);

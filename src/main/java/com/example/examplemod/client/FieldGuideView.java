@@ -105,7 +105,7 @@ public final class FieldGuideView {
     }
     private static void pageNumber(ExcavationScreenView.Canvas c,int page,int pages){String text=(page+1)+" / "+pages;c.text(text,(WIDTH-c.textWidth(text))/2,216,0xff66553e);}
     public static void drawControl(ExcavationScreenView.Canvas c,Control b,boolean hover){
-        int color=b.enabled()?(hover?0xff315d4f:0xff84764f):0xffb5a783;
+        int color=b.enabled()?(hover?0xff315d4f:0xff615337):0xffb5a783;
         boolean toolbar=b.y()<30||b.id().equals("clear");
         if(toolbar){c.fill(b.x(),b.y(),b.w(),b.h(),b.enabled()?(hover?0xff5b7f68:0xff354e40):0xff516456);color=b.enabled()?0xfff5e9c7:0xff93a08a;}
         else if(hover&&b.enabled())c.fill(b.x(),b.y(),b.w(),b.h(),0xffdfcd9e);
