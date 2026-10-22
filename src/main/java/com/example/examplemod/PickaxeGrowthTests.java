@@ -45,7 +45,7 @@ public final class PickaxeGrowthTests {
     }
     private static void verifyAscensions(GameTestHelper h){
         for(var grade:ModifierScaling.values())for(int score:new int[]{0,50,100}){
-            var tool=tool(grade,score,181);var parts=assembly(tool).copy();double base=.2*score/100.0;
+            var tool=tool(grade,score,181);var parts=assembly(tool).copy();double base=.2*SPEED.power*score/100.0;
             PickaxeProgression.write(tool,new PickaxeProgression.State(10,0,0));check(h,PickaxeProgression.ascend(tool),"A gated graded tool must ascend");
             check(h,Math.abs(PickaxeModifiers.totals(tool).get(SPEED)-base*(1+grade.ascensionGrowth))<1e-10,"Ascension must scale each original roll by its own grade and quality");
             PickaxeProgression.write(tool,new PickaxeProgression.State(20,0,1));check(h,PickaxeProgression.ascend(tool)&&Math.abs(PickaxeModifiers.totals(tool).get(SPEED)-base*(1+2*grade.ascensionGrowth))<1e-10,"Ascension growth must add, never compound");
@@ -54,7 +54,7 @@ public final class PickaxeGrowthTests {
         var mixed=tool(ModifierScaling.S,50,182);var root=mixed.get(DataComponents.CUSTOM_DATA).copyTag();var assembly=root.getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);var parts=assembly.getCompoundOrEmpty("Parts");var bridge=parts.getCompoundOrEmpty(ReconstructionPattern.PICKAXE.parts.get(1));
         bridge.putInt("Score",100);var record=bridge.getCompoundOrEmpty("Modifiers");bridge.put("Modifiers",ArtifactModifiers.writeRolls(record,List.of(new ArtifactModifiers.Roll(SPEED.id,.1,1,ModifierScaling.F))));parts.put(ReconstructionPattern.PICKAXE.parts.get(1),bridge);assembly.put("Parts",parts);root.put(ArtifactQuality.ASSEMBLY,assembly);mixed.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
         PickaxeProgression.write(mixed,new PickaxeProgression.State(10,0,0));PickaxeProgression.ascend(mixed);
-        check(h,Math.abs(PickaxeModifiers.totals(mixed).get(SPEED)-(.1*1.2+.1*1.03))<1e-10,"Two copies of a trait must retain independent scores and scaling grades");
+        check(h,Math.abs(PickaxeModifiers.totals(mixed).get(SPEED)-SPEED.power*(.1*(1+ModifierScaling.S.ascensionGrowth)+.1*(1+ModifierScaling.F.ascensionGrowth)))<1e-10,"Two copies of a trait must retain independent scores and scaling grades");
     }
     private static void verifyLevels(GameTestHelper h){
         for(var grade:new ModifierScaling[]{ModifierScaling.F,ModifierScaling.S}){
@@ -67,7 +67,7 @@ public final class PickaxeGrowthTests {
                 int changed=0;var now=PickaxeModifiers.contributions(tool);
                 for(int i=0;i<now.size();i++){int delta=now.get(i).levelHits()-old.get(i).levelHits();check(h,delta==0||delta==1,"A modifier can grow at most once per normal level");changed+=delta;}
                 check(h,changed>=1&&changed<=3,"Every normal level must select one to three distinct positive modifiers");counts.add(changed);
-                for(var c:now)check(h,Math.abs(PickaxeModifiers.totals(tool).get(c.trait())-c.base()*(1+current.ascensions()*grade.ascensionGrowth+c.levelHits()*grade.levelGrowth))<1e-9,"Level growth must add a small grade-scaled fraction of the original quality-adjusted roll");
+                for(var c:now)check(h,Math.abs(PickaxeModifiers.totals(tool).get(c.trait())-Math.min(c.trait().cap,c.base()*(1+current.ascensions()*grade.ascensionGrowth+c.levelHits()*grade.levelGrowth)))<1e-9,"Level growth must add a small grade-scaled fraction of the original quality-adjusted roll");
                 double reach=tool.get(DataComponents.ATTRIBUTE_MODIFIERS).compute(net.minecraft.world.entity.ai.attributes.Attributes.BLOCK_INTERACTION_RANGE,4.5,net.minecraft.world.entity.EquipmentSlot.MAINHAND);
                 check(h,Math.abs(reach-4.5-PickaxeModifiers.totals(tool).get(REACH))<1e-9&&tool.getMaxDamage()==(int)Math.round(1800*(1+PickaxeModifiers.totals(tool).get(DURABILITY))),"Native reach and durability must update as soon as a level grants growth");
                 check(h,assembly(tool).equals(frozen),"Normal leveling must preserve every sealed raw roll and score");
@@ -84,7 +84,7 @@ public final class PickaxeGrowthTests {
         var tool=tool(ModifierScaling.B,50,909);var root=tool.get(DataComponents.CUSTOM_DATA).copyTag();var assembly=root.getCompoundOrEmpty(ArtifactQuality.ASSEMBLY);var parts=assembly.getCompoundOrEmpty("Parts");
         for(String id:ReconstructionPattern.PICKAXE.parts){var part=parts.getCompoundOrEmpty(id);var record=part.getCompoundOrEmpty("Modifiers");var rolls=record.getCompoundOrEmpty("Rolls");for(int i=0;i<record.getIntOr("Count",0);i++){var roll=rolls.getCompoundOrEmpty(""+i);roll.remove("Scaling");rolls.put(""+i,roll);}record.put("Rolls",rolls);part.put("Modifiers",record);parts.put(id,part);}
         assembly.put("Parts",parts);root.put(ArtifactQuality.ASSEMBLY,assembly);root.remove(PickaxeTooltips.REVISION_KEY);var progression=root.getCompoundOrEmpty(PickaxeProgression.KEY);progression.putInt("Version",1);progression.putInt("Level",30);progression.putInt("Ascensions",2);progression.remove("GrowthSeed");root.put(PickaxeProgression.KEY,progression);tool.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
-        var frozen=assembly.copy();check(h,PickaxeTooltips.refresh(tool)&&Math.abs(PickaxeModifiers.totals(tool).get(SPEED)-.12)<1e-10,"Legacy modifiers must retain B's original +10% ascension rate");
+        var frozen=assembly.copy();check(h,PickaxeTooltips.refresh(tool)&&Math.abs(PickaxeModifiers.totals(tool).get(SPEED)-.1*SPEED.power*(1+2*ModifierScaling.B.ascensionGrowth))<1e-10,"Legacy modifiers must retain B identity and gain the reviewed B growth without changing saved rolls");
         check(h,PickaxeProgression.read(tool).level()==30&&PickaxeProgression.read(tool).ascensions()==2&&growth(tool).isEmpty()&&assembly(tool).equals(frozen),"Tooltip refresh must not reroll grades, retroactively grant growth, or reset earned progress");
         var refreshed=tool.copy();check(h,!PickaxeTooltips.refresh(tool)&&ItemStack.matches(refreshed,tool),"Presentation migration must happen once");
         check(h,ItemStack.matches(tool,roundtrip(h,tool)),"Legacy data and refreshed styles must survive item serialization");

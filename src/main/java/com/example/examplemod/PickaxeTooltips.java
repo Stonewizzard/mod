@@ -83,7 +83,7 @@ public final class PickaxeTooltips {
         int color=new int[]{0xC1CBD0,0x8ED879,0x73BAF4,0xCF9AFF,0xFFD369,0xFF8BAB}[rarity];
         lines.add(text(ArtifactModifierCatalog.rarity(rarity).label()+"  ",color).append(text("Quality ",LABEL)).append(text(score+"%",qualityColor(score))));
         String state=rolls.size()+" modifiers"+(!ComponentWork.locked(stack).isEmpty()?"  Locked":"")+(ComponentWork.corrupted(stack)?"  Corrupted":"");
-        lines.add(text(state,ComponentWork.corrupted(stack)?0xEE8A88:LABEL));lines.add(text("Inspect at an Appraisal Table",MUTED));return List.copyOf(lines);
+        var summary=text(state,ComponentWork.corrupted(stack)?0xEE8A88:LABEL);if(rolls.stream().anyMatch(AncientModifiers::ancient))summary.append(text("  Ancient",0xB69BE8).withStyle(style->style.withObfuscated(true)));lines.add(summary);lines.add(text("Inspect at an Appraisal Table",MUTED));return List.copyOf(lines);
     }
     public static List<Component> piece(int score,int rarity,List<ArtifactModifiers.Roll> rolls){
         var lines=new ArrayList<Component>();

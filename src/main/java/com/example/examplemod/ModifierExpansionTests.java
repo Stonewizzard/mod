@@ -75,10 +75,10 @@ public final class ModifierExpansionTests {
             // A legacy mining roll on a handle must remain saved but must not affect another tool family.
             var last=pieces.getLast();set(last,List.of(new ArtifactModifiers.Roll(SPEED.id,.5,1,ModifierScaling.B),new ArtifactModifiers.Roll(DURABILITY.id,.2,1,ModifierScaling.B),new ArtifactModifiers.Roll(UNBREAKING.id,.75,1,ModifierScaling.B)));
             var tool=ArtifactQuality.assemble(pattern,pieces);player.setItemInHand(InteractionHand.MAIN_HAND,tool);
-            check(h,PickaxeModifiers.totals(tool).get(SPEED)==(pattern==ReconstructionPattern.PICKAXE?.5:0),"Legacy mining rolls must be ignored on shared non-pickaxe equipment");
+            check(h,PickaxeModifiers.totals(tool).get(SPEED)==(pattern==ReconstructionPattern.PICKAXE?.5*SPEED.power:0),"Legacy mining rolls must be ignored on shared non-pickaxe equipment");
             check(h,tool.getMaxDamage()>1800&&tool.get(DataComponents.ATTRIBUTE_MODIFIERS).compute(Attributes.MOVEMENT_SPEED,.1,EquipmentSlot.MAINHAND)>.1,"Universal durability and movement attributes must work on every reconstructed equipment type");
             int spent=0;for(int i=0;i<1000;i++)spent+=tool.getItem().damageItem(tool,1,player,s->{});
-            check(h,spent>170&&spent<330,"Native durability hook must apply shared Hardwearing on swords, maces and tools");
+            check(h,spent>20&&spent<90,"Native durability hook must apply shared Hardwearing on swords, maces and tools");
             var ops=h.getLevel().registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE);
             var decoded=ItemStack.CODEC.parse(ops,ItemStack.CODEC.encodeStart(ops,tool).getOrThrow()).getOrThrow();check(h,ItemStack.matches(tool,decoded),"All equipment must retain modifiers and attributes through native saves");
         }
@@ -110,14 +110,14 @@ public final class ModifierExpansionTests {
             check(h,converted,"Each sediment conversion must use its actual final native drop and preserve counts");
         }
         var condenser=tool(100,Map.of(XP_CONDENSER,1.0),ModifierScaling.B);int released=0;
-        for(int i=0;i<10;i++)released+=drop(h,p,pos,Blocks.DIAMOND_ORE,condenser,new ItemStack(Items.DIAMOND),10).getDroppedExperience();
-        check(h,released==100&&MiningRuntime.read(condenser).getIntOr("XPBank",0)==0,"The XP condenser must conserve XP across complete release cycles");
+        for(int i=0;i<8;i++)released+=drop(h,p,pos,Blocks.DIAMOND_ORE,condenser,new ItemStack(Items.DIAMOND),10).getDroppedExperience();
+        check(h,released==100&&MiningRuntime.read(condenser).getIntOr("XPBank",0)==0,"The XP condenser must award its documented bonus and empty its bank across complete cycles");
         var charge=tool(100,Map.of(CHARGE_BATTERY,2.0,GEM_BATTERY,5.0,XP_BATTERY,1.0),ModifierScaling.B);
         var event=drop(h,p,pos,Blocks.DIAMOND_ORE,charge,new ItemStack(Items.DIAMOND),10);
-        check(h,MiningRuntime.charge(charge)==8&&event.getDroppedExperience()==9,"Charge generators must combine while XP battery consumes exactly one real XP");
+        check(h,MiningRuntime.charge(charge)==28&&event.getDroppedExperience()==9,"Charge generators must combine while XP battery consumes exactly one real XP");
         var frozen=MiningRuntime.read(charge);MiningRuntime.begin(p.getUUID());try{drop(h,p,pos,Blocks.DIAMOND_ORE,charge,new ItemStack(Items.DIAMOND),10);}finally{MiningRuntime.end(p.getUUID());}
         check(h,MiningRuntime.read(charge).equals(frozen),"Secondary breaks must not farm resonance or mutate primary cooldowns");
-        MiningRuntime.addCharge(charge,1000);check(h,MiningRuntime.charge(charge)==100&&!MiningRuntime.spend(charge,101)&&MiningRuntime.charge(charge)==100,"Charge capacity and failed spending must be atomic");
+        MiningRuntime.addCharge(charge,1000);check(h,MiningRuntime.charge(charge)==200&&!MiningRuntime.spend(charge,201)&&MiningRuntime.charge(charge)==200,"Charge capacity and failed spending must be atomic");
         var overflow=tool(100,Map.of(PHASEBOUND,1.0,ENDER_DISPATCH,1.0,DIMENSIONAL_BATTERY,1.0),ModifierScaling.B);PickaxeProgression.write(overflow,new PickaxeProgression.State(100,0,10));
         p.getInventory().clearContent();for(int slot=0;slot<p.getInventory().getContainerSize();slot++)p.getInventory().setItem(slot,new ItemStack(Items.DIRT,64));p.getEnderChestInventory().clearContent();
         var e=drop(h,p,pos,Blocks.DIAMOND_ORE,overflow,new ItemStack(Items.DIAMOND,6),0);check(h,e.getDrops().isEmpty()&&p.getEnderChestInventory().countItem(Items.DIAMOND)==6,"Ender dispatch must retain exact overflow counts");
@@ -133,9 +133,9 @@ public final class ModifierExpansionTests {
         MiningCollectionEffects.stop();protection=new net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent(protectedItem,p.damageSources().generic(),false);NeoForge.EVENT_BUS.post(protection);check(h,!protection.isInvulnerable(),"Clearing temporary protection must leave native damage behavior intact");
         var utility=tool(100,Map.of(ANVIL_THRIFT,.5,MENDING_BOOST,1.0),ModifierScaling.B);utility.setDamageValue(100);p.setItemInHand(InteractionHand.MAIN_HAND,utility);
         var anvil=new net.neoforged.neoforge.event.AnvilUpdateEvent(utility,new ItemStack(Items.IRON_INGOT,4),null,utility.copy(),10,4,p);NeoForge.EVENT_BUS.post(anvil);
-        check(h,anvil.getXpCost()==5&&anvil.getMaterialCost()==2,"Frugal Repairs must change real native anvil event costs");
+        check(h,anvil.getXpCost()==2&&anvil.getMaterialCost()==1,"Frugal Repairs must change real native anvil event costs");
         var orb=new net.minecraft.world.entity.ExperienceOrb(h.getLevel(),p.getX(),p.getY(),p.getZ(),5);NeoForge.EVENT_BUS.post(new net.neoforged.neoforge.event.entity.player.PlayerXpEvent.PickupXp(p,orb));
-        check(h,utility.getDamageValue()==95,"Mending Affinity must repair the held tool through native XP pickup");
+        check(h,utility.getDamageValue()==80,"Mending Affinity must repair the held tool through native XP pickup");
         placement(h,p,pos);
         area(h,p,pos);
     }
@@ -148,7 +148,7 @@ public final class ModifierExpansionTests {
         }
         p.removeAllEffects();h.getLevel().setBlockAndUpdate(pos.north(),Blocks.LAVA.defaultBlockState());
         drop(h,p,pos,Blocks.STONE,tool(100,Map.of(FIRE_WARD,1.0),ModifierScaling.B),new ItemStack(Items.COBBLESTONE),0);check(h,p.hasEffect(net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE),"Fire Ward must detect real nearby lava");h.getLevel().setBlockAndUpdate(pos.north(),Blocks.AIR.defaultBlockState());
-        var heart=tool(100,Map.of(BASALT_HEART,1.0),ModifierScaling.B);heart.setDamageValue(30);drop(h,p,pos,Blocks.BASALT,heart,new ItemStack(Items.BASALT),0);check(h,heart.getDamageValue()==29,"Basalt Heart must repair a real tool");
+        var heart=tool(100,Map.of(BASALT_HEART,1.0),ModifierScaling.B);heart.setDamageValue(30);drop(h,p,pos,Blocks.BASALT,heart,new ItemStack(Items.BASALT),0);check(h,heart.getDamageValue()==18,"Basalt Heart must repair a real tool");
         var cleanse=tool(100,Map.of(SOUL_CLEANSE,1.0),ModifierScaling.S);PickaxeProgression.write(cleanse,new PickaxeProgression.State(100,0,10));
         var ailments=List.of(net.minecraft.world.effect.MobEffects.POISON,net.minecraft.world.effect.MobEffects.WITHER,net.minecraft.world.effect.MobEffects.SLOWNESS,net.minecraft.world.effect.MobEffects.WEAKNESS);
         for(var effect:ailments)p.addEffect(new net.minecraft.world.effect.MobEffectInstance(effect,400,0));drop(h,p,pos,Blocks.SOUL_SAND,cleanse,new ItemStack(Items.SOUL_SAND),0);
@@ -160,13 +160,13 @@ public final class ModifierExpansionTests {
             check(h,hostile.hasEffect(test.effect())&&!passive.hasEffect(test.effect())&&!p.hasEffect(test.effect()),"Hostile pulses must affect enemies while excluding animals and players");
         }
         var breath=tool(100,Map.of(GHAST_BREATH,1.0),ModifierScaling.B);MiningRuntime.addCharge(breath,100);drop(h,p,pos,Blocks.STONE,breath,new ItemStack(Items.COBBLESTONE),0);
-        check(h,hostile.isOnFire()&&!passive.isOnFire()&&MiningRuntime.charge(breath)==95,"Ghast Breath must ignite only hostile targets and pay its charge cost");hostile.discard();passive.discard();
+        check(h,hostile.isOnFire()&&!passive.isOnFire()&&MiningRuntime.charge(breath)==98,"Ghast Breath must ignite only hostile targets and pay its charge cost");hostile.discard();passive.discard();
         var destination=p.position().add(0,0,2);var floor=BlockPos.containing(destination).below();h.getLevel().setBlockAndUpdate(floor,Blocks.STONE.defaultBlockState());h.getLevel().setBlockAndUpdate(floor.above(),Blocks.AIR.defaultBlockState());h.getLevel().setBlockAndUpdate(floor.above(2),Blocks.AIR.defaultBlockState());
         check(h,MiningStatusEffects.safeTeleport(p,destination)&&p.position().distanceToSqr(destination)<.01,"Blink destinations must actually move the server player");
         h.getLevel().setBlockAndUpdate(floor.above(),Blocks.STONE.defaultBlockState());check(h,!MiningStatusEffects.safeTeleport(p,destination),"Blink must reject collision-filled destinations");h.getLevel().setBlockAndUpdate(floor.above(),Blocks.AIR.defaultBlockState());
         var anchor=tool(100,Map.of(VOID_ANCHOR,1.0),ModifierScaling.B);MiningRuntime.addCharge(anchor,20);String dimension=h.getLevel().dimension().identifier().toString();
         MiningRuntime.edit(anchor,t->{t.putString("SafeDimension",dimension);t.putDouble("SafeX",destination.x);t.putDouble("SafeY",destination.y);t.putDouble("SafeZ",destination.z);});p.setItemInHand(InteractionHand.MAIN_HAND,anchor);p.setOnGround(false);p.snapTo(p.getX(),h.getLevel().getMinY()-3,p.getZ());MiningStatusEffects.tick(p,anchor);
-        check(h,p.position().distanceToSqr(destination)<.01&&MiningRuntime.charge(anchor)==0,"Void Anchor must rescue to its safe same-dimension position and consume twenty charge");
+        check(h,p.position().distanceToSqr(destination)<.01&&MiningRuntime.charge(anchor)==10,"Void Anchor must rescue to its safe same-dimension position and consume ten charge");
     }
     private static void placement(GameTestHelper h,ServerPlayer p,BlockPos origin){
         var tool=tool(100,Map.of(RECLAMATION,0.0),ModifierScaling.B);p.getInventory().clearContent();p.getInventory().setItem(5,new ItemStack(Items.COBBLESTONE,4));p.setItemInHand(InteractionHand.MAIN_HAND,tool);
@@ -184,12 +184,12 @@ public final class ModifierExpansionTests {
         boolean[] active={true};NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.level.block.BreakBlockEvent event)->{if(active[0]&&event.getPos().equals(pos.east(2)))event.setCanceled(true);});
         check(h,p.gameMode.destroyBlock(pos),"The actual primary break must succeed");active[0]=false;
         check(h,level.getBlockState(pos.east()).isAir()&&level.getBlockState(pos.east(2)).is(Blocks.DIAMOND_ORE),"Native extra breaks must work and respect a canceled neighboring break");
-        check(h,PickaxeProgression.read(tool).xp()==1&&MiningRuntime.charge(tool)==1,"Real native loot snapshots must persist charge on the live tool while extra breaks grant no extra tool XP or charge");
+        check(h,PickaxeProgression.read(tool).xp()==1&&MiningRuntime.charge(tool)==5,"Real native loot snapshots must persist charge on the live tool while extra breaks grant no extra tool XP or charge");
         p.setShiftKeyDown(false);level.setBlockAndUpdate(pos,Blocks.DIAMOND_ORE.defaultBlockState());level.setBlockAndUpdate(pos.east(),Blocks.DIAMOND_ORE.defaultBlockState());p.gameMode.destroyBlock(pos);
         check(h,level.getBlockState(pos.east()).is(Blocks.DIAMOND_ORE),"Standing mining must remain single-block precise");
         p.setShiftKeyDown(true);level.setBlockAndUpdate(pos,Blocks.DIAMOND_ORE.defaultBlockState());p.setItemInHand(InteractionHand.MAIN_HAND,tool(0,Map.of(VEIN_MINER,1.0),ModifierScaling.S));p.gameMode.destroyBlock(pos);check(h,level.getBlockState(pos.east()).is(Blocks.DIAMOND_ORE),"Zero-quality milestones must never activate");p.setShiftKeyDown(false);
     }
-    private static ItemStack tool(int quality,Map<PickaxeTrait,Double> traits,ModifierScaling grade){return ArtifactQuality.assemble(parts(ReconstructionPattern.PICKAXE,quality,traits,grade));}
+    static ItemStack tool(int quality,Map<PickaxeTrait,Double> traits,ModifierScaling grade){return ArtifactQuality.assemble(parts(ReconstructionPattern.PICKAXE,quality,traits,grade));}
     private static List<ItemStack> parts(ReconstructionPattern pattern,int quality,Map<PickaxeTrait,Double> traits,ModifierScaling grade){
         var result=new ArrayList<ItemStack>();for(int i=0;i<pattern.parts.size();i++){
             var part=new ItemStack(pattern.part(pattern.slots.get(i)));var root=new CompoundTag();var recovered=new CompoundTag();recovered.putInt("Quality",quality);recovered.putInt("Score",quality);recovered.putInt("Rarity",5);root.put(ArtifactQuality.RECOVERED,recovered);part.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
