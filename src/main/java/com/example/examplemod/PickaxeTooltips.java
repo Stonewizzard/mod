@@ -13,7 +13,7 @@ import net.minecraft.world.item.component.ItemLore;
 /** Shared styled components: compact labels, separate value colors, and no inherited lore italics. */
 public final class PickaxeTooltips {
     public static final String REVISION_KEY="examplemod:pickaxe_tooltip_revision";
-    public static final int REVISION=6;
+    public static final int REVISION=7;
     public static final int LABEL=0xB9C5CD,MUTED=0x788B98,TEAL=0x77D5CB,GOLD=0xFFD369;
     public record Stat(PickaxeTrait trait,double value,ModifierScaling low,ModifierScaling high){}
     public record ToolView(PickaxeProgression.State progression,double score,List<Stat> stats){}
@@ -30,8 +30,8 @@ public final class PickaxeTooltips {
         String result=String.format(Locale.ROOT,"%.3f",value);while(result.endsWith("0"))result=result.substring(0,result.length()-1);if(result.endsWith("."))result=result.substring(0,result.length()-1);return result;
     }
     public static String value(PickaxeTrait trait,double value){return switch(trait.unit){case PERCENT->percent(value);case LEVEL->number(value)+" lv";case BLOCKS->number(value)+" blocks";case POINTS->number(value);case PERK->"Milestone perk";};}
-    public static String baseValue(ArtifactModifiers.Roll roll){var trait=PickaxeTrait.byId(roll.id());return trait==null?"Unknown":trait.growth==PickaxeTrait.Growth.MILESTONE?"Ascension perk":tierPrefix(roll)+"+"+value(trait,roll.value());}
-    public static String label(PickaxeTrait trait){return switch(trait){case EXPERIENCE->"Mining XP";case AQUATIC->"Underwater recovery";case AIRBORNE->"Airborne recovery";case SILK->"Silk touch";case SMELTING->"Smelting";default->trait.label;};}
+    public static String baseValue(ArtifactModifiers.Roll roll){var trait=PickaxeTrait.byId(roll.id());return trait==null?"Unknown":trait.growth==PickaxeTrait.Growth.MILESTONE?"Ascension perk":tierPrefix(roll)+"+"+value(trait,roll.value()*trait.power);}
+    public static String label(PickaxeTrait trait){return switch(trait){case EXPERIENCE->"Mining XP";case AQUATIC->"Underwater mastery";case AIRBORNE->"Airborne mastery";case SILK->"Silk touch";case SMELTING->"Smelting";default->trait.label;};}
     private static MutableComponent gradeRange(ModifierScaling low,ModifierScaling high){
         if(low==high)return low.badge();return text("[",MUTED).append(text(low.name(),low.color)).append(text("-",MUTED)).append(text(high.name(),high.color)).append(text("]",MUTED));
     }
@@ -44,17 +44,19 @@ public final class PickaxeTooltips {
         }
         return new ToolView(PickaxeProgression.read(stack),Math.max(0,ArtifactQuality.assemblyScore(stack)),List.copyOf(stats));
     }
-    public static List<Component> tool(ItemStack stack){return tool(stack,0);}
-    public static List<Component> tool(ItemStack stack,int page){
-        var view=view(stack);var lines=new ArrayList<>(tool(view,page));
-        if(!PickaxeProgression.supports(stack)){lines.remove(1);lines.set(0,text("Reconstructed tool",TEAL));}
-        for(int i=0;i<lines.size();i++)if(lines.get(i).getString().contains("Perk")){
-            String label=lines.get(i).getString();for(var trait:PickaxeTrait.values())if(trait.growth==PickaxeTrait.Growth.MILESTONE&&label.startsWith(label(trait)+"  ")){var stat=view.stats().stream().filter(v->v.trait()==trait).findFirst().orElseThrow();lines.set(i,text(label(trait)+"  ",LABEL).append(text("Stage "+stageText(stack,trait),TEAL)).append(text("  ",MUTED)).append(gradeRange(stat.low(),stat.high())));break;}
+    public static List<Component> tool(ItemStack stack){
+        var lines=new ArrayList<Component>();var p=PickaxeProgression.read(stack);
+        if(PickaxeProgression.supports(stack)){
+            lines.add(text("Level ",LABEL).append(text(p.level()+"/100",GOLD)).append(text("  Ascension ",LABEL)).append(text(p.ascensions()+"/10",0xCF9AFF)));
+            lines.add(text(p.mastered()?"Mastered":p.needsAscension()?"Ascension required":p.xp()+"/"+PickaxeProgression.xpRequired(p.level())+" XP",p.needsAscension()?GOLD:MUTED));
         }
-        if(MiningRuntime.charge(stack)>0)lines.add(text("Resonance  ",LABEL).append(text(MiningRuntime.charge(stack)+"/100",TEAL)));
-        return List.copyOf(lines);
+        double quality=Math.max(0,ArtifactQuality.assemblyScore(stack));
+        lines.add(text("Quality ",LABEL).append(text(number(quality)+"%",qualityColor(quality))).append(text("  "+view(stack).stats().size()+" active bonuses",LABEL)));
+        if(MiningRuntime.charge(stack)>0)lines.add(text("Resonance "+MiningRuntime.charge(stack)+"/"+(int)ModifierGameplay.CHARGE_CAPACITY,TEAL));
+        lines.add(text("Inspect at an Appraisal Table",MUTED));return List.copyOf(lines);
     }
-    private static String stageText(ItemStack stack,PickaxeTrait trait){return PickaxeModifiers.stage(stack,trait)+"/3";}
+    /** Kept as a source-compatible entry point; details live at the Appraisal Table. */
+    public static List<Component> tool(ItemStack stack,int page){return tool(stack);}
     public static int pages(ToolView view){return Math.max(1,(view.stats().size()+7)/8);}
     public static List<Component> tool(ToolView view){return tool(view,0);}
     public static List<Component> tool(ToolView view,int page){
@@ -76,13 +78,12 @@ public final class PickaxeTooltips {
     }
     public static List<Component> piece(ItemStack stack){
         int score=ArtifactQuality.score(stack);if(score<0)return List.of();
-        var data=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactQuality.RECOVERED);
-        var lines=new ArrayList<Component>(piece(score,data.getIntOr("Rarity",0),ArtifactModifiers.read(stack)));
-        var influence=ComponentInfluences.current(stack);lines.add(1,text(!ComponentInfluences.known(stack)?"Unknown influence":influence==ModifierInfluence.NONE?"Uninfluenced":influence.label+" influence (permanent)",influence.color));
-        String locked=ComponentWork.locked(stack);if(!locked.isEmpty()){var trait=PickaxeTrait.byId(locked);lines.add(text("Locked: "+(trait==null?locked:label(trait)),0xB7D6F4));}
-        if(ComponentWork.corrupted(stack)){
-            lines.add(text("CORRUPTED - final",0xEE8A88));String result=ComponentWork.state(stack).getStringOr("LastAction","");if(!result.isEmpty())lines.add(text(result,MUTED));
-        }return List.copyOf(lines);
+        var data=ComponentWork.recovered(stack);var rolls=ArtifactModifiers.read(stack);
+        var lines=new ArrayList<Component>();int rarity=Math.clamp(data.getIntOr("Rarity",0),0,5);
+        int color=new int[]{0xC1CBD0,0x8ED879,0x73BAF4,0xCF9AFF,0xFFD369,0xFF8BAB}[rarity];
+        lines.add(text(ArtifactModifierCatalog.rarity(rarity).label()+"  ",color).append(text("Quality ",LABEL)).append(text(score+"%",qualityColor(score))));
+        String state=rolls.size()+" modifiers"+(!ComponentWork.locked(stack).isEmpty()?"  Locked":"")+(ComponentWork.corrupted(stack)?"  Corrupted":"");
+        var summary=text(state,ComponentWork.corrupted(stack)?0xEE8A88:LABEL);if(rolls.stream().anyMatch(AncientModifiers::ancient))summary.append(text("  Ancient",0xB69BE8).withStyle(style->style.withObfuscated(true)));lines.add(summary);lines.add(text("Inspect at an Appraisal Table",MUTED));return List.copyOf(lines);
     }
     public static List<Component> piece(int score,int rarity,List<ArtifactModifiers.Roll> rolls){
         var lines=new ArrayList<Component>();
@@ -90,7 +91,7 @@ public final class PickaxeTooltips {
         lines.add(text(ArtifactModifierCatalog.rarity(rarity).label()+" part",tierColor).append(text("   Quality ",LABEL)).append(text(score+"%",qualityColor(score))));
         for(var roll:rolls){
             if(AncientModifiers.ancient(roll)){lines.add(text("Ancient ",LABEL).append(text("forgotten runes",0xB69BE8).withStyle(style->style.withObfuscated(true))));continue;}
-            var trait=PickaxeTrait.byId(roll.id());if(trait==null)continue;double effective=roll.value()*score/100.0;var grade=roll.scaling();
+            var trait=PickaxeTrait.byId(roll.id());if(trait==null)continue;double effective=roll.value()*trait.power*score/100.0;var grade=roll.scaling();
             if(trait.growth==PickaxeTrait.Growth.MILESTONE){
                 lines.add(text(label(trait)+"  ",LABEL).append(grade.badge()).append(text("  "+percent(Math.min(1,effective))+" activation",TEAL)));
                 int offset=grade.ordinal()<=1?1:grade.ordinal()>=4?-1:0;
@@ -98,7 +99,7 @@ public final class PickaxeTooltips {
             }
             var line=text(label(trait)+"  ",LABEL).append(text("+"+value(trait,effective),magnitude(effective/trait.cap))).append(text("  ",MUTED)).append(grade.badge());
             var tag=ArtifactModifierCatalog.spec(trait).influence();if(tag!=ModifierInfluence.NONE)line.append(text(" ["+tag.label+"]",tag.color));lines.add(line);
-            lines.add(text("  Base ",MUTED).append(text("+"+value(trait,roll.value()),magnitude(roll.value()/trait.cap))).append(text(roll.tierRank()>0?"  T"+roll.tierRank():"",TEAL)).append(text("  Lv ",MUTED)).append(text("+"+percent(grade.levelGrowth),grade.color)).append(text("  Asc ",MUTED)).append(text("+"+percent(grade.ascensionGrowth),grade.color)));
+            lines.add(text("  Base ",MUTED).append(text("+"+value(trait,roll.value()*trait.power),magnitude(roll.value()/trait.cap))).append(text(roll.tierRank()>0?"  T"+roll.tierRank():"",TEAL)).append(text("  Lv ",MUTED)).append(text("+"+percent(grade.levelGrowth),grade.color)).append(text("  Asc ",MUTED)).append(text("+"+percent(grade.ascensionGrowth),grade.color)));
         }
         return List.copyOf(lines);
     }

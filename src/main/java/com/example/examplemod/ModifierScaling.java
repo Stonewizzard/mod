@@ -6,12 +6,12 @@ import net.minecraft.network.chat.MutableComponent;
 
 /** Growth fractions multiply the original score-adjusted roll; they never compound. */
 public enum ModifierScaling {
-    F(.03,.00025,0x929292),
-    D(.05,.00050,0xC3A57D),
-    C(.075,.00075,0x8ED879),
-    B(.10,.00100,0x73BAF4),
-    A(.15,.00150,0xCF9AFF),
-    S(.20,.00200,0xFFD369);
+    F(ModifierGameplay.F_ASCENSION,ModifierGameplay.F_LEVEL,0x929292),
+    D(ModifierGameplay.D_ASCENSION,ModifierGameplay.D_LEVEL,0xC3A57D),
+    C(ModifierGameplay.C_ASCENSION,ModifierGameplay.C_LEVEL,0x8ED879),
+    B(ModifierGameplay.B_ASCENSION,ModifierGameplay.B_LEVEL,0x73BAF4),
+    A(ModifierGameplay.A_ASCENSION,ModifierGameplay.A_LEVEL,0xCF9AFF),
+    S(ModifierGameplay.S_ASCENSION,ModifierGameplay.S_LEVEL,0xFFD369);
 
     public final double ascensionGrowth,levelGrowth;
     public final int color;
@@ -28,7 +28,7 @@ public enum ModifierScaling {
         for(var grade:values()){choice-=weights[grade.ordinal()];if(choice<0)return grade;}
         throw new IllegalStateException("Scaling grade weights must total 100");
     }
-    /** Missing grades are B: old ascensions retain their original +10% per stage. */
+    /** Missing grades remain B; saved base rolls and grade identities are preserved. */
     public static ModifierScaling read(String name){for(var grade:values())if(grade.name().equals(name))return grade;return B;}
     public MutableComponent badge(){return Component.literal("["+name()+"]").withStyle(s->s.withColor(color).withItalic(false));}
 }

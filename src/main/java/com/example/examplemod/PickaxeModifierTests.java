@@ -52,7 +52,7 @@ public final class PickaxeModifierTests {
                 for(var roll:rolls){var trait=PickaxeTrait.byId(roll.id());seen.add(trait);check(h,pool.entries().stream().anyMatch(d->d.contains(roll,profile.rarity()))&&unique.add(roll.id()),"Rolls must stay in an eligible value tier and contain no duplicate traits");if(trait==FORTUNE||trait==SILK||trait==SMELTING)harvest++;}
                 check(h,harvest<=1,"Harvest traits must be mutually exclusive on one piece");
             }
-            check(h,min==1&&max==new int[]{1,2,3,3,4,4}[rarity],"Higher tiers may roll extra modifiers without guaranteeing them");
+            check(h,(rarity>=4||min==1)&&max==new int[]{1,2,3,3,4,4}[rarity],"Higher tiers may roll extra modifiers without guaranteeing them");
             check(h,rarity==0?counts.size()==1:counts.size()>1,"Modifier counts must have the intended rarity variation");
             check(h,rarity>=2||!seen.contains(SILK),"Common and Uncommon must never roll Silk Touch");check(h,rarity>=3||!seen.contains(SMELTING),"Smelting must be restricted to Epic and higher");
         }
@@ -78,13 +78,13 @@ public final class PickaxeModifierTests {
         for(int score:new int[]{0,50,100}){
             var tool=tool(score,Map.of(SPEED,.10,DURABILITY,.40,REACH,1.0));player.setItemInHand(InteractionHand.MAIN_HAND,tool);
             var speed=new PlayerEvent.BreakSpeed(player,Blocks.STONE.defaultBlockState(),8,pos);NeoForge.EVENT_BUS.post(speed);
-            check(h,Math.abs(speed.getNewSpeed()-8*(1+.1*score/100))<.0001,"A +10% speed roll must yield exactly +0/+5/+10 percent at 0/50/100 quality");
-            check(h,tool.getMaxDamage()==1800+(int)(720*score/100),"Native durability must scale from the individual part's score");
-            double reach=tool.get(DataComponents.ATTRIBUTE_MODIFIERS).compute(Attributes.BLOCK_INTERACTION_RANGE,4.5,EquipmentSlot.MAINHAND);check(h,Math.abs(reach-(4.5+score/100.0))<.0001,"Native main-hand block reach must scale with quality");
+            check(h,Math.abs(speed.getNewSpeed()-8*PickaxeModifiers.coreSpeed(tool)*(1+.4*score/100))<.0001,"Saved raw speed rolls and the independent head-quality core must both scale correctly");
+            check(h,tool.getMaxDamage()==1800+(int)(2160*score/100),"Native durability must scale from the individual part's score");
+            double reach=tool.get(DataComponents.ATTRIBUTE_MODIFIERS).compute(Attributes.BLOCK_INTERACTION_RANGE,4.5,EquipmentSlot.MAINHAND);check(h,Math.abs(reach-(4.5+3*score/100.0))<.0001,"Native main-hand block reach must scale with quality");
             var encoded=ItemStack.CODEC.encodeStart(h.getLevel().registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE),tool).getOrThrow();var decoded=ItemStack.CODEC.parse(h.getLevel().registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE),encoded).getOrThrow();check(h,ItemStack.matches(tool,decoded)&&PickaxeModifiers.totals(tool).equals(PickaxeModifiers.totals(decoded)),"Effects, rolls and native components must survive item serialization");
         }
-        var stats=PickaxeModifiers.totals(tool(100,Map.of(AQUATIC,1.0,AIRBORNE,1.0)));check(h,PickaxeEvents.speedMultiplier(stats,true,.2,false)==25&&PickaxeEvents.speedMultiplier(stats,true,1,true)==1,"Penalty-removal modifiers must respect native underwater affinity and airborne penalties");
-        var pieces=parts(0);pieces.set(0,part(ArtifactProfile.Find.PICKAXE_LEFT,100,Map.of(SPEED,.1)));var mixed=ArtifactQuality.assemble(pieces);check(h,ArtifactQuality.assemblyScore(mixed)==20&&PickaxeModifiers.totals(mixed).get(SPEED)==.1,"The assembly average must not weaken an already score-scaled part a second time");
+        var stats=PickaxeModifiers.totals(tool(100,Map.of(AQUATIC,1.0,AIRBORNE,1.0)));check(h,PickaxeEvents.speedMultiplier(stats,true,.2,false)==100&&PickaxeEvents.speedMultiplier(stats,true,1,true)==2,"Environmental mastery must recover native penalties and still grant its speed bonus with Aqua Affinity");
+        var pieces=parts(0);pieces.set(0,part(ArtifactProfile.Find.PICKAXE_LEFT,100,Map.of(SPEED,.1)));var mixed=ArtifactQuality.assemble(pieces);check(h,ArtifactQuality.assemblyScore(mixed)==20&&PickaxeModifiers.totals(mixed).get(SPEED)==.4,"The assembly average must not weaken an already score-scaled part a second time");
         int rounded=0;var random=RandomSource.create(222);for(int i=0;i<4000;i++)rounded+=PickaxeEvents.stochastic(random,.5);check(h,rounded>1850&&rounded<2150,"Fractional Fortune and XP must retain their expected value rather than truncate to zero");
     }
     private static void verifyLoot(GameTestHelper h,ServerPlayer player,BlockPos pos){
@@ -92,13 +92,13 @@ public final class PickaxeModifierTests {
             var fortune=tool(score,Map.of(FORTUNE,3.0));int diamonds=0;
             for(int i=0;i<128;i++){var event=drop(h,player,pos,Blocks.DIAMOND_ORE,fortune);diamonds+=event.getDrops().stream().filter(e->e.getItem().is(Items.DIAMOND)).mapToInt(e->e.getItem().getCount()).sum();}
             check(h,score==0?diamonds==128:diamonds>160,"Native Fortune loot must activate only at positive effective quality");check(h,!fortune.has(DataComponents.ENCHANTMENTS)||fortune.get(DataComponents.ENCHANTMENTS).isEmpty(),"Virtual Fortune must never permanently enchant the real tool");
-            var silk=tool(score,Map.of(SILK,1.0));int silkCount=0;
+            var silk=tool(score,Map.of(SILK,.5));int silkCount=0;
             for(int i=0;i<128;i++){var event=drop(h,player,pos,Blocks.DIAMOND_ORE,silk);if(event.getDrops().stream().anyMatch(e->e.getItem().is(Items.DIAMOND_ORE)))silkCount++;}
             check(h,score==0?silkCount==0:score==100?silkCount==128:silkCount>35&&silkCount<93,"Silk Touch must use the score-scaled activation probability");
-            var smelter=tool(score,Map.of(SMELTING,1.0));int smelted=0;
+            var smelter=tool(score,Map.of(SMELTING,.5));int smelted=0;
             for(int i=0;i<100;i++){var event=drop(h,player,pos,Blocks.IRON_ORE,smelter);if(event.getDrops().stream().anyMatch(e->e.getItem().is(Items.IRON_INGOT)))smelted++;}
             check(h,score==0?smelted==0:score==100?smelted==100:smelted>25&&smelted<75,"Smelting must use native furnace recipes and score-scaled chance");
-            var scholar=drop(h,player,pos,Blocks.DIAMOND_ORE,tool(score,Map.of(EXPERIENCE,1.0)),10);check(h,scholar.getDroppedExperience()==10+score/10,"Mining XP must scale by the original part score");
+            var scholar=drop(h,player,pos,Blocks.DIAMOND_ORE,tool(score,Map.of(EXPERIENCE,1.0)),10);check(h,scholar.getDroppedExperience()==10+3*score/10,"Mining XP must scale by the original part score");
         }
         var ender=drop(h,player,pos,Blocks.ENDER_CHEST,tool(100,Map.of(SILK,1.0)));check(h,ender.getDrops().size()==1&&ender.getDrops().getFirst().getItem().is(Items.ENDER_CHEST),"Silk Touch must recover Ender Chests despite their block-entity type");
         var chest=drop(h,player,pos,Blocks.CHEST,tool(100,Map.of(SILK,1.0,FORTUNE,3.0)));check(h,chest.getDrops().size()==1&&chest.getDrops().getFirst().getItem().is(Items.CHEST),"Regular container block loot must stay intact");

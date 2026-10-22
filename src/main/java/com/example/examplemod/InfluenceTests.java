@@ -180,7 +180,7 @@ public final class InfluenceTests {
     private static ArrayList<ItemStack> parts(int score){
         var parts=new ArrayList<ItemStack>();
         for(var find:CreativePickaxeParts.FINDS){var part=ComponentWorkTests.component(find,score,5,45);setRolls(part,List.of());parts.add(part);}
-        var right=parts.get(2);ComponentWork.apply(ComponentStationKind.INFLUENCER,right,1,RandomSource.create(4));setRolls(right,List.of(new ArtifactModifiers.Roll(PHASEBOUND.id,1,score/100.0)));return parts;
+        var right=parts.get(2);ComponentWork.apply(ComponentStationKind.INFLUENCER,right,1,RandomSource.create(4));setRolls(right,List.of(new ArtifactModifiers.Roll(PHASEBOUND.id,.25,score/100.0)));return parts;
     }
     private static ItemStack tool(int score){return ArtifactQuality.assemble(parts(score));}
     private static ItemStack component(ArtifactProfile.Find find,int rarity,List<ArtifactModifiers.Roll> rolls){var part=ComponentWorkTests.component(find,80,rarity,7);setRolls(part,rolls);return part;}

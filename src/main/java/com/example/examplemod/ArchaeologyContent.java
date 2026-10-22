@@ -32,7 +32,7 @@ public final class ArchaeologyContent {
     public static final DeferredItem<net.minecraft.world.item.MaceItem> MACE=ExampleMod.ITEMS.registerItem("restored_ancient_mace",RestoredAncientMace::new,p->p.durability(1800).attributes(net.minecraft.world.item.MaceItem.createAttributes()).component(DataComponents.TOOL,net.minecraft.world.item.MaceItem.createToolProperties()).component(DataComponents.WEAPON,new net.minecraft.world.item.component.Weapon(1)).enchantable(15).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
     // Same kinetic timing/range parameters as the native diamond spear.
     public static final DeferredItem<Item> SPEAR=ExampleMod.ITEMS.registerItem("restored_ancient_spear",RestoredAncientTool::new,p->p.spear(ToolMaterial.DIAMOND,1.05F,1.075F,.5F,3F,10F,6.5F,5.1F,10F,4.6F).durability(1800).repairable(Items.IRON_INGOT).rarity(Rarity.RARE));
-    private static DeferredItem<Item> part(String id){return ExampleMod.ITEMS.registerSimpleItem(id,p->p.stacksTo(1).rarity(Rarity.UNCOMMON));}
+    private static DeferredItem<Item> part(String id){return ExampleMod.ITEMS.registerItem(id,AncientComponentItem::new,p->p.stacksTo(1).rarity(Rarity.UNCOMMON));}
     private static DeferredItem<Item> tool(String id,int life){return ExampleMod.ITEMS.registerSimpleItem(id,p->p.durability(life).enchantable(12).repairable(Items.IRON_INGOT));}
     private static DeferredItem<Item> lens(String id){return ExampleMod.ITEMS.registerSimpleItem(id,p->p.stacksTo(1));}
     public static void register(){} // Force registration before the item register is attached to the bus.

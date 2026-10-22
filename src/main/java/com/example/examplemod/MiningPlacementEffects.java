@@ -12,7 +12,7 @@ import static com.example.examplemod.PickaxeTrait.*;
 final class MiningPlacementEffects {
     static void apply(MiningContext c){
         if(!c.primary)return;var pos=c.event.getPos();boolean dark=c.level.getMaxLocalRawBrightness(pos)<8;
-        if(dark&&c.level.getBlockState(pos.below()).isSolidRender()&&c.perk(EMBERLIGHT,cooldown(c,EMBERLIGHT),2))place(c,pos,Blocks.SOUL_TORCH,null,false);
+        if(dark&&c.level.getBlockState(pos.below()).isSolidRender()&&c.perk(EMBERLIGHT,cooldown(c,EMBERLIGHT),c.count(EMBERLIGHT,ModifierTuning.Key.COST)))place(c,pos,Blocks.SOUL_TORCH,null,false);
         if(dark&&SharedToolEffects.owns(c.player,Items.TORCH)&&c.level.getBlockState(pos.below()).isSolidRender()&&c.perk(LIGHTBEARER,cooldown(c,LIGHTBEARER),0))place(c,pos,Blocks.TORCH,Items.TORCH,false);
         if(SharedToolEffects.owns(c.player,Items.COBBLESTONE)){
             if(c.level.getBlockState(pos.below()).isAir()&&c.perk(TIMBER_SUPPORT,cooldown(c,TIMBER_SUPPORT),0))place(c,pos.below(),Blocks.COBBLESTONE,Items.COBBLESTONE,false);
@@ -23,7 +23,7 @@ final class MiningPlacementEffects {
             for(var d:Direction.values()){var p=pos.relative(d);if(c.level.getBlockState(p).is(Blocks.DIRT)&&c.level.getBlockState(p.above()).isAir()&&c.perk(ECOLOGIST,cooldown(c,ECOLOGIST),0)){place(c,p,Blocks.GRASS_BLOCK,Items.BONE_MEAL,true);break;}}
         }
     }
-    static int cooldown(MiningContext c,PickaxeTrait trait){return (8-2*c.stage(trait))*20;}
+    static int cooldown(MiningContext c,PickaxeTrait trait){return c.count(trait,ModifierTuning.Key.COOLDOWN);}
     private static void cork(MiningContext c,PickaxeTrait trait,net.minecraft.tags.TagKey<net.minecraft.world.level.material.Fluid> tag){
         if(c.get(trait)<=0)return;for(var d:Direction.values()){var p=c.event.getPos().relative(d);if(c.level.hasChunkAt(p)&&c.level.getFluidState(p).is(tag)&&c.perk(trait,cooldown(c,trait),0)){place(c,p,Blocks.COBBLESTONE,Items.COBBLESTONE,false);break;}}
     }

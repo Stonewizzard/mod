@@ -13,7 +13,7 @@ import static com.example.examplemod.PickaxeTrait.*;
 /** Conditions are evaluated at the actual targeted block; no client-only prediction mutates state. */
 final class MiningConditions {
     static String id(BlockState state){return BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();}
-    static boolean ore(BlockState state){String id=id(state);return id.endsWith("_ore")||state.is(TagKey.create(Registries.BLOCK,Identifier.fromNamespaceAndPath("c","ores")));}
+    static boolean ore(BlockState state){String id=id(state);return id.equals("ancient_debris")||id.endsWith("_ore")||state.is(TagKey.create(Registries.BLOCK,Identifier.fromNamespaceAndPath("c","ores")));}
     static boolean gem(String id){return id.contains("diamond_ore")||id.contains("emerald_ore")||id.contains("lapis_ore");}
     static boolean stone(String id){return id.equals("stone")||id.contains("deepslate")||id.equals("andesite")||id.equals("granite")||id.equals("diorite")||id.equals("tuff")||id.equals("calcite")||netherStone(id)||id.equals("end_stone");}
     static boolean netherStone(String id){return id.contains("netherrack")||id.contains("basalt")||id.contains("blackstone");}

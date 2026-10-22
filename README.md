@@ -310,3 +310,11 @@ Cleanup removes the infection marker and its own speed modifier while preserving
 the mob's UUID, name, health, equipment, variants and other attribute modifiers.
 
 
+
+## Reconstructed tool rewards and appraisal
+
+Use the **Appraisal Table** to inspect recovered parts and finished tools. It explains each modifier's conditions, current effect, value tiers, scaling, caps, sources and ascension cost. Craft it with three planks, two sticks, paper and glass; [the table guide](docs/APPRAISAL_TABLE.md) has the pattern and controls.
+
+Reconstructed pickaxes have a quality-scaled mining/resonance core and substantially stronger modifier rewards. Fortune can add above the native Fortune III enchantment. Existing saved parts keep their raw rolls and provenance. Tooltips are compact; Nether and End influence appear through animated name colors while inventory icons stay unchanged.
+
+See [all 120 modifiers](docs/PICKAXE_MODIFIERS.md) and [the individual reward review](docs/MODIFIER_REWARD_REVIEW.md). Artifact acquisition chances are unchanged.

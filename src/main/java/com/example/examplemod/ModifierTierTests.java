@@ -210,8 +210,8 @@ public final class ModifierTierTests {
             check(h,ArtifactModifiers.read(saved.getCompoundOrEmpty(ReconstructionPattern.PICKAXE.parts.get(i)).getCompoundOrEmpty("Modifiers")).equals(ArtifactModifiers.read(parts.get(i))),
                 "Assembly must copy each part's exact value-tier metadata");
         check(h,ItemStack.matches(tool,roundtrip(h,tool)),"Tiered assembled tools must survive native serialization");
-        String tooltip=PickaxeTooltips.piece(parts.getFirst()).stream().map(Component::getString).reduce("",String::concat);
-        check(h,tooltip.contains("T"+ArtifactModifiers.read(parts.getFirst()).getFirst().tierRank()),"Piece tooltips must show the saved rolled tier");
+        String tooltip=AppraisalReport.read(parts.getFirst()).entries().stream().flatMap(e->e.lines().stream()).reduce("",String::concat);
+        check(h,tooltip.contains("T"+ArtifactModifiers.read(parts.getFirst()).getFirst().tierRank()),"Appraisal must show the saved rolled tier");
     }
     private static ItemStack rolled(ArtifactProfile.Find find,int rarity,int score,long seed) {
         var part=ComponentWorkTests.component(find,score,rarity,seed);

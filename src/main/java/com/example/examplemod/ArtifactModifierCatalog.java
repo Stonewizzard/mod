@@ -7,7 +7,7 @@ import static com.example.examplemod.PickaxeTrait.*;
 
 /** Editable family weights, per-family value tiers, and artifact rarity rules. */
 public final class ArtifactModifierCatalog {
-    public static final int REVISION = 7;
+    public static final int REVISION = 8;
     public record Rarity(String label, List<Double> chances) {
         public Rarity { chances = List.copyOf(chances); }
     }
@@ -15,14 +15,7 @@ public final class ArtifactModifierCatalog {
         public Spec(int minimumRarity, List<ModifierTier> tiers) { this(minimumRarity,tiers,ModifierInfluence.NONE,false); }
         public Spec { tiers = List.copyOf(tiers); if(influence==null || influenceOnly && influence==ModifierInfluence.NONE) throw new IllegalArgumentException("Influence-only modifiers need an influence tag"); }
     }
-    private static final List<Rarity> RARITIES = List.of(
-        new Rarity("Common", List.of(1.0)),
-        new Rarity("Uncommon", List.of(1.0, .20)),
-        new Rarity("Rare", List.of(1.0, .45, .10)),
-        new Rarity("Epic", List.of(1.0, .65, .25)),
-        new Rarity("Legendary", List.of(1.0, .80, .50, .15)),
-        new Rarity("Unique", List.of(1.0, .90, .70, .35))
-    );
+    private static final List<Rarity> RARITIES=java.util.stream.IntStream.range(0,6).mapToObj(i->new Rarity(new String[]{"Common","Uncommon","Rare","Epic","Legendary","Unique"}[i],java.util.Arrays.stream(ModifierGameplay.RARITY_CHANCES[i]).boxed().toList())).toList();
 
     private static final Map<PickaxeTrait,Spec> SPECS=ModifierDefinitions.SPECS;
     /** Shared pieces are deliberately tool-agnostic; mining traits belong to the three head parts. */
