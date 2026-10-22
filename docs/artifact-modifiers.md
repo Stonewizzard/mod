@@ -19,6 +19,10 @@ Each modifier family now owns **weighted value tiers**, with its own number of b
 
 Each new modifier also rolls an independent **F–S scaling grade**, which controls its ascension and normal-level growth. Existing ungraded modifiers use B. See [pickaxe progression](pickaxe-progression.md) for the grade rates, exact formula, compatibility policy, and six Creative comparison tools.
 
+## Influences
+
+Only the Influencer can assign a permanent Nether or End influence to a recovered component. Ordinary tagged modifiers can still appear on uninfluenced pieces without assigning influence. Matching tags receive 6× family weight, neutral modifiers keep normal weight, foreign tags are excluded, and exclusive modifiers require matching influence. [Influence rules and editable configuration](influences.md) explain locks, permanent assignment, and the End-only Phasebound modifier.
+
 ## Component customization
 
 Epic and higher artifacts can recover an obfuscated ancient roll. The [component workshops](component-workshops.md) provide fixed three-choice unveiling, permanent locks, annulment, scaling rerolls, terminal corruption, and restoration up to 120% quality. These actions apply to recovered pieces, not finished tools. Original extraction provenance remains saved; reconstruction copies the finalized component values.
@@ -33,9 +37,10 @@ Epic and higher artifacts can recover an obfuscated ancient roll. The [component
 - **Scholar:** increases the block's native mining XP. Fractional XP is stochastic-rounded so small bonuses retain their expected value.
 - **Aquatic / Steady hands:** remove the indicated fraction of the native underwater/airborne mining penalty. Existing underwater mining attributes are respected.
 - **Long reach:** adds native main-hand block interaction range.
+- **Phasebound:** chance to insert each final mined-drop stack directly into the mining player's inventory. Full or partially full inventories leave the uncollected remainder in the world. Only matching End-influenced Legendary/Unique components can roll it.
 - **Smelter:** chance to convert drops using native smelting recipes, preserving output counts and granting the recipe's XP. It does not run on a Silk Touch harvest.
 
-Contributions add after per-part quality scaling. Aggregate caps are: +600% mining speed, Fortune III, 12-block magnet radius, 100% Silk/smelting chance, +200% durability, +300% mining XP, full removal of each movement penalty and +2.5 blocks of reach. These keep combined rolls bounded; caps can make a combined total grow less than linearly near its limit. Normal tool enchantments remain separate from part rolls. Virtual loot enchantments never alter the actual tool.
+Contributions add after per-part quality scaling. Aggregate caps are: +600% mining speed, Fortune III, 12-block magnet radius, 100% Silk/smelting chance, +200% durability, +300% mining XP, full removal of each movement penalty, +2.5 blocks of reach, and 100% Phase collection chance. These keep combined rolls bounded; caps can make a combined total grow less than linearly near its limit. Normal tool enchantments remain separate from part rolls. Virtual loot enchantments never alter the actual tool.
 
 Fortune/Silk use native block loot generation. Ender Chest Silk Touch is supported; dynamic block-entity/container drops otherwise stay intact. Ability handling stays server-authoritative for drops, XP, Creative rolls and magnetism; speed and native attributes also work on the client for responsive mining.
 
@@ -51,6 +56,4 @@ Moving a resolved piece, storing it, opening a UI or assembling it never rerolls
 
 `Rarity.chances` specifies one probability per roll attempt; `[1.0, .45, .10]` means one guaranteed roll, a 45% second attempt and a 10% third attempt. Modifier value-tier weights and per-part family weights are separate. Pool iteration uses enum order so seeds remain stable across JVMs. Definition validation rejects invalid IDs, weights, ranges and duplicate entries.
 
-`examplemod:part_modifiers` remains version 1 with catalog revision 5 and optional `Scaling`, `ValueTier`, and `TierRank` fields per roll. Existing records are never overwritten. `examplemod:reconstruction.Parts` retains each part's complete record. Unknown modifier IDs remain stored but have no active effect. Unknown tier IDs remain preserved; an existing known modifier keeps its saved value. Old untiered rolls remain untiered. Keep IDs stable and increment the catalog revision when changing future rolls; the data format stays compatible with existing saves.
-
-
+`examplemod:part_modifiers` remains version 1 with catalog revision 6 and optional `Scaling`, `ValueTier`, and `TierRank` fields per roll. Existing records are never overwritten. `examplemod:reconstruction.Parts` retains each part's complete record. Unknown modifier IDs remain stored but have no active effect. Unknown tier IDs remain preserved; an existing known modifier keeps its saved value. Old untiered rolls remain untiered. Keep IDs stable and increment the catalog revision when changing future rolls; the data format stays compatible with existing saves.

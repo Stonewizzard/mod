@@ -81,7 +81,21 @@ public final class PickaxeEvents {
             }
         }
         event.setDroppedExperience(silkActive?0:stochastic(random,(event.getDroppedExperience()+smeltingXp)*(1+stats.get(EXPERIENCE))));
+        collect(event.getDrops(),player,stats.get(PHASEBOUND));
         for(var drop:event.getDrops())markMinedDrop(drop,player);
+    }
+    /** Only this mining event's final drops qualify; full inventories leave the remainder in the world. */
+    static void collect(List<ItemEntity> drops,ServerPlayer player,double chance){
+        chance=Math.clamp(chance,0,1);if(chance<=0)return;boolean changed=false;
+        for(var drop:new ArrayList<>(drops)){
+            if(player.getRandom().nextDouble()>=chance)continue;
+            var remainder=drop.getItem().copy();int before=remainder.getCount();
+            player.getInventory().add(remainder);
+            if(remainder.getCount()==before)continue;
+            changed=true;
+            if(remainder.isEmpty()){drops.remove(drop);drop.discard();}else drop.setItem(remainder);
+        }
+        if(changed){player.getInventory().setChanged();player.inventoryMenu.broadcastChanges();}
     }
     public static void markMinedDrop(ItemEntity item,ServerPlayer player){
         var data=item.getPersistentData();data.putString(MAGNET_OWNER,player.getUUID().toString());data.putLong(MAGNET_UNTIL,player.level().getGameTime()+1200);
@@ -109,4 +123,3 @@ public final class PickaxeEvents {
     }
     private PickaxeEvents(){}
 }
-

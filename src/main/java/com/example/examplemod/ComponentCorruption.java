@@ -23,7 +23,7 @@ public final class ComponentCorruption {
             case HIGHER_GRADE,LOWER_GRADE->{var old=rolls.get(index);int step=selected==Outcome.HIGHER_GRADE?1:-1;var grade=ModifierScaling.values()[old.scaling().ordinal()+step];rolls.set(index,old.withScaling(grade));message=selected==Outcome.HIGHER_GRADE?"Corruption raised a scaling grade":"Corruption lowered a scaling grade";}
             case ADD->{
                 int rarity=ComponentWork.recovered(stack).getIntOr("Rarity",0);
-                var choices=AncientModifiers.eligible(ComponentWork.find(stack),rarity,rolls);
+                var choices=AncientModifiers.eligible(ComponentWork.find(stack),rarity,rolls,ComponentInfluences.current(stack));
                 var sampler=new java.util.Random(random.nextLong());
                 var entry=ArtifactModifiers.weighted(choices,ArtifactModifiers.Definition::weight,sampler);
                 var profile=new ArtifactProfile(random.nextLong(),rarity,ArtifactProfile.Matrix.SHALE,ComponentWork.find(stack));
@@ -41,7 +41,7 @@ public final class ComponentCorruption {
     static boolean eligible(Outcome outcome,ItemStack stack,List<ArtifactModifiers.Roll> rolls){return switch(outcome){
         case RESTORE->ArtifactQuality.score(stack)<ComponentWork.MAX_QUALITY;
         case FRACTURE->ArtifactQuality.score(stack)>0;
-        case ADD->rolls.size()<8&&!AncientModifiers.eligible(ComponentWork.find(stack),ComponentWork.recovered(stack).getIntOr("Rarity",0),rolls).isEmpty();
+        case ADD->rolls.size()<8&&!AncientModifiers.eligible(ComponentWork.find(stack),ComponentWork.recovered(stack).getIntOr("Rarity",0),rolls,ComponentInfluences.current(stack)).isEmpty();
         case UNCHANGED->true;
         default->!targets(outcome,stack,rolls).isEmpty();
     };}

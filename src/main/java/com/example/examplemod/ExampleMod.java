@@ -186,6 +186,7 @@ public class ExampleMod {
             modEventBus.addListener(ReconstructionTests::register);
             modEventBus.addListener(PickaxeModifierTests::register);
             modEventBus.addListener(ModifierTierTests::register);
+            modEventBus.addListener(InfluenceTests::register);
             modEventBus.addListener(PickaxeAscensionTests::register);
             modEventBus.addListener(PickaxeGrowthTests::register);
             modEventBus.addListener(PickaxeLevelSoundTests::register);

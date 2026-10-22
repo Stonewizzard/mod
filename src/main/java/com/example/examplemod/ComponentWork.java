@@ -34,14 +34,15 @@ public final class ComponentWork {
     public static boolean mutable(ItemStack stack){return component(stack)&&!corrupted(stack);}
     public static List<ArtifactModifiers.Roll> offers(ItemStack stack){return AncientModifiers.offers(stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactModifiers.KEY));}
     public static boolean can(ComponentStationKind kind,ItemStack stack,int choice){
-        if(!mutable(stack)||stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getBooleanOr(CreativePickaxeParts.PENDING,false))return false;var rolls=ArtifactModifiers.read(stack);String lock=locked(stack);
+        if(!mutable(stack)||!ComponentInfluences.known(stack)||stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getBooleanOr(CreativePickaxeParts.PENDING,false))return false;var rolls=ArtifactModifiers.read(stack);String lock=locked(stack);
         return switch(kind){
-            case UNVEILER->choice>=0&&choice<offers(stack).size()&&rolls.stream().anyMatch(AncientModifiers::ancient)&&AncientModifiers.eligible(find(stack),recovered(stack).getIntOr("Rarity",0),rolls).stream().anyMatch(d->d.id().equals(offers(stack).get(choice).id()));
+            case UNVEILER->choice>=0&&choice<offers(stack).size()&&rolls.stream().anyMatch(AncientModifiers::ancient)&&AncientModifiers.eligible(find(stack),recovered(stack).getIntOr("Rarity",0),rolls,ComponentInfluences.current(stack)).stream().anyMatch(d->d.id().equals(offers(stack).get(choice).id()));
             case LOCKER->lock.isEmpty()&&choice>=0&&choice<rolls.size()&&!AncientModifiers.ancient(rolls.get(choice))&&PickaxeTrait.byId(rolls.get(choice).id())!=null;
             case ANULLER->rolls.stream().anyMatch(r->!r.id().equals(lock));
             case SCALER->rolls.stream().anyMatch(r->!r.id().equals(lock)&&PickaxeTrait.byId(r.id())!=null);
             case RESTORER->ArtifactQuality.score(stack)<MAX_QUALITY;
             case CORRUPTOR->true;
+            case INFLUENCER->ComponentInfluences.can(stack,ModifierInfluence.choice(choice));
         };
     }
     public static boolean apply(ComponentStationKind kind,ItemStack stack,int choice,RandomSource random){
@@ -55,6 +56,7 @@ public final class ComponentWork {
             case SCALER->{int rarity=recovered(stack).getIntOr("Rarity",0);var find=find(stack);for(int i=0;i<rolls.size();i++){var old=rolls.get(i);if(!old.id().equals(lock)&&PickaxeTrait.byId(old.id())!=null){var profile=new ArtifactProfile(random.nextLong(),rarity,ArtifactProfile.Matrix.SHALE,find);rolls.set(i,old.withScaling(ModifierScaling.roll(profile,old.id())));}}message="Unlocked scaling grades rerolled";}
             case RESTORER->{int quality=Math.min(MAX_QUALITY,ArtifactQuality.score(stack)+RESTORE_STEP);state.putInt("Quality",quality);message="Quality restored to "+quality+"%";}
             case CORRUPTOR->{message=ComponentCorruption.apply(stack,state,rolls,random);state.putBoolean("Corrupted",true);}
+            case INFLUENCER->{var target=ModifierInfluence.choice(choice);record=ComponentInfluences.assign(stack,target,random);rolls.clear();rolls.addAll(ArtifactModifiers.read(record));state.putString(ComponentInfluences.FIELD,target.id);message=target.label+" influence applied permanently";}
             default->throw new IllegalStateException("Unknown station");
         }
         if(rolls.stream().noneMatch(AncientModifiers::ancient))record.remove(AncientModifiers.OFFERS);

@@ -29,6 +29,7 @@ public final class AscensionResources {
         map.put(PickaxeTrait.AIRBORNE,new Binding(Items.FEATHER,2));
         map.put(PickaxeTrait.REACH,new Binding(Items.ENDER_PEARL,1));
         map.put(PickaxeTrait.SMELTING,new Binding(Items.BLAZE_POWDER,2));
+        map.put(PickaxeTrait.PHASEBOUND,new Binding(Items.ENDER_PEARL,2));
         if(map.size()!=PickaxeTrait.values().length)throw new IllegalStateException("Every pickaxe trait needs an ascension resource");
         return Map.copyOf(map);
     }
