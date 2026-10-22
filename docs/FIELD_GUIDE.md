@@ -66,11 +66,13 @@ Escape or the close button closes the book. Reading never consumes the book, cha
 
 Hover a reconstructed tool and hold Shift while scrolling to browse its modifier pages. Effective values and grades remain on the tool; definitions and rules live here.
 
+Craft ancient field guide: book + paper, in any arrangement.
+
 <a id="sniffers"></a>
 
 ## Sniffers and ancient debris
 
-Obtain and hatch a vanilla Sniffer egg, then raise the Sniffer. Adults can investigate exposed ancient debris on a walkable surface. Buried debris is not a target for this feature.
+Brush suspicious sand in warm ocean ruins to find a vanilla Sniffer egg. Hatch it and raise the Sniffer. Adults can investigate exposed ancient debris on a walkable surface; buried debris is not a target. Adults breed with torchflower seeds.
 
 When the Sniffer successfully digs at exposed ancient debris, that debris breaks and yields netherite scrap and an artifact. Mob griefing must allow the interaction.
 
@@ -174,6 +176,8 @@ Clear the covering rock while preserving the inclusion. Thick crust calls for th
 
 When the table says Ready to recover, use Recover with the output slot empty. Take the recovered component before starting another reward. Table contents persist when the screen is closed.
 
+Craft archaeology table: grid rows PPP / SIS / S.S. A dot means an empty cell. P = any planks; S = stick; I = iron ingot.
+
 <a id="excavation-tools"></a>
 
 ## Choosing excavation tools
@@ -187,6 +191,14 @@ Hammer: broad removal of thick crust. Efficient for hard cover and risky near th
 Magnifying lens: inspection that helps reveal where material lies beneath the surface without removing that cover.
 
 Tool choice, covering thickness and how close you are to the find matter more than simply repeating the same action everywhere. Damage reduces the recovered quality.
+
+An ordinary Minecraft brush is the basic brush. The custom drill, hammer and lens recipes are listed on the following pages.
+
+Craft archaeology drill: grid rows .IR / .SI / .S.. A dot means an empty cell. I = iron ingot; R = redstone; S = stick.
+
+Craft archaeology hammer: grid rows II. / .S. / .S.. A dot means an empty cell. I = iron ingot; S = stick.
+
+Craft magnifying glass: grid rows GI / .S. A dot means an empty cell. G = glass pane; I = iron ingot; S = stick.
 
 <a id="tool-tiers"></a>
 
@@ -227,6 +239,8 @@ Sword, axe, shovel, hoe, mace and spear patterns are also available. Handles and
 The finished tool keeps each part's quality, saved rolls and customization provenance. Repeated contributions combine up to their relevant caps.
 
 The pickaxe has the developed mining modifier and progression system. Further specialized modifiers for other equipment can be added later.
+
+Craft reconstruction table: grid rows PPP / .C. / S.S. A dot means an empty cell. P = any planks; C = crafting table; S = stick.
 
 <a id="pickaxe-core"></a>
 

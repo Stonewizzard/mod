@@ -55,7 +55,7 @@ public final class FieldGuide {
             if(trait.unit!=PickaxeTrait.Unit.PERK)for(var tier:spec.tiers())lines.add("T"+tier.rank()+": "+PickaxeTooltips.value(trait,tier.minimum()*trait.power)+" to "+PickaxeTooltips.value(trait,tier.maximum()*trait.power)+". Rarity weights C/U/R/E/L/Unique: "+tier.rarityWeights().stream().map(Object::toString).collect(java.util.stream.Collectors.joining("/"))+".");
             var material=AscensionResources.BINDINGS.get(trait);lines.add("Ascension resource: "+net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(material.item()).getPath().replace('_',' ')+". Cost per occurrence: "+material.baseCount()+" times the upcoming ascension number. Repeated resources combine.");
             if(trait.growth==PickaxeTrait.Growth.NUMERIC)lines.add("Grade growth is relative to base. F/D/C/B/A/S add 6/10/15/22/32/45% per ascension and 0.05/0.10/0.15/0.25/0.35/0.50% per selected level.");
-            result.add(new Entry(trait.id,Category.MODIFIERS,group(trait),trait.label,"examplemod:restored_ancient_pickaxe",lines,List.of("modifier_basics","scaling_and_quality","influences","ascension"),trait.name()+" "+trait.family.name()+" "+spec.influence().label));
+            result.add(new Entry(trait.id,Category.MODIFIERS,group(trait),trait.label,"examplemod:restored_ancient_pickaxe",lines,List.of("modifier_basics","scaling_and_quality","influences","ascension"),trait.name()+" "+PickaxeTooltips.label(trait)+" "+(trait==PickaxeTrait.SPEED?"efficiency haste ":"")+trait.family.name()+" "+spec.influence().label));
         }return List.copyOf(result);
     }
     private static Group group(PickaxeTrait trait){

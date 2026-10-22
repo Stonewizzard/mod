@@ -69,6 +69,18 @@ def generate():
  for r in ROWS:review.append('| **%s** | %s× saved base | %s | %s |\n'%(r['label'],r['power'],r['cap'],r['review']))
  yield ROOT/'docs/MODIFIER_REWARD_REVIEW.md',''.join(review)
  chapters=json.loads((ROOT/'tools/field-guide.json').read_text(encoding="utf-8"))
+ for c in chapters:
+  c['paragraphs']=list(c['paragraphs'])
+  for recipe_id in c.get('recipes',[]):
+   recipe=json.loads((ROOT/'src/main/resources/data/examplemod/recipe'/f'{recipe_id}.json').read_text(encoding="utf-8"))
+   readable=lambda key:('any ' if key.startswith('#') else '')+key.lstrip('#').split(':')[-1].replace('_',' ')
+   title=recipe_id.replace('_',' ')
+   if recipe['type']=='minecraft:crafting_shaped':
+    pattern=' / '.join(row.replace(' ','.') for row in recipe['pattern'])
+    legend='; '.join(key+' = '+readable(value) for key,value in recipe['key'].items())
+    c['paragraphs'].append('Craft '+title+': grid rows '+pattern+'. A dot means an empty cell. '+legend+'.')
+   elif recipe['type']=='minecraft:crafting_shapeless':c['paragraphs'].append('Craft '+title+': '+' + '.join(readable(value) for value in recipe['ingredients'])+', in any arrangement.')
+   else:raise ValueError('Unsupported guide recipe: '+recipe_id)
  ids={r['id'] for r in chapters}|{'examplemod:'+r['id'] for r in ROWS}
  assert all(len(c['links'])<=4 for c in chapters),"Guide related links must fit their page"
  assert len(ids)==len(chapters)+len(ROWS),"Guide entry IDs must be unique"

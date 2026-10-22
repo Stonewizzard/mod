@@ -35,7 +35,10 @@
       "welcome",
       "modifier_basics"
     ],
-    "keywords": "controls search keyboard navigation pages"
+    "keywords": "controls search keyboard navigation pages",
+    "recipes": [
+      "ancient_field_guide"
+    ]
   },
   {
     "id": "sniffers",
@@ -43,7 +46,7 @@
     "title": "Sniffers and ancient debris",
     "icon": "minecraft:sniffer_egg",
     "paragraphs": [
-      "Obtain and hatch a vanilla Sniffer egg, then raise the Sniffer. Adults can investigate exposed ancient debris on a walkable surface. Buried debris is not a target for this feature.",
+      "Brush suspicious sand in warm ocean ruins to find a vanilla Sniffer egg. Hatch it and raise the Sniffer. Adults can investigate exposed ancient debris on a walkable surface; buried debris is not a target. Adults breed with torchflower seeds.",
       "When the Sniffer successfully digs at exposed ancient debris, that debris breaks and yields netherite scrap and an artifact. Mob griefing must allow the interaction.",
       "There is also a one-in-fifteen chance of a Cruncher egg from this excavation. Ordinary Sniffer digging still has its normal uses.",
       "Adult sniffers drop a Sniffer Head when killed. The head is a decorative trophy, with wall attachment and sixteen floor rotations."
@@ -136,7 +139,7 @@
       "sniffers",
       "crunchers"
     ],
-    "keywords": "skulk sculk parasite infection infected hostile deep dark ancient city sensors"
+    "keywords": "skulk sculk parasite infection infected hostile deep dark ancient city sensors cow zombie panda llama iron golem infected animals mobs"
   },
   {
     "id": "artifacts",
@@ -192,7 +195,10 @@
       "tool_tiers",
       "scaling_and_quality"
     ],
-    "keywords": "archeology archaeology excavation minigame recover extract artifact inventory field kit"
+    "keywords": "archeology archaeology excavation minigame recover extract artifact inventory field kit",
+    "recipes": [
+      "archaeology_table"
+    ]
   },
   {
     "id": "excavation_tools",
@@ -204,14 +210,20 @@
       "Brush: gentle cleaning of loose sediment, suited to exposed edges and the final pass.",
       "Hammer: broad removal of thick crust. Efficient for hard cover and risky near the inclusion.",
       "Magnifying lens: inspection that helps reveal where material lies beneath the surface without removing that cover.",
-      "Tool choice, covering thickness and how close you are to the find matter more than simply repeating the same action everywhere. Damage reduces the recovered quality."
+      "Tool choice, covering thickness and how close you are to the find matter more than simply repeating the same action everywhere. Damage reduces the recovered quality.",
+      "An ordinary Minecraft brush is the basic brush. The custom drill, hammer and lens recipes are listed on the following pages."
     ],
     "links": [
       "archaeology_table",
       "tool_tiers",
       "scaling_and_quality"
     ],
-    "keywords": "drill brush hammer lens magnifying glass tools damage condition"
+    "keywords": "drill brush hammer lens magnifying glass tools damage condition",
+    "recipes": [
+      "archaeology_drill",
+      "archaeology_hammer",
+      "magnifying_glass"
+    ]
   },
   {
     "id": "tool_tiers",
@@ -266,7 +278,10 @@
       "modifier_basics",
       "levels"
     ],
-    "keywords": "reconstruction table crafting pickaxe sword axe shovel hoe mace spear pieces connector handle"
+    "keywords": "reconstruction table crafting pickaxe sword axe shovel hoe mace spear pieces connector handle",
+    "recipes": [
+      "reconstruction_table"
+    ]
   },
   {
     "id": "pickaxe_core",
