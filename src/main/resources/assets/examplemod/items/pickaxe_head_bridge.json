@@ -1,6 +1,13 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "examplemod:item/pickaxe_head_bridge"
+    "model": "examplemod:item/pickaxe_head_bridge",
+    "tints": [
+      {
+        "type": "minecraft:custom_model_data",
+        "index": 0,
+        "default": -1
+      }
+    ]
   }
 }

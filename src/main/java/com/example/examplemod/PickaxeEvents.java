@@ -38,7 +38,7 @@ public final class PickaxeEvents {
     public static void speed(PlayerEvent.BreakSpeed event){
         var player=event.getEntity();var held=player.getMainHandItem();if(!held.is(ArchaeologyContent.PICKAXE.get())||event.getState().requiresCorrectToolForDrops()&&!held.isCorrectToolForDrops(event.getState()))return;
         var stats=PickaxeModifiers.totals(held);var pos=event.getPosition().orElse(player.blockPosition());
-        event.setNewSpeed((float)(event.getNewSpeed()*(1+MiningConditions.extra(player,pos,event.getState(),held,stats))*speedMultiplier(stats,player.isEyeInFluid(FluidTags.WATER),player.getAttributeValue(Attributes.SUBMERGED_MINING_SPEED),player.onGround())));
+        event.setNewSpeed((float)(event.getNewSpeed()*PickaxeModifiers.coreSpeed(held)*(1+MiningConditions.extra(player,pos,event.getState(),held,stats))*speedMultiplier(stats,player.isEyeInFluid(FluidTags.WATER),player.getAttributeValue(Attributes.SUBMERGED_MINING_SPEED),player.onGround())));
     }
     public static double speedMultiplier(PickaxeModifiers.Bonuses stats,boolean underwater,double submergedMultiplier,boolean grounded){
         double factor=1+stats.get(SPEED);
@@ -54,7 +54,7 @@ public final class PickaxeEvents {
     public static void drops(BlockDropsEvent event){
         var tool=event.getTool();if(!(event.getBreaker() instanceof ServerPlayer player)||!tool.is(ArchaeologyContent.PICKAXE.get()))return;
         if(event.getState().requiresCorrectToolForDrops()&&!tool.isCorrectToolForDrops(event.getState()))return;
-        var c=new MiningContext(event,player);var level=event.getLevel();var random=level.getRandom();var stats=c.stats;
+        var c=new MiningContext(event,player);MiningChargeEffects.prepare(c);var level=event.getLevel();var random=level.getRandom();var stats=c.stats;
         var lookup=level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
         var silk=lookup.getOrThrow(Enchantments.SILK_TOUCH);var fortune=lookup.getOrThrow(Enchantments.FORTUNE);
         boolean silkActive=EnchantmentHelper.getItemEnchantmentLevel(silk,tool)>0;
@@ -66,7 +66,7 @@ public final class PickaxeEvents {
             }
             if(!silkActive){
                 int base=EnchantmentHelper.getItemEnchantmentLevel(fortune,tool);
-                int target=Math.max(base,Math.min(3,base+stochastic(random,MiningLootEffects.fortune(c))));
+                int target=Math.max(base,Math.min((int)ModifierGameplay.MAX_FORTUNE,base+stochastic(random,MiningLootEffects.fortune(c))));
                 if(target>base){virtual.enchant(fortune,target);changed=true;}
             }
             if(changed){
@@ -81,7 +81,7 @@ public final class PickaxeEvents {
                 var inputStack=drop.getItem().copy();inputStack.setCount(1);var input=new SingleRecipeInput(inputStack);
                 var recipe=level.getServer().getRecipeManager().getRecipeFor(RecipeType.SMELTING,input,level);if(recipe.isEmpty())continue;
                 var result=recipe.get().value().assemble(input);if(result.isEmpty())continue;
-                int count=Math.min(4096,drop.getItem().getCount()*result.getCount());smeltingXp+=recipe.get().value().experience()*drop.getItem().getCount();
+                int count=Math.min(4096,stochastic(random,drop.getItem().getCount()*result.getCount()*(1+.25*c.get(PYROCLASTIC)+(c.soulFurnace?c.rule(SOUL_FURNACE,ModifierTuning.Key.YIELD_BONUS):0))));smeltingXp+=recipe.get().value().experience()*drop.getItem().getCount();
                 event.getDrops().remove(drop);c.smelted++;
                 while(count>0){int size=Math.min(count,result.getMaxStackSize());var stack=result.copy();stack.setCount(size);event.getDrops().add(new ItemEntity(level,drop.getX(),drop.getY(),drop.getZ(),stack));count-=size;}
             }
@@ -122,12 +122,13 @@ public final class PickaxeEvents {
         SharedToolEffects.tick(player,player.getMainHandItem());
         MiningChargeEffects.movement(player,player.getMainHandItem());
         MiningStatusEffects.tick(player,player.getMainHandItem());
+        MiningCollectionEffects.remote(player,player.getMainHandItem());
         if(player.level().getGameTime()%2!=0)return;
         double radius=PickaxeModifiers.totals(player.getMainHandItem()).get(MAGNET);if(radius<=0)return;
         attract(player,radius);
     }
     public static void attract(ServerPlayer player,double radius){
-        radius=Math.clamp(radius,0,12);if(radius<=0)return;
+        radius=Math.clamp(radius,0,24);if(radius<=0)return;
         String owner=player.getUUID().toString();long now=player.level().getGameTime();var target=new Vec3(player.getX(),player.getY()+.7,player.getZ());
         for(var item:player.level().getEntitiesOfClass(ItemEntity.class,player.getBoundingBox().inflate(radius))){
             var data=item.getPersistentData();if(!item.isAlive()||!data.getStringOr(MAGNET_OWNER,"").equals(owner)||data.getLongOr(MAGNET_UNTIL,0)<now||(item.getTarget()!=null&&!item.getTarget().equals(player.getUUID())))continue;

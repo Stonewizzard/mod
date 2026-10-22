@@ -89,6 +89,7 @@ public class ExampleModClient {
         event.register(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),com.example.examplemod.client.ArchaeologyTableScreen::new);
         event.register(ReconstructionContent.MENU.get(),com.example.examplemod.client.ReconstructionTableScreen::new);
         event.register(AscenderContent.MENU.get(),com.example.examplemod.client.AscenderScreen::new);
+        event.register(AppraisalContent.MENU.get(),com.example.examplemod.client.AppraisalScreen::new);
         event.register(ComponentStationContent.MENU.get(),com.example.examplemod.client.ComponentStationScreen::new);
     }
 }

@@ -12,13 +12,16 @@ import net.minecraft.world.item.component.CustomData;
 public final class MiningRuntime {
     public static final String KEY="examplemod:mining_runtime";
     private static final ThreadLocal<HashSet<UUID>> SECONDARY=ThreadLocal.withInitial(HashSet::new);
+    private static final ThreadLocal<HashSet<UUID>> FURNACE=ThreadLocal.withInitial(HashSet::new);
+    static boolean furnace(UUID player){return FURNACE.get().contains(player);}
+    static void begin(UUID player,boolean furnace){begin(player);if(furnace)FURNACE.get().add(player);}
     public static boolean secondary(UUID player){return SECONDARY.get().contains(player);}
     static void begin(UUID player){SECONDARY.get().add(player);}
-    static void end(UUID player){SECONDARY.get().remove(player);}
+    static void end(UUID player){SECONDARY.get().remove(player);FURNACE.get().remove(player);}
     public static CompoundTag read(ItemStack tool){return tool.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(KEY).copy();}
     public static void edit(ItemStack tool,Consumer<CompoundTag> action){var root=tool.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var state=root.getCompoundOrEmpty(KEY).copy();action.accept(state);root.put(KEY,state);tool.set(DataComponents.CUSTOM_DATA,CustomData.of(root));}
-    public static int charge(ItemStack tool){return Math.clamp(read(tool).getIntOr("Charge",0),0,100);}
-    public static void addCharge(ItemStack tool,int amount){if(amount>0)edit(tool,s->s.putInt("Charge",Math.clamp(s.getIntOr("Charge",0)+Math.min(amount,100),0,100)));}
+    public static int charge(ItemStack tool){return Math.clamp(read(tool).getIntOr("Charge",0),0,(int)ModifierGameplay.CHARGE_CAPACITY);}
+    public static void addCharge(ItemStack tool,int amount){if(amount>0)edit(tool,s->s.putInt("Charge",Math.clamp(s.getIntOr("Charge",0)+Math.min(amount,(int)ModifierGameplay.CHARGE_CAPACITY),0,(int)ModifierGameplay.CHARGE_CAPACITY)));}
     public static boolean spend(ItemStack tool,int cost){if(cost<0||charge(tool)<cost)return false;edit(tool,s->s.putInt("Charge",charge(tool)-cost));return true;}
     static boolean cooldown(ItemStack tool,String key,long now,int ticks){
         var state=read(tool);long last=state.getLongOr("CD_"+key,Long.MIN_VALUE/2);if(last>now){edit(tool,s->s.putLong("CD_"+key,now));return false;}

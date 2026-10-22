@@ -22,7 +22,7 @@ public final class PickaxeModifiers {
         public double get(PickaxeTrait trait){return values.getOrDefault(trait,0.0);}
     }
     public record Contribution(String key,PickaxeTrait trait,ArtifactModifiers.Roll roll,double quality,int levelHits){
-        public double base(){return Math.clamp(roll.value(),0,trait.cap)*quality;}
+        public double base(){return Math.clamp(roll.value()*trait.power,0,trait.cap)*quality;}
         public double value(int ascensions){return trait.growth==PickaxeTrait.Growth.MILESTONE?base():base()*(1+ascensions*roll.scaling().ascensionGrowth+levelHits*roll.scaling().levelGrowth);}
     }
     private record Cached(CustomData source,List<Contribution> contributions,Bonuses totals,int ascensions){}
@@ -61,6 +61,14 @@ public final class PickaxeModifiers {
             int stage=(asc>=3+offset?1:0)+(asc>=6+offset?1:0)+(asc>=9+offset?1:0);result=Math.max(result,stage);}
         return result;
     }
+    /** Only the three reconstructed mining heads contribute to the innate core. */
+    public static double headQuality(ItemStack stack){
+        if(pattern(stack)!=ReconstructionPattern.PICKAXE)return 0;
+        var parts=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY).getCompoundOrEmpty("Parts");
+        double sum=0;for(String id:ReconstructionPattern.PICKAXE.parts.subList(0,3))sum+=Math.clamp(parts.getCompoundOrEmpty(id).getIntOr("Score",0),0,ComponentWork.MAX_QUALITY)/100.0;
+        return sum/3;
+    }
+    public static double coreSpeed(ItemStack stack){return 1+ModifierGameplay.CORE_SPEED_BONUS*headQuality(stack);}
     public static Bonuses totals(ItemStack stack){
         return stack.isEmpty()?new Bonuses(Map.of()):cached(stack).totals();
     }

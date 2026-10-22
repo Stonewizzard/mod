@@ -23,7 +23,7 @@ final class SharedToolEffects {
     static boolean owns(ServerPlayer player,Item item){for(int i=0;i<player.getInventory().getContainerSize();i++)if(plain(player.getInventory().getItem(i),item))return true;return false;}
     static boolean plain(ItemStack stack,Item item){return stack.is(item)&&ItemStack.isSameItemSameComponents(stack,new ItemStack(item));}
     static void tick(ServerPlayer player,ItemStack tool){
-        if(PickaxeModifiers.pattern(tool)==null||!tool.isDamaged()||player.level().getGameTime()%200!=0)return;
+        if(PickaxeModifiers.pattern(tool)==null||!tool.isDamaged()||player.level().getGameTime()%100!=0)return;
         var stats=PickaxeModifiers.totals(tool);int repair=PickaxeEvents.stochastic(player.getRandom(),stats.get(SELF_REPAIR));
         if(player.isInWater()||player.level().isRainingAt(player.blockPosition()))repair+=PickaxeEvents.stochastic(player.getRandom(),stats.get(RAIN_REPAIR));
         int metal=PickaxeEvents.stochastic(player.getRandom(),stats.get(METAL_MAINTENANCE));

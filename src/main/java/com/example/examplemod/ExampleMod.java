@@ -143,6 +143,7 @@ public class ExampleMod {
                 output.accept(ReconstructionContent.TABLE_ITEM.get());
                 output.accept(AscenderContent.ITEM.get());
                 ComponentStationContent.STATIONS.forEach(station->output.accept(station.item().get()));
+                output.accept(AppraisalContent.ITEM.get());
                 ReconstructionContent.pieces().forEach(output::accept);
                 ArchaeologyContent.materials().forEach(output::accept);
                 ArchaeologyContent.tools().forEach(output::accept);
@@ -200,6 +201,7 @@ public class ExampleMod {
         ReconstructionContent.register();
         AscenderContent.register();
         ComponentStationContent.register();
+        AppraisalContent.register();
         BLOCKS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
@@ -254,6 +256,7 @@ public class ExampleMod {
             event.accept(ReconstructionContent.TABLE_ITEM);
             event.accept(AscenderContent.ITEM);
             ComponentStationContent.STATIONS.forEach(station->event.accept(station.item()));
+            event.accept(AppraisalContent.ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ARCHAEOLOGY_DRILL);
             event.accept(ARCHAEOLOGY_HAMMER);

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " PG",
+    "PPP",
+    "S S"
+  ],
+  "key": {
+    "P": "#minecraft:planks",
+    "G": "minecraft:glass",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "examplemod:appraisal_table",
+    "count": 1
+  }
+}
