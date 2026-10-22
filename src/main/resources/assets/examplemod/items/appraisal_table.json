@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "examplemod:block/appraisal_table"
+    "model": "examplemod:item/ancient_field_guide"
   }
 }
