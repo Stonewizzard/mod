@@ -60,7 +60,7 @@ public final class FieldGuideView {
     private static void pagination(List<Control> c,int page,int pages){c.add(control("previous",18,213,24,12,"<",page>0));c.add(control("next",278,213,24,12,">",page+1<pages));}
     public static void activate(String id,FieldGuideNavigation n,ExcavationScreenView.Canvas measure){
         switch(id){
-            case "back"->n.back();case "home"->n.home();case "clear"->n.query("");case "welcome"->n.open("welcome");
+            case "back"->n.back();case "home"->n.home();case "clear"->n.home();case "welcome"->n.open("welcome");
             case "previous","next"->{int direction=id.equals("next")?1:-1;if(n.page()==FieldGuideNavigation.Page.ARTICLE)n.turnPage(direction,pages(measure,n.selected()));else n.listPage(direction);}
             default->{
                 if(id.startsWith("category:"))n.category(FieldGuide.Category.valueOf(id.substring(9)));
@@ -77,6 +77,7 @@ public final class FieldGuideView {
         c.fill(156,28,2,188,0xffc8b48a);c.fill(158,28,4,188,0xffaa916b);c.fill(162,28,2,188,0xffdbc59b);
         c.fill(12,30,296,23,0xffeddfbc);c.fill(17,32,271,19,0xff847954);c.fill(18,33,269,17,0xfff7edcf);
         c.text("Ancient Field Guide",94,14,0xfff4e6c0);
+        if(n.page()==FieldGuideNavigation.Page.INDEX||n.page()==FieldGuideNavigation.Page.ARTICLE)c.fill(12,211,296,14,0xffeddfbc);
         switch(n.page()){
             case HOME->{
                 c.text("FIELD NOTES",24,66,ACCENT);c.fill(24,79,120,1,0xffaf9566);
@@ -88,7 +89,7 @@ public final class FieldGuideView {
             case TOPICS->{c.text("Modifier reference",22,62,ACCENT);c.text("Choose a topic",22,73,0xff76634a);}
             case INDEX->{
                 String heading=!n.query().isEmpty()?"Search results":n.category()==null?"All entries":n.category()==FieldGuide.Category.MODIFIERS?n.group().label:n.category().title;
-                c.text(fit(c,heading,270),22,61,ACCENT);c.text(n.results().size()+" entries",22,72,0xff78684d);
+                c.text(fit(c,heading,270),22,61,ACCENT);c.text(n.results().size()+(n.results().size()==1?" entry":" entries"),22,72,0xff78684d);
                 if(n.results().isEmpty()){c.text("Nothing found.",24,93,INK);c.text("Try a shorter search.",24,108,INK);}
                 pageNumber(c,n.listPage(),n.listPages());
             }

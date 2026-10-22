@@ -30,7 +30,7 @@ public final class FieldGuideNavigation {
     public void query(String value){
         String next=value==null?"":value.substring(0,Math.min(128,value.length()));
         if(next.equals(query))return;
-        if(query.isEmpty())remember();
+        if(query.isEmpty()||page!=Page.INDEX)remember();
         query=next;category=null;group=FieldGuide.Group.ALL;filter();
         if(query.isEmpty())page=Page.HOME;
     }

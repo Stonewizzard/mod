@@ -41,7 +41,7 @@ public final class FieldGuideVisualRegression {
         System.out.println("FIELD_GUIDE_UI_CHECK: PASS: "+scenes+" article pages across "+FieldGuide.entries().size()+" entries, all categories/topic indexes, empty results, native font bounds, direct related links, custom icon and native widget input");
     }
     private static void draw(ExcavationVisualRegression.RecordingCanvas c,FieldGuideNavigation n){
-        FieldGuideView.draw(c,n);var controls=FieldGuideView.controls(c,n);
+        FieldGuideView.draw(c,n);c.text(FieldGuideView.fit(c,n.query().isEmpty()?"Search all entries...":n.query(),258),21,36,0xff76634a);var controls=FieldGuideView.controls(c,n);
         for(var b:controls){FieldGuideView.drawControl(c,b,false);for(var other:controls)if(b!=other&&b.x()<other.x()+other.w()&&b.x()+b.w()>other.x()&&b.y()<other.y()+other.h()&&b.y()+b.h()>other.y())throw new IllegalStateException("Overlapping guide controls: "+b.id()+" and "+other.id());}
     }
     private static void addPreview(com.google.gson.JsonArray preview,String id,ExcavationVisualRegression.RecordingCanvas c){var scene=new com.google.gson.JsonObject();scene.addProperty("id",id);scene.add("commands",c.commands);preview.add(scene);}

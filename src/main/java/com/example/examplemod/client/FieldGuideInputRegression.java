@@ -26,6 +26,7 @@ final class FieldGuideInputRegression {
             f.click("group:ALL",1);f.click("next",1);require(f.nav.listPage()==1,"Index pagination must work");f.click("row:0",1);f.click("back",1);require(f.nav.listPage()==1,"Back must preserve an index page");
             f.nav.query("magnet");f.refresh();f.click("row:0",1);f.click("back",1);require(f.nav.query().equals("magnet")&&f.nav.page()==FieldGuideNavigation.Page.INDEX,"Back must restore search results");
             f.click("clear",1);require(f.nav.query().isEmpty()&&f.nav.page()==FieldGuideNavigation.Page.HOME,"Clear-search button must return to contents");
+            f.click("back",1);require(f.nav.query().equals("magnet")&&f.nav.page()==FieldGuideNavigation.Page.INDEX,"Back after Clear must restore the search");
             f.click("close",1);require(f.closed,"Native close control must activate");
         }
         System.out.println("FIELD_GUIDE_INPUT_CHECK: PASS: native Button click validation/press callbacks and container dispatch (audio omitted in headless datagen); SDL primary, zero/right rejection, category/topic/entry/link/Home/Back/Close/Clear, reading and index pagination at three screen origins");
