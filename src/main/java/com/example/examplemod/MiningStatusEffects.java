@@ -37,7 +37,7 @@ final class MiningStatusEffects {
     private static void buff(MiningContext c,PickaxeTrait trait,Holder<MobEffect> effect){c.player.addEffect(new MobEffectInstance(effect,c.count(trait,DURATION),c.count(trait,AMPLIFIER)));}
     private static void pulse(MiningContext c,PickaxeTrait trait,Holder<MobEffect> effect){
         if(c.get(trait)<=0)return;double radius=c.rule(trait,RADIUS);
-        var mobs=c.level.getEntitiesOfClass(net.minecraft.world.entity.Mob.class,c.player.getBoundingBox().inflate(radius),m->m instanceof net.minecraft.world.entity.monster.Enemy&&m.isAlive()&&m.distanceToSqr(c.player)<=radius*radius);
+        var mobs=c.level.getEntitiesOfClass(net.minecraft.world.entity.Mob.class,c.player.getBoundingBox().inflate(radius),m->m instanceof net.minecraft.world.entity.monster.Enemy&&!c.player.isAlliedTo(m)&&m.isAlive()&&m.distanceToSqr(c.player)<=radius*radius);
         var projectiles=trait==REPULSOR?c.level.getEntitiesOfClass(net.minecraft.world.entity.projectile.Projectile.class,c.player.getBoundingBox().inflate(radius),p->p.getOwner() instanceof net.minecraft.world.entity.monster.Enemy&&p.distanceToSqr(c.player)<=radius*radius):java.util.List.<net.minecraft.world.entity.projectile.Projectile>of();
         if(mobs.isEmpty()&&projectiles.isEmpty()||!c.perk(trait))return;
         for(var mob:mobs.stream().limit(32).toList()){

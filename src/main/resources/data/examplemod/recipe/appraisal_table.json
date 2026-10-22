@@ -3,12 +3,13 @@
   "category": "misc",
   "pattern": [
     " PG",
-    "PPP",
+    "WWW",
     "S S"
   ],
   "key": {
-    "P": "#minecraft:planks",
+    "P": "minecraft:paper",
     "G": "minecraft:glass",
+    "W": "#minecraft:planks",
     "S": "minecraft:stick"
   },
   "result": {

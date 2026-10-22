@@ -92,10 +92,10 @@ public final class PickaxeModifierTests {
             var fortune=tool(score,Map.of(FORTUNE,3.0));int diamonds=0;
             for(int i=0;i<128;i++){var event=drop(h,player,pos,Blocks.DIAMOND_ORE,fortune);diamonds+=event.getDrops().stream().filter(e->e.getItem().is(Items.DIAMOND)).mapToInt(e->e.getItem().getCount()).sum();}
             check(h,score==0?diamonds==128:diamonds>160,"Native Fortune loot must activate only at positive effective quality");check(h,!fortune.has(DataComponents.ENCHANTMENTS)||fortune.get(DataComponents.ENCHANTMENTS).isEmpty(),"Virtual Fortune must never permanently enchant the real tool");
-            var silk=tool(score,Map.of(SILK,1.0));int silkCount=0;
+            var silk=tool(score,Map.of(SILK,.5));int silkCount=0;
             for(int i=0;i<128;i++){var event=drop(h,player,pos,Blocks.DIAMOND_ORE,silk);if(event.getDrops().stream().anyMatch(e->e.getItem().is(Items.DIAMOND_ORE)))silkCount++;}
             check(h,score==0?silkCount==0:score==100?silkCount==128:silkCount>35&&silkCount<93,"Silk Touch must use the score-scaled activation probability");
-            var smelter=tool(score,Map.of(SMELTING,1.0));int smelted=0;
+            var smelter=tool(score,Map.of(SMELTING,.5));int smelted=0;
             for(int i=0;i<100;i++){var event=drop(h,player,pos,Blocks.IRON_ORE,smelter);if(event.getDrops().stream().anyMatch(e->e.getItem().is(Items.IRON_INGOT)))smelted++;}
             check(h,score==0?smelted==0:score==100?smelted==100:smelted>25&&smelted<75,"Smelting must use native furnace recipes and score-scaled chance");
             var scholar=drop(h,player,pos,Blocks.DIAMOND_ORE,tool(score,Map.of(EXPERIENCE,1.0)),10);check(h,scholar.getDroppedExperience()==10+3*score/10,"Mining XP must scale by the original part score");

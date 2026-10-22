@@ -29,7 +29,7 @@ final class MiningAreaEffects {
         if(c.block.equals("amethyst_cluster")&&c.chance(CRYSTAL_HARVEST))around(c,targets,c.count(CRYSTAL_HARVEST,AMOUNT),s->MiningConditions.id(s).equals("amethyst_cluster"));
         if(c.block.equals("obsidian")&&c.chance(OBSIDIAN_CHISEL))around(c,targets,c.count(OBSIDIAN_CHISEL,AMOUNT),s->MiningConditions.id(s).equals(c.block));
         if(c.perk(SURGE_DISCHARGE)){int count=0;for(int radius=1;radius<=6&&count<c.count(SURGE_DISCHARGE,AMOUNT);radius++)for(var d:List.of(Direction.NORTH,Direction.SOUTH,Direction.EAST,Direction.WEST)){targets.add(origin.relative(d,radius));count++;}}
-        targets.remove(origin);int budget=(int)ModifierGameplay.MAX_EXTRA_BLOCKS;MiningRuntime.begin(c.player.getUUID(),c.soulFurnace||infernal);
+        targets.remove(origin);int budget=(int)ModifierGameplay.MAX_EXTRA_BLOCKS;MiningRuntime.begin(c.player.getUUID(),c.soulFurnace||infernal,c.soulFurnace);
         try{for(var p:targets){if(budget<=0||c.tool.isEmpty()||c.player.getMainHandItem()!=c.tool)break;if(!valid(c,p))continue;budget--;c.player.gameMode.destroyBlock(p);}}
         finally{MiningRuntime.end(c.player.getUUID());}
     }

@@ -23,11 +23,14 @@ final class SharedToolEffects {
     static boolean owns(ServerPlayer player,Item item){for(int i=0;i<player.getInventory().getContainerSize();i++)if(plain(player.getInventory().getItem(i),item))return true;return false;}
     static boolean plain(ItemStack stack,Item item){return stack.is(item)&&ItemStack.isSameItemSameComponents(stack,new ItemStack(item));}
     static void tick(ServerPlayer player,ItemStack tool){
-        if(PickaxeModifiers.pattern(tool)==null||!tool.isDamaged()||player.level().getGameTime()%100!=0)return;
-        var stats=PickaxeModifiers.totals(tool);int repair=PickaxeEvents.stochastic(player.getRandom(),stats.get(SELF_REPAIR));
-        if(player.isInWater()||player.level().isRainingAt(player.blockPosition()))repair+=PickaxeEvents.stochastic(player.getRandom(),stats.get(RAIN_REPAIR));
-        int metal=PickaxeEvents.stochastic(player.getRandom(),stats.get(METAL_MAINTENANCE));
-        if(player.isShiftKeyDown()&&metal>0&&consume(player,Items.IRON_NUGGET,1))repair+=metal;
+        if(PickaxeModifiers.pattern(tool)==null||!tool.isDamaged())return;
+        long now=player.level().getGameTime();var stats=PickaxeModifiers.totals(tool);int repair=0;
+        if(now%ModifierTuning.integer(SELF_REPAIR,ModifierTuning.Key.COOLDOWN,PickaxeModifiers.stage(tool,SELF_REPAIR))==0)repair+=PickaxeEvents.stochastic(player.getRandom(),stats.get(SELF_REPAIR));
+        if((player.isInWater()||player.level().isRainingAt(player.blockPosition()))&&now%ModifierTuning.integer(RAIN_REPAIR,ModifierTuning.Key.COOLDOWN,PickaxeModifiers.stage(tool,RAIN_REPAIR))==0)repair+=PickaxeEvents.stochastic(player.getRandom(),stats.get(RAIN_REPAIR));
+        if(now%ModifierTuning.integer(METAL_MAINTENANCE,ModifierTuning.Key.COOLDOWN,PickaxeModifiers.stage(tool,METAL_MAINTENANCE))==0){
+            int metal=PickaxeEvents.stochastic(player.getRandom(),stats.get(METAL_MAINTENANCE));
+            if(player.isShiftKeyDown()&&metal>0&&consume(player,Items.IRON_NUGGET,1))repair+=metal;
+        }
         MiningRuntime.repair(tool,repair);
     }
     static void anvil(AnvilUpdateEvent event){

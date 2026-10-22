@@ -47,7 +47,7 @@ public final class ModifierDescriptions {
         case CHAIN_XP -> "Additional mining XP during a consecutive mining chain.";
         case XP_CONDENSER -> "Banks half of primary mining XP. Every few breaks releases the bank with a bonus multiplier and resonance. Silk Touch disables this effect.";
         case DROP_DUPLICATION -> "Copies the first final drop stack, up to sixteen items per extra copy. Values above 100% can grant multiple extra copies. Disabled by Silk Touch, block entities and secondary breaks.";
-        case GEM_ECHO -> "Adds matching diamond, emerald or lapis after a primary gem ore break. The amount increases with ascension. Disabled by Silk Touch.";
+        case GEM_ECHO -> "Adds matching diamond, emerald or lapis after a primary gem ore break. The amount increases with ascension. Disabled by Silk Touch. Above 100% chance, extra echo batches are stochastically awarded.";
         case LUCKY_REFUND -> "Repairs twelve durability on a successful primary ore proc. Disabled by Silk Touch.";
         case GRAVEL_SIFTER -> "Chance: Converts a gravel drop into flint. Disabled by Silk Touch. Applies to secondary excavation too.";
         case SAND_GLASS -> "Chance: Converts sand drops into glass. Disabled by Silk Touch. Applies to secondary excavation too.";

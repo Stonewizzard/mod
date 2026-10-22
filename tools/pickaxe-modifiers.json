@@ -3687,7 +3687,7 @@
     "unit": "PERCENT",
     "cap": 2,
     "family": "LOOT",
-    "description": "Adds matching diamond, emerald or lapis after a primary gem ore break. The amount increases with ascension. Disabled by Silk Touch.",
+    "description": "Adds matching diamond, emerald or lapis after a primary gem ore break. The amount increases with ascension. Disabled by Silk Touch. Above 100% chance, extra echo batches are stochastically awarded.",
     "minimumRarity": 2,
     "weight": 20,
     "influence": "NONE",
@@ -3753,7 +3753,7 @@
     "growth": "NUMERIC",
     "resource": "LAPIS_LAZULI",
     "power": 4,
-    "review": "Fourfold chance, up to eight extra gems, and a two-second cooldown.",
+    "review": "Fourfold chance, up to eight extra gems, and a two-second cooldown. Above 100% grants extra batches, so further growth remains useful.",
     "rules": {
       "COOLDOWN": [
         40,

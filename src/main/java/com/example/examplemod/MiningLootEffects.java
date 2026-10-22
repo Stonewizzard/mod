@@ -16,7 +16,7 @@ final class MiningLootEffects {
     static double silk(MiningContext c){return Math.min(1,c.get(SILK)+(MiningConditions.still(c.player)?c.get(PRECISION_SILK):0));}
     static double smeltChance(MiningContext c){
         double chance=Math.min(1,c.get(SMELTING)+c.get(PYROCLASTIC)+.04*c.get(CINDER_CHAIN));
-        if(!c.primary&&MiningRuntime.furnace(c.player.getUUID())){c.soulFurnace=c.get(SOUL_FURNACE)>0;return 1;}
+        if(!c.primary&&MiningRuntime.furnace(c.player.getUUID())){c.soulFurnace=MiningRuntime.soulFurnace(c.player.getUUID());return 1;}
         if(c.primary&&c.get(SOUL_FURNACE)>0&&c.chance(SOUL_FURNACE)){
             boolean recipe=false;
             for(var e:c.event.getDrops()){
@@ -43,7 +43,12 @@ final class MiningLootEffects {
         if((c.block.contains("gold_ore")||c.block.equals("gilded_blackstone"))&&c.chance(PIGLIN_PURSE))add(c,new ItemStack(Items.GOLD_NUGGET,c.count(PIGLIN_PURSE,AMOUNT)));
         if(c.ore&&c.chance(LUCKY_REFUND))MiningRuntime.repair(c.tool,c.count(LUCKY_REFUND,AMOUNT));
         int copies=c.amount(DROP_DUPLICATION);for(int i=0;i<copies;i++)duplicate(c,16);
-        if(c.gem&&c.perk(GEM_ECHO)){Item item=c.block.contains("diamond")?Items.DIAMOND:c.block.contains("emerald")?Items.EMERALD:Items.LAPIS_LAZULI;add(c,new ItemStack(item,c.count(GEM_ECHO,AMOUNT)));}
+        if(c.gem&&c.get(GEM_ECHO)>0){
+            long last=MiningRuntime.read(c.tool).getLongOr("CD_"+GEM_ECHO.name(),Long.MIN_VALUE/2);
+            if(c.now>=last&&c.now-last>=c.count(GEM_ECHO,COOLDOWN)){int echoes=c.amount(GEM_ECHO);if(echoes>0&&MiningRuntime.cooldown(c.tool,GEM_ECHO.name(),c.now,c.count(GEM_ECHO,COOLDOWN))){
+                Item item=c.block.contains("diamond")?Items.DIAMOND:c.block.contains("emerald")?Items.EMERALD:Items.LAPIS_LAZULI;add(c,new ItemStack(item,c.count(GEM_ECHO,AMOUNT)*echoes));
+            }}
+        }
         if(!c.event.getDrops().isEmpty()&&c.perk(LOOT_DISCHARGE))duplicate(c,c.count(LOOT_DISCHARGE,AMOUNT));
         var state=MiningRuntime.read(c.tool);long until=state.getLongOr("TemporalUntil",0);
         if(c.get(TEMPORAL_ECHO)>0&&until>=c.now&&until>0&&!c.event.getDrops().isEmpty()){

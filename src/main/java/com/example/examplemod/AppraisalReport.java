@@ -49,7 +49,7 @@ public final class AppraisalReport {
             for(var roll:ArtifactModifiers.read(stack)){
                 if(AncientModifiers.ancient(roll)){entries.add(new Entry("Ancient runes",0xB69BE8,List.of("An unread ancient modifier. Reveal its fixed choices at the Unveiler. Appraisal does not expose those choices.")));continue;}
                 var trait=PickaxeTrait.byId(roll.id());if(trait==null){entries.add(new Entry("Unknown modifier",PickaxeTooltips.MUTED,List.of("This saved modifier is not recognized. Its data is preserved.")));continue;}
-                double quality=Math.max(0,ArtifactQuality.score(stack))/100.0,value=Math.clamp(roll.value()*trait.power,0,trait.cap)*quality;
+                double quality=Math.max(0,ArtifactQuality.score(stack))/100.0,value=Math.min(trait.cap,Math.clamp(roll.value(),0,trait.cap)*trait.power*quality);
                 var lines=describe(trait,value,0,false);lines.add("Rolled base at 100% quality: "+PickaxeTooltips.value(trait,roll.value()*trait.power)+". "+tier(roll)+".");growth(lines,roll);
                 if(roll.id().equals(ComponentWork.locked(stack)))lines.add("Locked: cannot be annulled or modified.");
                 entries.add(new Entry(trait.label,PickaxeTooltips.TEAL,lines));
@@ -61,6 +61,7 @@ public final class AppraisalReport {
         var lines=new ArrayList<String>();lines.add(ModifierDescriptions.description(trait));
         lines.add(trait.growth==PickaxeTrait.Growth.MILESTONE?"Activation: "+PickaxeTooltips.percent(Math.min(1,effective))+". "+(tool?"Current stage: "+stage+" / 3.":"Starts at stage 0 when assembled."):"Current contribution: "+PickaxeTooltips.value(trait,effective)+".");
         if(effective<=0)lines.add("Dormant: zero excavation quality gives no effect.");
+        if(trait.growth!=PickaxeTrait.Growth.MILESTONE&&!ModifierTuning.rules(trait).isEmpty())lines.add("Current stage: "+stage+" / 3 for the stage parameters below.");
         for(var rule:ModifierTuning.rules(trait).entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()){
             boolean time=rule.getKey()==ModifierTuning.Key.COOLDOWN||rule.getKey()==ModifierTuning.Key.DURATION;
             String values=rule.getValue().stream().map(v->fmt(time?v/20:v)).collect(java.util.stream.Collectors.joining(" / "));

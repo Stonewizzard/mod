@@ -83,7 +83,7 @@ public final class ComponentWorkTests {
             var capped=part.copy();check(h,!ComponentWork.apply(ComponentStationKind.RESTORER,part,0,RandomSource.create())&&ItemStack.matches(capped,part),"Restoration at 120 must be a no-op");parts.add(part);
         }
         var tool=ArtifactQuality.assemble(parts);check(h,ArtifactQuality.assemblyScore(tool)==120,"An assembled average above 100 must not be clamped away");
-        double expected=0;for(var part:parts)for(var roll:ArtifactModifiers.read(part))if(roll.id().equals(SPEED.id))expected+=roll.value()*1.2;
+        double expected=0;for(var part:parts)for(var roll:ArtifactModifiers.read(part))if(roll.id().equals(SPEED.id))expected+=Math.min(SPEED.cap,roll.value()*SPEED.power)*1.2;
         check(h,Math.abs(PickaxeModifiers.totals(tool).get(SPEED)-Math.min(SPEED.cap,expected))<1e-9,"Each restored piece must contribute its full 120% value after assembly");
         var assembly=tool.get(DataComponents.CUSTOM_DATA).copyTag().getCompoundOrEmpty(ArtifactQuality.ASSEMBLY).getCompoundOrEmpty("Parts");for(String id:ReconstructionPattern.PICKAXE.parts)check(h,assembly.getCompoundOrEmpty(id).getIntOr("Score",0)==120&&assembly.getCompoundOrEmpty(id).getCompoundOrEmpty("Customization").getIntOr("Quality",0)==120,"Assembly must remember each part's customization provenance");
         var fixed=tool.copy();for(var kind:ComponentStationKind.values())check(h,!ComponentWork.component(tool)&&!ComponentWork.apply(kind,tool,0,RandomSource.create())&&ItemStack.matches(fixed,tool),"Every workshop must reject finished tools without changing them");

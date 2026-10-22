@@ -24,8 +24,6 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 @EventBusSubscriber(modid = ExampleMod.MODID, value = Dist.CLIENT)
 public class ExampleModClient {
     public ExampleModClient(ModContainer container) {
-        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::tooltip);
-        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::scroll);
         // Allows NeoForge to create a config screen for this mod's configs.
         // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
         // Do not forget to add translations for your config options to the en_us.json file.

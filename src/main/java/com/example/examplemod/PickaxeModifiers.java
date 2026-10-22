@@ -22,7 +22,7 @@ public final class PickaxeModifiers {
         public double get(PickaxeTrait trait){return values.getOrDefault(trait,0.0);}
     }
     public record Contribution(String key,PickaxeTrait trait,ArtifactModifiers.Roll roll,double quality,int levelHits){
-        public double base(){return Math.clamp(roll.value()*trait.power,0,trait.cap)*quality;}
+        public double base(){return Math.clamp(roll.value(),0,trait.cap)*trait.power*quality;}
         public double value(int ascensions){return trait.growth==PickaxeTrait.Growth.MILESTONE?base():base()*(1+ascensions*roll.scaling().ascensionGrowth+levelHits*roll.scaling().levelGrowth);}
     }
     private record Cached(CustomData source,List<Contribution> contributions,Bonuses totals,int ascensions){}

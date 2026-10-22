@@ -19,7 +19,7 @@ public final class ComponentCorruption {
         var targets=targets(selected,stack,rolls);int index=targets.isEmpty()?-1:targets.get(random.nextInt(targets.size()));
         String message;
         switch(selected){
-            case STRONGER,WEAKER->{var old=rolls.get(index);var trait=PickaxeTrait.byId(old.id());double value=Math.min(trait.cap,old.value()*(selected==Outcome.STRONGER?1.25:.75));rolls.set(index,old.withValue(value));message=selected==Outcome.STRONGER?"Corruption strengthened a modifier":"Corruption weakened a modifier";}
+            case STRONGER,WEAKER->{var old=rolls.get(index);var trait=PickaxeTrait.byId(old.id());double value=selected==Outcome.STRONGER?Math.min(trait.cap/trait.power,old.value()*1.25):old.value()*.75;rolls.set(index,old.withValue(value));message=selected==Outcome.STRONGER?"Corruption strengthened a modifier":"Corruption weakened a modifier";}
             case HIGHER_GRADE,LOWER_GRADE->{var old=rolls.get(index);int step=selected==Outcome.HIGHER_GRADE?1:-1;var grade=ModifierScaling.values()[old.scaling().ordinal()+step];rolls.set(index,old.withScaling(grade));message=selected==Outcome.HIGHER_GRADE?"Corruption raised a scaling grade":"Corruption lowered a scaling grade";}
             case ADD->{
                 int rarity=ComponentWork.recovered(stack).getIntOr("Rarity",0);
@@ -51,7 +51,7 @@ public final class ComponentCorruption {
             var roll=rolls.get(i);if(roll.id().equals(locked))continue;var trait=PickaxeTrait.byId(roll.id());
             boolean eligible=switch(outcome){
                 case REMOVE->true;
-                case STRONGER->trait!=null&&roll.value()>0&&roll.value()<trait.cap;
+                case STRONGER->trait!=null&&roll.value()>0&&roll.value()<trait.cap/trait.power;
                 case WEAKER->trait!=null&&roll.value()>0;
                 case HIGHER_GRADE->trait!=null&&roll.scaling()!=ModifierScaling.S;
                 case LOWER_GRADE->trait!=null&&roll.scaling()!=ModifierScaling.F;

@@ -49,7 +49,7 @@ Every one of the 120 modifiers was reviewed. Saved rolls and acquisition chances
 | **Experienced rhythm** | 3× saved base | 8 | Triple conditional XP; preserves distinct location, target or rhythm requirements. |
 | **Experience condenser** | 1× saved base | 1 | Banked XP now returns with a 1.5x–3x multiplier and resonance, instead of merely delaying the same XP. |
 | **Echoing spoils** | 8× saved base | 3 | Eightfold proc strength, stochastic extra copies above 100%, and a sixteen-item limit per copy. |
-| **Gem echo** | 4× saved base | 2 | Fourfold chance, up to eight extra gems, and a two-second cooldown. |
+| **Gem echo** | 4× saved base | 2 | Fourfold chance, up to eight extra gems, and a two-second cooldown. Above 100% grants extra batches, so further growth remains useful. |
 | **Lucky edge** | 3× saved base | 0.75 | Triple chance and twelve durability restored per successful ore proc. |
 | **Gravel sifter** | 3× saved base | 1 | Triple conversion chance; conversion also works on secondary blocks so area-mining combinations process consistently. |
 | **Vitrifier** | 3× saved base | 1 | Triple conversion chance; conversion also works on secondary blocks so area-mining combinations process consistently. |

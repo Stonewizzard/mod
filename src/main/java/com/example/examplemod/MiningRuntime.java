@@ -12,9 +12,10 @@ import net.minecraft.world.item.component.CustomData;
 public final class MiningRuntime {
     public static final String KEY="examplemod:mining_runtime";
     private static final ThreadLocal<HashSet<UUID>> SECONDARY=ThreadLocal.withInitial(HashSet::new);
-    private static final ThreadLocal<HashSet<UUID>> FURNACE=ThreadLocal.withInitial(HashSet::new);
-    static boolean furnace(UUID player){return FURNACE.get().contains(player);}
-    static void begin(UUID player,boolean furnace){begin(player);if(furnace)FURNACE.get().add(player);}
+    private static final ThreadLocal<java.util.Map<UUID,Boolean>> FURNACE=ThreadLocal.withInitial(java.util.HashMap::new);
+    static boolean furnace(UUID player){return FURNACE.get().containsKey(player);}
+    static boolean soulFurnace(UUID player){return Boolean.TRUE.equals(FURNACE.get().get(player));}
+    static void begin(UUID player,boolean furnace,boolean soul){begin(player);if(furnace)FURNACE.get().put(player,soul);}
     public static boolean secondary(UUID player){return SECONDARY.get().contains(player);}
     static void begin(UUID player){SECONDARY.get().add(player);}
     static void end(UUID player){SECONDARY.get().remove(player);FURNACE.get().remove(player);}
