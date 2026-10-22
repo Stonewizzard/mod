@@ -10,8 +10,8 @@ Every one of the 120 modifiers was reviewed. Saved rolls and acquisition chances
 | **Silk touch** | 2× saved base | 1 | Twice the chance; strong rolls reliably provide Silk Touch without occupying an enchantment. |
 | **Reinforced** | 3× saved base | 8 | Triple the bonus with a much higher cap to support meaningful bulk excavation. |
 | **Scholar** | 3× saved base | 12 | Triple mining XP strength and a larger combined XP cap. |
-| **Aquatic** | 3× saved base | 1 | Triple penalty recovery; mid-to-high rolls can eliminate the underwater penalty. |
-| **Steady hands** | 3× saved base | 1 | Triple penalty recovery so airborne excavation is practical. |
+| **Aquatic** | 3× saved base | 1 | Triple recovery strength plus an additional underwater speed multiplier, so native Aqua Affinity does not make the modifier redundant. |
+| **Steady hands** | 3× saved base | 1 | Triple penalty recovery and an extra airborne speed multiplier reward an aerial excavation build. |
 | **Long reach** | 3× saved base | 6 | Triple added reach, capped at six extra blocks; native interaction checks still apply. |
 | **Smelter** | 2× saved base | 1 | Twice the recipe-processing chance; high rolls reach reliable furnace-free processing. |
 | **Phasebound** | 4× saved base | 1 | Fourfold collection chance; strong rolls reliably collect loot directly into inventory. |

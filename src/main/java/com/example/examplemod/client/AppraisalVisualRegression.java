@@ -8,6 +8,13 @@ import net.minecraft.server.packs.resources.ResourceManager;
 public final class AppraisalVisualRegression {
     public static void run(ResourceManager resources)throws Exception{
         java.awt.image.BufferedImage font;try(var input=resources.getResourceOrThrow(Identifier.withDefaultNamespace("textures/font/ascii.png")).open()){font=ImageIO.read(input);}
+        var custom=net.minecraft.network.chat.Component.literal("My heirloom").withStyle(style->style.withBold(true).withItalic(true));var frozen=custom.copy();
+        for(var influence:List.of(ModifierInfluence.NETHER,ModifierInfluence.END)){
+            var first=InfluenceNameAnimation.animate(custom,influence,0);var second=InfluenceNameAnimation.animate(custom,influence,2);
+            if(!first.getString().equals(custom.getString())||!second.getString().equals(custom.getString())||!custom.equals(frozen)||first.equals(second))throw new IllegalStateException("Influence names must animate without changing text or saved styles");
+            first.visit((style,value)->{if(!style.isBold()||!style.isItalic()||style.getColor()==null)throw new IllegalStateException("The name shimmer lost custom styling");return java.util.Optional.empty();},net.minecraft.network.chat.Style.EMPTY);
+        }
+        if(InfluenceNameAnimation.animate(custom,ModifierInfluence.NONE,0)!=custom)throw new IllegalStateException("Ordinary names must remain untouched");
         var entries=new ArrayList<AppraisalReport.Entry>();entries.add(new AppraisalReport.Entry("Overview",0xffddbb,List.of("Place an artifact or a component in the slot. The inspection is read only.")));
         for(var trait:PickaxeTrait.values()){
             var lines=new ArrayList<String>();lines.add(ModifierDescriptions.description(trait));lines.add("Current contribution: "+PickaxeTooltips.value(trait,trait.cap)+".");lines.add("Scaling S: +45% of base per ascension. Value tier T1.");

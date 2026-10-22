@@ -31,7 +31,7 @@ public final class PickaxeTooltips {
     }
     public static String value(PickaxeTrait trait,double value){return switch(trait.unit){case PERCENT->percent(value);case LEVEL->number(value)+" lv";case BLOCKS->number(value)+" blocks";case POINTS->number(value);case PERK->"Milestone perk";};}
     public static String baseValue(ArtifactModifiers.Roll roll){var trait=PickaxeTrait.byId(roll.id());return trait==null?"Unknown":trait.growth==PickaxeTrait.Growth.MILESTONE?"Ascension perk":tierPrefix(roll)+"+"+value(trait,roll.value()*trait.power);}
-    public static String label(PickaxeTrait trait){return switch(trait){case EXPERIENCE->"Mining XP";case AQUATIC->"Underwater recovery";case AIRBORNE->"Airborne recovery";case SILK->"Silk touch";case SMELTING->"Smelting";default->trait.label;};}
+    public static String label(PickaxeTrait trait){return switch(trait){case EXPERIENCE->"Mining XP";case AQUATIC->"Underwater mastery";case AIRBORNE->"Airborne mastery";case SILK->"Silk touch";case SMELTING->"Smelting";default->trait.label;};}
     private static MutableComponent gradeRange(ModifierScaling low,ModifierScaling high){
         if(low==high)return low.badge();return text("[",MUTED).append(text(low.name(),low.color)).append(text("-",MUTED)).append(text(high.name(),high.color)).append(text("]",MUTED));
     }
@@ -51,7 +51,7 @@ public final class PickaxeTooltips {
             lines.add(text(p.mastered()?"Mastered":p.needsAscension()?"Ascension required":p.xp()+"/"+PickaxeProgression.xpRequired(p.level())+" XP",p.needsAscension()?GOLD:MUTED));
         }
         double quality=Math.max(0,ArtifactQuality.assemblyScore(stack));
-        lines.add(text("Quality ",LABEL).append(text(number(quality)+"%",qualityColor(quality))).append(text("  "+view(stack).stats().size()+" modifiers",LABEL)));
+        lines.add(text("Quality ",LABEL).append(text(number(quality)+"%",qualityColor(quality))).append(text("  "+view(stack).stats().size()+" active bonuses",LABEL)));
         if(MiningRuntime.charge(stack)>0)lines.add(text("Resonance "+MiningRuntime.charge(stack)+"/"+(int)ModifierGameplay.CHARGE_CAPACITY,TEAL));
         lines.add(text("Inspect at an Appraisal Table",MUTED));return List.copyOf(lines);
     }
@@ -103,7 +103,7 @@ public final class PickaxeTooltips {
         }
         return List.copyOf(lines);
     }
-    public static void markCurrent(ItemStack stack){ComponentAppearance.refresh(stack);var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();root.putInt(REVISION_KEY,REVISION);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(root));}
+    public static void markCurrent(ItemStack stack){var root=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();root.putInt(REVISION_KEY,REVISION);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(root));}
     /** One-time refresh for owned old items; no seeds, rolls, quality, or earned levels change. */
     public static boolean refresh(ItemStack stack){
         if(stack.isEmpty())return false;

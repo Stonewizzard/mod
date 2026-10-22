@@ -527,7 +527,7 @@
     "unit": "PERCENT",
     "cap": 1,
     "family": "SPEED",
-    "description": "Recovers a fraction of the underwater mining penalty.",
+    "description": "Recovers this fraction of the underwater mining penalty and also adds the same fraction as extra underwater speed. The bonus remains useful with native Aqua Affinity.",
     "minimumRarity": 1,
     "weight": 20,
     "influence": "NONE",
@@ -593,7 +593,7 @@
     "growth": "NUMERIC",
     "resource": "PRISMARINE_SHARD",
     "power": 3,
-    "review": "Triple penalty recovery; mid-to-high rolls can eliminate the underwater penalty.",
+    "review": "Triple recovery strength plus an additional underwater speed multiplier, so native Aqua Affinity does not make the modifier redundant.",
     "rules": {}
   },
   {
@@ -603,7 +603,7 @@
     "unit": "PERCENT",
     "cap": 1,
     "family": "SPEED",
-    "description": "Recovers a fraction of the airborne mining penalty.",
+    "description": "Recovers this fraction of the native airborne mining penalty and adds the same fraction as extra airborne speed.",
     "minimumRarity": 1,
     "weight": 20,
     "influence": "NONE",
@@ -669,7 +669,7 @@
     "growth": "NUMERIC",
     "resource": "FEATHER",
     "power": 3,
-    "review": "Triple penalty recovery so airborne excavation is practical.",
+    "review": "Triple penalty recovery and an extra airborne speed multiplier reward an aerial excavation build.",
     "rules": {}
   },
   {

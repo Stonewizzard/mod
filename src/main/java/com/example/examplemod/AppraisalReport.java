@@ -42,7 +42,7 @@ public final class AppraisalReport {
             for(var trait:PickaxeTrait.values()){
                 var sources=PickaxeModifiers.contributions(stack).stream().filter(c->c.trait()==trait).toList();if(sources.isEmpty())continue;
                 var lines=describe(trait,totals.get(trait),PickaxeModifiers.stage(stack,trait),true);int asc=PickaxeProgression.read(stack).ascensions();
-                for(var c:sources){lines.add("Source: "+c.key().split("\\|")[0].replace('_',' ')+". Quality "+fmt(c.quality()*100)+"%. "+c.roll().scaling().name()+" scaling, "+tier(c.roll())+". Effective "+PickaxeTooltips.value(trait,c.value(asc))+".");growth(lines,c.roll());}
+                for(var c:sources){lines.add("Source: "+c.key().split("\\|")[0].replace('_',' ')+". Quality "+fmt(c.quality()*100)+"%. "+c.roll().scaling().name()+" scaling, "+tier(c.roll())+". Effective "+PickaxeTooltips.value(trait,c.value(asc))+".");lines.add("Selected-level growth awards: "+c.levelHits()+".");growth(lines,c.roll());}
                 entries.add(new Entry(trait.label,PickaxeTooltips.TEAL,lines));
             }
         }else if(!artifact(stack)){
@@ -67,7 +67,12 @@ public final class AppraisalReport {
             String values=rule.getValue().stream().map(v->fmt(time?v/20:v)).collect(java.util.stream.Collectors.joining(" / "));
             lines.add(rule.getKey().name().toLowerCase(Locale.ROOT).replace('_',' ')+": "+values+(time?" seconds":"")+" (stages 0 / 1 / 2 / 3).");
         }
+        if(trait.family==PickaxeTrait.Family.SPEED)lines.add("Conditional speed bonuses add together, capped at +800%, then multiply the core and general Mining Speed bonus.");
+        if(java.util.Set.of(PickaxeTrait.FORTUNE,PickaxeTrait.ORE_FORTUNE,PickaxeTrait.GEM_FORTUNE,PickaxeTrait.REDSTONE_FORTUNE,PickaxeTrait.COAL_FORTUNE,PickaxeTrait.METAL_FORTUNE).contains(trait))lines.add("Adds above native Fortune; combined cap is Fortune X. Native enchantments stronger than X are preserved. Silk Touch takes priority.");
+        if(java.util.Set.of(PickaxeTrait.EXPERIENCE,PickaxeTrait.DEEP_XP,PickaxeTrait.ORE_XP,PickaxeTrait.CHAIN_XP).contains(trait))lines.add("Applicable mining XP bonuses add together, capped at +2000%, before XP Condenser or Knowledge Siphon.");
         if(trait.unit!=PickaxeTrait.Unit.PERK)lines.add("Combined cap: "+PickaxeTooltips.value(trait,trait.cap)+".");
+        var spec=ArtifactModifierCatalog.spec(trait);
+        if(spec.influence()!=ModifierInfluence.NONE)lines.add(spec.influence().label+(spec.influenceOnly()?" influence required.":" themed; sixfold roll weight when matching influence."));
         lines.add("Pool: "+(trait.utility?"universal handle/connector":"pickaxe head")+". Earliest rarity: "+ArtifactModifierCatalog.rarity(ArtifactModifierCatalog.spec(trait).minimumRarity()).label()+".");
         for(var tier:ArtifactModifierCatalog.spec(trait).tiers())lines.add("T"+tier.rank()+": "+PickaxeTooltips.value(trait,tier.minimum()*trait.power)+" to "+PickaxeTooltips.value(trait,tier.maximum()*trait.power)+" at 100% quality.");
         var resource=AscensionResources.BINDINGS.get(trait);lines.add("Ascension: "+resource.baseCount()+" x upcoming ascension of "+resource.item().getName(new ItemStack(resource.item())).getString()+" per occurrence; repeated costs combine.");

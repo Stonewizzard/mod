@@ -8,8 +8,8 @@ public final class ModifierDescriptions {
         case SILK -> "Chance to generate native Silk Touch loot; exclusive with the base Fortune and Smelter families.";
         case DURABILITY -> "Increases maximum durability on any reconstructed tool.";
         case EXPERIENCE -> "Increases block and furnace experience; suppressed by Silk Touch.";
-        case AQUATIC -> "Recovers a fraction of the underwater mining penalty.";
-        case AIRBORNE -> "Recovers a fraction of the airborne mining penalty.";
+        case AQUATIC -> "Recovers this fraction of the underwater mining penalty and also adds the same fraction as extra underwater speed. The bonus remains useful with native Aqua Affinity.";
+        case AIRBORNE -> "Recovers this fraction of the native airborne mining penalty and adds the same fraction as extra airborne speed.";
         case REACH -> "Adds native block interaction range in the main hand.";
         case SMELTING -> "Chance to apply the real furnace recipe to each drop, preserving recipe counts and XP.";
         case PHASEBOUND -> "Chance to put final mined drops directly into your inventory; overflow remains in the world.";

@@ -43,7 +43,8 @@ public final class PickaxeEvents {
     public static double speedMultiplier(PickaxeModifiers.Bonuses stats,boolean underwater,double submergedMultiplier,boolean grounded){
         double factor=1+stats.get(SPEED);
         if(underwater&&submergedMultiplier>0&&submergedMultiplier<1)factor*=1+(1/submergedMultiplier-1)*stats.get(AQUATIC);
-        if(!grounded)factor*=1+4*stats.get(AIRBORNE);
+        if(underwater)factor*=1+stats.get(AQUATIC);
+        if(!grounded)factor*=(1+4*stats.get(AIRBORNE))*(1+stats.get(AIRBORNE));
         return factor;
     }
     /** Fractional levels and XP are stochastic-rounded instead of rounded away at low quality. */

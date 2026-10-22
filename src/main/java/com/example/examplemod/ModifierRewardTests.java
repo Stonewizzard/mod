@@ -69,9 +69,17 @@ public final class ModifierRewardTests {
             if(ArchaeologyContent.artifacts().stream().anyMatch(before::is))check(h,report.entries().size()==1,"Raw specimens must not expose hidden rewards or modifiers");
             check(h,!menu.quickMoveStack(p,0).isEmpty()&&table.getItem(0).isEmpty(),"The inspected item must return normally without consuming or changing it");
         }
+        for(var trait:PickaxeTrait.values()){
+            var single=ComponentWorkTests.component(trait.utility?ArtifactProfile.Find.TOOL_HANDLE:ArtifactProfile.Find.PICKAXE_LEFT,50,5,71);var root=single.get(DataComponents.CUSTOM_DATA).copyTag();var record=root.getCompoundOrEmpty(ArtifactModifiers.KEY);
+            var band=ArtifactModifierCatalog.spec(trait).tiers().getLast();root.put(ArtifactModifiers.KEY,ArtifactModifiers.writeRolls(record,List.of(new ArtifactModifiers.Roll(trait.id,band.maximum(),.5,ModifierScaling.S,band.id(),band.rank()))));single.set(DataComponents.CUSTOM_DATA,CustomData.of(root));
+            var saved=single.copy();var detail=AppraisalReport.read(single);
+            check(h,detail.entries().size()==2&&detail.entries().get(1).lines().contains(ModifierDescriptions.description(trait))&&ItemStack.matches(saved,single),"Every one of the 120 modifier descriptions must be reachable without modifying its component");
+        }
+        p.snapTo(pos.getX()+30,pos.getY(),pos.getZ());check(h,!menu.stillValid(p),"Appraisal must use the native table distance check");p.snapTo(pos.getX()+.5,pos.getY()+1,pos.getZ()+.5);
         var part=ComponentWorkTests.component(ArtifactProfile.Find.PICKAXE_LEFT,100,5,33);check(h,ComponentWork.apply(ComponentStationKind.INFLUENCER,part,0,p.getRandom()),"Test influence must assign normally");
-        check(h,part.get(DataComponents.CUSTOM_MODEL_DATA)!=null&&part.getHoverName().getStyle().getColor().getValue()==ModifierInfluence.NETHER.color,"Nether influence must tint both the icon and native item name");
+        check(h,!part.has(DataComponents.CUSTOM_MODEL_DATA)&&part.getHoverName().getStyle().getColor().getValue()==ModifierInfluence.NETHER.color,"Nether influence must color the name without changing icon data");
         check(h,PickaxeTooltips.piece(part).size()<=3&&PickaxeTooltips.piece(part).stream().noneMatch(c->c.getString().contains("Uninfluenced")||c.getString().contains("influence")),"Influence must not add tooltip clutter");
+        var end=ComponentWorkTests.component(ArtifactProfile.Find.PICKAXE_LEFT,100,5,34);end.set(DataComponents.CUSTOM_NAME,Component.literal("My heirloom"));check(h,ComponentWork.apply(ComponentStationKind.INFLUENCER,end,1,p.getRandom())&&end.getHoverName().getString().equals("My heirloom")&&!end.has(DataComponents.CUSTOM_MODEL_DATA),"End influence must preserve player custom names and icon data");
         table.setItem(0,part.copy());var bounds=new net.minecraft.world.phys.AABB(pos).inflate(2);level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,bounds).forEach(net.minecraft.world.entity.item.ItemEntity::discard);level.destroyBlock(pos,true);
         var drops=level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,bounds);check(h,drops.stream().mapToInt(e->e.getItem().getCount()).sum()==2&&drops.stream().anyMatch(e->ItemStack.matches(part,e.getItem())),"Breaking the Appraisal Table returns its block and exact input once");
     }

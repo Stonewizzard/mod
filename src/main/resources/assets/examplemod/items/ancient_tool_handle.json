@@ -1,13 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "examplemod:item/ancient_tool_handle",
-    "tints": [
-      {
-        "type": "minecraft:custom_model_data",
-        "index": 0,
-        "default": -1
-      }
-    ]
+    "model": "examplemod:item/ancient_tool_handle"
   }
 }
