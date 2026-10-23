@@ -53,6 +53,14 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        clientVisualQa {
+            client()
+            systemProperty 'examplemod.clientVisualQa', 'true'
+            systemProperty 'examplemod.clientQaDirectory', file('build/client-qa').getAbsolutePath()
+            programArguments.addAll '--width', '1280', '--height', '720'
+            logLevel = org.slf4j.event.Level.INFO
+        }
+
         sculkRenderCheck {
             clientData()
             systemProperty 'examplemod.sculkRenderCheck', 'true'

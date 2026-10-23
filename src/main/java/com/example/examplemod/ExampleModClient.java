@@ -24,6 +24,10 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 @EventBusSubscriber(modid = ExampleMod.MODID, value = Dist.CLIENT)
 public class ExampleModClient {
     public ExampleModClient(ModContainer container) {
+        if(Boolean.getBoolean("examplemod.clientVisualQa")){
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ClientVisualQa::tick);
+            net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ClientVisualQa::rendered);
+        }
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.InfluenceNameAnimation::tooltip);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.FieldGuideClient::open);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::tooltip);
