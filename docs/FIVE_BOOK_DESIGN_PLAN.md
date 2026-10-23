@@ -1,5 +1,7 @@
 # Five guidebook prototypes
 
+> Historical comparison. The Workshop Manual was selected; the other four comparison items have since been removed. Current behavior and illustrated navigation are documented in [GUIDEBOOK_AUTHORING.md](GUIDEBOOK_AUTHORING.md).
+
 The baseline failed its visual review: overprinted dark search text, clipped labels, generic modifier rules before the useful explanation, a footer outside the cover, and sentences cut across columns. A successful replacement must help a player **do something**, not merely contain all the text.
 
 ## Candidates

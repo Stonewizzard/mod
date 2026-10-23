@@ -9,6 +9,9 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public final class FieldGuideScreen extends Screen {
     private final FieldGuideNavigation navigation;private final GuideDesign design;
@@ -56,7 +59,12 @@ public final class FieldGuideScreen extends Screen {
     }
     @Override public void tick(){super.tick();if(dirty)rebuildButtons();}
     @Override public void extractRenderState(GuiGraphicsExtractor g,int mouseX,int mouseY,float partialTick){
-        if(dirty)rebuildButtons();GuideBookView.draw(canvas(g),design,navigation,related);if(search.getValue().isEmpty())canvas(g).text("Search the whole guide...",23,35,0xffc5cebf);super.extractRenderState(g,mouseX,mouseY,partialTick);
+        if(dirty)rebuildButtons();GuideBookView.draw(canvas(g),design,navigation,related);
+        for(var illustration:GuideBookView.illustrations(navigation)){
+            var item=BuiltInRegistries.ITEM.getValue(Identifier.parse(illustration.item()));
+            if(item!=null&&item!=Items.AIR)g.item(new ItemStack(item),px(illustration.x()),top+illustration.y());
+        }
+        if(search.getValue().isEmpty())canvas(g).text("Search the whole guide...",23,35,0xffc5cebf);super.extractRenderState(g,mouseX,mouseY,partialTick);
     }
     @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){if(dirty)rebuildButtons();return super.mouseClicked(event,doubleClick);}
     @Override public boolean mouseScrolled(double mouseX,double mouseY,double scrollX,double scrollY){

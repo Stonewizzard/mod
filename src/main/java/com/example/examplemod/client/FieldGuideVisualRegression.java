@@ -22,7 +22,7 @@ public final class FieldGuideVisualRegression {
             if(!first.getString().equals(custom.getString())||!custom.equals(frozen)||first.equals(second))throw new IllegalStateException("Name-only shimmer lost its text or animation");
             first.visit((style,value)->{if(!style.isBold()||!style.isItalic()||style.getColor()==null)throw new IllegalStateException("Name shimmer lost custom styling");return Optional.empty();},net.minecraft.network.chat.Style.EMPTY);
         }
-        System.out.println("FIELD_GUIDE_UI_CHECK: PASS: five resource sets, native widget input, font-measured semantic sections and item-name style preservation");
+        System.out.println("FIELD_GUIDE_UI_CHECK: PASS: Workshop Manual resources, native widget input, font-measured semantic sections and item-name style preservation");
     }
     private FieldGuideVisualRegression(){}
 }
