@@ -17,7 +17,7 @@ final class FieldGuideInputRegression {
             f.click("category:CREATURES",InputConstants.MOUSE_BUTTON_LEFT);
             require(f.nav.page()==FieldGuideNavigation.Page.INDEX&&f.nav.category()==FieldGuide.Category.CREATURES,"Native category click must open its index");
             f.click("row:0",1);require(f.nav.page()==FieldGuideNavigation.Page.ARTICLE,"Native entry buttons must open articles");
-            f.nav.open(PickaxeTrait.SPEED.id);f.nav.section(2);f.refresh();
+            f.nav.open(PickaxeTrait.SPEED.id);f.nav.section(4);f.refresh();
             f.click("next",1);require(f.nav.articlePage()==1,"Native next-page control must turn a long section");
             f.click("previous",1);require(f.nav.articlePage()==0,"Native previous-page control must turn back");
             f.click("previous",1);require(f.nav.articlePage()==0,"Disabled previous control must not wrap");

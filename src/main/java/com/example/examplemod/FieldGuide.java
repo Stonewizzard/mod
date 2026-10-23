@@ -56,17 +56,17 @@ public final class FieldGuide {
                 lines.add(rule.getKey().name().toLowerCase(Locale.ROOT).replace('_',' ')+": "+values+(time?" seconds":"")+" at stages 0 / 1 / 2 / 3.");
             }
             lines.add("Value tiers below show base effect at 100% quality, before growth and combined caps. T1 is strongest. Rarity changes the relative weights of the tiers, not the meaning of a saved tier.");
-            if(trait.unit!=PickaxeTrait.Unit.PERK)for(var tier:spec.tiers())lines.add("T"+tier.rank()+": "+PickaxeTooltips.value(trait,tier.minimum()*trait.power)+" to "+PickaxeTooltips.value(trait,tier.maximum()*trait.power)+". Rarity weights C/U/R/E/L/Unique: "+tier.rarityWeights().stream().map(Object::toString).collect(java.util.stream.Collectors.joining("/"))+".");
+            if(trait.unit!=PickaxeTrait.Unit.PERK)for(var tier:spec.tiers().stream().sorted(Comparator.comparingInt(ModifierTier::rank)).toList())lines.add("T"+tier.rank()+": "+PickaxeTooltips.value(trait,tier.minimum()*trait.power)+" to "+PickaxeTooltips.value(trait,tier.maximum()*trait.power)+". Rarity weights C/U/R/E/L/Unique: "+tier.rarityWeights().stream().map(Object::toString).collect(java.util.stream.Collectors.joining("/"))+".");
             var material=AscensionResources.BINDINGS.get(trait);lines.add("Ascension resource: "+net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(material.item()).getPath().replace('_',' ')+". Cost per occurrence: "+material.baseCount()+" times the upcoming ascension number. Repeated resources combine.");
             if(trait.growth==PickaxeTrait.Growth.NUMERIC)lines.add("Grade growth is relative to base. F/D/C/B/A/S add 6/10/15/22/32/45% per ascension and 0.05/0.10/0.15/0.25/0.35/0.50% per selected level.");
             var effect=new ArrayList<String>();effect.add(lines.get(0));effect.add(lines.get(1));
             effect.add(trait.growth==PickaxeTrait.Growth.NUMERIC?"Combined limit: "+PickaxeTooltips.value(trait,trait.cap)+".":"A staged perk, unlocked through ascension. See Growth for milestones.");
             var tiers=new ArrayList<String>();var odds=new ArrayList<String>();
-            odds.add(lines.get(2));odds.add("Tier weights are relative chances. C / U / R / E / L / Unique means Common / Uncommon / Rare / Epic / Legendary / Unique.");
+            odds.add(lines.get(2));odds.add("Family weight: "+ModifierDefinitions.weight(trait)+" before influence weighting and pool exclusions.");odds.add("Tier weights are relative chances. C / U / R / E / L / Unique means Common / Uncommon / Rare / Epic / Legendary / Unique.");
             if(trait.unit==PickaxeTrait.Unit.PERK)tiers.add("This modifier unlocks perk stages rather than rolling numeric value bands. Open Growth for stage milestones.");
             else {
                 tiers.add("Base at 100% quality. T1 is strongest.");
-                for(var tier:spec.tiers()){
+                for(var tier:spec.tiers().stream().sorted(Comparator.comparingInt(ModifierTier::rank)).toList()){
                     tiers.add("T"+tier.rank()+": "+PickaxeTooltips.value(trait,tier.minimum()*trait.power)+" to "+PickaxeTooltips.value(trait,tier.maximum()*trait.power));
                     odds.add("T"+tier.rank()+": "+tier.rarityWeights().stream().map(Object::toString).collect(java.util.stream.Collectors.joining(" / ")));
                 }

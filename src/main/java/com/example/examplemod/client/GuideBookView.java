@@ -52,7 +52,7 @@ public final class GuideBookView {
     public static int pages(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n){return reading(c,d,n).size();}
     public static List<FieldGuideView.Control> controls(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n,boolean related){
         var out=new ArrayList<FieldGuideView.Control>();
-        out.add(b("back",10,7,33,16,"Back",n.canBack()));out.add(b("home",47,7,37,16,"Home",n.page()!=HOME));
+        out.add(b("back",10,7,33,16,"Back",n.canBack()));out.add(b("home",47,7,37,16,"Home",n.page()!=HOME||n.listPage()>0));
         out.add(b("close",365,7,21,16,"X",true));out.add(b("clear",348,29,38,18,"Clear",!n.query().isEmpty()));
         if(d==GuideDesign.MANUAL){int i=0;for(var category:FieldGuide.Category.values())out.add(b("category:"+category.name(),14,66+i++*18,89,17,category.tab,true));}
         if(d==GuideDesign.TRAIL||d==GuideDesign.REFERENCE){int i=0;for(var category:FieldGuide.Category.values())out.add(b("category:"+category.name(),14+i++*53,52,52,17,category==FieldGuide.Category.CREATURES?"Mobs":category==FieldGuide.Category.EQUIPMENT?"Gear":category==FieldGuide.Category.ARTIFACTS?"Finds":category==FieldGuide.Category.MODIFIERS?"Affixes":category.tab,true));}

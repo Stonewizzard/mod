@@ -112,6 +112,11 @@ def run():
         process('xdotool','key',str(slot));time.sleep(.3)
         process('xdotool','click','3')
         expect(screen='FieldGuideScreen',design=design,page='HOME');capture(design.lower()+'-home')
+        # Exercise the candidate's actual first-action affordance, not only shared categories.
+        if design in ('MANUAL','TRAIL'):click('open:sniffers');expect(selected='sniffers')
+        elif design=='ATLAS':click('category:START');click('row:0');expect(selected='welcome')
+        else:click('welcome');expect(selected='welcome')
+        capture(design.lower()+'-first-step');click('home')
         # Newcomer / casual mod user: find the excavation and understand recovery.
         click('category:EXCAVATION');expect(page='INDEX');click('row:0');expect(selected='archaeology_table')
         capture(design.lower()+'-excavation');click('section:3');expect(section=3)
