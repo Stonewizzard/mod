@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - '.github/workflows/client-visual-qa.yml'
+      - 'build.gradle'
+      - 'gradle.properties'
+      - 'src/main/java/com/example/examplemod/ExampleModClient.java'
       - 'tools/client_qa/**'
       - 'src/main/java/com/example/examplemod/client/ClientVisualQa.java'
       - 'src/main/java/com/example/examplemod/client/FieldGuide*.java'

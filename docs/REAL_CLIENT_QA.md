@@ -2,6 +2,8 @@
 
 This is a separate graphical test run. It starts **Minecraft 26.3 with NeoForge**, an actual X11 window and software OpenGL. `xdotool` sends mouse and keyboard input through X11 and SDL to Minecraft. ImageMagick captures the presented window, and FFmpeg records the session. The output is not reconstructed from drawing commands, fonts, mock widgets or model meshes.
 
+[The first actual-client review](BOOK_VISUAL_BASELINE.md) records observed book defects and includes actual game captures.
+
 The earlier layout/datagen checks remain useful for bounds and content validation. They cannot approve visual quality or prove that an interface feels usable.
 
 ## Running it
@@ -36,7 +38,7 @@ The pilot uses OS input to create a disposable Creative/Superflat world through 
 
 The bridge only opens the guide after world entry, changes the GUI scale, quits and reports live state. It does not call the guide's navigation actions. All pilot navigation is performed by OS input. Its observers report the same control bounds that the real screen creates; screenshot inspection is still needed to detect misleading or badly drawn controls.
 
-GitHub Actions provides a repeatable screenshot-and-input loop, not a live remote desktop connection to the user's computer. A new scripted run takes a few minutes. The test harness can be run interactively in an attached Linux desktop when that capability is available.
+GitHub Actions provides a repeatable screenshot-and-input loop, not a live remote desktop connection to the user's computer. A new scripted run takes a few minutes. The test harness can be run interactively in an attached Linux desktop when that capability is available. Software-rendered CI frame rates are not representative of a player’s GPU performance.
 
 ## Persona-based review
 
