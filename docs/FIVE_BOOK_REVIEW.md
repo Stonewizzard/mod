@@ -65,7 +65,64 @@ Finalists can also be obtained with `/give @s examplemod:ancient_field_guide`, `
 
 Screenshots below are from the actual Minecraft 26.3/NeoForge client. They are not reconstructed UI drawings. The workflow creates a real Creative/Superflat world, supplies five fixture books, selects hotbar slots and opens each through ordinary right-click item use. Navigation input travels through xdotool → X11 → SDL → native widgets. Captures and video are retained in the workflow artifact.
 
-<!-- FINAL_EVIDENCE -->
+**Implementation tested:** `f24b720b1d0e26b4c75d0cd8b3497dfe1ae91860`.
+
+- [Native Minecraft run: 63 window captures, video and action/state timeline](https://github.com/Stonewizzard/mod/actions/runs/39992749607). All five actual book items passed their OS-input scenarios.
+- [Build, 24 required server GameTests and client rendering checks](https://github.com/Stonewizzard/mod/actions/runs/39992749558). The layout check covered **7,210 section/design/width combinations**, plus native widget dispatch at three offsets and five complete icon/model resource sets.
+- The following commit adds this evidence and documentation only; the tested Java, assets, content and QA driver remain identical.
+
+### Finalists
+
+**Workshop Manual — task list and persistent contents**
+
+![Workshop Manual in the actual Minecraft client](images/book-manual-home.png)
+
+**Trail Guide — first-tool route and category ribbon**
+
+![Trail Guide in the actual Minecraft client](images/book-trail-home.png)
+
+**Relic Atlas — illustrated category cards and a section rail**
+
+![Relic Atlas in the actual Minecraft client](images/book-atlas-home.png)
+
+### Reading and modifier information
+
+![Specific effect first, with the subject highlighted](images/book-manual-modifier.png)
+
+![Compact strongest-first value tiers](images/book-manual-tiers.png)
+
+![An excavation article with named steps](images/book-atlas-excavation.png)
+
+<details>
+<summary>Minimum-width captures: all three finalists at 640×480</summary>
+
+![Workshop Manual at minimum GUI width](images/book-manual-narrow.png)
+
+![Trail Guide at minimum GUI width](images/book-trail-narrow.png)
+
+![Relic Atlas at minimum GUI width](images/book-atlas-narrow.png)
+
+</details>
+
+<details>
+<summary>The two remaining prototypes and their narrow-window tradeoffs</summary>
+
+![Field Journal](images/book-journal-home.png)
+
+![Pocket Reference](images/book-reference-home.png)
+
+![Journal columns at 640×480](images/book-journal-narrow.png)
+
+![Reference list and abbreviated section labels at 640×480](images/book-reference-narrow.png)
+
+</details>
+
+### Actual inventory icons
+
+The five fixture items, left to right: Journal, Manual, Trail, Reference, Atlas. Normal creative tabs expose Manual, Trail and Atlas.
+
+![Five actual hotbar book items](images/book-five-items.png)
+
 
 The native scenarios cover each edition's first action; categories and modifier topics; global multiword search; empty results and Clear; Effect/tier/growth sections; related links and restored section history; GUI scales 2/3; 1280×720, 854×480 and 640×480 windows; Escape, Close, keyboard Tab/Return, and reopening a bookmarked section. The inventory capture checks the five real icons.
 
