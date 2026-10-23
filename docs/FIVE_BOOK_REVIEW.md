@@ -1,5 +1,7 @@
 # Five guidebook designs: review and finalists
 
+> Historical comparison. The Workshop Manual was selected; the other four comparison items have since been removed. Current behavior and illustrated navigation are documented in [GUIDEBOOK_AUTHORING.md](GUIDEBOOK_AUTHORING.md).
+
 **Recommended comparison set: Workshop Manual, Trail Guide and Relic Atlas.** They are the first three items in the mod's creative tab. Workshop Manual replaces the existing guide in place and keeps its book + paper recipe and registry ID, `examplemod:ancient_field_guide`. Existing books therefore open the Manual. All editions contain the same 147 searchable entries; none changes gameplay.
 
 This is a **five-persona simulated evaluation**, not feedback from five people. I inspected actual Minecraft window captures and used reproducible mouse/keyboard tasks. Scores are qualitative design judgments, not measured user-success rates. The user's in-game comparison is the next test.

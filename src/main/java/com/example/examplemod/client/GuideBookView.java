@@ -49,6 +49,10 @@ public final class GuideBookView {
         if(c.textWidth(category.tab)<=62)return category.tab;
         return switch(category){case CREATURES->"Mobs";case ARTIFACTS->"Relics";case EXCAVATION->"Dig";case EQUIPMENT->"Gear";case MODIFIERS->"Mods";default->category.tab;};
     }
+    private static String topicLabel(ExcavationScreenView.Canvas c,FieldGuide.Group group){
+        if(c.textWidth(group.label)<=98)return group.label;
+        return switch(group){case HARVEST->"Loot and XP";case UTILITY->"Universal";case NETHER->"Nether";case END->"End";default->group.label;};
+    }
     private static String topicIcon(FieldGuide.Group group){return switch(group){
         case ALL->"minecraft:enchanted_book";case SPEED->"minecraft:golden_pickaxe";case HARVEST->"minecraft:diamond";
         case AREA->"minecraft:iron_pickaxe";case RESONANCE->"minecraft:amethyst_shard";case SURVIVAL->"minecraft:shield";
@@ -77,7 +81,7 @@ public final class GuideBookView {
         }else if(n.page()==HOME){
             for(int i=0;i<6;i++)out.add(icon("open:"+PATH[i],116,80+i*19,262,18,TASKS[i],FieldGuide.entry(PATH[i]).icon()));
         }else if(n.page()==TOPICS){
-            int i=0;for(var group:FieldGuide.Group.values()){out.add(icon("group:"+group.name(),116+(i%2)*131,88+(i/2)*22,125,20,group.label,topicIcon(group)));i++;}
+            int i=0;for(var group:FieldGuide.Group.values()){out.add(icon("group:"+group.name(),116+(i%2)*131,88+(i/2)*22,125,20,topicLabel(c,group),topicIcon(group)));i++;}
         }else if(n.page()==INDEX){
             for(int i=0;i<FieldGuideNavigation.RESULTS_PER_PAGE;i++){
                 int index=n.listPage()*FieldGuideNavigation.RESULTS_PER_PAGE+i;if(index>=n.results().size())break;var e=n.results().get(index);

@@ -58,9 +58,9 @@ This book contains general knowledge. Your item tooltips show the values actuall
 
 ## Using this field guide
 
-Craft a normal book with one paper for the Workshop Manual. Trail Guide and Relic Atlas are alternative editions beside it in the creative tab. All editions contain the same information.
+Craft a normal book with one paper for the Workshop Manual, or find it in the creative tab. Item pictures identify the subjects in Contents, entry lists, search results and article headings.
 
-Home opens this edition's contents. Categories cover creatures, artifacts, excavation, equipment and customization stations. Modifiers opens a topic index.
+Home opens the Manual's contents. Categories cover creatures, artifacts, excavation, equipment and customization stations. Modifiers opens a topic index.
 
 Search looks through the whole guide, including descriptions and modifier IDs. All words must match. Clear empties search. Arrows and the mouse wheel turn pages. Select a named section to read details. Related opens connected articles; Back restores your previous view.
 
