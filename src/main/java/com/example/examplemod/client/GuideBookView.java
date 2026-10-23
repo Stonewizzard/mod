@@ -54,8 +54,9 @@ public final class GuideBookView {
     public static int pages(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n){return reading(c,d,n).size();}
     public static List<FieldGuideView.Control> controls(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n,boolean related){
         var out=new ArrayList<FieldGuideView.Control>();
-        out.add(b("back",10,7,33,16,"Back",n.canBack()));out.add(b("home",47,7,37,16,"Home",n.page()!=HOME||n.listPage()>0));
-        out.add(b("close",365,7,21,16,"X",true));out.add(b("clear",348,29,38,18,"Clear",!n.query().isEmpty()));
+        int backWidth=Math.max(33,c.textWidth("Back")+8),homeWidth=Math.max(37,c.textWidth("Home")+8),clearWidth=Math.max(38,c.textWidth("Clear")+8);
+        out.add(b("back",10,7,backWidth,16,"Back",n.canBack()));out.add(b("home",14+backWidth,7,homeWidth,16,"Home",n.page()!=HOME||n.listPage()>0));
+        out.add(b("close",365,7,21,16,"X",true));out.add(b("clear",386-clearWidth,29,clearWidth,18,"Clear",!n.query().isEmpty()));
         if(d==GuideDesign.MANUAL){int i=0;for(var category:FieldGuide.Category.values())out.add(b("category:"+category.name(),14,66+i++*18,89,17,category.tab,true));}
         if(d==GuideDesign.TRAIL||d==GuideDesign.REFERENCE){
             var categories=FieldGuide.Category.values();int x=14;

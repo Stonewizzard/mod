@@ -36,7 +36,7 @@ final class GuideBookRegression {
     private static void check(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n,boolean related){
         var controls=GuideBookView.controls(c,d,n,related);var ids=new HashSet<String>();
         for(var b:controls){
-            if(b.y()==52&&c.textWidth(b.label())>b.w()-8)throw new AssertionError("Truncated guide category: "+b.label());
+            if((b.y()==52||b.y()<27||b.id().equals("clear"))&&c.textWidth(b.label())>b.w()-8)throw new AssertionError("Truncated guide category: "+b.label());
             if(!ids.add(b.id()))throw new AssertionError("Duplicate guide control: "+d+" "+b.id());
             if(b.x()<0||b.y()<0||b.x()+b.w()>396||b.y()+b.h()>224)throw new AssertionError("Guide control outside frame");
             for(var other:controls)if(b!=other&&b.x()<other.x()+other.w()&&b.x()+b.w()>other.x()&&b.y()<other.y()+other.h()&&b.y()+b.h()>other.y())throw new AssertionError("Guide controls overlap: "+d+" "+n.page()+" "+b.id()+" / "+other.id());
