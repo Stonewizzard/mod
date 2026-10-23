@@ -5,7 +5,7 @@ import java.util.*;
 /** One place at a time: contents, a topic index, an entry list, or a reading spread. */
 public final class FieldGuideNavigation {
     public enum Page { HOME, TOPICS, INDEX, ARTICLE }
-    public static final int RESULTS_PER_PAGE=8;
+    public static final int RESULTS_PER_PAGE=7;
     private Page page=Page.HOME;
     private String query="",selected="";
     private FieldGuide.Category category;

@@ -1,10 +1,12 @@
-# Ancient Field Guide
+# Workshop Manual
 
-All five comparison editions share the chapters and live modifier reference below. Craft a book and one paper for the Workshop Manual; the creative tab offers the three review finalists. Right-click a book to read. Global search, named article sections, related links, Back, mouse-wheel pagination and native keyboard focus are shared. Each edition remembers its own place during the session.
+The Workshop Manual is the selected guidebook. Craft a book and one paper, or find it in the creative tab. Right-click to read. Global search, named article sections, related links, Back, mouse-wheel pagination and native keyboard focus are supported. The book remembers its place during the session.
 
-Modifier entries open with their Effect; Value tiers, Growth and Resources are separate sections. Actual rolls stay on equipment tooltips. Reading changes no items. See [the design plan](FIVE_BOOK_DESIGN_PLAN.md), [the review](FIVE_BOOK_REVIEW.md), and [the authoring guide](GUIDEBOOK_AUTHORING.md).
+Native item graphics identify categories, task shortcuts, every entry and search result, modifier topics, related links, and article headings. Seven full-height illustrated results fit each page, including at narrow GUI widths. Each chapter supplies one `icon` registry ID reused wherever that subject appears.
 
-The visual direction draws on the familiar category browsing of Lexica Botania and Materials and You, with original presentation code and newly generated inventory icons. No book dependency or copied mod textures is required.
+Modifier entries open with their Effect; Value tiers, Growth and Resources are separate sections. Actual rolls stay on equipment tooltips. Reading changes no items. See [the authoring guide](GUIDEBOOK_AUTHORING.md) and [native-client QA](REAL_CLIENT_QA.md).
+
+The visual direction draws on familiar mod guidebook category browsing, with original presentation code and an ancient archaeology tome inventory icon. No book dependency or copied mod textures is required.
 
 ## Contents
 

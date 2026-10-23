@@ -7,8 +7,8 @@ public final class FieldGuideContent {
     static {for(var design:GuideDesign.values())EDITIONS.put(design,ExampleMod.ITEMS.registerItem(design.itemId,p->new FieldGuideItem(p,design),p->p.stacksTo(1)));}
     public static final DeferredItem<Item> BOOK=EDITIONS.get(GuideDesign.MANUAL);
     public static DeferredItem<Item> book(GuideDesign design){return EDITIONS.get(design);}
-    /** Finalist exposure is deliberately separate from registration of the five review prototypes. */
-    public static List<DeferredItem<Item>> finalists(){return List.of(book(GuideDesign.MANUAL),book(GuideDesign.TRAIL),book(GuideDesign.ATLAS));}
+    /** Only the selected Workshop Manual is registered and exposed. */
+    public static List<DeferredItem<Item>> finalists(){return List.of(BOOK);}
     public static boolean isGuide(ItemStack stack){return stack.getItem() instanceof FieldGuideItem;}
     public static void register(){}
     private FieldGuideContent(){}

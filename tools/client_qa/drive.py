@@ -107,16 +107,16 @@ def run():
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
     command('seed_books');time.sleep(1)
     process('xdotool','key','Escape');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','fixture book closing')
-    capture('00-five-book-items')
-    for slot,design in enumerate(('JOURNAL','MANUAL','TRAIL','REFERENCE','ATLAS'),1):
+    capture('00-workshop-manual-item')
+    for slot,design in enumerate(('MANUAL',),1):
         process('xdotool','key',str(slot));time.sleep(.3)
         process('xdotool','click','3')
         expect(screen='FieldGuideScreen',design=design,page='HOME');capture(design.lower()+'-home')
-        # Exercise the candidate's actual first-action affordance, not only shared categories.
-        if design in ('MANUAL','TRAIL'):click('open:sniffers');expect(selected='sniffers')
-        elif design=='ATLAS':click('category:START');click('row:0');expect(selected='welcome')
-        else:click('welcome');expect(selected='welcome')
-        capture(design.lower()+'-first-step');click('home')
+        click('open:sniffers');expect(selected='sniffers')
+        capture('manual-first-step');click('home')
+        click('category:CREATURES');expect(page='INDEX');capture('manual-creature-index')
+        click('row:0');expect(selected='sniffers');capture('manual-creature-article')
+        click('related');expect(related=True);capture('manual-related');click('home')
         # Newcomer / casual mod user: find the excavation and understand recovery.
         click('category:EXCAVATION');expect(page='INDEX');click('row:0');expect(selected='archaeology_table')
         capture(design.lower()+'-excavation');click('section:3');expect(section=3)
@@ -133,7 +133,7 @@ def run():
         # Vanilla veteran: use natural language rather than a modifier's internal name.
         search_text('wither rose');click('row:0');expect(selected='crunchers');click('section:2');expect(section=2)
         # Experienced builder: browse modifier topic; check boundaries and small-window reading.
-        click('home');click('category:MODIFIERS');expect(page='TOPICS');click('group:AREA');expect(group='AREA',page='INDEX')
+        click('home');click('category:MODIFIERS');expect(page='TOPICS');capture('manual-topics');click('group:AREA');expect(group='AREA',page='INDEX')
         click('row:0');expect(page='ARTICLE');capture(design.lower()+'-area')
         command('gui_scale',value=2);process('xdotool','windowsize',WINDOW,'854','480')
         wait_for(lambda s:s.get('windowWidth')==854 and s.get('windowHeight')==480,'small window');capture(design.lower()+'-small')
@@ -141,6 +141,8 @@ def run():
         process('xdotool','windowsize',WINDOW,'640','480')
         wait_for(lambda s:s.get('windowWidth')==640 and s.get('guiWidth')==320,'minimum GUI width')
         capture(design.lower()+'-narrow-home')
+        click('category:CREATURES');capture('manual-narrow-index');click('row:0');capture('manual-narrow-creature');click('home')
+        search_text('magnet');capture('manual-narrow-search');click('clear')
         click('category:EXCAVATION');click('row:0');capture(design.lower()+'-narrow')
         click('home')
         # Actual Tab + Return activation of native Close, and session bookmark reopening.
@@ -156,9 +158,9 @@ def run():
         process('xdotool','windowsize',WINDOW,'1280','720')
         wait_for(lambda s:s.get('windowWidth')==1280 and s.get('windowHeight')==720,'normal window');command('gui_scale',value=3)
         wait_for(lambda s:s.get('guiScale')==3,'normal GUI scale')
-        print('FIVE_BOOK_NATIVE_PASS: '+design+'; actual item opening, categories, sections, related/history, global search, no matches, topics, small window, bookmarks and keyboard',flush=True)
+        print('WORKSHOP_MANUAL_NATIVE_PASS: '+design+'; actual item opening, categories, sections, related/history, global search, no matches, topics, small window, bookmarks and keyboard',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
-    print('CLIENT_VISUAL_QA_PASS: all five book items and OS input task paths',flush=True)
+    print('CLIENT_VISUAL_QA_PASS: Workshop Manual item, illustrated browsing and OS input task paths',flush=True)
 
 if __name__=='__main__':
     try:run()

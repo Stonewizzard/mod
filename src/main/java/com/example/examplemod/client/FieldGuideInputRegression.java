@@ -31,7 +31,7 @@ final class FieldGuideInputRegression {
             f.click("back",1);require(f.nav.query().equals("magnet")&&f.nav.page()==FieldGuideNavigation.Page.INDEX,"Back after Clear must restore the search");
             f.click("close",1);require(f.closed,"Native close control must activate");
         }
-        System.out.println("FIELD_GUIDE_INPUT_CHECK: PASS: native Button click validation/press callbacks and container dispatch (audio omitted in headless datagen); SDL primary, zero/right rejection, category/topic/entry/link/Home/Back/Close/Clear, reading and index pagination in all five layouts at three screen origins");
+        System.out.println("FIELD_GUIDE_INPUT_CHECK: PASS: native Button click validation/press callbacks and container dispatch (audio omitted in headless datagen); SDL primary, zero/right rejection, category/topic/entry/link/Home/Back/Close/Clear, reading and index pagination in the Workshop Manual at three screen origins");
     }
     private static final class Fixture extends AbstractContainerEventHandler {
         final FieldGuideNavigation nav=new FieldGuideNavigation();final List<GuiEventListener> children=new ArrayList<>();

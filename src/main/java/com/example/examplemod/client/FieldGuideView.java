@@ -19,7 +19,7 @@ public final class FieldGuideView {
         if(!result.isEmpty())result.removeLast();return List.copyOf(result);
     }
     public static String categoryIcon(FieldGuide.Category category){return switch(category){
-        case START->"examplemod:example_block";case CREATURES->"minecraft:sniffer_egg";case ARTIFACTS->"examplemod:ancient_artifact";case EXCAVATION->"minecraft:brush";case EQUIPMENT->"examplemod:restored_ancient_pickaxe";case STATIONS->"examplemod:reconstruction_table";case MODIFIERS->"minecraft:enchanted_book";
+        case START->"examplemod:ancient_field_guide";case CREATURES->"minecraft:sniffer_egg";case ARTIFACTS->"examplemod:ancient_artifact";case EXCAVATION->"minecraft:brush";case EQUIPMENT->"examplemod:restored_ancient_pickaxe";case STATIONS->"examplemod:reconstruction_table";case MODIFIERS->"minecraft:enchanted_book";
     };}
     public static boolean inside(double x,double y,int left,int top,int w,int h){return x>=left&&x<left+w&&y>=top&&y<top+h;}
     public static String fit(ExcavationScreenView.Canvas c,String text,int width){if(c.textWidth(text)<=width)return text;while(text.length()>1&&c.textWidth(text+"..")>width)text=text.substring(0,text.length()-1);return text+"..";}

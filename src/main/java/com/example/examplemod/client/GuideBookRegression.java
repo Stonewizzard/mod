@@ -25,7 +25,7 @@ final class GuideBookRegression {
             n.query("zzzznotpresentzzzz");check(measure,design,n,false);
         }
         }
-        System.out.println("FIVE_BOOK_LAYOUT_CHECK: PASS: "+count+" sections, five designs at full and minimum GUI widths, every entry, categories, topics, empty search, body bounds and control overlap");
+        System.out.println("WORKSHOP_MANUAL_LAYOUT_CHECK: PASS: "+count+" sections, Workshop Manual at full and minimum GUI widths, every entry, categories, topics, empty search, body bounds and control overlap");
     }
     private record FitMeasure(ExcavationScreenView.Canvas nativeFont,double scale) implements ExcavationScreenView.Canvas {
         @Override public int textWidth(String text){return (int)Math.ceil(nativeFont.textWidth(text)/scale);}
@@ -34,9 +34,12 @@ final class GuideBookRegression {
         @Override public void text(String text,int x,int y,int color){throw new UnsupportedOperationException();}
     }
     private static void check(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n,boolean related){
+        if(n.page()==FieldGuideNavigation.Page.ARTICLE&&(GuideBookView.illustrations(n).size()!=1||!GuideBookView.illustrations(n).getFirst().item().equals(n.selected().icon())))throw new AssertionError("Article needs its subject illustration");
         var controls=GuideBookView.controls(c,d,n,related);var ids=new HashSet<String>();
         for(var b:controls){
             if((b.y()==52||b.y()<27||b.id().equals("clear"))&&c.textWidth(b.label())>b.w()-8)throw new AssertionError("Truncated guide category: "+b.label());
+            if((b.id().startsWith("row:")||b.id().startsWith("category:")||b.id().startsWith("group:")||b.id().startsWith("open:")||b.id().startsWith("link:"))&&(b.icon().isEmpty()||b.h()<16))throw new AssertionError("Missing or crowded item illustration: "+b.id());
+            if(!b.icon().isEmpty()&&(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(b.icon()))==null||net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(b.icon()))==net.minecraft.world.item.Items.AIR))throw new AssertionError("Unknown illustration item: "+b.icon());
             if(!ids.add(b.id()))throw new AssertionError("Duplicate guide control: "+d+" "+b.id());
             if(b.x()<0||b.y()<0||b.x()+b.w()>396||b.y()+b.h()>224)throw new AssertionError("Guide control outside frame");
             for(var other:controls)if(b!=other&&b.x()<other.x()+other.w()&&b.x()+b.w()>other.x()&&b.y()<other.y()+other.h()&&b.y()+b.h()>other.y())throw new AssertionError("Guide controls overlap: "+d+" "+n.page()+" "+b.id()+" / "+other.id());
