@@ -16,17 +16,19 @@ Each run uploads `real-minecraft-visual-qa`, containing:
 - `timeline.json`: actions and their resulting live states.
 - `result.json`, `client.log` and `video.log`: functional results and diagnostics.
 
+`graphics.txt` records the actual OpenGL renderer. To decode screenshots from a downloaded job log, run `python3 tools/client_qa/import_evidence.py job.log output-directory`.
+
 A small selection of screenshots is also encoded in the job log with `MC_QA_IMAGE` markers. This lets the GitHub connector retrieve the actual pixels for visual inspection without copying Minecraft runtime assets or requiring an account login. These are disposable CI captures, not screenshots of a player's PC.
 
-On a Linux machine with Java 25, X11, Xvfb, Mesa, xdotool, ImageMagick and FFmpeg installed:
+On a Linux machine with Java 25, X11, Xvfb, Mesa OpenGL/Vulkan software drivers, xdotool, ImageMagick and FFmpeg installed:
 
 ```bash
-LIBGL_ALWAYS_SOFTWARE=1 ALSOFT_DRIVERS=null SDL_VIDEODRIVER=x11 \
+LIBGL_ALWAYS_SOFTWARE=1 ALSOFT_DRIVERS=null SDL_VIDEODRIVER=x11 SDL_VIDEO_FORCE_EGL=1 \
   xvfb-run -a -s '-screen 0 1280x720x24 +extension GLX +render -noreset' \
   bash tools/client_qa/run.sh
 ```
 
-For manual inspection on a machine with a desktop, `./gradlew runClientVisualQa` opens the same actual client and book. Normal `runClient` and released gameplay never enable the QA bridge.
+For manual inspection on a machine with a desktop, `./gradlew runClientVisualQa` opens the same actual client and book. Normal `runClient` and released gameplay never enable the QA bridge. The graphical QA client uses the isolated `run/visual-qa` profile and does not overwrite normal development-client settings.
 
 ## Current scope
 

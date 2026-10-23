@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-mkdir -p build/client-qa run
+mkdir -p build/client-qa run/visual-qa
+glxinfo -B >build/client-qa/graphics.txt 2>&1 || true
+for qa_lvp_icd in /usr/share/vulkan/icd.d/lvp_*.json; do
+    if [ -f "$qa_lvp_icd" ]; then export VK_DRIVER_FILES="$qa_lvp_icd"; break; fi
+done
+vulkaninfo --summary >build/client-qa/vulkan.txt 2>&1 || true
 rm -f build/client-qa/state.json build/client-qa/command.json
-cat > run/options.txt <<'EOF'
+cat > run/visual-qa/options.txt <<'EOF'
 onboardAccessibility:false
 startedCleanly:true
 narrator:0
@@ -12,7 +17,7 @@ maxFps:30
 enableVsync:false
 fullscreen:false
 renderDistance:2
-simulationDistance:2
+simulationDistance:5
 EOF
 ./gradlew runClientVisualQa >build/client-qa/client.log 2>&1 &
 client_pid=$!

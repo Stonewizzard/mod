@@ -19,6 +19,13 @@ def wait_for(predicate,description,timeout=20):
     while time.monotonic()-start<timeout:
         state=observe()
         if predicate(state):return state
+        if description=='the real book window' and state.get('frames',0)>90 and state.get('screen') not in ('TitleScreen','FieldGuideScreen'):
+            raise AssertionError('Unexpected real startup screen: '+str(state.get('screen')))
+        client_log=QA/'client.log'
+        if client_log.exists():
+            errors=client_log.read_text(errors='replace')
+            if 'Failed to create backend OpenGL' in errors and 'Failed to create backend Vulkan' in errors:
+                raise AssertionError('Both native graphics backends failed; inspect graphics.txt, vulkan.txt and client.log')
         pid=os.environ.get('CLIENT_QA_PID')
         if pid and not (Path('/proc')/pid).exists():raise AssertionError('Minecraft launcher exited; inspect client.log')
         time.sleep(.15)
