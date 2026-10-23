@@ -3,7 +3,21 @@ All captures, live state, action history and video also remain in the Actions ar
 """
 from pathlib import Path
 import base64,json
-root=Path('build/client-qa');print('CLIENT_QA_RESULT', (root/'result.json').read_text() if (root/'result.json').exists() else 'No result')
+root=Path('build/client-qa')
+for diagnostic in ('graphics.txt','vulkan.txt'):
+    path=root/diagnostic
+    if path.exists():print('CLIENT_QA_DIAGNOSTIC '+diagnostic+'\n'+path.read_text(errors='replace')[:16000])
+for path in Path('run/visual-qa/crash-reports').glob('*.txt'):
+    print('NATIVE_CLIENT_CRASH '+path.name+'\n'+path.read_text(errors='replace')[:24000])
+    (root/path.name).write_bytes(path.read_bytes())
+log=root/'client.log'
+if log.exists():
+    lines=log.read_text(errors='replace').splitlines();selected=set()
+    for i,line in enumerate(lines):
+        if any(word in line for word in ('Exception','Caused by:','FATAL','CLIENT_VISUAL_QA','Rendering screen')):
+            selected.update(range(max(0,i-3),min(len(lines),i+25)))
+    print('CLIENT_QA_RUNTIME_DIAGNOSTICS\n'+'\n'.join(lines[i] for i in sorted(selected)))
+print('CLIENT_QA_RESULT', (root/'result.json').read_text() if (root/'result.json').exists() else 'No result')
 for name in ('01-contents','02-getting-started','05-modifier','11-small-window','failure'):
     path=root/'captures'/(name+'.png')
     if not path.exists():continue
