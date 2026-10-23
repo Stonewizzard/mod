@@ -1,6 +1,7 @@
 package com.example.examplemod.client;
 
 import com.example.examplemod.FieldGuideNavigation;
+import com.example.examplemod.GuideDesign;
 import com.example.examplemod.ExampleMod;
 import com.google.gson.*;
 import java.nio.file.*;
@@ -35,7 +36,11 @@ public final class ClientVisualQa {
                 if(id!=commandId){
                     commandId=id;
                     switch(command.get("action").getAsString()){
-                        case "open_book"->open(minecraft);
+                        case "open_book"->{navigation=new FieldGuideNavigation();minecraft.gui.setScreen(new FieldGuideScreen(navigation,command.has("design")?GuideDesign.valueOf(command.get("design").getAsString()):GuideDesign.JOURNAL));}
+                        case "seed_books"->{
+                            var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();
+                            server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);int slot=0;for(var design:GuideDesign.values())player.getInventory().setItem(slot++,new net.minecraft.world.item.ItemStack(com.example.examplemod.FieldGuideContent.book(design).get()));player.inventoryMenu.broadcastChanges();});
+                        }
                         case "gui_scale"->{minecraft.options.guiScale().set(command.get("value").getAsInt());minecraft.resizeGui();}
                         case "quit"->minecraft.stop();
                         default->throw new IllegalArgumentException("Unknown visual-QA command");
@@ -58,16 +63,18 @@ public final class ClientVisualQa {
             state.addProperty("screen",screen==null?"InGame":screen.getClass().getSimpleName());state.addProperty("windowWidth",window.getScreenWidth());state.addProperty("windowHeight",window.getScreenHeight());
             state.addProperty("guiWidth",window.getGuiScaledWidth());state.addProperty("guiHeight",window.getGuiScaledHeight());state.addProperty("guiScale",window.getGuiScale());state.addProperty("inWorld",minecraft.level!=null);
             var widgets=new JsonArray();if(screen!=null)for(var child:screen.children())widgets(child,widgets);state.add("widgets",widgets);
-            if(screen instanceof FieldGuideScreen){
+            if(screen instanceof FieldGuideScreen book){
+                state.addProperty("focus",book.getFocused() instanceof GuideBookButton button?button.control.id():book.getFocused() instanceof net.minecraft.client.gui.components.EditBox?"search":"");
+                navigation=book.navigation();state.addProperty("design",book.design().name());state.addProperty("section",navigation.section());state.addProperty("related",book.related());
                 state.addProperty("page",navigation.page().name());state.addProperty("query",navigation.query());state.addProperty("articlePage",navigation.articlePage());state.addProperty("listPage",navigation.listPage());
                 state.addProperty("selected",navigation.selected()==null?"":navigation.selected().id());state.addProperty("results",navigation.results().size());
                 state.addProperty("category",navigation.category()==null?"":navigation.category().name());state.addProperty("group",navigation.group().name());
-                var controls=new JsonArray();int left=(screen.width-FieldGuideView.WIDTH)/2,top=(screen.height-FieldGuideView.HEIGHT)/2;
-                for(var c:FieldGuideView.controls(new Measure(minecraft),navigation)){
+                var controls=new JsonArray();
+                for(var c:book.liveControls()){
                     var b=new JsonObject();b.addProperty("id",c.id());b.addProperty("label",c.label());b.addProperty("enabled",c.enabled());
-                    b.addProperty("x",left+c.x());b.addProperty("y",top+c.y());b.addProperty("width",c.w());b.addProperty("height",c.h());controls.add(b);
+                    b.addProperty("x",c.x());b.addProperty("y",c.y());b.addProperty("width",c.w());b.addProperty("height",c.h());controls.add(b);
                 }
-                state.add("controls",controls);state.addProperty("searchX",left+100);state.addProperty("searchY",top+41);
+                state.add("controls",controls);state.addProperty("searchX",book.searchX());state.addProperty("searchY",book.searchY());
             }
             Path temporary=DIRECTORY.resolve("state.tmp");Files.writeString(temporary,JSON.toJson(state),StandardCharsets.UTF_8);
             Files.move(temporary,DIRECTORY.resolve("state.json"),StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE);

@@ -64,6 +64,12 @@ def click_widget(label,exact=True):
     x,y=physical(state,control['x']+control['width']/2,control['y']+control['height']/2)
     process('xdotool','mousemove','--window',WINDOW,str(x),str(y),'click','1');time.sleep(.5);log('native widget '+label)
 
+def search_text(value):
+    s=observe();x,y=physical(s,s['searchX'],s['searchY'])
+    process('xdotool','mousemove','--window',WINDOW,str(x),str(y),'click','1')
+    process('xdotool','key','ctrl+a');process('xdotool','type','--clearmodifiers','--delay','40',value)
+    expect(query=value);log('type search '+value)
+
 def find_window(state):
     # SDL3 does not consistently expose the legacy WM_NAME used by xdotool search.
     # Resolve the actual focused window, then fall back to the X11 geometry tree.
@@ -99,33 +105,60 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
-    capture('01-contents')
-    # Pilot task: a new player follows the introduction to its first creature.
-    click('welcome');expect(page='ARTICLE',selected='welcome');capture('02-getting-started')
-    click('link:0');expect(page='ARTICLE',selected='sniffers');capture('03-sniffers')
-    click('back');expect(selected='welcome');click('home');expect(page='HOME')
-    # Pilot task: a returning player searches for a known modifier.
-    s=observe();x,y=physical(s,s['searchX'],s['searchY'])
-    process('xdotool','mousemove','--window',WINDOW,str(x),str(y),'click','1')
-    process('xdotool','type','--clearmodifiers','--delay','100','magnet')
-    expect(page='INDEX',query='magnet');capture('04-search')
-    click('row:0');expect(page='ARTICLE',selected='examplemod:magnetized');capture('05-modifier')
-    click('next');expect(articlePage=1);capture('06-modifier-next-page')
-    click('back');expect(page='INDEX',query='magnet');click('clear');expect(page='HOME')
-    # Pilot task: an equipment builder browses a topic instead of searching.
-    click('category:MODIFIERS');expect(page='TOPICS');capture('07-modifier-topics')
-    click('group:AREA');expect(page='INDEX',group='AREA');capture('08-area-index')
-    click('row:0');expect(page='ARTICLE');capture('09-area-modifier')
-    # Reflow at real GUI scales and physical window sizes; no synthetic render export.
-    command('gui_scale',value=2);capture('10-scale-2')
-    process('xdotool','windowsize',WINDOW,'854','480')
-    wait_for(lambda s:s.get('windowWidth')==854 and s.get('windowHeight')==480,'854x480 resize');capture('11-small-window')
-    click('home');expect(page='HOME');capture('12-small-contents')
-    process('xdotool','key','Escape');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','Escape closing the book')
-    log('Escape closed book');command('open_book');expect(page='HOME');capture('13-reopened')
-    click('close');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','the close button');log('Close button closed book')
+    command('seed_books');time.sleep(1)
+    process('xdotool','key','Escape');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','fixture book closing')
+    capture('00-five-book-items')
+    for slot,design in enumerate(('JOURNAL','MANUAL','TRAIL','REFERENCE','ATLAS'),1):
+        process('xdotool','key',str(slot));time.sleep(.3)
+        process('xdotool','click','3')
+        expect(screen='FieldGuideScreen',design=design,page='HOME');capture(design.lower()+'-home')
+        # Exercise the candidate's actual first-action affordance, not only shared categories.
+        if design in ('MANUAL','TRAIL'):click('open:sniffers');expect(selected='sniffers')
+        elif design=='ATLAS':click('category:START');click('row:0');expect(selected='welcome')
+        else:click('welcome');expect(selected='welcome')
+        capture(design.lower()+'-first-step');click('home')
+        # Newcomer / casual mod user: find the excavation and understand recovery.
+        click('category:EXCAVATION');expect(page='INDEX');click('row:0');expect(selected='archaeology_table')
+        capture(design.lower()+'-excavation');click('section:3');expect(section=3)
+        click('related');expect(related=True);click('link:0');expect(selected='excavation_tools')
+        click('back');expect(selected='archaeology_table',section=3)
+        click('home');expect(page='HOME')
+        # Returning player: exact lookup, explicit tier/growth sections and preserved search.
+        search_text('magnet');expect(page='INDEX',query='magnet');capture(design.lower()+'-search')
+        click('row:0');expect(selected='examplemod:magnetized');capture(design.lower()+'-modifier')
+        click('section:1');expect(section=1);capture(design.lower()+'-tiers')
+        click('section:2');expect(section=2);click('back');expect(page='INDEX',query='magnet')
+        search_text('zzzznotpresentzzzz');expect(page='INDEX',results=0);capture(design.lower()+'-empty')
+        click('clear');expect(page='HOME',query='')
+        # Vanilla veteran: use natural language rather than a modifier's internal name.
+        search_text('wither rose');click('row:0');expect(selected='crunchers');click('section:2');expect(section=2)
+        # Experienced builder: browse modifier topic; check boundaries and small-window reading.
+        click('home');click('category:MODIFIERS');expect(page='TOPICS');click('group:AREA');expect(group='AREA',page='INDEX')
+        click('row:0');expect(page='ARTICLE');capture(design.lower()+'-area')
+        command('gui_scale',value=2);process('xdotool','windowsize',WINDOW,'854','480')
+        wait_for(lambda s:s.get('windowWidth')==854 and s.get('windowHeight')==480,'small window');capture(design.lower()+'-small')
+        click('home');capture(design.lower()+'-small-home')
+        process('xdotool','windowsize',WINDOW,'640','480')
+        wait_for(lambda s:s.get('windowWidth')==640 and s.get('guiWidth')==320,'minimum GUI width')
+        capture(design.lower()+'-narrow-home')
+        click('category:EXCAVATION');click('row:0');capture(design.lower()+'-narrow')
+        click('home')
+        # Actual Tab + Return activation of native Close, and session bookmark reopening.
+        click('category:EXCAVATION');click('row:0');click('section:3')
+        process('xdotool','key','Escape');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','Escape closing book')
+        process('xdotool','click','3');expect(screen='FieldGuideScreen',selected='archaeology_table',section=3)
+        click('home')
+        for _ in range(12):
+            process('xdotool','key','Tab');time.sleep(.2)
+            if observe().get('focus')=='close':break
+        expect(focus='close')
+        process('xdotool','key','Return');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','keyboard Close')
+        process('xdotool','windowsize',WINDOW,'1280','720')
+        wait_for(lambda s:s.get('windowWidth')==1280 and s.get('windowHeight')==720,'normal window');command('gui_scale',value=3)
+        wait_for(lambda s:s.get('guiScale')==3,'normal GUI scale')
+        print('FIVE_BOOK_NATIVE_PASS: '+design+'; actual item opening, categories, sections, related/history, global search, no matches, topics, small window, bookmarks and keyboard',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
-    print('CLIENT_VISUAL_QA_PASS: real client rendering, OS mouse/keyboard, search, links, pages, GUI scale, resize, Escape and Close',flush=True)
+    print('CLIENT_VISUAL_QA_PASS: all five book items and OS input task paths',flush=True)
 
 if __name__=='__main__':
     try:run()

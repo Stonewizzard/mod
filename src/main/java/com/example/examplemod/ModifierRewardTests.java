@@ -62,6 +62,7 @@ public final class ModifierRewardTests {
         var entries=FieldGuide.entries();check(h,entries.size()==147&&entries.stream().filter(e->e.category()==FieldGuide.Category.MODIFIERS).count()==120,"The field guide must include all 27 chapters and all 120 modifier definitions");
         for(var category:FieldGuide.Category.values())check(h,!FieldGuide.search("",category,FieldGuide.Group.ALL).isEmpty(),"Every guide category must contain articles");
         for(var entry:entries){
+            check(h,!entry.sections().isEmpty()&&entry.sections().stream().allMatch(section->!section.title().isBlank()&&!section.paragraphs().isEmpty()),"Every guide entry must have named, nonempty semantic sections");
             for(var link:entry.links())check(h,FieldGuide.entry(link)!=null,"Every related-article link must resolve");
             var icon=net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(Identifier.parse(entry.icon()));check(h,icon!=null&&icon!=Items.AIR,"Every guide icon must refer to a registered item");
         }
@@ -71,6 +72,8 @@ public final class ModifierRewardTests {
         check(h,FieldGuide.search("zzzznotpresentzzzz",null,FieldGuide.Group.ALL).isEmpty(),"No-match searches must return an empty result set");
         for(var entry:FieldGuide.search("",FieldGuide.Category.MODIFIERS,FieldGuide.Group.NETHER))check(h,ArtifactModifierCatalog.spec(PickaxeTrait.byId(entry.id())).influence()==ModifierInfluence.NETHER,"Topic filters must not leak foreign modifier definitions");
         var nav=new FieldGuideNavigation();nav.category(FieldGuide.Category.CREATURES);nav.query("wither rose");nav.selectRow(0);String selected=nav.selected().id();nav.open("cruncher_egg");check(h,nav.selected().id().equals("cruncher_egg"),"Related navigation must open articles");nav.back();check(h,nav.query().equals("wither rose")&&nav.page()==FieldGuideNavigation.Page.ARTICLE&&nav.selected().id().equals(selected),"Back must restore the query and prior article");
+        nav.open("sniffers");nav.section(2);nav.open("cruncher_egg");nav.back();check(h,nav.section()==2,"Related navigation must restore the previous reading section");
+        for(var design:GuideDesign.values())check(h,FieldGuideContent.book(design).get() instanceof FieldGuideItem guide&&guide.design==design,"Every prototype must open its own presentation");
         nav.home();nav.category(FieldGuide.Category.MODIFIERS);check(h,nav.page()==FieldGuideNavigation.Page.TOPICS,"Modifiers must first show a clear topic index");nav.group(FieldGuide.Group.ALL);nav.listPage(10000);check(h,nav.listPage()<nav.listPages(),"Result pagination must stay bounded");nav.query("zzzznotpresentzzzz");check(h,nav.selected()==null&&nav.listPage()==0,"A no-results search must clear a stale article selection");
         var recipeInput=net.minecraft.world.item.crafting.CraftingInput.of(2,2,List.of(new ItemStack(Items.BOOK),ItemStack.EMPTY,ItemStack.EMPTY,new ItemStack(Items.PAPER)));
         var recipe=h.getLevel().getServer().getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,recipeInput,h.getLevel());

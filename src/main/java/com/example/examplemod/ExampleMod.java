@@ -130,7 +130,7 @@ public class ExampleMod {
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> SNIFFER_SKULL_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
-                output.accept(FieldGuideContent.BOOK.get());
+                FieldGuideContent.finalists().forEach(book->output.accept(book.get()));
                 output.accept(SNIFFER_SKULL_ITEM.get()); // Our placeable block also appears in this mod tab.
                 ArchaeologyContent.artifacts().forEach(output::accept);
                 output.accept(CRUNCHER_EGG_ITEM.get());
@@ -257,7 +257,7 @@ public class ExampleMod {
             event.accept(ReconstructionContent.TABLE_ITEM);
             event.accept(AscenderContent.ITEM);
             ComponentStationContent.STATIONS.forEach(station->event.accept(station.item()));
-            event.accept(FieldGuideContent.BOOK);
+            FieldGuideContent.finalists().forEach(event::accept);
         } else if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ARCHAEOLOGY_DRILL);
             event.accept(ARCHAEOLOGY_HAMMER);

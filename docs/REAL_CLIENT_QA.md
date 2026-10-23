@@ -34,22 +34,14 @@ For manual inspection on a machine with a desktop, `./gradlew runClientVisualQa`
 
 ## Current scope
 
-The pilot uses OS input to create a disposable Creative/Superflat world through Minecraft’s native UI, then opens the actual book in that world. Minecraft 26.3 binds item data when a world loads, so a title-screen-only book preview is invalid. The pilot does not yet test obtaining the book or claim to cover unrelated gameplay. It verifies the book's actual textures, text, native widget rendering and OS input at GUI scales 2 and 3 and at 1280×720 and 854×480 window sizes. It exercises search, topics, article pages, related links, history, Escape, Close and reopening.
+The script uses OS input to create a disposable Creative/Superflat world through Minecraft's native UI. The development bridge puts the five real book items in the hotbar. The script selects each slot and right-clicks it through the normal item-opening path, then exercises that edition's starting point, categories, semantic sections, related links, preserved search/history, no-match recovery, natural-language lookup, modifier topics, Escape, keyboard Tab/Return activation and session bookmarks. It captures all five books at GUI scales 2 and 3 and at 1280×720, 854×480 and 640×480. A hotbar capture verifies the actual item icons.
 
-The bridge only opens the guide after world entry, changes the GUI scale, quits and reports live state. It does not call the guide's navigation actions. All pilot navigation is performed by OS input. Its observers report the same control bounds that the real screen creates; screenshot inspection is still needed to detect misleading or badly drawn controls.
+Minecraft 26.3 binds item data when a world loads, so a title-screen-only book preview is invalid. The bridge bootstraps one screen only after world entry, provides test inventory fixtures, changes GUI scale, quits, and reports read-only live state. It does not call the guide's navigation actions. All comparison navigation and subsequent item opening is performed by OS input. Normal clients never register this bridge. The fixture books do not add a gameplay grant to released worlds.
 
 GitHub Actions provides a repeatable screenshot-and-input loop, not a live remote desktop connection to the user's computer. A new scripted run takes a few minutes. The test harness can be run interactively in an attached Linux desktop when that capability is available. Software-rendered CI frame rates are not representative of a player’s GPU performance.
 
 ## Persona-based review
 
-The script supplies reproducible evidence for three initial task paths:
+The five simulated experience levels, acceptance criteria and design tradeoffs are documented in [the design plan](FIVE_BOOK_DESIGN_PLAN.md). [The completed review](FIVE_BOOK_REVIEW.md) records the critical findings, revisions, selection and native captures.
 
-| Perspective | Task | Visual/usability questions to assess from the actual client |
-|---|---|---|
-| New archaeologist | Open the introduction, follow it to Sniffers, then return | Is the starting point obvious? Are the headings readable? Does the page explain a concrete next step? |
-| Returning player | Search for Magnetized and read its details | Is search visible? Are the results clear? Do page changes and Back preserve context? |
-| Equipment builder | Browse modifier topics and inspect an area modifier | Do the categories make sense? Is important information easy to compare? Can the player recover from taking the wrong path? |
-
-These are simulated task perspectives, not evidence from human participants. A passing script only establishes that the expected actions completed. After viewing the real screenshots and video, record issues separately by severity: blockers, readability/navigation problems, clutter and visual polish. Do not infer that the book looks good merely because tests pass.
-
-Future book revisions should run these paths again and review the images before being marked ready. Expand the paths to include ordinary in-world book use and inventory presentation when world-level UI testing is added.
+These are simulated task perspectives, not evidence from human participants. A passing script establishes that the expected actions completed. Screenshot review is required to judge presentation; small-window comfort, localization, screen-reader output and real player comprehension still benefit from human feedback. Do not infer that the book looks good merely because tests pass.

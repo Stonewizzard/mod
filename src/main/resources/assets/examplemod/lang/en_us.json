@@ -109,5 +109,9 @@
   "block.examplemod.scaling_randomizer": "Scaling Randomizer",
   "block.examplemod.component_restorer": "Restorer",
   "block.examplemod.influencer": "Influencer",
-  "item.examplemod.ancient_field_guide": "Ancient Field Guide"
+  "item.examplemod.ancient_field_guide": "Workshop Manual",
+  "item.examplemod.trail_guide": "Trail Guide",
+  "item.examplemod.pocket_reference": "Pocket Reference",
+  "item.examplemod.relic_atlas": "Relic Atlas",
+  "item.examplemod.field_journal": "Field Journal"
 }
