@@ -32,9 +32,9 @@ For manual inspection on a machine with a desktop, `./gradlew runClientVisualQa`
 
 ## Current scope
 
-The pilot opens the actual book after the title screen has loaded. It does not create a world, test obtaining the book, or claim to cover unrelated gameplay. It verifies the book's actual textures, text, native widget rendering and OS input at GUI scales 2 and 3 and at 1280×720 and 854×480 window sizes. It exercises search, topics, article pages, related links, history, Escape, Close and reopening.
+The pilot uses OS input to create a disposable Creative/Superflat world through Minecraft’s native UI, then opens the actual book in that world. Minecraft 26.3 binds item data when a world loads, so a title-screen-only book preview is invalid. The pilot does not yet test obtaining the book or claim to cover unrelated gameplay. It verifies the book's actual textures, text, native widget rendering and OS input at GUI scales 2 and 3 and at 1280×720 and 854×480 window sizes. It exercises search, topics, article pages, related links, history, Escape, Close and reopening.
 
-The bridge only opens the guide, changes the GUI scale, quits and reports live state. It does not call the guide's navigation actions. All pilot navigation is performed by OS input. Its observers report the same control bounds that the real screen creates; screenshot inspection is still needed to detect misleading or badly drawn controls.
+The bridge only opens the guide after world entry, changes the GUI scale, quits and reports live state. It does not call the guide's navigation actions. All pilot navigation is performed by OS input. Its observers report the same control bounds that the real screen creates; screenshot inspection is still needed to detect misleading or badly drawn controls.
 
 GitHub Actions provides a repeatable screenshot-and-input loop, not a live remote desktop connection to the user's computer. A new scripted run takes a few minutes. The test harness can be run interactively in an attached Linux desktop when that capability is available.
 

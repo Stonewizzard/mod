@@ -19,8 +19,6 @@ def wait_for(predicate,description,timeout=20):
     while time.monotonic()-start<timeout:
         state=observe()
         if predicate(state):return state
-        if description=='the real book window' and state.get('frames',0)>90 and state.get('screen') not in ('TitleScreen','FieldGuideScreen'):
-            raise AssertionError('Unexpected real startup screen: '+str(state.get('screen')))
         client_log=QA/'client.log'
         if client_log.exists():
             errors=client_log.read_text(errors='replace')
@@ -60,13 +58,33 @@ def capture(name):
 def expect(**fields):
     return wait_for(lambda s:all(s.get(k)==v for k,v in fields.items()),str(fields))
 
+def click_widget(label,exact=True):
+    state=wait_for(lambda s:any(b['enabled'] and (b['label']==label if exact else b['label'].startswith(label)) for b in s.get('widgets',[])), 'native widget '+label)
+    control=next(b for b in state['widgets'] if b['enabled'] and (b['label']==label if exact else b['label'].startswith(label)))
+    x,y=physical(state,control['x']+control['width']/2,control['y']+control['height']/2)
+    process('xdotool','mousemove','--window',WINDOW,str(x),str(y),'click','1');time.sleep(.5);log('native widget '+label)
+
 def run():
     global WINDOW
-    wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('frames',0)>12,'the real book window',timeout=360)
+    wait_for(lambda s:s.get('screen')=='TitleScreen' and s.get('frames',0)>12,'the native title screen',timeout=360)
     ids=subprocess.check_output(['xdotool','search','--onlyvisible','--name','Minecraft'],text=True).splitlines()
     if not ids:raise AssertionError('No actual Minecraft X11 window found')
     WINDOW=ids[-1];process('xdotool','windowfocus','--sync',WINDOW)
-    process('xdotool','mousemove','--window',WINDOW,'5','5')
+    process('xdotool','mousemove','--window',WINDOW,'5','5');capture('00-title')
+    # Create a real disposable flat world through native Minecraft UI.
+    click_widget('Singleplayer')
+    wait_for(lambda s:s.get('screen') in ('SelectWorldScreen','CreateWorldScreen'),'world selection or creation',timeout=90)
+    if observe()['screen']=='SelectWorldScreen':click_widget('Create New World')
+    wait_for(lambda s:s.get('screen')=='CreateWorldScreen','world creation',timeout=90)
+    for _ in range(6):
+        if any('Game Mode:' in w['label'] and 'Creative' in w['label'] for w in observe().get('widgets',[])):break
+        click_widget('Game Mode:',exact=False)
+    click_widget('World')
+    for _ in range(12):
+        if any('World Type:' in w['label'] and 'Superflat' in w['label'] for w in observe().get('widgets',[])):break
+        click_widget('World Type:',exact=False)
+    capture('00-world-setup');click_widget('Create New World')
+    wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
     capture('01-contents')
     # Pilot task: a new player follows the introduction to its first creature.
     click('welcome');expect(page='ARTICLE',selected='welcome');capture('02-getting-started')
@@ -92,7 +110,7 @@ def run():
     process('xdotool','key','Escape');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','Escape closing the book')
     log('Escape closed book');command('open_book');expect(page='HOME');capture('13-reopened')
     click('close');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','the close button');log('Close button closed book')
-    (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png')))},indent=2))
+    (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
     print('CLIENT_VISUAL_QA_PASS: real client rendering, OS mouse/keyboard, search, links, pages, GUI scale, resize, Escape and Close',flush=True)
 
 if __name__=='__main__':
