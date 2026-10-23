@@ -56,7 +56,7 @@ public final class FieldGuideScreen extends Screen {
     }
     @Override public void tick(){super.tick();if(dirty)rebuildButtons();}
     @Override public void extractRenderState(GuiGraphicsExtractor g,int mouseX,int mouseY,float partialTick){
-        if(dirty)rebuildButtons();GuideBookView.draw(canvas(g),design,navigation,related);if(search.getValue().isEmpty()&&!search.isFocused())canvas(g).text("Search the whole guide...",20,35,0xffc5cebf);super.extractRenderState(g,mouseX,mouseY,partialTick);
+        if(dirty)rebuildButtons();GuideBookView.draw(canvas(g),design,navigation,related);if(search.getValue().isEmpty())canvas(g).text("Search the whole guide...",23,35,0xffc5cebf);super.extractRenderState(g,mouseX,mouseY,partialTick);
     }
     @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){if(dirty)rebuildButtons();return super.mouseClicked(event,doubleClick);}
     @Override public boolean mouseScrolled(double mouseX,double mouseY,double scrollX,double scrollY){

@@ -9,7 +9,7 @@ This is a **five-persona simulated evaluation**, not feedback from five people. 
 | Finding | Consequence | Revision |
 |---|---|---|
 | Old entries split sentences across a crease and hid specific effects behind repeated rules | Hard to follow an explanation or look up a modifier | Named sections; Effect first; a section's paragraphs paginate independently. Long column text breaks at sentence boundaries where possible. |
-| First native screenshots still showed a nearly black search placeholder | Search looked broken even though typed text worked | Removed the native hint rendering; a single high-contrast, unshadowed placeholder now appears only while the empty input is unfocused. Native typed text, selection and caret remain native. |
+| First native screenshots still showed a nearly black search placeholder | Search looked broken even though typed text worked | Removed the native hint rendering; a single high-contrast, unshadowed placeholder now remains visible whenever the input is empty, including keyboard autofocus. Native typed text, selection and caret remain native. |
 | Full category names were truncated in short tabs | Novices had to guess the destination | Short labels and measured ribbon widths, with full Modifiers text; complete article titles remain available in the reading view. |
 | An earlier page background ended above the footer buttons | Footer appeared to hang outside the book | Extended the paper/footer surface within the leather frame. |
 | Detailed tier probabilities overwhelmed the value ranges | Too much paging to answer “how strong can this be?” | Compact strongest-first T1… ranges in Value tiers; family weights, rarity weights and eligibility in Roll odds. Growth and ascension resources have their own sections. |
@@ -25,18 +25,22 @@ Scores run from 1 (obstructive) to 5 (strong). A 3 means passable with a noticea
 
 | Simulated reviewer | Field Journal | Workshop Manual | Trail Guide | Pocket Reference | Relic Atlas |
 |---|---:|---:|---:|---:|---:|
-| Rowan: Minecraft newcomer, no mods | 4 | 5 | 5 | 3 | 4 |
+| Rowan: Minecraft newcomer, no mods | 4 | 4 | 5 | 3 | 4 |
 | Alex: vanilla veteran, first content mod | 4 | 5 | 4 | 3 | 4 |
 | Morgan: casual user of several mods | 4 | 5 | 4 | 4 | 4 |
 | Sam: experienced modpack/equipment builder | 3 | 4 | 4 | 5 | 4 |
 | Casey: returning player, small window | 4 | 4 | 4 | 3 | 4 |
-| **Mean heuristic score** | **3.8** | **4.6** | **4.2** | **3.6** | **4.0** |
+| **Mean heuristic score** | **3.8** | **4.4** | **4.2** | **3.6** | **4.0** |
 
-- **Rowan:** The Manual's “What would you like to do?” and the Trail's numbered tasks expose concrete first actions. The Atlas needs an extra category selection. The Reference is usable through its “New here?” action, but the initial 147-entry list distracts from starting.
+- **Rowan:** The Manual's “What would you like to do?” and the Trail's numbered tasks expose concrete first actions. The Atlas needs an extra category selection. The Reference is usable through its “New here?” action, but the initial 147-entry list distracts from starting. Vanilla terms such as suspicious sand and ancient debris still require some Minecraft knowledge; the Trail provides the clearest route, while the Manual offers more choices at once.
 - **Alex:** Searching ordinary words such as “wither rose” reaches Cruncher food. Named sections separate hatching time, speed boost and space requirements. A ribbon uses short labels; fuller subject names and the search field provide the context.
 - **Morgan:** Following excavation → related tools → Back restores the exact excavation section. Recover has a dedicated section explaining the empty output requirement. The Manual retains categories while reading and highlights the current article's subject even when it was reached through search, reducing detours.
 - **Sam:** Effect, cap/eligibility, value ranges, weights, growth and resources are separated. The Reference's persistent result list is fastest for hopping among definitions, but leaves less room for each explanation. The Atlas's section rail is easier to scan than the Journal's reading columns.
 - **Casey:** Search, clear/no-match recovery, native keyboard activation, Escape and per-edition bookmarks work across the five items. The smaller 854×480 and minimum-width 640×480 captures retain controls and readable body text. The Reference has two independent page controls and a narrow reading area, creating the largest navigation cost.
+
+## Icon review
+
+At actual inventory size, all five now read as closed books with a page edge and a large cover symbol. They do not depend on color alone. Heuristic recognizability scores: Journal **4/5**, Manual **5/5**, Trail **4/5**, Reference **4/5**, Atlas **4/5**. The Manual's pale anvil has the clearest contrast; the green Journal is darker in hand. The hotbar capture below records the actual five sprites, not enlarged source artwork. Icon quality was a pass criterion alongside navigation, reading and explanation; the primary ranking remains usability.
 
 ## Why these three
 
@@ -69,6 +73,6 @@ Additional checks cover all 27 chapters and 120 live modifier entries, every nam
 
 ## Limits and next decision
 
-This establishes functional coverage and a critical visual review, not real-player comprehension or preference. English text and software-rendered CI windows were tested; localization, narrator output and other resource packs need separate review. Long articles still paginate, particularly in the Journal and Reference. These prototypes deliberately emphasize clear paper, headings and controls over elaborate animation. The user's choice among the three finalists should determine the single long-term edition before adding more visual polish.
+This establishes functional coverage and a critical visual review, not real-player comprehension or preference. English text and software-rendered CI windows were tested; localization, narrator output and other resource packs need separate review. Long articles still paginate, particularly in the Journal and Reference. Recipe sections currently describe real grid rows and ingredients in text; illustrated crafting grids would be a useful later addition. These prototypes deliberately emphasize clear paper, headings and controls over elaborate animation. The user's choice among the three finalists should determine the single long-term edition before adding more visual polish.
 
 To add content, see [GUIDEBOOK_AUTHORING.md](GUIDEBOOK_AUTHORING.md). Chapters, recipes, links and search keywords are authored once; new modifier explanations derive from live gameplay definitions. New entries require no per-edition UI edits.
