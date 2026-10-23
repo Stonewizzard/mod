@@ -1,13 +1,15 @@
 name: Real Minecraft visual QA
 on:
   workflow_dispatch:
-  push:
-    branches: ['codex/real-client-visual-qa']
   pull_request:
     paths:
       - '.github/workflows/client-visual-qa.yml'
       - 'tools/client_qa/**'
       - 'src/main/java/com/example/examplemod/client/ClientVisualQa.java'
+      - 'src/main/java/com/example/examplemod/client/FieldGuide*.java'
+      - 'src/main/java/com/example/examplemod/FieldGuide*.java'
+      - 'src/main/resources/assets/examplemod/**/ancient_field_guide*'
+      - 'tools/field-guide.json'
 permissions:
   contents: read
 jobs:

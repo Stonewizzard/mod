@@ -16,7 +16,13 @@ simulationDistance:2
 EOF
 ./gradlew runClientVisualQa >build/client-qa/client.log 2>&1 &
 client_pid=$!
-trap 'kill "$client_pid" 2>/dev/null || true' EXIT
+export CLIENT_QA_PID="$client_pid"
+video_pid=""
+cleanup() {
+    kill "$client_pid" 2>/dev/null || true
+    if [ -n "$video_pid" ]; then kill -INT "$video_pid" 2>/dev/null || true; fi
+}
+trap cleanup EXIT
 # The recording contains only this disposable development game window.
 ffmpeg -nostdin -loglevel error -f x11grab -video_size 1280x720 -framerate 10 -i "$DISPLAY" -c:v libx264 -preset ultrafast -crf 30 -pix_fmt yuv420p -y build/client-qa/session.mp4 >build/client-qa/video.log 2>&1 &
 video_pid=$!

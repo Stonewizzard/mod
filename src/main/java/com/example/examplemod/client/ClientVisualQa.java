@@ -17,7 +17,7 @@ public final class ClientVisualQa {
     private static FieldGuideNavigation navigation;
     private static boolean opened;
     private static long sequence,frames,lastWrite;
-    private static int commandId=-1;
+    private static long commandId=-1;
 
     public static void tick(ClientTickEvent.Post event){
         if(!Boolean.getBoolean("examplemod.clientVisualQa"))return;
@@ -26,7 +26,7 @@ public final class ClientVisualQa {
             if(!opened&&minecraft.gui.screen() instanceof TitleScreen){open(minecraft);opened=true;}
             Path commands=DIRECTORY.resolve("command.json");
             if(Files.isRegularFile(commands)){
-                var command=JsonParser.parseString(Files.readString(commands)).getAsJsonObject();int id=command.get("id").getAsInt();
+                var command=JsonParser.parseString(Files.readString(commands)).getAsJsonObject();long id=command.get("id").getAsLong();
                 if(id!=commandId){
                     commandId=id;
                     switch(command.get("action").getAsString()){

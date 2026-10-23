@@ -19,6 +19,8 @@ def wait_for(predicate,description,timeout=20):
     while time.monotonic()-start<timeout:
         state=observe()
         if predicate(state):return state
+        pid=os.environ.get('CLIENT_QA_PID')
+        if pid and not (Path('/proc')/pid).exists():raise AssertionError('Minecraft launcher exited; inspect client.log')
         time.sleep(.15)
     raise AssertionError(f'Timed out waiting for {description}; last live state: {observe()}')
 
@@ -45,7 +47,7 @@ def click(id):
 def capture(name):
     # Capture the X11 client window, after presentation. No drawing-plan reconstruction.
     time.sleep(.6);path=CAPTURES/(name+'.png')
-    process('import','-window',WINDOW,'-depth','8',str(path))
+    process('import','-window',WINDOW or 'root','-depth','8',str(path))
     (CAPTURES/(name+'.json')).write_text(json.dumps(observe(),indent=2));log('screenshot '+name)
 
 def expect(**fields):
@@ -89,9 +91,8 @@ def run():
 if __name__=='__main__':
     try:run()
     except Exception:
-        if WINDOW:
-            try:capture('failure')
-            except Exception:pass
+        try:capture('failure')
+        except Exception:pass
         (QA/'result.json').write_text(json.dumps({'pass':False,'error':traceback.format_exc()},indent=2))
         raise
     finally:

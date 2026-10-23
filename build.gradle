@@ -207,3 +207,8 @@ neoForge.runs.named('sculkRenderCheck') {
     logLevel = org.slf4j.event.Level.INFO
 }
 
+
+// This launches a full graphical client; it is separate from datagen/layout checks.
+neoForge.runs.named('clientVisualQa') {
+    logLevel = org.slf4j.event.Level.INFO
+}
