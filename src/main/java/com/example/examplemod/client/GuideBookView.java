@@ -24,6 +24,7 @@ public final class GuideBookView {
             default->new Region(20,y,356,198-y);
         };
     }
+    private static String ribbonLabel(FieldGuide.Category category){return category==FieldGuide.Category.CREATURES?"Mobs":category==FieldGuide.Category.EQUIPMENT?"Gear":category.tab;}
     private static int tabsY(GuideDesign d){return d==GuideDesign.TRAIL||d==GuideDesign.REFERENCE?96:80;}
     /** Paragraphs stay intact whenever they fit on a column. Long blocks alone may continue onto a following page. */
     public static List<List<Line>> reading(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n){
@@ -55,7 +56,15 @@ public final class GuideBookView {
         out.add(b("back",10,7,33,16,"Back",n.canBack()));out.add(b("home",47,7,37,16,"Home",n.page()!=HOME||n.listPage()>0));
         out.add(b("close",365,7,21,16,"X",true));out.add(b("clear",348,29,38,18,"Clear",!n.query().isEmpty()));
         if(d==GuideDesign.MANUAL){int i=0;for(var category:FieldGuide.Category.values())out.add(b("category:"+category.name(),14,66+i++*18,89,17,category.tab,true));}
-        if(d==GuideDesign.TRAIL||d==GuideDesign.REFERENCE){int i=0;for(var category:FieldGuide.Category.values())out.add(b("category:"+category.name(),14+i++*53,52,52,17,category==FieldGuide.Category.CREATURES?"Mobs":category==FieldGuide.Category.EQUIPMENT?"Gear":category==FieldGuide.Category.ARTIFACTS?"Finds":category==FieldGuide.Category.MODIFIERS?"Affixes":category.tab,true));}
+        if(d==GuideDesign.TRAIL||d==GuideDesign.REFERENCE){
+            var categories=FieldGuide.Category.values();int x=14;
+            int minimum=Arrays.stream(categories).mapToInt(category->c.textWidth(ribbonLabel(category))+8).sum();
+            int extra=Math.max(0,(372-minimum)/categories.length);
+            for(var category:categories){
+                String label=ribbonLabel(category);int w=c.textWidth(label)+8+extra;
+                out.add(b("category:"+category.name(),x,52,w,17,label,true));x+=w;
+            }
+        }
         if(d==GuideDesign.REFERENCE&&n.page()!=TOPICS){
             for(int i=0;i<8;i++){int index=n.listPage()*8+i;if(index>=n.results().size())break;out.add(b("row:"+i,14,76+i*15,146,14,n.results().get(index).title(),true));}
         }
@@ -164,7 +173,8 @@ public final class GuideBookView {
         if(n.page()==INDEX||d==GuideDesign.REFERENCE){String count=(n.listPage()+1)+" / "+n.listPages();c.text(count,d==GuideDesign.REFERENCE?53:59,208,MUTED);}
     }
     public static void drawControl(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n,FieldGuideView.Control b,boolean hover){
-        boolean selected=b.id().equals("section:"+n.section())||b.id().equals("category:"+(n.category()==null?"":n.category().name()));
+        var activeCategory=n.page()==ARTICLE&&n.selected()!=null?n.selected().category():n.category();
+        boolean selected=b.id().equals("section:"+n.section())||b.id().equals("category:"+(activeCategory==null?"":activeCategory.name()));
         int bg=hover&&b.enabled()?0xffd4c39a:selected?0xffd9c9a5:0xffe7d9b7;
         boolean toolbar=b.y()<27;
         c.fill(b.x(),b.y(),b.w(),b.h(),toolbar?(hover?0xff586b56:d.accent):bg);
