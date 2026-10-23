@@ -14,7 +14,7 @@ public final class FieldGuideScreen extends Screen {
     private final FieldGuideNavigation navigation;private final GuideDesign design;
     private final List<GuideBookButton> buttons=new ArrayList<>();
     private EditBox search;private int left,top;private boolean syncing,dirty,related;
-    public FieldGuideScreen(FieldGuideNavigation navigation){this(navigation,GuideDesign.JOURNAL);}
+    public FieldGuideScreen(FieldGuideNavigation navigation){this(navigation,GuideDesign.MANUAL);}
     public FieldGuideScreen(FieldGuideNavigation navigation,GuideDesign design){super(Component.literal(design.title));this.navigation=navigation;this.design=design;}
     public FieldGuideNavigation navigation(){return navigation;}
     public GuideDesign design(){return design;}
@@ -24,7 +24,7 @@ public final class FieldGuideScreen extends Screen {
         left=(width-GuideBookView.WIDTH)/2;top=(height-GuideBookView.HEIGHT)/2;buttons.clear();
         // Native white text on a dark inset avoids the old dark-text/drop-shadow overprint.
         search=new EditBox(font,left+20,top+34,316,11,Component.literal("Search the whole guide"));
-        search.setBordered(false);search.setTextColor(0xfff4efde);search.setTextColorUneditable(0xffc1c8bc);search.setMaxLength(128);search.setValue(navigation.query());search.setHint(Component.literal("Search the whole guide..."));
+        search.setBordered(false);search.setTextColor(0xfff4efde);search.setTextColorUneditable(0xffc1c8bc);search.setMaxLength(128);search.setValue(navigation.query());search.setHint(Component.empty());
         search.setResponder(value->{if(!syncing){navigation.query(value);related=false;dirty=true;}});addRenderableWidget(search);rebuildButtons();
     }
     private ExcavationScreenView.Canvas canvas(GuiGraphicsExtractor g){return new ExcavationScreenView.Canvas(){
@@ -50,7 +50,7 @@ public final class FieldGuideScreen extends Screen {
     }
     @Override public void tick(){super.tick();if(dirty)rebuildButtons();}
     @Override public void extractRenderState(GuiGraphicsExtractor g,int mouseX,int mouseY,float partialTick){
-        if(dirty)rebuildButtons();GuideBookView.draw(canvas(g),design,navigation,related);super.extractRenderState(g,mouseX,mouseY,partialTick);
+        if(dirty)rebuildButtons();GuideBookView.draw(canvas(g),design,navigation,related);if(search.getValue().isEmpty()&&!search.isFocused())canvas(g).text("Search the whole guide...",20,35,0xffc5cebf);super.extractRenderState(g,mouseX,mouseY,partialTick);
     }
     @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){if(dirty)rebuildButtons();return super.mouseClicked(event,doubleClick);}
     @Override public boolean mouseScrolled(double mouseX,double mouseY,double scrollX,double scrollY){

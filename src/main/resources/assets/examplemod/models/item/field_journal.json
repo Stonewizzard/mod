@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "examplemod:item/workshop_manual"
+    "layer0": "examplemod:item/field_journal"
   }
 }

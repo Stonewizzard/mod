@@ -10,13 +10,12 @@ public final class GuideBookView {
     private static final int INK=0xff332e26,MUTED=0xff675d4b,PAPER=0xfff0e4c4,RULE=0xffc4b38e;
     public record Region(int x,int y,int w,int h){}
     public record Line(String text,int x,int y){}
-    private static final String[] PATH={"sniffers","cruncher_egg","archaeology_table","reconstruction","modifier_basics","ascension"};
-    private static final String[] TASKS={"Find your first artifact","Hatch a Cruncher","Uncover a component","Build your first tool","Understand a modifier","Level and ascend"};
-    private static final String[] HINTS={"Sniffers and exposed debris","Egg stages and warped nylium","Tools, quality and recovery","Patterns, heads and handles","Values, tiers and grades","XP gates and material costs"};
+    private static final String[] PATH={"sniffers","archaeology_table","reconstruction","modifier_basics","influences","ascension"};
+    private static final String[] TASKS={"Find your first artifact","Uncover a component","Build your first tool","Understand modifiers","Customize your parts","Level and ascend"};
     private static FieldGuideView.Control b(String id,int x,int y,int w,int h,String label,boolean enabled){return new FieldGuideView.Control(id,x,y,w,h,label,enabled,"");}
     private static FieldGuideView.Control icon(String id,int x,int y,int w,int h,String label,String item){return new FieldGuideView.Control(id,x,y,w,h,label,true,item);}
     public static Region body(GuideDesign d,FieldGuideNavigation n){
-        int tabs=n.selected()==null?0:(n.selected().sections().size()+2)/3;
+        int tabs=n.selected()==null?0:(Math.min(7,n.selected().sections().size())+2)/3;
         int y=tabsY(d)+tabs*15;
         return switch(d){
             case MANUAL->new Region(116,y,262,198-y);
@@ -34,14 +33,19 @@ public final class GuideBookView {
         var pages=new ArrayList<List<Line>>();var page=new ArrayList<Line>();int col=0,row=0;
         var section=entry.sections().get(Math.min(n.section(),entry.sections().size()-1));
         for(String paragraph:section.paragraphs()){
-            var lines=FieldGuideView.wrap(c,List.of(paragraph),colWidth);
-            if(row>0&&row+lines.size()>rows){col++;row=0;}
-            if(col>=columns){pages.add(List.copyOf(page));page.clear();col=row=0;}
-            for(String line:lines){
-                if(row>=rows){col++;row=0;}if(col>=columns){pages.add(List.copyOf(page));page.clear();col=row=0;}
-                page.add(new Line(line,r.x()+col*(colWidth+gap),r.y()+row++*10));
+            var initial=FieldGuideView.wrap(c,List.of(paragraph),colWidth);
+            // A long description continues at a sentence boundary, avoiding fragments across the gutter.
+            var blocks=initial.size()>rows?List.of(paragraph.split("(?<=[.!?])\\s+")):List.of(paragraph);
+            for(String block:blocks){
+                var lines=FieldGuideView.wrap(c,List.of(block),colWidth);
+                if(row>0&&row+lines.size()>rows){col++;row=0;}
+                if(col>=columns){pages.add(List.copyOf(page));page.clear();col=row=0;}
+                for(String line:lines){
+                    if(row>=rows){col++;row=0;}if(col>=columns){pages.add(List.copyOf(page));page.clear();col=row=0;}
+                    page.add(new Line(line,r.x()+col*(colWidth+gap),r.y()+row++*10));
+                }
             }
-            row++; // a real paragraph gap, never printed as an orphaned line
+            if(!paragraph.matches("T\\d+:.*"))row++;
         }
         if(!page.isEmpty())pages.add(List.copyOf(page));return pages.isEmpty()?List.of(List.of()):List.copyOf(pages);
     }
@@ -51,7 +55,7 @@ public final class GuideBookView {
         out.add(b("back",10,7,33,16,"Back",n.canBack()));out.add(b("home",47,7,37,16,"Home",n.page()!=HOME));
         out.add(b("close",365,7,21,16,"X",true));out.add(b("clear",348,29,38,18,"Clear",!n.query().isEmpty()));
         if(d==GuideDesign.MANUAL){int i=0;for(var category:FieldGuide.Category.values())out.add(b("category:"+category.name(),14,66+i++*18,89,17,category.tab,true));}
-        if(d==GuideDesign.TRAIL||d==GuideDesign.REFERENCE){int i=0;for(var category:FieldGuide.Category.values())out.add(b("category:"+category.name(),14+i++*53,52,52,17,category.tab,true));}
+        if(d==GuideDesign.TRAIL||d==GuideDesign.REFERENCE){int i=0;for(var category:FieldGuide.Category.values())out.add(b("category:"+category.name(),14+i++*53,52,52,17,category==FieldGuide.Category.CREATURES?"Mobs":category==FieldGuide.Category.EQUIPMENT?"Gear":category==FieldGuide.Category.ARTIFACTS?"Finds":category==FieldGuide.Category.MODIFIERS?"Affixes":category.tab,true));}
         if(d==GuideDesign.REFERENCE&&n.page()!=TOPICS){
             for(int i=0;i<8;i++){int index=n.listPage()*8+i;if(index>=n.results().size())break;out.add(b("row:"+i,14,76+i*15,146,14,n.results().get(index).title(),true));}
         }
@@ -62,9 +66,16 @@ public final class GuideBookView {
                 for(int i=0;i<e.links().size();i++){var target=FieldGuide.entry(e.links().get(i));out.add(icon("link:"+i,d==GuideDesign.MANUAL?116:d==GuideDesign.REFERENCE?172:20,100+i*23,d==GuideDesign.MANUAL?262:d==GuideDesign.REFERENCE?208:356,21,target.title(),target.icon()));}
             }else{
                 int x=d==GuideDesign.MANUAL?116:d==GuideDesign.REFERENCE?172:20,w=d==GuideDesign.MANUAL?262:d==GuideDesign.REFERENCE?208:356;
-                for(int i=0;i<e.sections().size();i++){
-                    if(d==GuideDesign.ATLAS)out.add(b("section:"+i,20,85+i*16,116,15,e.sections().get(i).title(),true));
-                    else out.add(b("section:"+i,x+i%3*(w/3),tabsY(d)+i/3*15,w/3-2,14,e.sections().get(i).title(),true));
+                int count=e.sections().size(),first=count>7?(n.section()/6)*6:0;
+                int visible=count>7?Math.min(6,count-first):count;
+                for(int i=0;i<visible;i++){
+                    int index=first+i;
+                    if(d==GuideDesign.ATLAS)out.add(b("section:"+index,20,85+i*16,116,15,e.sections().get(index).title(),true));
+                    else out.add(b("section:"+index,x+i%3*(w/3),tabsY(d)+i/3*15,w/3-2,14,e.sections().get(index).title(),true));
+                }
+                if(count>7){int i=visible;
+                    if(d==GuideDesign.ATLAS)out.add(b("more_sections",20,85+i*16,116,15,"More >",true));
+                    else out.add(b("more_sections",x+i%3*(w/3),tabsY(d)+i/3*15,w/3-2,14,"More >",true));
                 }
                 int page=Math.min(n.articlePage(),pages(c,d,n)-1);
                 out.add(b("previous",d==GuideDesign.REFERENCE?172:20,204,28,14,"<",page>0));out.add(b("next",d==GuideDesign.REFERENCE?242:90,204,28,14,">",page+1<pages(c,d,n)));
@@ -75,7 +86,7 @@ public final class GuideBookView {
                 case JOURNAL->{
                     out.add(icon("welcome",22,88,165,29,"Start your first dig",FieldGuideView.categoryIcon(FieldGuide.Category.START)));
                     out.add(b("open:book_controls",22,161,165,21,"How to use this book",true));
-                    int i=0;for(var cat:FieldGuide.Category.values())out.add(icon("category:"+cat.name(),211,71+i++*19,164,18,cat.title,FieldGuideView.categoryIcon(cat)));
+                    int i=0;for(var cat:FieldGuide.Category.values())out.add(icon("category:"+cat.name(),211,71+i++*19,164,18,cat==FieldGuide.Category.START?"Getting started":cat.tab,FieldGuideView.categoryIcon(cat)));
                 }
                 case MANUAL->{for(int i=0;i<6;i++)out.add(icon("open:"+PATH[i],116,80+i*19,262,18,TASKS[i],FieldGuide.entry(PATH[i]).icon()));}
                 case TRAIL->{for(int i=0;i<6;i++)out.add(icon("open:"+PATH[i],20+(i%2)*181,91+(i/2)*35,175,32,(i+1)+". "+TASKS[i],FieldGuide.entry(PATH[i]).icon()));}
@@ -99,16 +110,25 @@ public final class GuideBookView {
         return List.copyOf(out);
     }
     public static void activate(String id,GuideDesign d,FieldGuideNavigation n,ExcavationScreenView.Canvas measure){
+        if(id.equals("more_sections")){int next=(n.section()/6+1)*6;n.section(next<n.selected().sections().size()?next:0);return;}
         if(id.equals("topics")){n.category(FieldGuide.Category.MODIFIERS);return;}
         if(id.startsWith("open:")){n.open(id.substring(5));return;}
         if(id.startsWith("section:")){n.section(Integer.parseInt(id.substring(8)));return;}
         if(id.equals("list_previous")||id.equals("list_next")){n.listPage(id.equals("list_next")?1:-1);return;}
         if(id.equals("previous")||id.equals("next")){n.turnPage(id.equals("next")?1:-1,pages(measure,d,n));return;}
-        FieldGuideView.activate(id,n,measure);
+        switch(id){
+            case "back"->n.back();case "home","clear"->n.home();case "welcome"->n.open("welcome");
+            default->{
+                if(id.startsWith("category:"))n.category(FieldGuide.Category.valueOf(id.substring(9)));
+                else if(id.startsWith("group:"))n.group(FieldGuide.Group.valueOf(id.substring(6)));
+                else if(id.startsWith("row:"))n.selectRow(Integer.parseInt(id.substring(4)));
+                else if(id.startsWith("link:")&&n.selected()!=null)n.open(n.selected().links().get(Integer.parseInt(id.substring(5))));
+            }
+        }
     }
     public static void draw(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n,boolean related){
         // Quiet page surfaces, pixel edges and a restrained leather frame. No decoration beneath body text.
-        c.fill(0,3,WIDTH,HEIGHT-6,0xff211c19);c.fill(2,1,WIDTH-4,HEIGHT-2,d.accent);c.fill(6,25,WIDTH-12,HEIGHT-31,0xffb19b71);c.fill(9,27,WIDTH-18,HEIGHT-37,PAPER);
+        c.fill(0,3,WIDTH,HEIGHT-6,0xff211c19);c.fill(2,1,WIDTH-4,HEIGHT-2,d.accent);c.fill(6,25,WIDTH-12,HEIGHT-29,0xffb19b71);c.fill(9,27,WIDTH-18,HEIGHT-32,PAPER);
         c.fill(14,29,330,18,0xff27352f);c.fill(15,30,328,1,0xff151e19);
         c.text(d.title,(WIDTH-c.textWidth(d.title))/2,11,0xfff8efda);
         if(d==GuideDesign.JOURNAL){int gutter=n.page()==ARTICLE?body(d,n).y():52;c.fill(196,gutter,2,199-gutter,0xffd2c19b);c.fill(198,gutter,1,199-gutter,0xffe4d4b2);}

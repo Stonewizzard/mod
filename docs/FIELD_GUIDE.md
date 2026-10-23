@@ -1,14 +1,10 @@
 # Ancient Field Guide
 
-Craft a normal book and one paper together, or find the guide in the creative tab. Right-click to read. Home opens an illustrated contents page. Pick a category, then an article. Modifiers has a separate topic index. Search always looks through the entire guide, including article text, modifier IDs and keywords. Clear search with its X. Read across both pages; arrows and mouse wheel turn reading spreads or list pages. Related links sit below articles. Back restores the previous view and search; Escape closes the book. Your place is remembered for the play session. Native Minecraft buttons support primary mouse clicks and keyboard focus/activation.
+All five comparison editions share the chapters and live modifier reference below. Craft a book and one paper for the Workshop Manual; the creative tab offers the three review finalists. Right-click a book to read. Global search, named article sections, related links, Back, mouse-wheel pagination and native keyboard focus are shared. Each edition remembers its own place during the session.
 
-Actual rolled values, scaling grades, value tiers and quality remain on item tooltips. Hold Shift and scroll over a reconstructed tool tooltip to browse its modifier pages. The book explains definitions and systems without reading or changing an item.
+Modifier entries open with their Effect; Value tiers, Growth and Resources are separate sections. Actual rolls stay on equipment tooltips. Reading changes no items. See [the design plan](FIVE_BOOK_DESIGN_PLAN.md), [the review](FIVE_BOOK_REVIEW.md), and [the authoring guide](GUIDEBOOK_AUTHORING.md).
 
-The Appraisal Table and its remaining compatibility registrations are removed.
-
-## Design references
-
-The category-first contents and page navigation were informed by [Lexica Botania](https://botaniamod.net/lexicon.html) and [Materials and You](https://slimeknights.github.io/docs/books/1.20/materials-and-you/). The book interface and 32-pixel teal/brass field-guide icon are original assets; no dependency or copied book textures are required.
+The visual direction draws on the familiar category browsing of Lexica Botania and Materials and You, with original presentation code and newly generated inventory icons. No book dependency or copied mod textures is required.
 
 ## Contents
 
@@ -46,7 +42,7 @@ The category-first contents and page navigation were informed by [Lexica Botania
 
 ## Start your first excavation
 
-Ancient Discoveries follows the remains of an accomplished civilization of crafters and smiths. Recover buried artifacts, carefully uncover useful parts, reconstruct equipment and shape its modifiers.
+Hatch a Sniffer and expose ancient debris. Bring its artifact to an Archaeology Table. Uncover a component, then use a Reconstruction Table to assemble equipment.
 
 Start with a Sniffer. Expose ancient debris on a walkable surface for it to investigate. Its finds lead to artifacts and, occasionally, a Cruncher egg.
 
@@ -60,7 +56,7 @@ This book contains general knowledge. Your item tooltips show the values actuall
 
 ## Using this field guide
 
-Craft a book with one paper for the Field Journal. Workshop Manual and Trail Guide are comparison editions in the creative tab; all editions contain the same information.
+Craft a normal book with one paper for the Workshop Manual. Trail Guide and Relic Atlas are alternative editions beside it in the creative tab. All editions contain the same information.
 
 Home opens this edition's contents. Categories cover creatures, artifacts, excavation, equipment and customization stations. Modifiers opens a topic index.
 

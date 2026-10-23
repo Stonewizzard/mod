@@ -143,8 +143,9 @@ def run():
             if observe().get('focus')=='close':break
         expect(focus='close')
         process('xdotool','key','Return');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','keyboard Close')
-        process('xdotool','windowsize',WINDOW,'1280','720');command('gui_scale',value=3)
-        wait_for(lambda s:s.get('windowWidth')==1280 and s.get('windowHeight')==720,'normal window')
+        process('xdotool','windowsize',WINDOW,'1280','720')
+        wait_for(lambda s:s.get('windowWidth')==1280 and s.get('windowHeight')==720,'normal window');command('gui_scale',value=3)
+        wait_for(lambda s:s.get('guiScale')==3,'normal GUI scale')
         print('FIVE_BOOK_NATIVE_PASS: '+design+'; actual item opening, categories, sections, related/history, global search, no matches, topics, small window, bookmarks and keyboard',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
     print('CLIENT_VISUAL_QA_PASS: all five book items and OS input task paths',flush=True)

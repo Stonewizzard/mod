@@ -10,6 +10,7 @@ vulkaninfo --summary >build/client-qa/vulkan.txt 2>&1 || true
 rm -f build/client-qa/state.json build/client-qa/command.json
 cat > run/visual-qa/options.txt <<'EOF'
 onboardAccessibility:false
+tutorialStep:none
 startedCleanly:true
 narrator:0
 guiScale:3

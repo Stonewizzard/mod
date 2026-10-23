@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.*;
 /** One native widget per painted control; narration uses the full, unabridged label. */
-final class GuideBookButton extends Button {
+class GuideBookButton extends Button {
     final FieldGuideView.Control control;
     private final GuideDesign design;private final FieldGuideNavigation navigation;
     private final Function<GuiGraphicsExtractor,ExcavationScreenView.Canvas> canvas;

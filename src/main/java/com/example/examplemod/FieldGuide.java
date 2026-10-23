@@ -61,10 +61,19 @@ public final class FieldGuide {
             if(trait.growth==PickaxeTrait.Growth.NUMERIC)lines.add("Grade growth is relative to base. F/D/C/B/A/S add 6/10/15/22/32/45% per ascension and 0.05/0.10/0.15/0.25/0.35/0.50% per selected level.");
             var effect=new ArrayList<String>();effect.add(lines.get(0));effect.add(lines.get(1));
             effect.add(trait.growth==PickaxeTrait.Growth.NUMERIC?"Combined limit: "+PickaxeTooltips.value(trait,trait.cap)+".":"A staged perk, unlocked through ascension. See Growth for milestones.");
-            var rolls=new ArrayList<String>();rolls.add(lines.get(2));
+            var tiers=new ArrayList<String>();var odds=new ArrayList<String>();
+            odds.add(lines.get(2));odds.add("Tier weights are relative chances. C / U / R / E / L / Unique means Common / Uncommon / Rare / Epic / Legendary / Unique.");
+            if(trait.unit==PickaxeTrait.Unit.PERK)tiers.add("This modifier unlocks perk stages rather than rolling numeric value bands. Open Growth for stage milestones.");
+            else {
+                tiers.add("Base at 100% quality. T1 is strongest.");
+                for(var tier:spec.tiers()){
+                    tiers.add("T"+tier.rank()+": "+PickaxeTooltips.value(trait,tier.minimum()*trait.power)+" to "+PickaxeTooltips.value(trait,tier.maximum()*trait.power));
+                    odds.add("T"+tier.rank()+": "+tier.rarityWeights().stream().map(Object::toString).collect(java.util.stream.Collectors.joining(" / ")));
+                }
+            }
             var growth=new ArrayList<String>();var resources=new ArrayList<String>();
-            for(int k=3;k<lines.size();k++){String line=lines.get(k);if(line.startsWith("T")||line.startsWith("Value tiers"))rolls.add(line);else if(line.startsWith("Ascension resource"))resources.add(line);else if(!line.startsWith("Combined cap"))growth.add(line);}
-            var sections=List.of(new Section("Effect",effect),new Section("Value tiers",rolls),new Section("Growth",growth),new Section("Resources",resources));
+            for(int k=3;k<lines.size();k++){String line=lines.get(k);if(line.startsWith("T")||line.startsWith("Value tiers"))continue;else if(line.startsWith("Ascension resource"))resources.add(line);else if(!line.startsWith("Combined cap"))growth.add(line);}
+            var sections=List.of(new Section("Effect",effect),new Section("Value tiers",tiers),new Section("Growth",growth),new Section("Resources",resources),new Section("Roll odds",odds));
             result.add(new Entry(trait.id,Category.MODIFIERS,group(trait),trait.label,"examplemod:restored_ancient_pickaxe",lines,List.of("modifier_basics","scaling_and_quality","influences","ascension"),trait.name()+" "+PickaxeTooltips.label(trait)+" "+(trait==PickaxeTrait.SPEED?"efficiency haste ":"")+trait.family.name()+" "+spec.influence().label,sections));
         }return List.copyOf(result);
     }
