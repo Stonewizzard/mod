@@ -11,15 +11,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
 public final class FieldGuideScreen extends Screen {
-    private final FieldGuideNavigation navigation;
-    private final List<FieldGuideButton> buttons=new ArrayList<>();
-    private EditBox search;private int left,top;private boolean syncing,dirty;
-    public FieldGuideScreen(FieldGuideNavigation navigation){super(Component.literal("Ancient Field Guide"));this.navigation=navigation;}
+    private final FieldGuideNavigation navigation;private final GuideDesign design;
+    private final List<GuideBookButton> buttons=new ArrayList<>();
+    private EditBox search;private int left,top;private boolean syncing,dirty,related;
+    public FieldGuideScreen(FieldGuideNavigation navigation){this(navigation,GuideDesign.JOURNAL);}
+    public FieldGuideScreen(FieldGuideNavigation navigation,GuideDesign design){super(Component.literal(design.title));this.navigation=navigation;this.design=design;}
+    public FieldGuideNavigation navigation(){return navigation;}
+    public GuideDesign design(){return design;}
+    public boolean related(){return related;}
+    public List<FieldGuideView.Control> controls(){return GuideBookView.controls(canvas(null),design,navigation,related);}
     @Override protected void init(){
-        left=(width-FieldGuideView.WIDTH)/2;top=(height-FieldGuideView.HEIGHT)/2;buttons.clear();
-        search=new EditBox(font,left+21,top+36,262,12,Component.literal("Search all guide entries"));
-        search.setBordered(false);search.setTextColor(0xff443b2d);search.setTextColorUneditable(0xff76634a);search.setMaxLength(128);search.setValue(navigation.query());search.setHint(Component.literal("Search all entries..."));
-        search.setResponder(value->{if(!syncing){navigation.query(value);dirty=true;}});addRenderableWidget(search);rebuildButtons();
+        left=(width-GuideBookView.WIDTH)/2;top=(height-GuideBookView.HEIGHT)/2;buttons.clear();
+        // Native white text on a dark inset avoids the old dark-text/drop-shadow overprint.
+        search=new EditBox(font,left+20,top+34,316,11,Component.literal("Search the whole guide"));
+        search.setBordered(false);search.setTextColor(0xfff4efde);search.setTextColorUneditable(0xffc1c8bc);search.setMaxLength(128);search.setValue(navigation.query());search.setHint(Component.literal("Search the whole guide..."));
+        search.setResponder(value->{if(!syncing){navigation.query(value);related=false;dirty=true;}});addRenderableWidget(search);rebuildButtons();
     }
     private ExcavationScreenView.Canvas canvas(GuiGraphicsExtractor g){return new ExcavationScreenView.Canvas(){
         @Override public void fill(int x,int y,int w,int h,int color){g.fill(left+x,top+y,left+x+w,top+y+h,color);}
@@ -28,13 +34,14 @@ public final class FieldGuideScreen extends Screen {
         @Override public int textWidth(String text){return font.width(text);}
     };}
     private void rebuildButtons(){
-        String focused=getFocused() instanceof FieldGuideButton b?b.control.id():"";
-        if(getFocused() instanceof FieldGuideButton)setFocused(null);
+        String focused=getFocused() instanceof GuideBookButton b?b.control.id():"";
+        if(getFocused() instanceof GuideBookButton)setFocused(null);
         for(var button:buttons)removeWidget(button);buttons.clear();
-        for(var control:FieldGuideView.controls(canvas(null),navigation)){
-            var button=new FieldGuideButton(control,left,top,()->{
+        for(var control:controls()){
+            var button=new GuideBookButton(control,left,top,design,navigation,()->{
                 if(control.id().equals("close")){onClose();return;}
-                FieldGuideView.activate(control.id(),navigation,canvas(null));
+                if(control.id().equals("related"))related=!related;
+                else {GuideBookView.activate(control.id(),design,navigation,canvas(null));related=false;}
                 syncing=true;search.setValue(navigation.query());syncing=false;dirty=true;
             },this::canvas);
             buttons.add(button);addRenderableWidget(button);if(control.id().equals(focused)&&button.active)setFocused(button);
@@ -43,15 +50,13 @@ public final class FieldGuideScreen extends Screen {
     }
     @Override public void tick(){super.tick();if(dirty)rebuildButtons();}
     @Override public void extractRenderState(GuiGraphicsExtractor g,int mouseX,int mouseY,float partialTick){
-        if(dirty)rebuildButtons();FieldGuideView.draw(canvas(g),navigation);super.extractRenderState(g,mouseX,mouseY,partialTick);
+        if(dirty)rebuildButtons();GuideBookView.draw(canvas(g),design,navigation,related);super.extractRenderState(g,mouseX,mouseY,partialTick);
     }
-    @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){
-        if(dirty)rebuildButtons();return super.mouseClicked(event,doubleClick);
-    }
+    @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){if(dirty)rebuildButtons();return super.mouseClicked(event,doubleClick);}
     @Override public boolean mouseScrolled(double mouseX,double mouseY,double scrollX,double scrollY){
-        if(scrollY==0||!FieldGuideView.inside(mouseX-left,mouseY-top,12,55,296,154))return super.mouseScrolled(mouseX,mouseY,scrollX,scrollY);
+        if(scrollY==0||!FieldGuideView.inside(mouseX-left,mouseY-top,12,71,372,130))return super.mouseScrolled(mouseX,mouseY,scrollX,scrollY);
         int direction=scrollY>0?-1:1;
-        if(navigation.page()==FieldGuideNavigation.Page.ARTICLE)navigation.turnPage(direction,FieldGuideView.pages(canvas(null),navigation.selected()));
+        if(navigation.page()==FieldGuideNavigation.Page.ARTICLE&&!related)navigation.turnPage(direction,GuideBookView.pages(canvas(null),design,navigation));
         else if(navigation.page()==FieldGuideNavigation.Page.INDEX)navigation.listPage(direction);else return false;
         dirty=true;return true;
     }

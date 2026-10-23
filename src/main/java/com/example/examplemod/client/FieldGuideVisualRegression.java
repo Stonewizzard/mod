@@ -8,6 +8,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 public final class FieldGuideVisualRegression {
     public static void run(ResourceManager resources)throws Exception{
         java.awt.image.BufferedImage font;try(var input=resources.getResourceOrThrow(Identifier.withDefaultNamespace("textures/font/ascii.png")).open()){font=ImageIO.read(input);}
+        GuideBookRegression.run(font);
         int scenes=0;var preview=new com.google.gson.JsonArray();
         var home=new FieldGuideNavigation();var homeCanvas=new ExcavationVisualRegression.RecordingCanvas(font,320,228);
         draw(homeCanvas,home);addPreview(preview,"contents",homeCanvas);

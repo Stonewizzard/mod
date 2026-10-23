@@ -70,7 +70,12 @@ def generate():
  yield ROOT/'docs/MODIFIER_REWARD_REVIEW.md',''.join(review)
  chapters=json.loads((ROOT/'tools/field-guide.json').read_text(encoding="utf-8"))
  for c in chapters:
-  c['paragraphs']=list(c['paragraphs'])
+  assert c.get('sections'), 'Guide chapter needs named sections: '+c['id']
+  assert len({s['title'] for s in c['sections']})==len(c['sections']), 'Duplicate section name'
+  assert all(s['title'].strip() and s['paragraphs'] and all(p.strip() for p in s['paragraphs']) for s in c['sections']), 'Empty guide section'
+  c['sections']=[dict(s,paragraphs=list(s['paragraphs'])) for s in c['sections']]
+  c['paragraphs']=[p for s in c['sections'] for p in s['paragraphs']]
+  recipe_start=len(c['paragraphs'])
   for recipe_id in c.get('recipes',[]):
    recipe=json.loads((ROOT/'src/main/resources/data/examplemod/recipe'/f'{recipe_id}.json').read_text(encoding="utf-8"))
    readable=lambda key:('any ' if key.startswith('#') else '')+key.lstrip('#').split(':')[-1].replace('_',' ')
@@ -81,12 +86,13 @@ def generate():
     c['paragraphs'].append('Craft '+title+': grid rows '+pattern+'. A dot means an empty cell. '+legend+'.')
    elif recipe['type']=='minecraft:crafting_shapeless':c['paragraphs'].append('Craft '+title+': '+' + '.join(readable(value) for value in recipe['ingredients'])+', in any arrangement.')
    else:raise ValueError('Unsupported guide recipe: '+recipe_id)
+  if len(c['paragraphs'])>recipe_start:c['sections'].append({'title':'Recipe','paragraphs':c['paragraphs'][recipe_start:]})
  ids={r['id'] for r in chapters}|{'examplemod:'+r['id'] for r in ROWS}
  assert all(len(c['links'])<=4 for c in chapters),"Guide related links must fit their page"
  assert len(ids)==len(chapters)+len(ROWS),"Guide entry IDs must be unique"
  assert all(link in ids for chapter in chapters for link in chapter['links']),"Broken guidebook cross-reference"
  lines=['package com.example.examplemod;','import java.util.List;','/** Generated from tools/field-guide.json. */','final class FieldGuideChapters {','    static List<FieldGuide.Entry> entries(){return List.of(']
- for i,c in enumerate(chapters):lines.append('        new FieldGuide.Entry(%s,FieldGuide.Category.%s,FieldGuide.Group.ALL,%s,%s,List.of(%s),List.of(%s),%s)%s'%(q(c['id']),c['category'],q(c['title']),q(c['icon']),','.join(q(p) for p in c['paragraphs']),','.join(q(p) for p in c['links']),q(c['keywords']),',' if i<len(chapters)-1 else ''))
+ for i,c in enumerate(chapters):lines.append('        new FieldGuide.Entry(%s,FieldGuide.Category.%s,FieldGuide.Group.ALL,%s,%s,List.of(%s),List.of(%s),%s,List.of(%s))%s'%(q(c['id']),c['category'],q(c['title']),q(c['icon']),','.join(q(p) for p in c['paragraphs']),','.join(q(p) for p in c['links']),q(c['keywords']),','.join('new FieldGuide.Section(%s,List.of(%s))'%(q(section['title']),','.join(q(p) for p in section['paragraphs'])) for section in c['sections']),',' if i<len(chapters)-1 else ''))
  lines+=['    );}','    private FieldGuideChapters(){}','}']
  yield JAVA/'FieldGuideChapters.java','\n'.join(lines)+'\n'
  guide=['# Ancient Field Guide\n\nCraft a normal book and one paper together, or find the guide in the creative tab. Right-click to read. Home opens an illustrated contents page. Pick a category, then an article. Modifiers has a separate topic index. Search always looks through the entire guide, including article text, modifier IDs and keywords. Clear search with its X. Read across both pages; arrows and mouse wheel turn reading spreads or list pages. Related links sit below articles. Back restores the previous view and search; Escape closes the book. Your place is remembered for the play session. Native Minecraft buttons support primary mouse clicks and keyboard focus/activation.\n\nActual rolled values, scaling grades, value tiers and quality remain on item tooltips. Hold Shift and scroll over a reconstructed tool tooltip to browse its modifier pages. The book explains definitions and systems without reading or changing an item.\n\nThe Appraisal Table and its remaining compatibility registrations are removed.\n\n## Design references\n\nThe category-first contents and page navigation were informed by [Lexica Botania](https://botaniamod.net/lexicon.html) and [Materials and You](https://slimeknights.github.io/docs/books/1.20/materials-and-you/). The book interface and 32-pixel teal/brass field-guide icon are original assets; no dependency or copied book textures are required.\n\n## Contents\n\n']

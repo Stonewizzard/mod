@@ -13,8 +13,12 @@ public final class FieldGuide {
         ALL("All topics"),SPEED("Mining speed"),HARVEST("Loot and experience"),AREA("Area mining"),RESONANCE("Resonance"),SURVIVAL("Survival"),UTILITY("Universal parts"),NETHER("Nether influence"),END("End influence");
         public final String label;Group(String label){this.label=label;}
     }
-    public record Entry(String id,Category category,Group group,String title,String icon,List<String> paragraphs,List<String> links,String keywords){
-        public Entry {paragraphs=List.copyOf(paragraphs);links=List.copyOf(links);}
+    public record Section(String title,List<String> paragraphs){
+        public Section {if(title.isBlank()||paragraphs.isEmpty())throw new IllegalArgumentException("Empty guide section");paragraphs=List.copyOf(paragraphs);}
+    }
+    public record Entry(String id,Category category,Group group,String title,String icon,List<String> paragraphs,List<String> links,String keywords,List<Section> sections){
+        public Entry(String id,Category category,Group group,String title,String icon,List<String> paragraphs,List<String> links,String keywords){this(id,category,group,title,icon,paragraphs,links,keywords,List.of(new Section("Overview",paragraphs)));}
+        public Entry {paragraphs=List.copyOf(paragraphs);links=List.copyOf(links);sections=List.copyOf(sections);if(sections.isEmpty())throw new IllegalArgumentException("Guide entry needs sections");}
         String searchable(){return normalize(title+" "+category.title+" "+group.label+" "+id+" "+keywords+" "+String.join(" ",paragraphs));}
     }
     private static final class Library {
@@ -55,7 +59,13 @@ public final class FieldGuide {
             if(trait.unit!=PickaxeTrait.Unit.PERK)for(var tier:spec.tiers())lines.add("T"+tier.rank()+": "+PickaxeTooltips.value(trait,tier.minimum()*trait.power)+" to "+PickaxeTooltips.value(trait,tier.maximum()*trait.power)+". Rarity weights C/U/R/E/L/Unique: "+tier.rarityWeights().stream().map(Object::toString).collect(java.util.stream.Collectors.joining("/"))+".");
             var material=AscensionResources.BINDINGS.get(trait);lines.add("Ascension resource: "+net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(material.item()).getPath().replace('_',' ')+". Cost per occurrence: "+material.baseCount()+" times the upcoming ascension number. Repeated resources combine.");
             if(trait.growth==PickaxeTrait.Growth.NUMERIC)lines.add("Grade growth is relative to base. F/D/C/B/A/S add 6/10/15/22/32/45% per ascension and 0.05/0.10/0.15/0.25/0.35/0.50% per selected level.");
-            result.add(new Entry(trait.id,Category.MODIFIERS,group(trait),trait.label,"examplemod:restored_ancient_pickaxe",lines,List.of("modifier_basics","scaling_and_quality","influences","ascension"),trait.name()+" "+PickaxeTooltips.label(trait)+" "+(trait==PickaxeTrait.SPEED?"efficiency haste ":"")+trait.family.name()+" "+spec.influence().label));
+            var effect=new ArrayList<String>();effect.add(lines.get(0));effect.add(lines.get(1));
+            effect.add(trait.growth==PickaxeTrait.Growth.NUMERIC?"Combined limit: "+PickaxeTooltips.value(trait,trait.cap)+".":"A staged perk, unlocked through ascension. See Growth for milestones.");
+            var rolls=new ArrayList<String>();rolls.add(lines.get(2));
+            var growth=new ArrayList<String>();var resources=new ArrayList<String>();
+            for(int k=3;k<lines.size();k++){String line=lines.get(k);if(line.startsWith("T")||line.startsWith("Value tiers"))rolls.add(line);else if(line.startsWith("Ascension resource"))resources.add(line);else if(!line.startsWith("Combined cap"))growth.add(line);}
+            var sections=List.of(new Section("Effect",effect),new Section("Value tiers",rolls),new Section("Growth",growth),new Section("Resources",resources));
+            result.add(new Entry(trait.id,Category.MODIFIERS,group(trait),trait.label,"examplemod:restored_ancient_pickaxe",lines,List.of("modifier_basics","scaling_and_quality","influences","ascension"),trait.name()+" "+PickaxeTooltips.label(trait)+" "+(trait==PickaxeTrait.SPEED?"efficiency haste ":"")+trait.family.name()+" "+spec.influence().label,sections));
         }return List.copyOf(result);
     }
     private static Group group(PickaxeTrait trait){
