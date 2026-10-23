@@ -53,6 +53,15 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        clientVisualQa {
+            client()
+            gameDirectory = project.file('run/visual-qa')
+            systemProperty 'examplemod.clientVisualQa', 'true'
+            systemProperty 'examplemod.clientQaDirectory', file('build/client-qa').getAbsolutePath()
+            programArguments.addAll '--width', '1280', '--height', '720'
+            logLevel = org.slf4j.event.Level.INFO
+        }
+
         sculkRenderCheck {
             clientData()
             systemProperty 'examplemod.sculkRenderCheck', 'true'
@@ -199,3 +208,8 @@ neoForge.runs.named('sculkRenderCheck') {
     logLevel = org.slf4j.event.Level.INFO
 }
 
+
+// This launches a full graphical client; it is separate from datagen/layout checks.
+neoForge.runs.named('clientVisualQa') {
+    logLevel = org.slf4j.event.Level.INFO
+}

@@ -320,3 +320,10 @@ Rolled modifier values, grades, tiers and quality remain on recovered-component 
 The Appraisal Table and its remaining compatibility registrations have been removed. The portable guide has its own teal-and-brass pixel-art book icon.
 
 See [the field guide](docs/FIELD_GUIDE.md), [all 120 modifiers](docs/PICKAXE_MODIFIERS.md) and [the reward review](docs/MODIFIER_REWARD_REVIEW.md).
+
+
+## Testing the actual Minecraft interface
+
+[Real-client visual QA](docs/REAL_CLIENT_QA.md) launches Minecraft in a virtual display, sends real OS mouse/keyboard input and captures screenshots and video. Layout/datagen checks validate structure; visual review of the actual client is required before approving a UI. The first pilot covers the field guide with newcomer, returning-player and equipment-builder task paths.
+
+The [initial in-game book review](docs/BOOK_VISUAL_BASELINE.md) includes actual screenshots and separates functional success from visual/usability problems that remain to be redesigned.
