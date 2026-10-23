@@ -69,12 +69,12 @@ public final class ClientVisualQa {
                 state.addProperty("page",navigation.page().name());state.addProperty("query",navigation.query());state.addProperty("articlePage",navigation.articlePage());state.addProperty("listPage",navigation.listPage());
                 state.addProperty("selected",navigation.selected()==null?"":navigation.selected().id());state.addProperty("results",navigation.results().size());
                 state.addProperty("category",navigation.category()==null?"":navigation.category().name());state.addProperty("group",navigation.group().name());
-                var controls=new JsonArray();int left=(screen.width-GuideBookView.WIDTH)/2,top=(screen.height-GuideBookView.HEIGHT)/2;
-                for(var c:book.controls()){
+                var controls=new JsonArray();
+                for(var c:book.liveControls()){
                     var b=new JsonObject();b.addProperty("id",c.id());b.addProperty("label",c.label());b.addProperty("enabled",c.enabled());
-                    b.addProperty("x",left+c.x());b.addProperty("y",top+c.y());b.addProperty("width",c.w());b.addProperty("height",c.h());controls.add(b);
+                    b.addProperty("x",c.x());b.addProperty("y",c.y());b.addProperty("width",c.w());b.addProperty("height",c.h());controls.add(b);
                 }
-                state.add("controls",controls);state.addProperty("searchX",left+100);state.addProperty("searchY",top+38);
+                state.add("controls",controls);state.addProperty("searchX",book.searchX());state.addProperty("searchY",book.searchY());
             }
             Path temporary=DIRECTORY.resolve("state.tmp");Files.writeString(temporary,JSON.toJson(state),StandardCharsets.UTF_8);
             Files.move(temporary,DIRECTORY.resolve("state.json"),StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE);

@@ -2,7 +2,7 @@
 
 ## One library, five presentations
 
-`tools/field-guide.json` is the source for authored chapters. `FieldGuide` adds modifier entries from the same catalog, descriptions, stage tuning and resource bindings used by gameplay. `FieldGuideNavigation` owns search, history, selected section and pagination. `GuideBookView` presents this state in the five editions; `FieldGuideScreen` creates one native Minecraft button per visible control. Reading never reads or mutates a player's rolled equipment.
+`tools/field-guide.json` is the source for authored chapters. `FieldGuide` adds modifier entries from the same catalog, descriptions, stage tuning and resource bindings used by gameplay. `FieldGuideNavigation` owns search, history, selected section and pagination. `GuideBookView` presents this state in the five editions; `FieldGuideScreen` creates one native Minecraft button per visible control. It fits the layout horizontally at narrow GUI widths, with normal-size text and matching measured wrapping and native input bounds. Reading never reads or mutates a player's rolled equipment.
 
 To add a chapter, append an object:
 

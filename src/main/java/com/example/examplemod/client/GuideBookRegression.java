@@ -4,7 +4,9 @@ import java.util.*;
 /** Structural checks complement (and never substitute for) real-window screenshot review. */
 final class GuideBookRegression {
     static void run(java.awt.image.BufferedImage font){
-        var measure=new ExcavationVisualRegression.RecordingCanvas(font,396,224);int count=0;
+        var nativeFont=new ExcavationVisualRegression.RecordingCanvas(font,396,224);int count=0;
+        for(double scale:new double[]{1,312.0/396}){
+        var measure=new FitMeasure(nativeFont,scale);
         for(var design:GuideDesign.values()){
             var n=new FieldGuideNavigation();check(measure,design,n,false);
             for(var category:FieldGuide.Category.values()){n.category(category);check(measure,design,n,false);}
@@ -22,7 +24,14 @@ final class GuideBookRegression {
             }
             n.query("zzzznotpresentzzzz");check(measure,design,n,false);
         }
-        System.out.println("FIVE_BOOK_LAYOUT_CHECK: PASS: "+count+" sections, five designs, every entry, categories, topics, empty search, body bounds and control overlap");
+        }
+        System.out.println("FIVE_BOOK_LAYOUT_CHECK: PASS: "+count+" sections, five designs at full and minimum GUI widths, every entry, categories, topics, empty search, body bounds and control overlap");
+    }
+    private record FitMeasure(ExcavationScreenView.Canvas nativeFont,double scale) implements ExcavationScreenView.Canvas {
+        @Override public int textWidth(String text){return (int)Math.ceil(nativeFont.textWidth(text)/scale);}
+        @Override public void fill(int x,int y,int w,int h,int color){throw new UnsupportedOperationException();}
+        @Override public void texture(net.minecraft.resources.Identifier id,int x,int y,int w,int h,float u,float v,int sw,int sh,int tw,int th,int color){throw new UnsupportedOperationException();}
+        @Override public void text(String text,int x,int y,int color){throw new UnsupportedOperationException();}
     }
     private static void check(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n,boolean related){
         var controls=GuideBookView.controls(c,d,n,related);var ids=new HashSet<String>();

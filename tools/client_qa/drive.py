@@ -138,6 +138,11 @@ def run():
         command('gui_scale',value=2);process('xdotool','windowsize',WINDOW,'854','480')
         wait_for(lambda s:s.get('windowWidth')==854 and s.get('windowHeight')==480,'small window');capture(design.lower()+'-small')
         click('home');capture(design.lower()+'-small-home')
+        process('xdotool','windowsize',WINDOW,'640','480')
+        wait_for(lambda s:s.get('windowWidth')==640 and s.get('guiWidth')==320,'minimum GUI width')
+        capture(design.lower()+'-narrow-home')
+        click('category:EXCAVATION');click('row:0');capture(design.lower()+'-narrow')
+        click('home')
         # Actual Tab + Return activation of native Close, and session bookmark reopening.
         click('category:EXCAVATION');click('row:0');click('section:3')
         process('xdotool','key','Escape');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','Escape closing book')

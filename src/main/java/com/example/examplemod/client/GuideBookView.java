@@ -25,6 +25,7 @@ public final class GuideBookView {
         };
     }
     private static String ribbonLabel(FieldGuide.Category category){return category==FieldGuide.Category.CREATURES?"Mobs":category==FieldGuide.Category.EQUIPMENT?"Gear":category.tab;}
+    private static String compactRibbonLabel(FieldGuide.Category category){return switch(category){case CREATURES->"Mobs";case ARTIFACTS->"Relics";case EXCAVATION->"Dig";case EQUIPMENT->"Gear";case MODIFIERS->"Mods";default->category.tab;};}
     private static int tabsY(GuideDesign d){return d==GuideDesign.TRAIL||d==GuideDesign.REFERENCE?96:80;}
     /** Paragraphs stay intact whenever they fit on a column. Long blocks alone may continue onto a following page. */
     public static List<List<Line>> reading(ExcavationScreenView.Canvas c,GuideDesign d,FieldGuideNavigation n){
@@ -59,9 +60,11 @@ public final class GuideBookView {
         if(d==GuideDesign.TRAIL||d==GuideDesign.REFERENCE){
             var categories=FieldGuide.Category.values();int x=14;
             int minimum=Arrays.stream(categories).mapToInt(category->c.textWidth(ribbonLabel(category))+8).sum();
+            boolean compact=minimum>372;
+            if(compact)minimum=Arrays.stream(categories).mapToInt(category->c.textWidth(compactRibbonLabel(category))+8).sum();
             int extra=Math.max(0,(372-minimum)/categories.length);
             for(var category:categories){
-                String label=ribbonLabel(category);int w=c.textWidth(label)+8+extra;
+                String label=compact?compactRibbonLabel(category):ribbonLabel(category);int w=c.textWidth(label)+8+extra;
                 out.add(b("category:"+category.name(),x,52,w,17,label,true));x+=w;
             }
         }
@@ -71,7 +74,7 @@ public final class GuideBookView {
         if(n.page()==ARTICLE&&n.selected()!=null){
             var e=n.selected();
             if(related){
-                out.add(b("related",278,204,103,14,"Return to article",true));
+                out.add(b("related",278,204,103,14,"Back to text",true));
                 for(int i=0;i<e.links().size();i++){var target=FieldGuide.entry(e.links().get(i));out.add(icon("link:"+i,d==GuideDesign.MANUAL?116:d==GuideDesign.REFERENCE?172:20,100+i*23,d==GuideDesign.MANUAL?262:d==GuideDesign.REFERENCE?208:356,21,target.title(),target.icon()));}
             }else{
                 int x=d==GuideDesign.MANUAL?116:d==GuideDesign.REFERENCE?172:20,w=d==GuideDesign.MANUAL?262:d==GuideDesign.REFERENCE?208:356;
@@ -88,7 +91,7 @@ public final class GuideBookView {
                 }
                 int page=Math.min(n.articlePage(),pages(c,d,n)-1);
                 out.add(b("previous",d==GuideDesign.REFERENCE?172:20,204,28,14,"<",page>0));out.add(b("next",d==GuideDesign.REFERENCE?242:90,204,28,14,">",page+1<pages(c,d,n)));
-                out.add(b("related",278,204,103,14,"Related articles",!e.links().isEmpty()));
+                out.add(b("related",278,204,103,14,"Related",!e.links().isEmpty()));
             }
         }else if(n.page()==HOME){
             switch(d){

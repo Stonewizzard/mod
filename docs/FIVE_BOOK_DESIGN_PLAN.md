@@ -24,7 +24,7 @@ These are a structured heuristic evaluation performed by the developer assistant
 | Alex, vanilla veteran | Years / first content mod | Can I find Sniffer requirements, Cruncher food, and hatching help using ordinary words? Are unfamiliar ideas explained rather than assumed? |
 | Morgan, casual mod player | Comfortable / several small mods | Can I switch from excavation instructions to tools and back without losing my place? Are recovery and quality easy to find? |
 | Sam, modpack builder | Expert / many complex mods | Can I look up effect, eligibility, caps, tier weights, growth and ascension resources without reading generic prose repeatedly? |
-| Casey, returning player | Experienced / returning after a break, small window | Can I search, recover from no results, use keyboard focus, reopen where I left off, and read at 854×480 without clipped controls? |
+| Casey, returning player | Experienced / returning after a break, small window | Can I search, recover from no results, use keyboard focus, reopen where I left off, and read at 854×480 and 640×480 without clipped controls? |
 
 ## Acceptance and selection
 

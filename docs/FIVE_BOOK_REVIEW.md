@@ -15,6 +15,7 @@ This is a **five-persona simulated evaluation**, not feedback from five people. 
 | Detailed tier probabilities overwhelmed the value ranges | Too much paging to answer “how strong can this be?” | Compact strongest-first T1… ranges in Value tiers; family weights, rarity weights and eligibility in Roll odds. Growth and ascension resources have their own sections. |
 | The first tutorial route detoured through Cruncher hatching before the first tool | Suggested an optional creature was a mandatory first step | The task route now goes Find → Uncover → Build → Understand → Customize → Ascend. Creature details remain in their category. |
 | Generic section labels such as “Details 3” offered no clue | Players could not choose the useful explanation | Short task-specific labels such as Food, Hatch time, Recover, Permanent and Costs. |
+| A wider book could exceed Minecraft's minimum 320-pixel GUI width | Parts of the page and buttons could leave the window | The layout fits horizontally without shrinking the native font; measured wrapping and widget bounds use the same fitted coordinates. |
 | Five content copies would become expensive to maintain | Future features could diverge between editions | One structured chapter source and one runtime modifier library feed every presentation. Removed the obsolete book renderer and moved its input checks to the new designs. |
 | The old ornate icon read poorly at inventory size | The guide was difficult to recognize | Five new generated book covers, with large silhouettes, cream page edges and distinct symbols/colors. Actual hotbar rendering is part of the review. |
 
@@ -35,7 +36,7 @@ Scores run from 1 (obstructive) to 5 (strong). A 3 means passable with a noticea
 - **Alex:** Searching ordinary words such as “wither rose” reaches Cruncher food. Named sections separate hatching time, speed boost and space requirements. A ribbon uses short labels; fuller subject names and the search field provide the context.
 - **Morgan:** Following excavation → related tools → Back restores the exact excavation section. Recover has a dedicated section explaining the empty output requirement. The Manual retains categories while reading and highlights the current article's subject even when it was reached through search, reducing detours.
 - **Sam:** Effect, cap/eligibility, value ranges, weights, growth and resources are separated. The Reference's persistent result list is fastest for hopping among definitions, but leaves less room for each explanation. The Atlas's section rail is easier to scan than the Journal's reading columns.
-- **Casey:** Search, clear/no-match recovery, native keyboard activation, Escape and per-edition bookmarks work across the five items. The smaller 854×480 captures retain controls and readable body text. The Reference has two independent page controls and a narrow reading area, creating the largest navigation cost.
+- **Casey:** Search, clear/no-match recovery, native keyboard activation, Escape and per-edition bookmarks work across the five items. The smaller 854×480 and minimum-width 640×480 captures retain controls and readable body text. The Reference has two independent page controls and a narrow reading area, creating the largest navigation cost.
 
 ## Why these three
 
@@ -62,7 +63,7 @@ Screenshots below are from the actual Minecraft 26.3/NeoForge client. They are n
 
 <!-- FINAL_EVIDENCE -->
 
-The native scenarios cover each edition's first action; categories and modifier topics; global multiword search; empty results and Clear; Effect/tier/growth sections; related links and restored section history; GUI scales 2/3; 1280×720 and 854×480 windows; Escape, Close, keyboard Tab/Return, and reopening a bookmarked section. The inventory capture checks the five real icons.
+The native scenarios cover each edition's first action; categories and modifier topics; global multiword search; empty results and Clear; Effect/tier/growth sections; related links and restored section history; GUI scales 2/3; 1280×720, 854×480 and 640×480 windows; Escape, Close, keyboard Tab/Return, and reopening a bookmarked section. The inventory capture checks the five real icons.
 
 Additional checks cover all 27 chapters and 120 live modifier entries, every named section in every layout, font-measured body bounds, overlapping/duplicate controls, native primary-click validation at three offsets in all five layouts, five item/model/texture resource sets, read-only item use and saved equipment data, and the existing server gameplay regression suite.
 

@@ -38,7 +38,7 @@ final class FieldGuideInputRegression {
         final ExcavationScreenView.Canvas measure;final int left,top;final GuideDesign design;boolean closed,related;
         Fixture(ExcavationScreenView.Canvas measure,GuideDesign design,int left,int top){this.design=design;this.measure=measure;this.left=left;this.top=top;refresh();}
         @Override public List<? extends GuiEventListener> children(){return children;}
-        void refresh(){children.clear();for(var control:GuideBookView.controls(measure,design,nav,related))children.add(new GuideBookButton(control,left,top,design,nav,()->{
+        void refresh(){children.clear();for(var control:GuideBookView.controls(measure,design,nav,related))children.add(new GuideBookButton(control,left,top,1,design,nav,()->{
             if(control.id().equals("close"))closed=true;else if(control.id().equals("related"))related=!related;else {GuideBookView.activate(control.id(),design,nav,measure);related=false;}
         },g->measure){
             // AbstractWidget.mouseClicked asks the live Minecraft singleton for its audio engine.

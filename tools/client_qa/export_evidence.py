@@ -18,7 +18,7 @@ if log.exists():
             selected.update(range(max(0,i-3),min(len(lines),i+25)))
     print('CLIENT_QA_RUNTIME_DIAGNOSTICS\n'+'\n'.join(lines[i] for i in sorted(selected)))
 print('CLIENT_QA_RESULT', (root/'result.json').read_text() if (root/'result.json').exists() else 'No result')
-for name in ['00-five-book-items','failure']+[d+'-'+view for d in ('journal','manual','trail','reference','atlas') for view in ('home','first-step','excavation','modifier','tiers','small')]:
+for name in ['00-five-book-items','failure']+[d+'-'+view for d in ('journal','manual','trail','reference','atlas') for view in ('home','first-step','excavation','modifier','tiers','small','narrow')]:
     path=root/'captures'/(name+'.png')
     if not path.exists():continue
     payload=base64.b64encode(path.read_bytes()).decode();chunks=[payload[i:i+7000] for i in range(0,len(payload),7000)]

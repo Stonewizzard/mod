@@ -1,5 +1,7 @@
 # Book review from the actual Minecraft client
 
+Historical baseline before the five-edition redesign. See [the current comparison and native evidence](FIVE_BOOK_REVIEW.md) for the replacements.
+
 Status: **functional pilot passes; visual/usability review fails**. This is the baseline to fix in the next book-design change, not an approval of the current interface.
 
 Captured with Minecraft 26.3, NeoForge 26.3.0.77 and Mesa software OpenGL in a newly created Creative/Superflat world. The driver used real X11/SDL mouse and keyboard input. These images come directly from the game window. The test created the world, navigated the guide, searched, followed links, changed pages, resized the window and tested Escape, Close and reopening. It produced 15 screenshots plus video. The scripted task paths are simulated perspectives, not a human user study.
