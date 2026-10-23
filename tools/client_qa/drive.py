@@ -1,5 +1,5 @@
 """Run against a real, visible Minecraft client. All input goes through xdotool/X11/SDL."""
-import argparse, base64, json, os, subprocess, time, traceback
+import argparse, base64, json, os, re, subprocess, time, traceback
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -64,12 +64,26 @@ def click_widget(label,exact=True):
     x,y=physical(state,control['x']+control['width']/2,control['y']+control['height']/2)
     process('xdotool','mousemove','--window',WINDOW,str(x),str(y),'click','1');time.sleep(.5);log('native widget '+label)
 
+def find_window(state):
+    # SDL3 does not consistently expose the legacy WM_NAME used by xdotool search.
+    # Resolve the actual focused window, then fall back to the X11 geometry tree.
+    tree=subprocess.check_output(['xwininfo','-root','-tree'],text=True,errors='replace')
+    (QA/'windows.txt').write_text(tree)
+    focus=subprocess.run(['xdotool','getwindowfocus','-f'],capture_output=True,text=True)
+    candidates=[focus.stdout.strip()] if focus.returncode==0 else []
+    for id,w,h in re.findall(r'^\s*(0x[0-9a-fA-F]+).*?\b(\d+)x(\d+)[+-]\d+[+-]\d+',tree,re.M):
+        if (int(w),int(h))==(state['windowWidth'],state['windowHeight']):candidates.append(id)
+    for id in candidates:
+        if not id or int(id,0)<=1:continue
+        result=subprocess.run(['xdotool','getwindowgeometry','--shell',id],capture_output=True,text=True)
+        geometry=dict(line.split('=',1) for line in result.stdout.splitlines() if '=' in line)
+        if int(geometry.get('WIDTH',0))==state['windowWidth'] and int(geometry.get('HEIGHT',0))==state['windowHeight']:return id
+    raise AssertionError('Cannot resolve native Minecraft window; inspect windows.txt')
+
 def run():
     global WINDOW
     wait_for(lambda s:s.get('screen')=='TitleScreen' and s.get('frames',0)>12,'the native title screen',timeout=360)
-    ids=subprocess.check_output(['xdotool','search','--onlyvisible','--name','Minecraft'],text=True).splitlines()
-    if not ids:raise AssertionError('No actual Minecraft X11 window found')
-    WINDOW=ids[-1];process('xdotool','windowfocus','--sync',WINDOW)
+    WINDOW=find_window(observe());process('xdotool','windowfocus','--sync',WINDOW)
     process('xdotool','mousemove','--window',WINDOW,'5','5');capture('00-title')
     # Create a real disposable flat world through native Minecraft UI.
     click_widget('Singleplayer')
