@@ -27,7 +27,7 @@ public final class RuinedAncientForgeBlock extends BaseEntityBlock {
     @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){
         if(player instanceof ServerPlayer server){
             var status=RuinedForgeStructure.inspect(level,pos,state.getValue(FACING));
-            if(!status.complete())server.displayClientMessage(status.message(),true);
+            if(!status.complete())server.connection.send(new net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket(status.message()));
             else if(level.getBlockEntity(pos) instanceof ReconstructionTableBlockEntity forge)server.openMenu(forge);
         }
         return InteractionResult.SUCCESS;

@@ -26,6 +26,6 @@ public final class AncientForgeRenderer implements BlockEntityRenderer<Reconstru
         resolver.updateForTopItem(state.item,item,ItemDisplayContext.FIXED,forge.getLevel(),null,(int)forge.getBlockPos().asLong());
     }
     @Override public void submit(State state,PoseStack stack,SubmitNodeCollector collector,CameraRenderState camera){
-        if(state.item.isEmpty())return;stack.pushPose();stack.translate(.5,.47,.5);stack.mulPose(Axis.XP.rotationDegrees(90));stack.scale(.5F,.5F,.5F);state.item.submit(stack,collector,state.lightCoords,OverlayTexture.NO_OVERLAY,0);stack.popPose();
+        if(state.item.isEmpty())return;stack.pushPose();stack.translate(.5,.47,.5);stack.rotateDegrees(Axis.XP,90);stack.scale(.5F,.5F,.5F);state.item.submit(stack,collector,state.lightCoords,OverlayTexture.NO_OVERLAY,0);stack.popPose();
     }
 }
