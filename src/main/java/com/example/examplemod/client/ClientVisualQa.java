@@ -21,6 +21,7 @@ public final class ClientVisualQa {
     private static FieldGuideNavigation navigation;
     private static boolean opened;
     private static volatile net.minecraft.core.BlockPos forgePosition;
+    private static net.minecraft.core.BlockPos generatedForgePosition;private static boolean probeForgeWorldgen;
     private static long sequence,frames,lastWrite;
     private static long commandId=-1;
 
@@ -64,6 +65,8 @@ public final class ClientVisualQa {
                                 if(action.equals("forge_view")){if(close)player.connection.teleport(12.5,forgePosition.getY(),9.5,0,23);else player.connection.teleport(8,forgePosition.getY(),6,-34,5);}
                             });
                         }
+                        case "forge_probe_worldgen"->probeForgeWorldgen=true;
+                        case "forge_generated_view"->{var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var found=generatedForgePosition;server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);player.connection.teleport(found.getX()-4.5,forgePosition.getY(),found.getZ()-6.5,-34,-6);});}
                         case "gui_scale"->{minecraft.options.guiScale().set(command.get("value").getAsInt());minecraft.resizeGui();}
                         case "quit"->minecraft.stop();
                         default->throw new IllegalArgumentException("Unknown visual-QA command");
@@ -100,6 +103,13 @@ public final class ClientVisualQa {
                 state.add("controls",controls);state.addProperty("searchX",book.searchX());state.addProperty("searchY",book.searchY());
             }
             if(forgePosition!=null&&minecraft.level!=null){
+                state.addProperty("forgeY",forgePosition.getY());
+                if(probeForgeWorldgen&&generatedForgePosition==null){
+                    outer:for(int x=16;x<=40;x++)for(int z=32;z<=56;z++)for(int y=forgePosition.getY()-2;y<=forgePosition.getY()+7;y++){
+                        var at=new net.minecraft.core.BlockPos(x,y,z);if(minecraft.level.hasChunkAt(at)&&minecraft.level.getBlockState(at).is(com.example.examplemod.AncientForgeContent.CORE.get())){generatedForgePosition=at;break outer;}
+                    }
+                }
+                state.addProperty("generatedForge",generatedForgePosition!=null);
                 state.addProperty("forgeReady",com.example.examplemod.RuinedForgeStructure.inspect(minecraft.level,forgePosition,net.minecraft.core.Direction.NORTH).complete());
                 state.addProperty("aimedAtForge",minecraft.hitResult instanceof net.minecraft.world.phys.BlockHitResult hit&&hit.getBlockPos().equals(forgePosition));
             }

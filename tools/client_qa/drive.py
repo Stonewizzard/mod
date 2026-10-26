@@ -174,6 +174,12 @@ def run():
     command('forge_repair');expect(forgeReady=True);process('xdotool','click','3')
     expect(screen='ReconstructionTableScreen',forgeMenu=True,forgeOutput=True);capture('forge-repaired')
     process('xdotool','key','Escape');command('forge_view');time.sleep(1);capture('forge-display')
+    # Exercise native jigsaw generation, not only direct fixture placement or an NBT parser.
+    command('forge_probe_worldgen')
+    process('xdotool','key','t');time.sleep(.2)
+    process('xdotool','type','--clearmodifiers','--delay','20','/place structure examplemod:ruined_ancient_forge 24 '+str(observe()['forgeY'])+' 40')
+    process('xdotool','key','Return');expect(generatedForge=True)
+    command('forge_generated_view');time.sleep(1);capture('forge-world-ruin')
     print('ANCIENT_FORGE_NATIVE_PASS: real block interaction, multiblock-gated assembly, output, frame interruption, repair, saved output and tabletop display',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
     print('CLIENT_VISUAL_QA_PASS: Workshop Manual item, illustrated browsing and OS input task paths',flush=True)
