@@ -104,6 +104,7 @@ public final class ClientVisualQa {
             }
             if(forgePosition!=null&&minecraft.level!=null){
                 state.addProperty("forgeY",forgePosition.getY());
+                state.addProperty("forgeDisplayOutput",minecraft.level.getBlockEntity(forgePosition) instanceof com.example.examplemod.ReconstructionTableBlockEntity forge&&!forge.getItem(5).isEmpty());
                 if(probeForgeWorldgen&&generatedForgePosition==null){
                     outer:for(int x=8;x<=40;x++)for(int z=24;z<=56;z++)for(int y=forgePosition.getY()-2;y<=forgePosition.getY()+7;y++){
                         var at=new net.minecraft.core.BlockPos(x,y,z);if(minecraft.level.hasChunkAt(at)&&minecraft.level.getBlockState(at).is(com.example.examplemod.AncientForgeContent.CORE.get())){generatedForgePosition=at;break outer;}

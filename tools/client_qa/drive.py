@@ -165,7 +165,7 @@ def run():
     command('forge_view');time.sleep(1);capture('forge-complete')
     command('forge_view',close=True);expect(aimedAtForge=True)
     process('xdotool','click','3');expect(screen='ReconstructionTableScreen',forgeMenu=True,forgePattern=1);capture('forge-assembly')
-    click('forge_assemble');expect(forgeOutput=True);capture('forge-result')
+    click('forge_assemble');expect(forgeOutput=True,forgeDisplayOutput=True);capture('forge-result')
     command('forge_damage');expect(forgeReady=False)
     wait_for(lambda s:s.get('screen')!='ReconstructionTableScreen','broken multiblock closes the live menu')
     process('xdotool','click','3');time.sleep(.5)
@@ -173,7 +173,7 @@ def run():
     capture('forge-incomplete')
     command('forge_repair');expect(forgeReady=True);process('xdotool','click','3')
     expect(screen='ReconstructionTableScreen',forgeMenu=True,forgeOutput=True);capture('forge-repaired')
-    process('xdotool','key','Escape');command('forge_view');time.sleep(1);capture('forge-display')
+    process('xdotool','key','Escape');time.sleep(1);capture('forge-display-close');command('forge_view');time.sleep(1);capture('forge-display')
     # Exercise native jigsaw generation, not only direct fixture placement or an NBT parser.
     command('forge_probe_worldgen')
     process('xdotool','key','t');time.sleep(.2)

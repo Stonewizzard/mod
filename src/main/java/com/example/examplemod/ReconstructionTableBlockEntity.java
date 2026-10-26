@@ -29,6 +29,10 @@ public final class ReconstructionTableBlockEntity extends BaseContainerBlockEnti
         return super.stillValid(player)&&(!getBlockState().is(AncientForgeContent.CORE.get())||level!=null&&RuinedForgeStructure.inspect(level,worldPosition,getBlockState().getValue(RuinedAncientForgeBlock.FACING)).complete());
     }
     @Override public boolean canPlaceItem(int slot,ItemStack stack){return ReconstructionTableMenu.accepts(pattern,slot,stack);}
+    @Override public void setChanged(){
+        super.setChanged();
+        if(level instanceof net.minecraft.server.level.ServerLevel&&getBlockState().is(AncientForgeContent.CORE.get()))level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+    }
     @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);items=NonNullList.withSize(6,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);pattern=input.read("Pattern",com.mojang.serialization.Codec.INT).filter(v->ReconstructionPattern.byId(v)!=null).orElse(0);}
     @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);ContainerHelper.saveAllItems(output,items);output.putInt("Pattern",pattern);}
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries){return saveCustomOnly(registries);}
