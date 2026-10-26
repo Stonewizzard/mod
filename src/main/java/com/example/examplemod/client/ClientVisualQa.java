@@ -66,7 +66,7 @@ public final class ClientVisualQa {
                             });
                         }
                         case "forge_probe_worldgen"->probeForgeWorldgen=true;
-                        case "forge_generated_view"->{var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var found=generatedForgePosition;server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);player.connection.teleport(found.getX()-4.5,forgePosition.getY(),found.getZ()-6.5,-34,-6);});}
+                        case "forge_generated_view"->{var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var found=generatedForgePosition;server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var front=player.level().getBlockState(found).getValue(com.example.examplemod.RuinedAncientForgeBlock.FACING);var viewer=found.relative(front,6).relative(front.getCounterClockWise(),4);float yaw=(float)Math.toDegrees(Math.atan2(viewer.getX()-found.getX(),found.getZ()-viewer.getZ()));player.connection.teleport(viewer.getX()+.5,forgePosition.getY(),viewer.getZ()+.5,yaw,-6);});}
                         case "gui_scale"->{minecraft.options.guiScale().set(command.get("value").getAsInt());minecraft.resizeGui();}
                         case "quit"->minecraft.stop();
                         default->throw new IllegalArgumentException("Unknown visual-QA command");
@@ -105,7 +105,7 @@ public final class ClientVisualQa {
             if(forgePosition!=null&&minecraft.level!=null){
                 state.addProperty("forgeY",forgePosition.getY());
                 if(probeForgeWorldgen&&generatedForgePosition==null){
-                    outer:for(int x=16;x<=40;x++)for(int z=32;z<=56;z++)for(int y=forgePosition.getY()-2;y<=forgePosition.getY()+7;y++){
+                    outer:for(int x=8;x<=40;x++)for(int z=24;z<=56;z++)for(int y=forgePosition.getY()-2;y<=forgePosition.getY()+7;y++){
                         var at=new net.minecraft.core.BlockPos(x,y,z);if(minecraft.level.hasChunkAt(at)&&minecraft.level.getBlockState(at).is(com.example.examplemod.AncientForgeContent.CORE.get())){generatedForgePosition=at;break outer;}
                     }
                 }
