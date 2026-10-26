@@ -67,7 +67,9 @@ def click_widget(label,exact=True):
 def search_text(value):
     s=observe();x,y=physical(s,s['searchX'],s['searchY'])
     process('xdotool','mousemove','--window',WINDOW,str(x),str(y),'click','1')
-    process('xdotool','key','ctrl+a');process('xdotool','type','--clearmodifiers','--delay','40',value)
+    wait_for(lambda s:s.get('focus')=='search','native search focus');time.sleep(.2)
+    process('xdotool','key','ctrl+a');time.sleep(.2)
+    process('xdotool','type','--clearmodifiers','--delay','80',value)
     expect(query=value);log('type search '+value)
 
 def find_window(state):
