@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "examplemod:block/ruined_forge_bricks"
+  }
+}

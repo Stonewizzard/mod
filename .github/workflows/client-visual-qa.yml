@@ -15,6 +15,10 @@ on:
       - 'src/main/java/com/example/examplemod/FieldGuide*.java'
       - 'src/main/resources/assets/examplemod/**/ancient_field_guide*'
       - 'tools/field-guide.json'
+      - 'src/main/java/com/example/examplemod/*Forge*.java'
+      - 'src/main/java/com/example/examplemod/client/*Forge*.java'
+      - 'src/main/resources/assets/examplemod/models/block/ruined*'
+      - 'src/main/resources/data/examplemod/worldgen/**'
 permissions:
   contents: read
 jobs:

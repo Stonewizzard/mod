@@ -11,11 +11,12 @@ import net.minecraft.world.item.ItemStack;
 public final class ReconstructionTableMenu extends AbstractContainerMenu {
     public static final int[][] POSITIONS={{157,46},{181,46},{205,46},{181,73},{181,100},{277,73}};
     private final Container container;
-    private int clientPattern;
+    private int clientPattern;private boolean clientForge;
     public ReconstructionTableMenu(int id,Inventory inventory){this(id,inventory,new SimpleContainer(6));}
     public ReconstructionTableMenu(int id,Inventory inventory,Container container){
         super(ReconstructionContent.MENU.get(),id);checkContainerSize(container,6);this.container=container;
         addDataSlot(new DataSlot(){@Override public int get(){return pattern();}@Override public void set(int value){clientPattern=value;}});
+        addDataSlot(new DataSlot(){@Override public int get(){return forge()?1:0;}@Override public void set(int value){clientForge=value==1;}});
         for(int i=0;i<6;i++){final int slot=i;addSlot(new Slot(container,i,POSITIONS[i][0],POSITIONS[i][1]){
             @Override public boolean mayPlace(ItemStack stack){return accepts(pattern(),slot,stack);}
             // Spare pieces stay visible/removable when a different pattern is selected.
@@ -25,6 +26,7 @@ public final class ReconstructionTableMenu extends AbstractContainerMenu {
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inventory,9+row*9+col,79+col*18,161+row*18));
         for(int col=0;col<9;col++)addSlot(new Slot(inventory,col,79+col*18,219));
     }
+    public boolean forge(){return container instanceof ReconstructionTableBlockEntity table?table.getBlockState().is(AncientForgeContent.CORE.get()):clientForge;}
     public int pattern(){return container instanceof ReconstructionTableBlockEntity table?table.pattern():clientPattern;}
     public static boolean accepts(int pattern,int slot,ItemStack stack){var p=ReconstructionPattern.byId(pattern);return p!=null&&slot>=0&&slot<5&&p.part(slot)!=null&&!stack.isEmpty()&&stack.is(p.part(slot));}
     /** Legacy callers default to the original five-piece pickaxe. */

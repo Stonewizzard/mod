@@ -49,6 +49,7 @@ public class ExampleModClient {
     @SubscribeEvent
     static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ExampleMod.ARCHAEOLOGY_TABLE_ENTITY.get(),com.example.examplemod.client.ArchaeologyTableRenderer::new);
+        event.registerBlockEntityRenderer(ReconstructionContent.ENTITY.get(),com.example.examplemod.client.AncientForgeRenderer::new);
         event.registerEntityRenderer(ExampleMod.CRUNCHER.get(), CruncherRenderer::new);
         event.registerEntityRenderer(ExampleMod.SKULK_PARASITE.get(), SkulkParasiteRenderer::new);
         event.registerEntityRenderer(ExampleMod.SKULK_ZOMBIE.get(), SkulkZombieRenderer::new);

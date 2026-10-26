@@ -8,6 +8,8 @@
     "examplemod:modifier_locker",
     "examplemod:scaling_randomizer",
     "examplemod:component_restorer",
-    "examplemod:influencer"
+    "examplemod:influencer",
+    "examplemod:ruined_ancient_forge",
+    "examplemod:ruined_forge_bricks"
   ]
 }

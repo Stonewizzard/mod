@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "examplemod:block/ruined_ancient_forge",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "examplemod:block/ruined_ancient_forge",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "examplemod:block/ruined_ancient_forge",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "examplemod:block/ruined_ancient_forge",
+      "y": 270
+    }
+  }
+}

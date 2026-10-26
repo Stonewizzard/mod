@@ -59,7 +59,7 @@ public final class ModifierRewardTests {
         System.out.println("REWARD_BENCHMARK: unenchanted speed build=72; Efficiency V restored core=102; Efficiency V Netherite=35; Fortune modified="+advanced+", vanilla III="+normal);
     }
     private static void guidebook(GameTestHelper h){
-        var entries=FieldGuide.entries();check(h,entries.size()==147&&entries.stream().filter(e->e.category()==FieldGuide.Category.MODIFIERS).count()==120,"The field guide must include all 27 chapters and all 120 modifier definitions");
+        var entries=FieldGuide.entries();check(h,entries.size()==148&&entries.stream().filter(e->e.category()==FieldGuide.Category.MODIFIERS).count()==120,"The field guide must include all 28 chapters and all 120 modifier definitions");
         for(var category:FieldGuide.Category.values())check(h,!FieldGuide.search("",category,FieldGuide.Group.ALL).isEmpty(),"Every guide category must contain articles");
         for(var entry:entries){
             check(h,!entry.sections().isEmpty()&&entry.sections().stream().allMatch(section->!section.title().isBlank()&&!section.paragraphs().isEmpty()),"Every guide entry must have named, nonempty semantic sections");
