@@ -53,7 +53,7 @@ public final class ClientVisualQa {
                                 var finds=new com.example.examplemod.ArtifactProfile.Find[]{com.example.examplemod.ArtifactProfile.Find.PICKAXE_LEFT,com.example.examplemod.ArtifactProfile.Find.PICKAXE_BRIDGE,com.example.examplemod.ArtifactProfile.Find.PICKAXE_RIGHT,com.example.examplemod.ArtifactProfile.Find.TOOL_CONNECTOR,com.example.examplemod.ArtifactProfile.Find.TOOL_HANDLE};
                                 for(int i=0;i<5;i++)forge.setItem(i,com.example.examplemod.ArchaeologyContent.reward(new com.example.examplemod.ExcavationStudy(new com.example.examplemod.ArtifactProfile(771+i,1,com.example.examplemod.ArtifactProfile.Matrix.SHALE,finds[i]))));
                                 player.getInventory().setItem(0,net.minecraft.world.item.ItemStack.EMPTY);player.inventoryMenu.broadcastChanges();
-                                player.connection.teleport(12.5,forgePosition.getY()+1.5,6,0,24);
+                                player.connection.teleport(12.5,forgePosition.getY(),6,0,5);
                             });
                         }
                         case "forge_view","forge_damage","forge_repair"->{
@@ -61,7 +61,7 @@ public final class ClientVisualQa {
                             server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var level=player.level();
                                 if(action.equals("forge_damage"))level.setBlock(com.example.examplemod.RuinedForgeStructure.PARTS.getLast().at(forgePosition,net.minecraft.core.Direction.NORTH),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
                                 if(action.equals("forge_repair"))for(var part:com.example.examplemod.RuinedForgeStructure.PARTS)level.setBlock(part.at(forgePosition,net.minecraft.core.Direction.NORTH),com.example.examplemod.AncientForgeContent.BRICKS.get().defaultBlockState(),3);
-                                if(action.equals("forge_view")){if(close)player.connection.teleport(12.5,forgePosition.getY(),9.5,0,23);else player.connection.teleport(8,forgePosition.getY()+1.5,6,-34,24);}
+                                if(action.equals("forge_view")){if(close)player.connection.teleport(12.5,forgePosition.getY(),9.5,0,23);else player.connection.teleport(8,forgePosition.getY(),6,-34,5);}
                             });
                         }
                         case "gui_scale"->{minecraft.options.guiScale().set(command.get("value").getAsInt());minecraft.resizeGui();}

@@ -113,7 +113,7 @@
   "block.examplemod.ruined_ancient_forge": "Ruined Ancient Forge",
   "block.examplemod.ruined_forge_bricks": "Ruined Forge Bricks",
   "forge.examplemod.ready": "Ruined Ancient Forge \u2014 tier I ready",
-  "forge.examplemod.incomplete": "Ruined Ancient Forge: %s/%s masonry. Repair the %s. See the Workshop Manual for the layout.",
+  "forge.examplemod.incomplete": "Forge %s/%s: repair %s. Layout in Workshop Manual.",
   "forge.examplemod.section.foundation": "3 \u00d7 3 foundation",
   "forge.examplemod.section.pillars": "side pillars",
   "forge.examplemod.section.back": "rear wall",
