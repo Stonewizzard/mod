@@ -251,13 +251,17 @@ Craft reconstruction table: grid rows PPP / .C. / S.S. A dot means an empty cell
 
 The Ruined Ancient Forge is the first, small form of the ancient workshop. Complete its masonry to reconstruct equipment with the same recovered parts and patterns as the Reconstruction Table. It does not grant extra modifier rolls or change your pieces.
 
-The hearth holds five input pieces and an output. Right-click it after repairing the frame. Breaking a frame block closes access, but preserves everything inside. Breaking the hearth drops its inventory and the hearth itself.
+The hearth holds five input pieces and an output. Completing the frame automatically forms one weathered stone-and-bronze forge. Right-click the hearth or any formed section to open it. Breaking a section restores the surviving original masonry and keeps the stored pieces safe. Breaking the hearth drops its inventory and the hearth itself.
 
 The footprint is three blocks wide and three deep, four blocks tall including the foundation. The hearth sits at the center of the front edge, one block above the foundation. All layers below are read front row first. B is Ruined Forge Bricks, H is the hearth, and a dot is empty space.
 
 Foundation: BBB / BBB / BBB. Hearth level: .H. / B.B / BBB. One above the hearth: ... / B.B / .B. Two above the hearth: ... / ... / .B.
 
-Use one hearth and eighteen Ruined Forge Bricks. The two side pillars are behind the hearth; the chimney is centered at the back. The frame rotates with the hearth. Click an incomplete hearth to see the first section that needs repair.
+Use one hearth and eighteen Ruined Forge Bricks. The two side pillars are behind the hearth; the chimney is centered at the back. The frame rotates with the hearth. The completed structure forms a connected work pad, firebox, supports and chimney.
+
+Right-click an incomplete hearth with an empty hand, then choose Show ghost layout. Translucent cyan blocks mark missing masonry. Amber marks spaces occupied by another block: clear those spaces before placing bricks. The preview never places or consumes blocks.
+
+Click the incomplete hearth again to hide the layout. Only you see your preview, and it disappears when the forge forms or you leave the world. Shift-right-click the hearth with an empty hand to inspect repair status.
 
 Small ruined workshops occasionally generate in plains, forests, taigas and savannas in newly generated terrain. A found workshop contains a removable hearth and most of its frame, with two bricks missing. Repair it there or take the materials home.
 
@@ -265,7 +269,7 @@ Exploration is optional. Craft the same hearth from four Ruined Forge Bricks, tw
 
 Packs can replace these recipes, change the masonry tag, or disable/add structure biomes with datapacks. The locator command is /locate structure examplemod:ruined_ancient_forge.
 
-This is tier one: a worn stone-and-copper hearth with an open working area. Larger tiers, configurable upgrades, corruption and Forgemaster rewards remain future progression. You do not need an advanced prototype editing station to obtain or use this first forge.
+This is a weathered starter forge. Advanced functions, Forgemaster rewards and future forge designs remain separate work. The planned expanding, Blood Magic-inspired structure will be the Ancient Anvil. Its exact layout and upgrades are not part of this first forge.
 
 Craft ruined forge bricks: grid rows DD / DD. A dot means an empty cell. D = any stone crafting materials.
 

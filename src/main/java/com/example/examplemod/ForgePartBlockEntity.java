@@ -13,7 +13,7 @@ public final class ForgePartBlockEntity extends BlockEntity {
     public BlockState original(){return original;}
     public void original(BlockState value){original=value.getBlock() instanceof net.minecraft.world.level.block.EntityBlock?AncientForgeContent.BRICKS.get().defaultBlockState():value;setChanged();}
     @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);output.store("OriginalMasonry",BlockState.CODEC,original);}
-    @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);original=input.read("OriginalMasonry",BlockState.CODEC).orElse(AncientForgeContent.BRICKS.get().defaultBlockState());}
+    @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);var restored=input.read("OriginalMasonry",BlockState.CODEC).orElse(AncientForgeContent.BRICKS.get().defaultBlockState());original=restored.getBlock() instanceof net.minecraft.world.level.block.EntityBlock?AncientForgeContent.BRICKS.get().defaultBlockState():restored;}
     public static void tick(net.minecraft.world.level.Level level,BlockPos pos,BlockState state,ForgePartBlockEntity part){
         if(level.getGameTime()%20!=0||!(level instanceof net.minecraft.server.level.ServerLevel server))return;
         var core=FormedForgePartBlock.core(pos,state);

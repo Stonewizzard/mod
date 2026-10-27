@@ -76,6 +76,7 @@ public class ExampleModClient {
                 com.example.examplemod.client.ComponentStationVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.PickaxeTooltipRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.AscenderVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
+                com.example.examplemod.client.AncientForgeVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.ReconstructionVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.ExcavationVisualRegression.run(
                         event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
