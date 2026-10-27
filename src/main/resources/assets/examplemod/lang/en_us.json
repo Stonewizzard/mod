@@ -123,5 +123,6 @@
   "forge.examplemod.repair_count": "Frame: %s / %s masonry blocks",
   "forge.examplemod.ghost_missing": "Cyan: %s missing blocks",
   "forge.examplemod.ghost_occupied": "Amber: %s occupied spaces",
-  "forge.examplemod.repair_hint": "The preview places no blocks."
+  "forge.examplemod.repair_hint": "The preview places no blocks.",
+  "block.examplemod.formed_ruined_forge": "Ruined Ancient Forge"
 }

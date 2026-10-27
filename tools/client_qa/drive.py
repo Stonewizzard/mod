@@ -179,6 +179,7 @@ def run():
     command('forge_view',close=True);expect(aimedAtForge=True)
     process('xdotool','click','3');expect(screen='ForgeRepairScreen');click_widget('Hide ghost layout');expect(screen='InGame',forgeGhost=False)
     capture('forge-incomplete')
+    command('forge_view',close=True);time.sleep(.5);expect(aimedAtForge=True)
     process('xdotool','click','3');expect(screen='ForgeRepairScreen');click_widget('Show ghost layout');expect(screen='InGame',forgeGhost=True)
     command('forge_repair');expect(forgeReady=True,forgeFormed=True,forgeGhost=False)
     command('forge_view',close=True);expect(aimedAtForge=True);process('xdotool','click','3')

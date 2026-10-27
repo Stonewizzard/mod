@@ -65,7 +65,7 @@ public final class ClientVisualQa {
                                 if(action.equals("forge_obstruct"))level.setBlock(com.example.examplemod.RuinedForgeStructure.PARTS.getLast().at(forgePosition,net.minecraft.core.Direction.NORTH),net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState(),3);
                                 if(action.equals("forge_part_view"))player.connection.teleport(11.5,forgePosition.getY(),10,0,14.5F);
                                 if(action.equals("forge_repair"))for(var part:com.example.examplemod.RuinedForgeStructure.PARTS)level.setBlock(part.at(forgePosition,net.minecraft.core.Direction.NORTH),com.example.examplemod.AncientForgeContent.BRICKS.get().defaultBlockState(),3);
-                                if(action.equals("forge_view")){if(close)player.connection.teleport(12.5,forgePosition.getY(),9.5,0,com.example.examplemod.ForgeAssembly.formed(level.getBlockState(forgePosition))?15:23);else player.connection.teleport(8,forgePosition.getY(),6,-34,5);}
+                                if(action.equals("forge_view")){if(close)player.connection.teleport(12.5,forgePosition.getY(),9.5,0,com.example.examplemod.ForgeAssembly.formed(level.getBlockState(forgePosition))?15:23);else player.connection.teleport(9.5,forgePosition.getY(),8,-34,5);}
                             });
                         }
                         case "forge_probe_worldgen"->probeForgeWorldgen=true;
