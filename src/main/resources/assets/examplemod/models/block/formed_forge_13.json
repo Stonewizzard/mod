@@ -1,0 +1,149 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "stone": "examplemod:block/forge_stone",
+    "soot": "examplemod:block/forge_soot",
+    "bronze": "examplemod:block/forge_bronze",
+    "ash": "examplemod:block/forge_ash",
+    "particle": "examplemod:block/forge_stone"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        6,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#soot",
+          "uv": [
+            0,
+            10,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#soot",
+          "uv": [
+            0,
+            10,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#soot",
+          "uv": [
+            0,
+            10,
+            14,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#soot",
+          "uv": [
+            2,
+            10,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#soot",
+          "uv": [
+            0,
+            0,
+            16,
+            14
+          ]
+        },
+        "down": {
+          "texture": "#soot",
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        6,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ]
+        },
+        "south": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ]
+        },
+        "west": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            0,
+            14,
+            10
+          ]
+        },
+        "east": {
+          "texture": "#stone",
+          "uv": [
+            2,
+            0,
+            16,
+            10
+          ]
+        },
+        "up": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            0,
+            16,
+            14
+          ]
+        },
+        "down": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

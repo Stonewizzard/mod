@@ -623,7 +623,7 @@
         "title": "Tier one",
         "paragraphs": [
           "The Ruined Ancient Forge is the first, small form of the ancient workshop. Complete its masonry to reconstruct equipment with the same recovered parts and patterns as the Reconstruction Table. It does not grant extra modifier rolls or change your pieces.",
-          "The hearth holds five input pieces and an output. Right-click it after repairing the frame. Breaking a frame block closes access, but preserves everything inside. Breaking the hearth drops its inventory and the hearth itself."
+          "The hearth holds five input pieces and an output. Completing the frame automatically forms one weathered stone-and-bronze forge. Right-click the hearth or any formed section to open it. Breaking a section restores the surviving original masonry and keeps the stored pieces safe. Breaking the hearth drops its inventory and the hearth itself."
         ]
       },
       {
@@ -631,7 +631,14 @@
         "paragraphs": [
           "The footprint is three blocks wide and three deep, four blocks tall including the foundation. The hearth sits at the center of the front edge, one block above the foundation. All layers below are read front row first. B is Ruined Forge Bricks, H is the hearth, and a dot is empty space.",
           "Foundation: BBB / BBB / BBB. Hearth level: .H. / B.B / BBB. One above the hearth: ... / B.B / .B. Two above the hearth: ... / ... / .B.",
-          "Use one hearth and eighteen Ruined Forge Bricks. The two side pillars are behind the hearth; the chimney is centered at the back. The frame rotates with the hearth. Click an incomplete hearth to see the first section that needs repair."
+          "Use one hearth and eighteen Ruined Forge Bricks. The two side pillars are behind the hearth; the chimney is centered at the back. The frame rotates with the hearth. The completed structure forms a connected work pad, firebox, supports and chimney."
+        ]
+      },
+      {
+        "title": "Ghost layout",
+        "paragraphs": [
+          "Right-click an incomplete hearth with an empty hand, then choose Show ghost layout. Translucent cyan blocks mark missing masonry. Amber marks spaces occupied by another block: clear those spaces before placing bricks. The preview never places or consumes blocks.",
+          "Click the incomplete hearth again to hide the layout. Only you see your preview, and it disappears when the forge forms or you leave the world. Shift-right-click the hearth with an empty hand to inspect repair status."
         ]
       },
       {
@@ -643,9 +650,9 @@
         ]
       },
       {
-        "title": "Growing forge",
+        "title": "The future workshop",
         "paragraphs": [
-          "This is tier one: a worn stone-and-copper hearth with an open working area. Larger tiers, configurable upgrades, corruption and Forgemaster rewards remain future progression. You do not need an advanced prototype editing station to obtain or use this first forge."
+          "This is a weathered starter forge. Advanced functions, Forgemaster rewards and future forge designs remain separate work. The planned expanding, Blood Magic-inspired structure will be the Ancient Anvil. Its exact layout and upgrades are not part of this first forge."
         ]
       }
     ],
@@ -654,7 +661,7 @@
       "archaeology_table",
       "pickaxe_core"
     ],
-    "keywords": "ruined ancient forge hearth multiblock tier one structure repair bricks craft workshop",
+    "keywords": "ruined ancient forge hearth multiblock tier one structure repair bricks craft workshop ghost preview layout formed connected",
     "recipes": [
       "ruined_forge_bricks",
       "ruined_ancient_forge"

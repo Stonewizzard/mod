@@ -31,6 +31,15 @@ public final class AncientForgeTests {
                 level.setBlock(core,AncientForgeContent.CORE.get().defaultBlockState().setValue(RuinedAncientForgeBlock.FACING,front),3);
                 check(h,!RuinedForgeStructure.inspect(level,core,front).complete(),"A lone core cannot act as a finished multiblock");
                 for(var part:RuinedForgeStructure.PARTS)level.setBlock(part.at(core,front),AncientForgeContent.BRICKS.get().defaultBlockState(),3);
+                check(h,ForgeAssembly.form(level,core)&&ForgeAssembly.formed(level.getBlockState(core)),"Repairing the frame must form the connected forge");
+                for(int i=0;i<RuinedForgeStructure.PARTS.size();i++){var at=RuinedForgeStructure.PARTS.get(i).at(core,front);check(h,FormedForgePartBlock.belongs(level,at,core,front,i),"Every frame cell must form with the correct facing and ownership");}
+                var broken=RuinedForgeStructure.PARTS.getFirst().at(core,front);var bounds=new net.minecraft.world.phys.AABB(core).inflate(5);
+                int beforeBricks=level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,bounds).stream().mapToInt(e->e.getItem().is(AncientForgeContent.BRICKS_ITEM.get())?e.getItem().getCount():0).sum();
+                level.destroyBlock(broken,true);
+                int afterBricks=level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,bounds).stream().mapToInt(e->e.getItem().is(AncientForgeContent.BRICKS_ITEM.get())?e.getItem().getCount():0).sum();
+                check(h,afterBricks-beforeBricks==1&&!ForgeAssembly.formed(level.getBlockState(core)),"Breaking a formed cell returns one original brick and unforms the forge");
+                for(int i=1;i<RuinedForgeStructure.PARTS.size();i++)check(h,level.getBlockState(RuinedForgeStructure.PARTS.get(i).at(core,front)).is(AncientForgeContent.BRICKS.get()),"Surviving masonry must restore in place without extra drops");
+                level.setBlock(broken,AncientForgeContent.BRICKS.get().defaultBlockState(),3);check(h,ForgeAssembly.form(level,core),"The repaired forge can form again");
                 var forge=(ReconstructionTableBlockEntity)level.getBlockEntity(core);var menu=new ReconstructionTableMenu(51,player.getInventory(),forge);player.containerMenu=menu;
                 check(h,menu.forge()&&menu.stillValid(player)&&RuinedForgeStructure.inspect(level,core,front).complete(),"Every orientation must validate and use the forge presentation");
                 check(h,menu.clickMenuButton(player,11),"The validated forge must allow a pickaxe pattern");
@@ -40,11 +49,19 @@ public final class AncientForgeTests {
                 check(h,!menu.stillValid(player)&&!menu.clickMenuButton(player,1)&&forge.getItem(5).isEmpty(),"Breaking the structure must immediately invalidate assembly without consuming components");
                 for(int i=0;i<5;i++)check(h,ItemStack.matches(forge.getItem(i),pieces.get(i)),"A broken frame must preserve every stored part");
                 level.setBlock(missing,AncientForgeContent.BRICKS.get().defaultBlockState(),3);
-                check(h,menu.stillValid(player)&&menu.clickMenuButton(player,1)&&forge.getItem(5).is(ArchaeologyContent.PICKAXE.get()),"Repair must restore assembly using the saved parts");
+                check(h,ForgeAssembly.form(level,core)&&menu.stillValid(player)&&menu.clickMenuButton(player,1)&&forge.getItem(5).is(ArchaeologyContent.PICKAXE.get()),"Repair must restore assembly using the saved parts");
                 check(h,!menu.clickMenuButton(player,1),"Assembly cannot duplicate an output");
                 var saved=forge.saveWithFullMetadata(level.registryAccess());var loaded=BlockEntity.loadStatic(core,forge.getBlockState(),saved,level.registryAccess());check(h,loaded instanceof ReconstructionTableBlockEntity restored&&ItemStack.matches(restored.getItem(5),forge.getItem(5))&&restored.pattern()==1,"Core inventory and pattern must survive native block-entity serialization");
+                // Persist an alternate masonry state, then verify it restores exactly on dismantling.
+                var original=Blocks.DEEPSLATE.defaultBlockState().setValue(RotatedPillarBlock.AXIS,front.getAxis());
+                var customAt=RuinedForgeStructure.PARTS.getLast().at(core,front);
+                var custom=(ForgePartBlockEntity)level.getBlockEntity(customAt);custom.original(original);
+                var savedPart=custom.saveWithFullMetadata(level.registryAccess());
+                var loadedPart=BlockEntity.loadStatic(customAt,custom.getBlockState(),savedPart,level.registryAccess());
+                check(h,loadedPart instanceof ForgePartBlockEntity restoredPart&&restoredPart.original().equals(original),"Formed cells must persist their exact original block state across reloads");
                 int before=level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(core).inflate(3)).stream().mapToInt(e->e.getItem().is(ArchaeologyContent.PICKAXE.get())?e.getItem().getCount():0).sum();
                 level.destroyBlock(core,true);int after=level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(core).inflate(3)).stream().mapToInt(e->e.getItem().is(ArchaeologyContent.PICKAXE.get())?e.getItem().getCount():0).sum();check(h,after-before==1,"Breaking the core returns its inventory exactly once");
+                for(var part:RuinedForgeStructure.PARTS){var at=part.at(core,front);check(h,at.equals(customAt)?level.getBlockState(at).equals(original):level.getBlockState(at).is(AncientForgeContent.BRICKS.get()),"Removing the core restores the surviving masonry, including original pack-provided states");}
                 for(var part:RuinedForgeStructure.PARTS)level.setBlock(part.at(core,front),Blocks.AIR.defaultBlockState(),3);
             }
             recipe(h,3,3,List.of(AncientForgeContent.BRICKS_ITEM.get(),net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace("copper_block")),AncientForgeContent.BRICKS_ITEM.get(),Items.IRON_INGOT,Items.BLAST_FURNACE,Items.IRON_INGOT,AncientForgeContent.BRICKS_ITEM.get(),net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(Identifier.withDefaultNamespace("copper_block")),AncientForgeContent.BRICKS_ITEM.get()),AncientForgeContent.CORE_ITEM.get(),1);
@@ -65,6 +82,7 @@ public final class AncientForgeTests {
             var damage=RuinedForgeStructure.inspect(level,found,Direction.NORTH);check(h,damage.missing().size()==2,"A found forge must require exactly two repairs rather than granting a complete workshop");
             for(var part:damage.missing())level.setBlock(part.at(found,Direction.NORTH),AncientForgeContent.BRICKS.get().defaultBlockState(),3);
             check(h,RuinedForgeStructure.inspect(level,found,Direction.NORTH).complete(),"World-found and player-built forges must use the same repair rules");
+            check(h,ForgeAssembly.form(level,found)&&ForgeAssembly.formed(level.getBlockState(found)),"A repaired world-found forge must use the same connected model state");
             System.out.println("ANCIENT_FORGE_TEMPLATE_CHECK: PASS: native structure loading, missing sections and repaired world-found hearth");h.succeed();
         }
     }

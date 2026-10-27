@@ -1,6 +1,6 @@
 # Ruined Ancient Forge — tier I
 
-A repairable first step toward the larger ancient forge. The hearth is a stone work basin with weathered copper bands; the surrounding masonry forms a foundation, two pillars, rear wall and broken-looking chimney. Tier I uses existing reconstruction patterns and retains each component's quality, modifiers and provenance. No advanced editing, new mining ability, boss requirement or later-tier economy is implied by this first tier.
+A repairable first step toward the ancient workshop. The hearth is a stone work basin with weathered copper bands; the surrounding masonry forms a foundation, two pillars, rear wall and broken-looking chimney. Tier I uses existing reconstruction patterns and retains each component's quality, modifiers and provenance. No advanced editing, new mining ability, boss requirement or later-tier economy is implied by this first tier.
 
 ## Acquisition
 
@@ -26,9 +26,15 @@ BBB              BBB              .B.              .B.
 
 Total: **one hearth + eighteen masonry blocks**. The occupied footprint is three wide by three deep, and four high including the foundation. Extra decoration is allowed; only the listed masonry is required. Do not block the interaction face.
 
-Click an incomplete hearth to see the current masonry count and first section requiring repair. Complete it to open the equipment-pattern screen. Stored input and output are kept in the core. Breaking the frame closes the menu and rejects assembly without consuming parts; repair restores access. Mining the hearth returns the hearth and its stored inventory through native block drops.
+Complete the frame to automatically form one connected, weathered forge: a raised stone-and-bronze work pad, tapered supports, recessed soot-blackened firebox and broken-looking chimney. Each frame cell uses its own portion of a unified model, collision shape and purpose-made textures. Every face has explicit UV coordinates. Right-click any formed section to open the equipment-pattern screen. Stored input and output are kept in the core. Breaking the frame closes the menu and rejects assembly without consuming parts; repair restores access. Mining any formed section drops that section’s original masonry and restores the surviving frame. Mining the hearth returns the hearth and its stored inventory through native block drops, and restores the surviving frame. Original masonry states are saved on each formed section, including pack-provided states; assembly never erases containers.
 
 The current output, or first input when no output exists, appears on the work pad. The wooden Reconstruction Table remains available; the forge uses the same patterns and assembly semantics while establishing the physical multiblock foundation for future tiers.
+
+## Ghost construction guide
+
+Right-click an **incomplete hearth with an empty hand** to open a small repair panel. **Show ghost layout** superimposes the eighteen-cell pattern in the world: cyan for missing masonry and amber for a space occupied by the wrong block. Place actual bricks to repair it. Correctly placed masonry disappears from the preview. Click the hearth again and use **Hide ghost layout** to turn it off; the preview also clears on formation, core removal or world change. It is client-local and never modifies the world or another player's display. Shift-right-click the hearth with an empty hand to inspect repair status.
+
+The overlay deliberately shows required full-block placement cells rather than the finished sculpted geometry. It follows all four hearth facings and does not obscure existing correct frame blocks.
 
 ## Testing commands
 
@@ -57,8 +63,8 @@ All paths are under `data/examplemod/` unless otherwise stated.
 
 To disable natural discovery in a pack, override the biome tag with `{"replace":true,"values":[]}`. The recipe and player-built forge remain usable. A custom dimension/biome generator can opt its own biomes into the tag. Packs with unusual resources should replace the fallback recipe; ordinary ingredients do not guarantee availability in every possible pack.
 
-`tools/generate_ruined_forge.py` reproducibly authors the default models, recipes, worldgen JSON and compressed template. It uses vanilla texture references, retains the existing pickaxe-mining block tag entries, and creates no new image assets. It is an authoring tool, not something executed on player machines.
+`tools/generate_ruined_forge.py` reproducibly authors the recipes, worldgen JSON and compressed template, then invokes `tools/generate_formed_forge.py`. The latter authors the connected block models, explicit UV mapping, facing states, and matching collision shapes from the same geometry. Four custom 32×32 textures depict weathered masonry, soot, aged bronze and cold ash. Both scripts preserve existing pickaxe-mining tag entries and run only during authoring.
 
 ## Future compatibility
 
-The hearth's stable block ID, orientation and stored reconstruction data can remain the starting point for later tiers. Current structure validation is localized in `RuinedForgeStructure`; eligibility uses a masonry tag. Larger tiers, specialized upgrade slots, corruption, and Forgemaster materials need their own considered design rather than being represented by unused settings now.
+The hearth's stable block ID, orientation and stored reconstruction data can remain the starting point for later tiers. Current structure validation is localized in `RuinedForgeStructure`; eligibility uses a masonry tag. Advanced forge functions, corruption, and Forgemaster materials need their own considered design. The Blood Magic-inspired expanding monument is now planned as a distinct **Ancient Anvil**, rather than a committed growth pattern for this forge.

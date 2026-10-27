@@ -57,12 +57,15 @@ public final class ClientVisualQa {
                                 player.connection.teleport(12.5,forgePosition.getY(),6,0,5);
                             });
                         }
-                        case "forge_view","forge_damage","forge_repair"->{
+                        case "forge_view","forge_damage","forge_repair","forge_obstruct","forge_strip_frame","forge_part_view"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();boolean close=command.has("close")&&command.get("close").getAsBoolean();
                             server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var level=player.level();
                                 if(action.equals("forge_damage"))level.setBlock(com.example.examplemod.RuinedForgeStructure.PARTS.getLast().at(forgePosition,net.minecraft.core.Direction.NORTH),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
+                                if(action.equals("forge_strip_frame"))for(var part:com.example.examplemod.RuinedForgeStructure.PARTS)level.setBlock(part.at(forgePosition,net.minecraft.core.Direction.NORTH),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
+                                if(action.equals("forge_obstruct"))level.setBlock(com.example.examplemod.RuinedForgeStructure.PARTS.getLast().at(forgePosition,net.minecraft.core.Direction.NORTH),net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState(),3);
+                                if(action.equals("forge_part_view"))player.connection.teleport(11.5,forgePosition.getY(),10,0,14.5F);
                                 if(action.equals("forge_repair"))for(var part:com.example.examplemod.RuinedForgeStructure.PARTS)level.setBlock(part.at(forgePosition,net.minecraft.core.Direction.NORTH),com.example.examplemod.AncientForgeContent.BRICKS.get().defaultBlockState(),3);
-                                if(action.equals("forge_view")){if(close)player.connection.teleport(12.5,forgePosition.getY(),9.5,0,23);else player.connection.teleport(8,forgePosition.getY(),6,-34,5);}
+                                if(action.equals("forge_view")){if(close)player.connection.teleport(12.5,forgePosition.getY(),9.5,0,com.example.examplemod.ForgeAssembly.formed(level.getBlockState(forgePosition))?15:23);else player.connection.teleport(9.5,forgePosition.getY(),8,-34,5);}
                             });
                         }
                         case "forge_probe_worldgen"->probeForgeWorldgen=true;
@@ -111,8 +114,14 @@ public final class ClientVisualQa {
                     }
                 }
                 state.addProperty("generatedForge",generatedForgePosition!=null);
+                state.addProperty("forgeFormed",com.example.examplemod.ForgeAssembly.formed(minecraft.level.getBlockState(forgePosition)));
+                state.addProperty("forgeGhost",ForgePreview.active(minecraft.level,forgePosition));
+                if(minecraft.level.getBlockState(forgePosition).is(com.example.examplemod.AncientForgeContent.CORE.get())){
+                    var status=com.example.examplemod.RuinedForgeStructure.inspect(minecraft.level,forgePosition,net.minecraft.core.Direction.NORTH);state.addProperty("forgeMissing",status.missing().size());
+                    state.addProperty("forgeOccupied",status.missing().stream().filter(p->!minecraft.level.getBlockState(p.at(forgePosition,net.minecraft.core.Direction.NORTH)).isAir()).count());
+                }
                 state.addProperty("forgeReady",com.example.examplemod.RuinedForgeStructure.inspect(minecraft.level,forgePosition,net.minecraft.core.Direction.NORTH).complete());
-                state.addProperty("aimedAtForge",minecraft.hitResult instanceof net.minecraft.world.phys.BlockHitResult hit&&hit.getBlockPos().equals(forgePosition));
+                state.addProperty("aimedAtForge",minecraft.hitResult instanceof net.minecraft.world.phys.BlockHitResult hit&&(hit.getBlockPos().equals(forgePosition)||minecraft.level.getBlockState(hit.getBlockPos()).is(com.example.examplemod.AncientForgeContent.PART.get())&&com.example.examplemod.FormedForgePartBlock.core(hit.getBlockPos(),minecraft.level.getBlockState(hit.getBlockPos())).equals(forgePosition)));
             }
             if(screen instanceof ReconstructionTableScreen forgeScreen){
                 var menu=forgeScreen.getMenu();state.addProperty("forgeMenu",menu.forge());state.addProperty("forgePattern",menu.pattern());state.addProperty("forgeOutput",!menu.getSlot(5).getItem().isEmpty());
