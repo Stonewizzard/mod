@@ -142,6 +142,8 @@ public class ExampleMod {
                 output.accept(ARCHAEOLOGY_HAMMER.get());
                 output.accept(MAGNIFYING_GLASS.get());
                 output.accept(ReconstructionContent.TABLE_ITEM.get());
+                output.accept(AncientForgeContent.CORE_ITEM.get());
+                output.accept(AncientForgeContent.BRICKS_ITEM.get());
                 output.accept(AscenderContent.ITEM.get());
                 ComponentStationContent.STATIONS.forEach(station->output.accept(station.item().get()));
                 ReconstructionContent.pieces().forEach(output::accept);
@@ -185,6 +187,7 @@ public class ExampleMod {
             modEventBus.addListener(ArchaeologyTableTests::register);
             modEventBus.addListener(ExcavationTests::register);
             modEventBus.addListener(ReconstructionTests::register);
+            modEventBus.addListener(AncientForgeTests::register);
             modEventBus.addListener(PickaxeModifierTests::register);
             modEventBus.addListener(ModifierTierTests::register);
             modEventBus.addListener(InfluenceTests::register);
@@ -200,6 +203,7 @@ public class ExampleMod {
         // Register the Deferred Register to the mod event bus so blocks get registered
         ArchaeologyContent.register();
         ReconstructionContent.register();
+        AncientForgeContent.register();
         AscenderContent.register();
         ComponentStationContent.register();
         FieldGuideContent.register();
@@ -241,6 +245,7 @@ public class ExampleMod {
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if(event.getTabKey()==CreativeModeTabs.COMBAT){event.accept(ArchaeologyContent.SWORD);event.accept(ArchaeologyContent.MACE);event.accept(ArchaeologyContent.SPEAR);}
         else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.accept(AncientForgeContent.BRICKS_ITEM);
             event.accept(SNIFFER_SKULL_ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             ArchaeologyContent.artifacts().forEach(event::accept);
@@ -255,6 +260,7 @@ public class ExampleMod {
         } else if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.accept(ARCHAEOLOGY_TABLE_ITEM);
             event.accept(ReconstructionContent.TABLE_ITEM);
+            event.accept(AncientForgeContent.CORE_ITEM);
             event.accept(AscenderContent.ITEM);
             ComponentStationContent.STATIONS.forEach(station->event.accept(station.item()));
             FieldGuideContent.finalists().forEach(event::accept);

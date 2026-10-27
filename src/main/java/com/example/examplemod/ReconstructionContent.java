@@ -17,7 +17,7 @@ public final class ReconstructionContent {
     public static final DeferredItem<Item> SHOVEL_HEAD=part("ancient_shovel_head"),HOE_HEAD=part("ancient_hoe_head"),MACE_HEAD=part("ancient_mace_head"),SPEAR_TIP=part("ancient_spear_tip");
     public static final DeferredBlock<ReconstructionTableBlock> TABLE=ExampleMod.BLOCKS.registerBlock("reconstruction_table",ReconstructionTableBlock::new,p->p.strength(2).sound(SoundType.WOOD).noOcclusion());
     public static final DeferredItem<BlockItem> TABLE_ITEM=ExampleMod.ITEMS.registerSimpleBlockItem("reconstruction_table",TABLE);
-    public static final DeferredHolder<BlockEntityType<?>,BlockEntityType<ReconstructionTableBlockEntity>> ENTITY=ExampleMod.BLOCK_ENTITIES.register("reconstruction_table",()->new BlockEntityType<>(ReconstructionTableBlockEntity::new,TABLE.get()));
+    public static final DeferredHolder<BlockEntityType<?>,BlockEntityType<ReconstructionTableBlockEntity>> ENTITY=ExampleMod.BLOCK_ENTITIES.register("reconstruction_table",()->new BlockEntityType<>(ReconstructionTableBlockEntity::new,TABLE.get(),AncientForgeContent.CORE.get()));
     public static final DeferredHolder<MenuType<?>,MenuType<ReconstructionTableMenu>> MENU=ExampleMod.MENUS.register("reconstruction_table",()->new MenuType<>(ReconstructionTableMenu::new,FeatureFlags.DEFAULT_FLAGS));
     private static DeferredItem<Item> part(String id){return ExampleMod.ITEMS.registerItem(id,AncientComponentItem::new,p->p.stacksTo(1).rarity(Rarity.UNCOMMON));}
     public static List<Item> pieces(){return List.of(LEFT.get(),BRIDGE.get(),RIGHT.get(),CONNECTOR.get(),HANDLE.get(),SHOVEL_HEAD.get(),HOE_HEAD.get(),MACE_HEAD.get(),SPEAR_TIP.get());}

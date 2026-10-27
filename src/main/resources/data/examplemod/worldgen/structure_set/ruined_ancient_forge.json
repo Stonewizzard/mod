@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "examplemod:ruined_ancient_forge",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 61720341,
+    "spacing": 48,
+    "separation": 24
+  }
+}

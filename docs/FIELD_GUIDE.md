@@ -25,6 +25,7 @@ The visual direction draws on familiar mod guidebook category browsing, with ori
 - [Field-tool upgrades](#tool-tiers) — Excavation
 - [Quality and scaling grades](#scaling-and-quality) — Equipment
 - [Reconstructing equipment](#reconstruction) — Equipment
+- [The Ruined Ancient Forge](#ruined-ancient-forge) — Stations
 - [The reconstructed pickaxe](#pickaxe-core) — Equipment
 - [Tool levels and mastery](#levels) — Equipment
 - [The Ascender](#ascension) — Stations
@@ -243,6 +244,32 @@ The finished tool keeps each part's quality, saved rolls and customization prove
 The pickaxe has the developed mining modifier and progression system. Further specialized modifiers for other equipment can be added later.
 
 Craft reconstruction table: grid rows PPP / .C. / S.S. A dot means an empty cell. P = any planks; C = crafting table; S = stick.
+
+<a id="ruined-ancient-forge"></a>
+
+## The Ruined Ancient Forge
+
+The Ruined Ancient Forge is the first, small form of the ancient workshop. Complete its masonry to reconstruct equipment with the same recovered parts and patterns as the Reconstruction Table. It does not grant extra modifier rolls or change your pieces.
+
+The hearth holds five input pieces and an output. Right-click it after repairing the frame. Breaking a frame block closes access, but preserves everything inside. Breaking the hearth drops its inventory and the hearth itself.
+
+The footprint is three blocks wide and three deep, four blocks tall including the foundation. The hearth sits at the center of the front edge, one block above the foundation. All layers below are read front row first. B is Ruined Forge Bricks, H is the hearth, and a dot is empty space.
+
+Foundation: BBB / BBB / BBB. Hearth level: .H. / B.B / BBB. One above the hearth: ... / B.B / .B. Two above the hearth: ... / ... / .B.
+
+Use one hearth and eighteen Ruined Forge Bricks. The two side pillars are behind the hearth; the chimney is centered at the back. The frame rotates with the hearth. Click an incomplete hearth to see the first section that needs repair.
+
+Small ruined workshops occasionally generate in plains, forests, taigas and savannas in newly generated terrain. A found workshop contains a removable hearth and most of its frame, with two bricks missing. Repair it there or take the materials home.
+
+Exploration is optional. Craft the same hearth from four Ruined Forge Bricks, two copper blocks, two iron ingots and one blast furnace. Forge bricks use ordinary stone crafting materials. No egg, boss drop, vault, new structure or rare random find is needed for the crafting route.
+
+Packs can replace these recipes, change the masonry tag, or disable/add structure biomes with datapacks. The locator command is /locate structure examplemod:ruined_ancient_forge.
+
+This is tier one: a worn stone-and-copper hearth with an open working area. Larger tiers, configurable upgrades, corruption and Forgemaster rewards remain future progression. You do not need an advanced prototype editing station to obtain or use this first forge.
+
+Craft ruined forge bricks: grid rows DD / DD. A dot means an empty cell. D = any stone crafting materials.
+
+Craft ruined ancient forge: grid rows BCB / IFI / BCB. A dot means an empty cell. B = ruined forge bricks; C = copper block; I = iron ingot; F = blast furnace.
 
 <a id="pickaxe-core"></a>
 

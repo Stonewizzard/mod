@@ -67,7 +67,9 @@ def click_widget(label,exact=True):
 def search_text(value):
     s=observe();x,y=physical(s,s['searchX'],s['searchY'])
     process('xdotool','mousemove','--window',WINDOW,str(x),str(y),'click','1')
-    process('xdotool','key','ctrl+a');process('xdotool','type','--clearmodifiers','--delay','40',value)
+    wait_for(lambda s:s.get('focus')=='search','native search focus');time.sleep(.2)
+    process('xdotool','key','ctrl+a');time.sleep(.2)
+    process('xdotool','type','--clearmodifiers','--delay','80',value)
     expect(query=value);log('type search '+value)
 
 def find_window(state):
@@ -159,6 +161,28 @@ def run():
         wait_for(lambda s:s.get('windowWidth')==1280 and s.get('windowHeight')==720,'normal window');command('gui_scale',value=3)
         wait_for(lambda s:s.get('guiScale')==3,'normal GUI scale')
         print('WORKSHOP_MANUAL_NATIVE_PASS: '+design+'; actual item opening, categories, sections, related/history, global search, no matches, topics, small window, bookmarks and keyboard',flush=True)
+    # The fixture only places blocks and parts. Opening and assembly are real OS mouse input.
+    command('gui_scale',value=2);command('forge_fixture');expect(forgeReady=True)
+    process('xdotool','key','1');time.sleep(1)
+    command('forge_view');time.sleep(1);capture('forge-complete')
+    command('forge_view',close=True);expect(aimedAtForge=True)
+    process('xdotool','click','3');expect(screen='ReconstructionTableScreen',forgeMenu=True,forgePattern=1);capture('forge-assembly')
+    click('forge_assemble');expect(forgeOutput=True,forgeDisplayOutput=True);capture('forge-result')
+    command('forge_damage');expect(forgeReady=False)
+    wait_for(lambda s:s.get('screen')!='ReconstructionTableScreen','broken multiblock closes the live menu')
+    process('xdotool','click','3');time.sleep(.5)
+    if observe().get('screen')=='ReconstructionTableScreen':raise AssertionError('Incomplete forge reopened')
+    capture('forge-incomplete')
+    command('forge_repair');expect(forgeReady=True);process('xdotool','click','3')
+    expect(screen='ReconstructionTableScreen',forgeMenu=True,forgeOutput=True);capture('forge-repaired')
+    process('xdotool','key','Escape');time.sleep(1);capture('forge-display-close');command('forge_view');time.sleep(1);capture('forge-display')
+    # Exercise native jigsaw generation, not only direct fixture placement or an NBT parser.
+    command('forge_probe_worldgen')
+    process('xdotool','key','t');time.sleep(.2)
+    process('xdotool','type','--clearmodifiers','--delay','20','/place structure examplemod:ruined_ancient_forge 24 '+str(observe()['forgeY'])+' 40')
+    process('xdotool','key','Return');expect(generatedForge=True)
+    command('forge_generated_view');time.sleep(1);capture('forge-world-ruin')
+    print('ANCIENT_FORGE_NATIVE_PASS: real block interaction, multiblock-gated assembly, output, frame interruption, repair, saved output and tabletop display',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
     print('CLIENT_VISUAL_QA_PASS: Workshop Manual item, illustrated browsing and OS input task paths',flush=True)
 

@@ -45,3 +45,7 @@ GitHub Actions provides a repeatable screenshot-and-input loop, not a live remot
 The five simulated experience levels, acceptance criteria and design tradeoffs are documented in [the design plan](FIVE_BOOK_DESIGN_PLAN.md). [The completed review](FIVE_BOOK_REVIEW.md) records the critical findings, revisions, selection and native captures.
 
 These are simulated task perspectives, not evidence from human participants. A passing script establishes that the expected actions completed. Screenshot review is required to judge presentation; small-window comfort, localization, screen-reader output and real player comprehension still benefit from human feedback. Do not infer that the book looks good merely because tests pass.
+
+## Ruined forge coverage
+
+The same actual-client run also places a development-only forge fixture and recovered input parts. OS input opens the physical hearth, assembles a tool, and verifies that frame damage closes the menu. After repair, OS input reopens the forge and confirms its saved output. Actual window captures include the complete frame, assembly screen, output, incomplete frame feedback, and repaired display. The fixture sets up world blocks and inventory only; it does not call menu assembly or input callbacks.

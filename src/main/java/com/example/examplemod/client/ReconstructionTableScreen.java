@@ -21,7 +21,7 @@ public final class ReconstructionTableScreen extends AbstractContainerScreen<Rec
             @Override public void texture(Identifier id,int x,int y,int w,int h,float u,float v,int sw,int sh,int tw,int th,int color){g.blit(RenderPipelines.GUI_TEXTURED,id,leftPos+x,topPos+y,u,v,w,h,sw,sh,tw,th,color);}
             @Override public void text(String text,int x,int y,int color){g.text(font,text,leftPos+x,topPos+y,color,false);}
             @Override public int textWidth(String text){return font.width(text);}
-        },state);
+        },state,menu.forge());
     }
     @Override protected void extractLabels(GuiGraphicsExtractor g,int mouseX,int mouseY){}
     @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){

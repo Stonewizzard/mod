@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "DD",
+    "DD"
+  ],
+  "key": {
+    "D": "#minecraft:stone_crafting_materials"
+  },
+  "result": {
+    "id": "examplemod:ruined_forge_bricks",
+    "count": 4
+  }
+}

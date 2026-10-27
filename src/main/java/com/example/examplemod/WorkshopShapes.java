@@ -51,7 +51,7 @@ public final class WorkshopShapes {
     });
     public static VoxelShape archaeology(boolean right,Direction facing){return (right?RIGHT:LEFT).get(facing);}
     public static VoxelShape reconstruction(Direction facing){return RECONSTRUCTION.get(facing);}
-    private static Map<Direction,VoxelShape> rotations(double[][] boxes){
+    static Map<Direction,VoxelShape> rotations(double[][] boxes){
         var shapes=new EnumMap<Direction,VoxelShape>(Direction.class);
         for(var facing:Direction.Plane.HORIZONTAL){
             int turns=switch(facing){case EAST->1;case SOUTH->2;case WEST->3;default->0;};var shape=Shapes.empty();

@@ -109,5 +109,13 @@
   "block.examplemod.scaling_randomizer": "Scaling Randomizer",
   "block.examplemod.component_restorer": "Restorer",
   "block.examplemod.influencer": "Influencer",
-  "item.examplemod.ancient_field_guide": "Workshop Manual"
+  "item.examplemod.ancient_field_guide": "Workshop Manual",
+  "block.examplemod.ruined_ancient_forge": "Ruined Ancient Forge",
+  "block.examplemod.ruined_forge_bricks": "Ruined Forge Bricks",
+  "forge.examplemod.ready": "Ruined Ancient Forge \u2014 tier I ready",
+  "forge.examplemod.incomplete": "Forge %s/%s: repair %s. Layout in Workshop Manual.",
+  "forge.examplemod.section.foundation": "3 \u00d7 3 foundation",
+  "forge.examplemod.section.pillars": "side pillars",
+  "forge.examplemod.section.back": "rear wall",
+  "forge.examplemod.section.chimney": "chimney"
 }

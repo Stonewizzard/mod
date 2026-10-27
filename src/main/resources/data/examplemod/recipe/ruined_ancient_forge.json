@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BCB",
+    "IFI",
+    "BCB"
+  ],
+  "key": {
+    "B": "examplemod:ruined_forge_bricks",
+    "C": "minecraft:copper_block",
+    "I": "minecraft:iron_ingot",
+    "F": "minecraft:blast_furnace"
+  },
+  "result": {
+    "id": "examplemod:ruined_ancient_forge",
+    "count": 1
+  }
+}

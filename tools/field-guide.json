@@ -614,6 +614,53 @@
     ]
   },
   {
+    "id": "ruined_ancient_forge",
+    "category": "STATIONS",
+    "title": "The Ruined Ancient Forge",
+    "icon": "examplemod:ruined_ancient_forge",
+    "sections": [
+      {
+        "title": "Tier one",
+        "paragraphs": [
+          "The Ruined Ancient Forge is the first, small form of the ancient workshop. Complete its masonry to reconstruct equipment with the same recovered parts and patterns as the Reconstruction Table. It does not grant extra modifier rolls or change your pieces.",
+          "The hearth holds five input pieces and an output. Right-click it after repairing the frame. Breaking a frame block closes access, but preserves everything inside. Breaking the hearth drops its inventory and the hearth itself."
+        ]
+      },
+      {
+        "title": "Build it",
+        "paragraphs": [
+          "The footprint is three blocks wide and three deep, four blocks tall including the foundation. The hearth sits at the center of the front edge, one block above the foundation. All layers below are read front row first. B is Ruined Forge Bricks, H is the hearth, and a dot is empty space.",
+          "Foundation: BBB / BBB / BBB. Hearth level: .H. / B.B / BBB. One above the hearth: ... / B.B / .B. Two above the hearth: ... / ... / .B.",
+          "Use one hearth and eighteen Ruined Forge Bricks. The two side pillars are behind the hearth; the chimney is centered at the back. The frame rotates with the hearth. Click an incomplete hearth to see the first section that needs repair."
+        ]
+      },
+      {
+        "title": "Find or craft",
+        "paragraphs": [
+          "Small ruined workshops occasionally generate in plains, forests, taigas and savannas in newly generated terrain. A found workshop contains a removable hearth and most of its frame, with two bricks missing. Repair it there or take the materials home.",
+          "Exploration is optional. Craft the same hearth from four Ruined Forge Bricks, two copper blocks, two iron ingots and one blast furnace. Forge bricks use ordinary stone crafting materials. No egg, boss drop, vault, new structure or rare random find is needed for the crafting route.",
+          "Packs can replace these recipes, change the masonry tag, or disable/add structure biomes with datapacks. The locator command is /locate structure examplemod:ruined_ancient_forge."
+        ]
+      },
+      {
+        "title": "Growing forge",
+        "paragraphs": [
+          "This is tier one: a worn stone-and-copper hearth with an open working area. Larger tiers, configurable upgrades, corruption and Forgemaster rewards remain future progression. You do not need an advanced prototype editing station to obtain or use this first forge."
+        ]
+      }
+    ],
+    "links": [
+      "reconstruction",
+      "archaeology_table",
+      "pickaxe_core"
+    ],
+    "keywords": "ruined ancient forge hearth multiblock tier one structure repair bricks craft workshop",
+    "recipes": [
+      "ruined_forge_bricks",
+      "ruined_ancient_forge"
+    ]
+  },
+  {
     "id": "pickaxe_core",
     "category": "EQUIPMENT",
     "title": "The reconstructed pickaxe",
