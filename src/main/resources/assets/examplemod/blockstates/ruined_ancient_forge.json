@@ -1,19 +1,35 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,formed=false": {
       "model": "examplemod:block/ruined_ancient_forge",
       "y": 0
     },
-    "facing=east": {
+    "facing=east,formed=false": {
       "model": "examplemod:block/ruined_ancient_forge",
       "y": 90
     },
-    "facing=south": {
+    "facing=south,formed=false": {
       "model": "examplemod:block/ruined_ancient_forge",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,formed=false": {
       "model": "examplemod:block/ruined_ancient_forge",
+      "y": 270
+    },
+    "facing=north,formed=true": {
+      "model": "examplemod:block/ruined_ancient_forge_formed",
+      "y": 0
+    },
+    "facing=east,formed=true": {
+      "model": "examplemod:block/ruined_ancient_forge_formed",
+      "y": 90
+    },
+    "facing=south,formed=true": {
+      "model": "examplemod:block/ruined_ancient_forge_formed",
+      "y": 180
+    },
+    "facing=west,formed=true": {
+      "model": "examplemod:block/ruined_ancient_forge_formed",
       "y": 270
     }
   }

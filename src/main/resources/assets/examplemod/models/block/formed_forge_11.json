@@ -1,0 +1,217 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "stone": "examplemod:block/forge_stone",
+    "soot": "examplemod:block/forge_soot",
+    "bronze": "examplemod:block/forge_bronze",
+    "ash": "examplemod:block/forge_ash",
+    "particle": "examplemod:block/forge_stone"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone",
+          "uv": [
+            2,
+            5,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            5,
+            14,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#stone",
+          "uv": [
+            2,
+            5,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            5,
+            14,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            2,
+            14,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            0,
+            14,
+            14
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11,
+        2
+      ],
+      "to": [
+        14,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bronze",
+          "uv": [
+            2,
+            4,
+            16,
+            5
+          ]
+        },
+        "south": {
+          "texture": "#bronze",
+          "uv": [
+            0,
+            4,
+            14,
+            5
+          ]
+        },
+        "west": {
+          "texture": "#bronze",
+          "uv": [
+            2,
+            4,
+            16,
+            5
+          ]
+        },
+        "east": {
+          "texture": "#bronze",
+          "uv": [
+            0,
+            4,
+            14,
+            5
+          ]
+        },
+        "up": {
+          "texture": "#bronze",
+          "uv": [
+            0,
+            2,
+            14,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#bronze",
+          "uv": [
+            0,
+            0,
+            14,
+            14
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone",
+          "uv": [
+            1,
+            0,
+            16,
+            4
+          ]
+        },
+        "south": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            0,
+            15,
+            4
+          ]
+        },
+        "west": {
+          "texture": "#stone",
+          "uv": [
+            1,
+            0,
+            16,
+            4
+          ]
+        },
+        "east": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            0,
+            15,
+            4
+          ]
+        },
+        "up": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            1,
+            15,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#stone",
+          "uv": [
+            0,
+            0,
+            15,
+            15
+          ]
+        }
+      }
+    }
+  ]
+}

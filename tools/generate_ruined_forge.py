@@ -66,3 +66,7 @@ out=RES/'data/examplemod/structure/ruined_ancient_forge.nbt';out.parent.mkdir(pa
 with out.open('wb') as f:
  with gzip.GzipFile(filename='',mode='wb',fileobj=f,mtime=0) as g:g.write(b'\x0a'+string('')+payload(10,nbt))
 print('Generated ruined forge models, recipes, sparse worldgen, and a two-block-damaged template.')
+
+# Formed models supersede the original placeholder geometry.
+import runpy
+runpy.run_path(str(ROOT/"tools/generate_formed_forge.py"),run_name="__main__")

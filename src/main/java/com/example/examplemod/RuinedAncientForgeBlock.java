@@ -14,24 +14,26 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.*;
 
 public final class RuinedAncientForgeBlock extends BaseEntityBlock {
+    public static final BooleanProperty FORMED=BooleanProperty.create("formed");
     public static final EnumProperty<Direction> FACING=BlockStateProperties.HORIZONTAL_FACING;
-    private static final java.util.Map<Direction,VoxelShape> SHAPES=WorkshopShapes.rotations(new double[][]{{1,0,1,15,3,15},{0,3,0,16,4,16},{2,4,2,4,12,14},{12,4,2,14,12,14},{4,4,12,12,12,14},{5,4,5,11,6,11},{4,6,4,12,7,12},{2,10,2,4,11,14},{12,10,2,14,11,14}});
-    public RuinedAncientForgeBlock(BlockBehaviour.Properties properties){super(properties);registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH));}
-    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder){builder.add(FACING);}
+    public RuinedAncientForgeBlock(BlockBehaviour.Properties properties){super(properties);registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH).setValue(FORMED,false));}
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder){builder.add(FACING,FORMED);}
     @Override public BlockState getStateForPlacement(BlockPlaceContext context){return defaultBlockState().setValue(FACING,context.getHorizontalDirection().getOpposite());}
     @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){return new ReconstructionTableBlockEntity(pos,state);}
     @Override protected RenderShape getRenderShape(BlockState state){return RenderShape.MODEL;}
     @Override protected VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){
-        return SHAPES.get(state.getValue(FACING));
+        return ForgeGeometry.shape(state.getValue(FORMED)?18:19,state.getValue(FACING));
     }
     @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){
         if(player instanceof ServerPlayer server){
             var status=RuinedForgeStructure.inspect(level,pos,state.getValue(FACING));
             if(!status.complete())server.connection.send(new net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket(status.message()));
-            else if(level.getBlockEntity(pos) instanceof ReconstructionTableBlockEntity forge)server.openMenu(forge);
+            else if(level.getBlockEntity(pos) instanceof ReconstructionTableBlockEntity forge&&ForgeAssembly.form(server.level(),pos))server.openMenu(forge);
         }
         return InteractionResult.SUCCESS;
     }
+    @Override public <T extends net.minecraft.world.level.block.entity.BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(Level level,BlockState state,net.minecraft.world.level.block.entity.BlockEntityType<T> type){return level instanceof net.minecraft.server.level.ServerLevel?createTickerHelper(type,ReconstructionContent.ENTITY.get(),ForgeAssembly::tick):null;}
+    @Override protected void affectNeighborsAfterRemoval(BlockState state,net.minecraft.server.level.ServerLevel level,BlockPos pos,boolean moving){super.affectNeighborsAfterRemoval(state,level,pos,moving);if(!level.getBlockState(pos).is(this))ForgeAssembly.dismantle(level,pos,state.getValue(FACING));}
     @Override protected BlockState rotate(BlockState state,Rotation rotation){return state.setValue(FACING,rotation.rotate(state.getValue(FACING)));}
     @Override protected BlockState mirror(BlockState state,Mirror mirror){return rotate(state,mirror.getRotation(state.getValue(FACING)));}
 }

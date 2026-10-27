@@ -10,6 +10,7 @@
     "examplemod:component_restorer",
     "examplemod:influencer",
     "examplemod:ruined_ancient_forge",
-    "examplemod:ruined_forge_bricks"
+    "examplemod:ruined_forge_bricks",
+    "examplemod:formed_ruined_forge"
   ]
 }

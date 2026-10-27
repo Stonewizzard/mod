@@ -27,7 +27,9 @@ public final class RuinedForgeStructure {
     }
     public static Status inspect(Level level,BlockPos core,Direction front){
         var missing=new ArrayList<Part>();
-        for(var part:PARTS){var pos=part.at(core,front);if(!level.hasChunkAt(pos)||!level.getBlockState(pos).is(AncientForgeContent.MASONRY))missing.add(part);}
+        for(int i=0;i<PARTS.size();i++){var part=PARTS.get(i);var pos=part.at(core,front);
+            if(!level.hasChunkAt(pos)||!level.getWorldBorder().isWithinBounds(pos)||!(FormedForgePartBlock.belongs(level,pos,core,front,i)||level.getBlockState(pos).is(AncientForgeContent.MASONRY)&&level.getBlockEntity(pos)==null))missing.add(part);
+        }
         return new Status(PARTS.size()-missing.size(),List.copyOf(missing));
     }
     private RuinedForgeStructure(){}

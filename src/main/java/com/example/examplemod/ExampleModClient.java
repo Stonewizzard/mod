@@ -30,6 +30,8 @@ public class ExampleModClient {
         }
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.InfluenceNameAnimation::tooltip);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.FieldGuideClient::open);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ForgePreview::click);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ForgePreview::tick);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::tooltip);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::scroll);
         // Allows NeoForge to create a config screen for this mod's configs.

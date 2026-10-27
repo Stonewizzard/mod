@@ -113,9 +113,15 @@
   "block.examplemod.ruined_ancient_forge": "Ruined Ancient Forge",
   "block.examplemod.ruined_forge_bricks": "Ruined Forge Bricks",
   "forge.examplemod.ready": "Ruined Ancient Forge \u2014 tier I ready",
-  "forge.examplemod.incomplete": "Forge %s/%s: repair %s. Layout in Workshop Manual.",
+  "forge.examplemod.incomplete": "Forge %s/%s: repair %s. Click empty-handed for the layout.",
   "forge.examplemod.section.foundation": "3 \u00d7 3 foundation",
   "forge.examplemod.section.pillars": "side pillars",
   "forge.examplemod.section.back": "rear wall",
-  "forge.examplemod.section.chimney": "chimney"
+  "forge.examplemod.section.chimney": "chimney",
+  "forge.examplemod.show_layout": "Show ghost layout",
+  "forge.examplemod.hide_layout": "Hide ghost layout",
+  "forge.examplemod.repair_count": "Frame: %s / %s masonry blocks",
+  "forge.examplemod.ghost_missing": "Cyan: %s missing blocks",
+  "forge.examplemod.ghost_occupied": "Amber: %s occupied spaces",
+  "forge.examplemod.repair_hint": "The preview places no blocks."
 }
