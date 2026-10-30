@@ -82,7 +82,7 @@ public final class AncientForgeTests {
         @Override protected MutableComponent typeDescription(){return Component.literal("World-found forge template repairs into the same tier-one multiblock");}
         @Override public void run(GameTestHelper h){
             var level=h.getLevel();var found=h.absolutePos(new BlockPos(3,2,4));
-            check(h,level.getBlockState(found).is(AncientForgeContent.CORE.get()),"The world template must contain a recoverable forge core");
+            check(h,level.getBlockState(found).is(AncientForgeContent.CORE.get())&&level.getBlockEntity(found) instanceof ReconstructionTableBlockEntity forge&&!forge.legacyForge(),"New world templates must explicitly use the current fireplace layout, never legacy relocation");
             var damage=RuinedForgeStructure.inspect(level,found,Direction.NORTH);check(h,damage.missing().size()==2,"A found forge must require exactly two repairs rather than granting a complete workshop");
             for(var part:damage.missing())level.setBlock(part.at(found,Direction.NORTH),AncientForgeContent.BRICKS.get().defaultBlockState(),3);
             check(h,RuinedForgeStructure.inspect(level,found,Direction.NORTH).complete(),"World-found and player-built forges must use the same repair rules");
