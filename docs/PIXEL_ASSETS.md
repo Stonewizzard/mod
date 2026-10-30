@@ -31,7 +31,7 @@ python tools/check_pixel_assets.py
 python tools/test_pixel_asset_checks.py
 ```
 
-The generator owns 43 ordinary item sprites and 13 workshop materials. The gate
+The generator owns 44 ordinary item sprites and 12 workshop materials. The gate
 checks all generated outputs for grid alignment, palette size and alpha. Item
 checks additionally require a clear one-pixel logical margin, an 11–14px longest
 dimension, no enclosed transparent pinholes and no detached tiny fragments.
