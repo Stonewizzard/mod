@@ -38,6 +38,7 @@ public final class ReconstructionTableMenu extends AbstractContainerMenu {
     @Override public boolean stillValid(Player player){return container.stillValid(player);}
     @Override public boolean clickMenuButton(Player player,int button){
         if(!(player instanceof net.minecraft.server.level.ServerPlayer)||player.containerMenu!=this||!stillValid(player)||!(container instanceof ReconstructionTableBlockEntity table))return false;
+        if(button==90&&forge()){table.alloying(true);((net.minecraft.server.level.ServerPlayer)player).openMenu(table);return true;}
         var selected=ReconstructionPattern.byId(button==0?1:button-10);
         if(selected!=null){table.pattern(selected.id);broadcastChanges();return true;}
         if(button!=1||!ready())return false;

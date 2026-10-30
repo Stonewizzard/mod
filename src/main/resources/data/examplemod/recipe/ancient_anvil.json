@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BBB",
+    " I ",
+    "III"
+  ],
+  "key": {
+    "B": "examplemod:ancient_metal_block",
+    "I": "examplemod:ancient_ingot"
+  },
+  "result": {
+    "id": "examplemod:ancient_anvil",
+    "count": 1
+  }
+}

@@ -124,5 +124,17 @@
   "forge.examplemod.ghost_missing": "Cyan: %s missing blocks",
   "forge.examplemod.ghost_occupied": "Amber: %s occupied spaces",
   "forge.examplemod.repair_hint": "The preview places no blocks.",
-  "block.examplemod.formed_ruined_forge": "Ruined Ancient Forge"
+  "block.examplemod.formed_ruined_forge": "Ruined Ancient Forge",
+  "block.examplemod.ancient_anvil": "Ancient Anvil",
+  "block.examplemod.ancient_metal_block": "Block of Ancient Metal",
+  "item.examplemod.ancient_ingot": "Ancient Ingot",
+  "alloy.examplemod.reconstruction": "Reconstruction",
+  "alloy.examplemod.alloy": "Alloy",
+  "anvil.examplemod.show": "Show foundation guide",
+  "anvil.examplemod.hide": "Hide foundation guide",
+  "anvil.examplemod.tier0": "Tier 0 / standalone anvil",
+  "anvil.examplemod.tier1": "Tier 1 / foundation complete",
+  "anvil.examplemod.foundation": "Metal foundation: %s / 9 blocks",
+  "anvil.examplemod.metals": "Iron, gold, copper, netherite or ancient metal",
+  "anvil.examplemod.mixed": "Mixed metals count. Place them one layer below."
 }
