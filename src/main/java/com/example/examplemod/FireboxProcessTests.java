@@ -48,6 +48,10 @@ public final class FireboxProcessTests {
             forge.setItem(0,ArchaeologyContent.specimen(1437,0));check(h,forge.process.start(l),"Artifacts use the same ignition and timer");
             int before=countWorld(l,core,ExampleMod.ANCIENT_ARTIFACT.get());l.destroyBlock(core,true);
             check(h,countWorld(l,core,ExampleMod.ANCIENT_ARTIFACT.get())==before+1&&countWorld(l,core,AncientAnvilContent.INGOT.get())==0,"Breaking a burning core returns the original artifact, never an early refined result");
+            // Relocation must never overwrite an unrelated block entity.
+            var blocked=core.north(2);l.setBlock(blocked,AncientForgeContent.CORE.get().defaultBlockState(),3);l.setBlock(core,Blocks.CHEST.defaultBlockState(),3);
+            var blockedSource=(ReconstructionTableBlockEntity)l.getBlockEntity(blocked);blockedSource.setItem(0,new ItemStack(Items.DIAMOND));var oldData=blockedSource.saveWithFullMetadata(l.registryAccess());oldData.remove("ForgeLayout");blockedSource=(ReconstructionTableBlockEntity)BlockEntity.loadStatic(blocked,blockedSource.getBlockState(),oldData,l.registryAccess());l.setBlockEntity(blockedSource);
+            check(h,!ForgeAssembly.migrate(l,blocked,blockedSource)&&l.getBlockState(core).is(Blocks.CHEST)&&blockedSource.getItem(0).is(Items.DIAMOND),"An unexpected container blocks migration without losing either inventory");blockedSource.clearContent();l.destroyBlock(blocked,false);l.destroyBlock(core,false);
             for(var facing:Direction.Plane.HORIZONTAL){
                 for(var p:RuinedForgeStructure.CELLS)l.setBlock(p.at(core,facing),Blocks.AIR.defaultBlockState(),3);
                 var old=core.relative(facing,2);l.setBlock(old,AncientForgeContent.CORE.get().defaultBlockState().setValue(RuinedAncientForgeBlock.FACING,facing).setValue(RuinedAncientForgeBlock.FORMED,true),3);

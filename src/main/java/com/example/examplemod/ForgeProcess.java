@@ -101,5 +101,5 @@ public final class ForgeProcess {
     }
     public void save(ValueOutput out){out.putInt("ForgePhase",phase);out.putInt("ForgeRemaining",remaining);}
     public void load(ValueInput in){phase=in.read("ForgePhase",com.mojang.serialization.Codec.INT).filter(v->v>=0&&v<=2).orElse(0);remaining=Math.clamp(in.read("ForgeRemaining",com.mojang.serialization.Codec.INT).orElse(0),0,DURATION);if(phase==1&&remaining==0)phase=0;}
-    private static void message(Player player,String text){player.displayClientMessage(Component.literal(text),true);}
+    private static void message(Player player,String text){if(player instanceof ServerPlayer server)server.connection.send(new net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket(Component.literal(text)));}
 }
