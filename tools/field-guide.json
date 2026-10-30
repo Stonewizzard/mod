@@ -100,7 +100,7 @@
       "artifacts",
       "sniffer_head"
     ],
-    "keywords": "sniff ancient debris netherite scrap cruncher egg",
+    "keywords": "sniff ancient debris ancient scrap cruncher egg",
     "sections": [
       {
         "title": "Raise one",
@@ -111,7 +111,7 @@
       {
         "title": "Debris",
         "paragraphs": [
-          "When the Sniffer successfully digs at exposed ancient debris, that debris breaks and yields netherite scrap and an artifact. Mob griefing must allow the interaction."
+          "When the Sniffer successfully digs at exposed ancient debris, the debris breaks and yields one Ancient Scrap and an artifact. Mob griefing must allow the interaction. Ordinary seed digging and the one-in-fifteen Cruncher egg chance are unchanged."
         ]
       },
       {
@@ -160,9 +160,10 @@
     "links": [
       "cruncher_egg",
       "ancient_geodes",
-      "sculk_parasites"
+      "sculk_parasites",
+      "ancient_scrap"
     ],
-    "keywords": "nether mob jaws wither rose food breeding",
+    "keywords": "nether mob jaws wither rose food breeding artifact recycle ancient scrap feeding",
     "sections": [
       {
         "title": "Overview",
@@ -186,6 +187,13 @@
         "title": "Infection",
         "paragraphs": [
           "An infected Cruncher has its own sculk transformation and attached parasite appearance. Further specialized infected behavior is planned."
+        ]
+      },
+      {
+        "title": "Recycle artifacts",
+        "paragraphs": [
+          "Right-click an adult Cruncher with an ancient artifact to recycle it into one Ancient Scrap. The artifact is consumed, and the Cruncher chews for two seconds before it can accept another. Any of the six artifact rarities can be recycled.",
+          "The scrap goes into your inventory, or drops at your feet if your inventory is full. This is deliberate item recycling and does not breed the Cruncher. Recovered component pieces and Ancient Fragments are not artifacts."
         ]
       }
     ]
@@ -629,8 +637,9 @@
       {
         "title": "Ancient alloying",
         "paragraphs": [
-          "Open the completed forge and select Alloy in the upper bar. Place one Netherite Scrap or Ancient Debris in Scrap, one gold ingot in Gold, and two iron ingots in Iron. Press Alloy to make four Ancient Ingots. Ingredients and output can stack. Shift-click routes ingredients to their matching input.",
-          "Both forge modes share stored slots. Switching to Alloy preserves all your parts; remove them, including the two stored-parts slots, before alloying. Collect the result before assembling equipment. Breaking the frame blocks both modes and preserves everything inside."
+          "Open the completed forge and select Alloy in the upper bar. Place one Ancient Scrap or Ancient Debris in Scrap, one gold ingot in Gold, and two iron ingots in Iron. Press Alloy to make four Ancient Ingots. Ingredients and output can stack. Shift-click routes ingredients to their matching input.",
+          "Both forge modes share stored slots. Switching to Alloy preserves all your parts; remove them, including the two stored-parts slots, before alloying. Collect the result before assembling equipment. Breaking the frame blocks both modes and preserves everything inside.",
+          "To recycle an artifact, place it in the left source slot with no gold or iron. The button becomes Melt; each artifact yields one Ancient Scrap. Collect an old output and remove spare components before starting a different process. Melting consumes the artifact, so reserve artifacts you want to excavate."
         ]
       },
       {
@@ -676,6 +685,53 @@
     ]
   },
   {
+    "id": "ancient_scrap",
+    "category": "ARTIFACTS",
+    "title": "Ancient Scrap and recycling",
+    "icon": "examplemod:ancient_scrap",
+    "sections": [
+      {
+        "title": "Three sources",
+        "paragraphs": [
+          "Ancient Scrap is a small recoverable piece of ancient metal. Get one by feeding an artifact to an adult Cruncher, by melting an artifact in a completed Ruined Ancient Forge, or as the guaranteed scrap from a successful Sniffer excavation of exposed Ancient Debris.",
+          "All six artifact rarities recycle into one scrap each. Recycling consumes the artifact and its excavation progress; save any artifact you want to uncover. Recovered equipment components and Ancient Fragments are not recycled by these actions."
+        ]
+      },
+      {
+        "title": "Feed a Cruncher",
+        "paragraphs": [
+          "Right-click an adult, idle Cruncher while holding an artifact. It consumes one artifact, gives one Ancient Scrap and chews for two seconds. It cannot accept another while chewing or crunching a geode. This interaction does not breed it.",
+          "The reward is delivered immediately. With a full inventory it drops at your feet. The existing wither-rose interaction remains the Cruncher’s food interaction."
+        ]
+      },
+      {
+        "title": "Melt in the forge",
+        "paragraphs": [
+          "Open the completed forge and choose Alloy. Place an artifact in the left source slot; the screen changes to Artifact Melting and the action becomes Melt. Leave Gold and Iron empty. Press Melt to consume the artifact and make one Ancient Scrap.",
+          "Collect any previous output and remove stored spare components first. A full or incompatible output, leftover metals, or an incomplete frame stops melting without consuming the artifact."
+        ]
+      },
+      {
+        "title": "Nine small pieces",
+        "paragraphs": [
+          "Craft nine Ancient Scrap into one vanilla Netherite Scrap. Craft one Netherite Scrap back into nine Ancient Scrap, just like an ingot and its nuggets. These conversions preserve the same quantity of material.",
+          "For ancient ingots, use one Ancient Scrap or Ancient Debris with one gold and two iron in the forge. That batch makes four Ancient Ingots."
+        ]
+      }
+    ],
+    "links": [
+      "crunchers",
+      "sniffers",
+      "ancient_alloy",
+      "ruined_ancient_forge"
+    ],
+    "keywords": "ancient scrap netherite nugget recycle melt feeding artifacts forge sniffer debris conversion",
+    "recipes": [
+      "netherite_scrap_from_ancient_scrap",
+      "ancient_scrap_from_netherite_scrap"
+    ]
+  },
+  {
     "id": "ancient_alloy",
     "category": "STATIONS",
     "title": "Ancient metal and alloying",
@@ -684,8 +740,8 @@
       {
         "title": "Make ancient metal",
         "paragraphs": [
-          "The repaired Ruined Ancient Forge can alloy ancient material with ordinary metals. Select Alloy in the forge, then use one Netherite Scrap OR Ancient Debris, one gold ingot, and two iron ingots to make four Ancient Ingots. No fuel or additional structure is needed for this first alloy.",
-          "Netherite Scrap is the vanilla scrap obtained by smelting Ancient Debris. Both forms are accepted directly. Artifacts, recovered component pieces, and Ancient Fragments are not alloy ingredients."
+          "The repaired Ruined Ancient Forge can alloy ancient material with ordinary metals. Select Alloy in the forge, then use one Ancient Scrap OR Ancient Debris, one gold ingot, and two iron ingots to make four Ancient Ingots. No fuel or additional structure is needed for this first alloy.",
+          "Ancient Scrap comes from recycling artifacts with an adult Cruncher or the forge, and from Sniffers excavating exposed Ancient Debris. Netherite Scrap converts into nine Ancient Scrap at a crafting grid; it is not a direct alloy ingredient."
         ]
       },
       {
@@ -699,9 +755,9 @@
     "links": [
       "ruined_ancient_forge",
       "ancient_anvil",
-      "reconstruction"
+      "ancient_scrap"
     ],
-    "keywords": "ancient ingot metal block alloy smelt scrap netherite debris gold iron forge",
+    "keywords": "ancient ingot metal block alloy smelt scrap netherite debris gold iron forge ancient scrap recycle melt",
     "recipes": [
       "ancient_metal_block",
       "ancient_ingots_from_block"

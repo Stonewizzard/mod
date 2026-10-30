@@ -49,7 +49,7 @@ java=['package com.example.examplemod;','import net.minecraft.core.Direction;','
 java += ['        {'+','.join(str(n) for n in a+B)+'}'+(',' if i<len(boxes)-1 else '') for i,(a,B,t) in enumerate(boxes)]
 java += ['    });','    public static VoxelShape shape(Direction facing){return SHAPES.get(facing);}','    private AncientAnvilGeometry(){}','}']
 (ROOT/'src/main/java/com/example/examplemod/AncientAnvilGeometry.java').write_text('\n'.join(java)+'\n')
-print('Authored Ancient Anvil model/collision, metal foundation tag, scrap input tag and three crafting recipes.')
+print('Authored Ancient Anvil model/collision, metal foundation tag, scrap input tag and five crafting recipes.')
 
 # Nugget-like reversible conversion. Exactly nine small ancient pieces equal one vanilla scrap.
 j(DATA/'recipe/netherite_scrap_from_ancient_scrap.json',{'type':'minecraft:crafting_shaped','category':'misc','pattern':['SSS','SSS','SSS'],'key':{'S':'examplemod:ancient_scrap'},'result':{'id':'minecraft:netherite_scrap','count':1}})

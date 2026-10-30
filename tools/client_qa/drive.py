@@ -204,6 +204,11 @@ def run():
     click_widget('Alloy');expect(alloyCount=8,alloyReady=False,alloyScrap=0,alloyGold=0,alloyIron=0)
     click_widget('Reconstruction');expect(screen='ReconstructionTableScreen',forgeOutput=True)
     click('forge_alloy_tab');expect(screen='ForgeAlloyScreen',alloyCount=8);slot_click(190,61,shift=True);expect(alloyCount=0)
+    command('melt_inventory');time.sleep(.5);slot_click(63,143,shift=True)
+    expect(melting=True,alloyReady=True,meltCount=0);capture('artifact-melting-ready')
+    click_widget('Melt');expect(meltCount=1,alloyReady=False,alloyScrap=0,alloyGold=0,alloyIron=0);capture('artifact-melting-result')
+    slot_click(190,61,shift=True);expect(meltCount=0)
+
     process('xdotool','key','Escape')
     # Place the actual crafted block item with native right-click, then inspect both foundation tiers.
     command('anvil_fixture');process('xdotool','key','2');time.sleep(.7);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0)
@@ -215,6 +220,11 @@ def run():
     process('xdotool','key','Escape');command('anvil_damage');expect(anvilTier=0,anvilMissing=1)
     command('anvil_foundation');expect(anvilTier=1,anvilMissing=0)
     print('ANCIENT_ANVIL_NATIVE_PASS: actual block item placement, tier zero/one, mixed metal foundation, real panel/guide buttons, downgrade/repair; native inventory shift-click alloying, exact costs, stacked output, mode switching and withdrawal',flush=True)
+    # Explicit player feeding uses native right-click on a real adult entity in survival.
+    previous_scrap=observe()['scrapInventory'];command('feed_fixture');process('xdotool','key','1')
+    expect(holdingArtifact=True,aimedAtCruncher=True);capture('cruncher-feeding-ready')
+    process('xdotool','click','3');expect(scrapInventory=previous_scrap+1,holdingArtifact=False,cruncherChewing=True);capture('cruncher-feeding-result')
+    print('ANCIENT_SCRAP_NATIVE_PASS: actual ancient-scrap alloying, native artifact melting and withdrawal, survival right-click artifact feeding with one scrap and synchronized chew animation',flush=True)
     # Exercise native jigsaw generation, not only direct fixture placement or an NBT parser.
     command('forge_probe_worldgen')
     process('xdotool','key','t');time.sleep(.2)

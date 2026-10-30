@@ -16,7 +16,7 @@ public final class AncientAnvilVisualRegression {
             var model=JsonParser.parseReader(new InputStreamReader(in,StandardCharsets.UTF_8)).getAsJsonObject();
             for(var e:model.getAsJsonArray("elements")){var box=e.getAsJsonObject();for(String corner:new String[]{"from","to"})for(var n:box.getAsJsonArray(corner))if(n.getAsDouble()<0||n.getAsDouble()>16)throw new IllegalStateException("Anvil extends beyond its owned cell");for(var face:box.getAsJsonObject("faces").entrySet()){var uv=face.getValue().getAsJsonObject().getAsJsonArray("uv");if(uv==null||uv.size()!=4)throw new IllegalStateException("Implicit anvil texture coordinates");for(var n:uv)if(n.getAsDouble()<0||n.getAsDouble()>16)throw new IllegalStateException("Out-of-range anvil UV");}}
         }
-        System.out.println("ANCIENT_ANVIL_VISUAL_CHECK: PASS: four custom materials, bounded explicit-UV model, transparent ingot margin");
+        System.out.println("ANCIENT_ANVIL_VISUAL_CHECK: PASS: four custom materials, bounded explicit-UV model, transparent ingot/scrap margins");
     }
     private AncientAnvilVisualRegression(){}
 }

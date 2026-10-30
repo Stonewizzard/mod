@@ -70,11 +70,11 @@ public class Cruncher extends Animal {
             if(level() instanceof ServerLevel server) {
                 if(!player.getAbilities().instabuild)artifact.shrink(1);
                 var scrap=new ItemStack(AncientAnvilContent.SCRAP_ITEM.get());
-                if(!player.addItem(scrap))Block.popResource(server,blockPosition(),scrap);
+                if(!player.addItem(scrap))player.drop(scrap,false);
                 artifactChewTicks=CRUNCH_TICKS;
                 entityData.set(CRUNCHING,true);
                 getNavigation().stop();
-                playSound(SoundEvents.GENERIC_EAT,.8F,.7F);
+                playSound(SoundEvents.GENERIC_EAT.value(),.8F,.7F);
             }
             return net.minecraft.world.InteractionResult.SUCCESS;
         }

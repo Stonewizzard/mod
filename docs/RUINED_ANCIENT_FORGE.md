@@ -32,7 +32,11 @@ The current output, or first input when no output exists, appears on the work pa
 
 ## Ancient alloying
 
-Select **Alloy** in the completed forge. One Netherite Scrap or Ancient Debris, one gold ingot and two iron ingots produce four Ancient Ingots. The alloy screen uses separate typed inputs and a shared output; stacks and shift-click are supported. Switch back with **Reconstruction**. Remove any old parts and output first: switching modes preserves all six stored slots. A missing frame or blocked output rejects a batch without consuming inputs. See [the Ancient Anvil reference](ANCIENT_ANVIL.md) for metal-block and anvil recipes.
+Select **Alloy** in the completed forge. One Ancient Scrap or Ancient Debris, one gold ingot and two iron ingots produce four Ancient Ingots. The alloy screen uses separate typed inputs and a shared output; stacks and shift-click are supported. Switch back with **Reconstruction**. Remove any old parts and output first: switching modes preserves all six stored slots. A missing frame or blocked output rejects a batch without consuming inputs. See [the Ancient Anvil reference](ANCIENT_ANVIL.md) for metal-block and anvil recipes.
+
+## Melt artifacts
+
+Place an artifact in the Alloy screen’s left source slot and leave Gold/Iron empty. The action becomes **Melt**: one artifact produces one Ancient Scrap. All six artifact rarities are accepted, with one scrap each. The source artifact and any excavation progress are consumed only after validating the frame, empty spare slots and available scrap-output space. An existing ingot output must be collected first. An empty source never produces another scrap from the leftover output. See [Ancient Scrap](ANCIENT_SCRAP.md).
 
 ## Ghost construction guide
 
