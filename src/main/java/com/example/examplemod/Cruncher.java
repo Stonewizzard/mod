@@ -70,7 +70,7 @@ public class Cruncher extends Animal {
             if(level() instanceof ServerLevel server) {
                 if(!player.getAbilities().instabuild)artifact.shrink(1);
                 var scrap=new ItemStack(AncientAnvilContent.SCRAP_ITEM.get());
-                if(!player.addItem(scrap))player.drop(scrap,false);
+                if(!player.addItem(scrap)&&!scrap.isEmpty())server.addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(server,player.getX(),player.getY()+.5,player.getZ(),scrap));
                 artifactChewTicks=CRUNCH_TICKS;
                 entityData.set(CRUNCHING,true);
                 getNavigation().stop();
