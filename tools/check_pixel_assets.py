@@ -47,6 +47,13 @@ def problems(im, item=True):
 
 def main():
  generate();failures=[]
+ # A new generic asset must opt into the authoring system instead of silently
+ # bypassing the gate. This animated block texture is maintained separately.
+ root=next(iter(OUTPUTS)).parents[1]
+ maintained={root/'block/cruncher_egg_veins.png'}
+ actual=set((root/'item').glob('*.png')) | set((root/'block').glob('*.png'))
+ for path in sorted(actual-set(OUTPUTS)-maintained):
+  failures.append(f'{path.name}: generic asset is not registered in the generator')
  for path in OUTPUTS:
   with Image.open(path) as im:
    errors=problems(im.convert('RGBA'),path.parent.name=='item')
