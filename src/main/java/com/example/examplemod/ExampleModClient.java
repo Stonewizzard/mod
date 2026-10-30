@@ -32,6 +32,8 @@ public class ExampleModClient {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.FieldGuideClient::open);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ForgePreview::click);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ForgePreview::tick);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.AncientAnvilPreview::click);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.AncientAnvilPreview::tick);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::tooltip);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::scroll);
         // Allows NeoForge to create a config screen for this mod's configs.
@@ -52,6 +54,7 @@ public class ExampleModClient {
     static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ExampleMod.ARCHAEOLOGY_TABLE_ENTITY.get(),com.example.examplemod.client.ArchaeologyTableRenderer::new);
         event.registerBlockEntityRenderer(ReconstructionContent.ENTITY.get(),com.example.examplemod.client.AncientForgeRenderer::new);
+        event.registerBlockEntityRenderer(AncientAnvilContent.ENTITY.get(),com.example.examplemod.client.AncientAnvilRenderer::new);
         event.registerEntityRenderer(ExampleMod.CRUNCHER.get(), CruncherRenderer::new);
         event.registerEntityRenderer(ExampleMod.SKULK_PARASITE.get(), SkulkParasiteRenderer::new);
         event.registerEntityRenderer(ExampleMod.SKULK_ZOMBIE.get(), SkulkZombieRenderer::new);
@@ -99,6 +102,7 @@ public class ExampleModClient {
     static void registerTableScreen(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event){
         event.register(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),com.example.examplemod.client.ArchaeologyTableScreen::new);
         event.register(ReconstructionContent.MENU.get(),com.example.examplemod.client.ReconstructionTableScreen::new);
+        event.register(AncientAnvilContent.ALLOY_MENU.get(),com.example.examplemod.client.ForgeAlloyScreen::new);
         event.register(AscenderContent.MENU.get(),com.example.examplemod.client.AscenderScreen::new);
         event.register(ComponentStationContent.MENU.get(),com.example.examplemod.client.ComponentStationScreen::new);
     }

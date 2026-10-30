@@ -18,6 +18,7 @@ public final class ReconstructionScreenView {
         c.fill(0,0,320,242,0xff181a1d);c.fill(1,1,318,240,0xff55585c);c.fill(2,2,316,238,0xffc6c6c6);
         c.fill(2,2,315,1,0xffeeeeee);c.fill(2,2,1,237,0xffeeeeee);c.fill(317,3,1,237,0xff67676a);c.fill(3,239,314,1,0xff67676a);
         c.fill(7,7,306,19,0xff33383e);c.fill(7,25,306,1,0xff9c7350);c.text(forge?"Ruined Ancient Forge":"Reconstruction",13,12,0xfff0e5d4);
+        if(forge){c.fill(218,8,49,16,0xff7a633e);c.fill(218,8,49,1,0xffd7b97e);c.text("Alloy",228,12,0xfff1e2c4);}
         String title=forge?"TIER I":"PATTERNS";c.text(title,309-c.textWidth(title),13,0xffb9c2c6);
         panel(c,10,29,98,119,0xff43464b);
         for(var p:ReconstructionPattern.values()){

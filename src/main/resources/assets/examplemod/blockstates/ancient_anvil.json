@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "facing=north,tier=0": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 0
+    },
+    "facing=east,tier=0": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 90
+    },
+    "facing=south,tier=0": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 180
+    },
+    "facing=west,tier=0": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    },
+    "facing=north,tier=1": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 0
+    },
+    "facing=east,tier=1": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 90
+    },
+    "facing=south,tier=1": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 180
+    },
+    "facing=west,tier=1": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    }
+  }
+}

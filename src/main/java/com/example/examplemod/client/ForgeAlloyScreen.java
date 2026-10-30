@@ -1,0 +1,39 @@
+package com.example.examplemod.client;
+
+import com.example.examplemod.*;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundContainerButtonClickPacket;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.*;
+
+/** A small furnace-like alloying layout with native inventory slots and real buttons. */
+public final class ForgeAlloyScreen extends AbstractContainerScreen<ForgeAlloyMenu> {
+    private Button alloy;
+    public ForgeAlloyScreen(ForgeAlloyMenu menu,Inventory inv,Component title){super(menu,inv,title,288,224);}
+    private void send(int id){if(minecraft.getConnection()!=null)minecraft.getConnection().send(new ServerboundContainerButtonClickPacket(menu.containerId,id));}
+    @Override protected void init(){super.init();addRenderableWidget(Button.builder(Component.translatable("alloy.examplemod.reconstruction"),b->send(90)).bounds(leftPos+179,topPos+7,101,18).build());alloy=addRenderableWidget(Button.builder(Component.translatable("alloy.examplemod.alloy"),b->send(1)).bounds(leftPos+180,topPos+94,88,20).build());}
+    @Override public void extractBackground(GuiGraphicsExtractor g,int mx,int my,float partial){
+        alloy.active=menu.ready();
+        g.fill(leftPos,topPos,leftPos+288,topPos+224,0xff28272a);g.fill(leftPos+2,topPos+2,leftPos+286,topPos+222,0xffc6c6c6);
+        g.fill(leftPos+7,topPos+7,leftPos+171,topPos+26,0xff33383e);text(g,"Ancient Alloying",13,12,0xfff1d7a4);
+        g.fill(leftPos+12,topPos+33,leftPos+276,topPos+121,0xff343638);
+        text(g,"Scrap",37,46,0xffd4c3a4);text(g,"Gold",85,46,0xffe6bd5b);text(g,"Iron",133,46,0xffc8d3db);text(g,">",166,65,0xffe6bd5b);
+        text(g,"1",59,80,0xffa5b0b2);text(g,"1",105,80,0xffa5b0b2);text(g,"2",151,80,0xffa5b0b2);
+        text(g,"Stored parts",218,34,0xffa8adb0);
+        for(int i=0;i<6;i++){var p=ForgeAlloyMenu.POSITIONS[i];slot(g,p[0],p[1]);}
+        // Real item models explain the recipe without adding large instructional tooltips.
+        Item[] ghosts={Items.NETHERITE_SCRAP,Items.GOLD_INGOT,Items.IRON_INGOT,null,null,AncientAnvilContent.INGOT.get()};
+        for(int i=0;i<6;i++)if(ghosts[i]!=null&&!menu.getSlot(i).hasItem()){var p=ForgeAlloyMenu.POSITIONS[i];g.item(new ItemStack(ghosts[i]),leftPos+p[0],topPos+p[1]);g.fill(leftPos+p[0],topPos+p[1],leftPos+p[0]+16,topPos+p[1]+16,0x99343638);}
+        text(g,"4 ingots",180,80,0xffd1bc8d);text(g,"Scrap or Ancient Debris",20,99,0xffc1c7c8);
+        boolean spare=menu.getSlot(3).hasItem()||menu.getSlot(4).hasItem();text(g,spare?"Remove stored parts to alloy":"Ruined Forge / completed frame",14,126,spare?0xff9a421e:0xff50545b);
+        text(g,"Inventory",14,146,0xff404044);
+        for(int row=0;row<3;row++)for(int col=0;col<9;col++)slot(g,63+col*18,143+row*18);
+        for(int col=0;col<9;col++)slot(g,63+col*18,201);
+    }
+    private void text(GuiGraphicsExtractor g,String s,int x,int y,int color){g.text(font,s,leftPos+x,topPos+y,color,false);}
+    private void slot(GuiGraphicsExtractor g,int x,int y){g.fill(leftPos+x-1,topPos+y-1,leftPos+x+17,topPos+y+17,0xffeeeeee);g.fill(leftPos+x-1,topPos+y-1,leftPos+x+16,topPos+y,0xff373c42);g.fill(leftPos+x-1,topPos+y-1,leftPos+x,topPos+y+16,0xff373c42);g.fill(leftPos+x,topPos+y,leftPos+x+16,topPos+y+16,0xff777f82);}
+    @Override protected void extractLabels(GuiGraphicsExtractor g,int x,int y){}
+}

@@ -144,6 +144,9 @@ public class ExampleMod {
                 output.accept(ReconstructionContent.TABLE_ITEM.get());
                 output.accept(AncientForgeContent.CORE_ITEM.get());
                 output.accept(AncientForgeContent.BRICKS_ITEM.get());
+                output.accept(AncientAnvilContent.ANVIL_ITEM.get());
+                output.accept(AncientAnvilContent.INGOT.get());
+                output.accept(AncientAnvilContent.METAL_ITEM.get());
                 output.accept(AscenderContent.ITEM.get());
                 ComponentStationContent.STATIONS.forEach(station->output.accept(station.item().get()));
                 ReconstructionContent.pieces().forEach(output::accept);
@@ -188,6 +191,7 @@ public class ExampleMod {
             modEventBus.addListener(ExcavationTests::register);
             modEventBus.addListener(ReconstructionTests::register);
             modEventBus.addListener(AncientForgeTests::register);
+            modEventBus.addListener(AncientAnvilTests::register);
             modEventBus.addListener(PickaxeModifierTests::register);
             modEventBus.addListener(ModifierTierTests::register);
             modEventBus.addListener(InfluenceTests::register);
@@ -204,6 +208,7 @@ public class ExampleMod {
         ArchaeologyContent.register();
         ReconstructionContent.register();
         AncientForgeContent.register();
+        AncientAnvilContent.register();
         AscenderContent.register();
         ComponentStationContent.register();
         FieldGuideContent.register();
@@ -246,8 +251,10 @@ public class ExampleMod {
         if(event.getTabKey()==CreativeModeTabs.COMBAT){event.accept(ArchaeologyContent.SWORD);event.accept(ArchaeologyContent.MACE);event.accept(ArchaeologyContent.SPEAR);}
         else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(AncientForgeContent.BRICKS_ITEM);
+            event.accept(AncientAnvilContent.METAL_ITEM);
             event.accept(SNIFFER_SKULL_ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            event.accept(AncientAnvilContent.INGOT);
             ArchaeologyContent.artifacts().forEach(event::accept);
             ArchaeologyContent.materials().forEach(event::accept);
             ReconstructionContent.pieces().forEach(event::accept);
@@ -261,6 +268,7 @@ public class ExampleMod {
             event.accept(ARCHAEOLOGY_TABLE_ITEM);
             event.accept(ReconstructionContent.TABLE_ITEM);
             event.accept(AncientForgeContent.CORE_ITEM);
+            event.accept(AncientAnvilContent.ANVIL_ITEM);
             event.accept(AscenderContent.ITEM);
             ComponentStationContent.STATIONS.forEach(station->event.accept(station.item()));
             FieldGuideContent.finalists().forEach(event::accept);
