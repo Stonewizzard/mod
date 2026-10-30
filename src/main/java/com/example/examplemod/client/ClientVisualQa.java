@@ -82,7 +82,7 @@ public final class ClientVisualQa {
                             if(action.equals("anvil_expose"))for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)if(x!=0||z!=0)l.setBlock(anvilPosition.offset(x,-1,z),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
                             if(action.equals("anvil_foundation"))for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)l.setBlock(anvilPosition.offset(x,-1,z),((x+z)%2==0?net.minecraft.world.level.block.Blocks.IRON_BLOCK:net.minecraft.world.level.block.Blocks.GOLD_BLOCK).defaultBlockState(),3);
                             if(action.equals("anvil_damage"))l.setBlock(anvilPosition.offset(1,-1,1),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
-                            if(action.equals("anvil_view")){if(close)player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY(),anvilPosition.getZ()-2.5,0,17);else player.connection.teleport(anvilPosition.getX()-2.5,anvilPosition.getY(),anvilPosition.getZ()-3.5,-37,9);}
+                            if(action.equals("anvil_view")){if(close)player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY(),anvilPosition.getZ()-2.5,0,17);else player.connection.teleport(anvilPosition.getX()-1.5,anvilPosition.getY(),anvilPosition.getZ()-2.5,-34,16);}
                             });
                         }
                         case "forge_probe_worldgen"->probeForgeWorldgen=true;

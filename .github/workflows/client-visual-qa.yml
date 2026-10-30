@@ -39,7 +39,7 @@ jobs:
         timeout-minutes: 5
         run: |
           sudo apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 update -qq
-          sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 install --no-install-recommends -y xvfb xdotool x11-utils imagemagick ffmpeg mesa-utils mesa-vulkan-drivers vulkan-tools libgl1-mesa-dri libglx-mesa0 libxkbcommon-x11-0 libxcursor1 libxinerama1 libxi6 libxrandr2 libasound2t64
+          sudo DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 install --no-install-recommends -y xvfb xauth xdotool x11-utils imagemagick ffmpeg mesa-utils mesa-vulkan-drivers vulkan-tools libgl1-mesa-dri libglx-mesa0 libxkbcommon-x11-0 libxcursor1 libxinerama1 libxi6 libxrandr2 libasound2t64
       - name: Build and validate catalog
         run: |
           chmod +x gradlew
