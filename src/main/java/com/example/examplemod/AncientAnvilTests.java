@@ -36,7 +36,7 @@ public final class AncientAnvilTests {
             check(h,net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace("copper_block")).defaultBlockState().is(AncientAnvilContent.FOUNDATION),"Copper metal blocks must qualify without a mod dependency");
             for(var part:RuinedForgeStructure.PARTS)l.setBlock(part.at(core,Direction.NORTH),AncientForgeContent.BRICKS.get().defaultBlockState(),3);
             l.setBlock(core,AncientForgeContent.CORE.get().defaultBlockState(),3);check(h,ForgeAssembly.form(l,core),"Alloying uses a real formed Ruined Forge");
-            var forge=(ReconstructionTableBlockEntity)l.getBlockEntity(core);forge.alloying(true);
+            var forge=(ReconstructionTableBlockEntity)l.getBlockEntity(core);
             var player=h.makeMockServerPlayerInLevel();player.snapTo(core.getX()+.5,core.getY()+1,core.getZ()+.5);var menu=new ForgeAlloyMenu(75,player.getInventory(),forge);player.containerMenu=menu;
             for(var source:List.of(AncientAnvilContent.SCRAP_ITEM.get(),Items.ANCIENT_DEBRIS)){
                 forge.setItem(0,new ItemStack(source));forge.setItem(1,ItemStack.EMPTY);forge.setItem(2,new ItemStack(Items.IRON_INGOT,2));forge.setItem(5,ItemStack.EMPTY);
@@ -50,7 +50,7 @@ public final class AncientAnvilTests {
             forge.setItem(3,new ItemStack(ReconstructionContent.HANDLE.get()));check(h,!menu.ready(),"Switching modes preserves spare components and requires removing them before alloying");forge.setItem(3,ItemStack.EMPTY);
             var damage=RuinedForgeStructure.PARTS.getLast().at(core,Direction.NORTH);l.destroyBlock(damage,false);check(h,!menu.stillValid(player)&&!menu.clickMenuButton(player,1)&&forge.getItem(0).getCount()==4,"Breaking the forge must block alloying without consuming ingredients");
             l.setBlock(damage,AncientForgeContent.BRICKS.get().defaultBlockState(),3);check(h,ForgeAssembly.form(l,core)&&menu.clickMenuButton(player,1)&&forge.getItem(5).getCount()==4,"Repair resumes the same saved alloy project");
-            var saved=forge.saveWithFullMetadata(l.registryAccess());var loaded=BlockEntity.loadStatic(core,forge.getBlockState(),saved,l.registryAccess());check(h,loaded instanceof ReconstructionTableBlockEntity restored&&restored.alloying()&&restored.getItem(2).getCount()==6&&restored.getItem(5).getCount()==4,"Forge mode, ingredient stack counts and output persist across reloads");
+            var saved=forge.saveWithFullMetadata(l.registryAccess());var loaded=BlockEntity.loadStatic(core,forge.getBlockState(),saved,l.registryAccess());check(h,loaded instanceof ReconstructionTableBlockEntity restored&&restored.getItem(2).getCount()==6&&restored.getItem(5).getCount()==4,"Forge ingredient stack counts and output persist across reloads");
             var slot=player.getInventory().getItem(9);player.getInventory().setItem(9,new ItemStack(Items.IRON_INGOT,2));check(h,!menu.quickMoveStack(player,6).isEmpty()&&forge.getItem(2).getCount()==8,"Shift-click routes iron to its correct input");player.getInventory().setItem(9,slot);
             var ingot=AncientAnvilContent.INGOT.get();var metal=AncientAnvilContent.METAL_ITEM.get();
             craft(h,3,3,List.of(metal,metal,metal,Items.AIR,ingot,Items.AIR,ingot,ingot,ingot),AncientAnvilContent.ANVIL_ITEM.get(),1);

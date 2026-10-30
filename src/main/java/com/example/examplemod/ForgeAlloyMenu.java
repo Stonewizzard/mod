@@ -5,7 +5,7 @@ import net.minecraft.world.entity.player.*;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 
-/** Both forge modes share the core's six persisted slots; mode switches never clear them. */
+/** Dedicated forge metallurgy; all six persisted legacy slots remain withdrawable. */
 public final class ForgeAlloyMenu extends AbstractContainerMenu {
     public static final int[][] POSITIONS={{42,61},{88,61},{134,61},{225,46},{249,46},{190,61}};
     private final Container container;
@@ -21,7 +21,6 @@ public final class ForgeAlloyMenu extends AbstractContainerMenu {
     @Override public boolean stillValid(Player p){return container.stillValid(p);}
     @Override public boolean clickMenuButton(Player player,int id){
         if(!(player instanceof net.minecraft.server.level.ServerPlayer server)||player.containerMenu!=this||!stillValid(player)||!(container instanceof ReconstructionTableBlockEntity forge)||!forge.getBlockState().is(AncientForgeContent.CORE.get()))return false;
-        if(id==90){forge.alloying(false);server.openMenu(forge);return true;}
         if(id!=1||!ready())return false;
         // Validate everything before mutating any slot; failed/duplicate packets cannot lose ingredients.
         boolean melt=melting();var result=AncientAlloy.result(container);int amount=AncientAlloy.outputCount(container);

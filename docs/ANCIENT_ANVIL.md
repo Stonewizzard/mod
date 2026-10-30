@@ -21,9 +21,9 @@ Right-click empty-handed to view the tier, foundation count and native **Show fo
 
 ## Forge alloying
 
-The completed forge retains Reconstruction and has an **Alloy** button. An artifact in the source slot changes the action to **Melt** and yields one Ancient Scrap with no gold/iron cost. Remove leftover metals and incompatible output first. Its separate native-slot screen holds scrap, gold and iron inputs and the shared output. Shift-click routes inputs correctly; stacks and repeated batches are supported. Switch back with **Reconstruction**.
+The completed forge opens directly to metallurgy. It handles alloying and artifact melting; equipment patterns remain at the separate Reconstruction Table. An artifact in the source slot changes the action to **Melt** and yields one Ancient Scrap with no gold/iron cost. Its native-slot screen holds source, gold and iron inputs, two legacy-storage cells and the output. Shift-click routes inputs correctly; stacks and repeated batches are supported.
 
-Both modes use the same persisted six-slot block entity. Switching modes preserves every item; clear any components (including the two stored-parts cells) and the old output before starting an alloy. The operation validates the whole batch before consuming anything. Output overflow, a foreign output item, missing ingredients, a broken frame, or spare components reject the action without consumption. Stored inventory and last-used mode persist, and breaking the hearth returns inventory through native drops. Reconstruction patterns and the wooden table remain available.
+All six persisted slots are preserved. Remove any stored components or finished tools before processing. The operation validates the whole batch before consuming anything. Output overflow, a foreign output item, missing ingredients, a broken frame, or spare components reject the action without consumption. Breaking the hearth returns inventory through native drops. Old mode flags cannot restore forge equipment assembly.
 
 The alloy definition and counts live in `AncientAlloy`, shared by server and screen. `ForgeAlloyMenu` enforces ownership, distance, complete-frame and capacity checks. Foundation/source eligibility is tag-driven:
 

@@ -11,12 +11,11 @@ import net.minecraft.world.item.ItemStack;
 public final class ReconstructionTableMenu extends AbstractContainerMenu {
     public static final int[][] POSITIONS={{157,46},{181,46},{205,46},{181,73},{181,100},{277,73}};
     private final Container container;
-    private int clientPattern;private boolean clientForge;
+    private int clientPattern;
     public ReconstructionTableMenu(int id,Inventory inventory){this(id,inventory,new SimpleContainer(6));}
     public ReconstructionTableMenu(int id,Inventory inventory,Container container){
         super(ReconstructionContent.MENU.get(),id);checkContainerSize(container,6);this.container=container;
         addDataSlot(new DataSlot(){@Override public int get(){return pattern();}@Override public void set(int value){clientPattern=value;}});
-        addDataSlot(new DataSlot(){@Override public int get(){return forge()?1:0;}@Override public void set(int value){clientForge=value==1;}});
         for(int i=0;i<6;i++){final int slot=i;addSlot(new Slot(container,i,POSITIONS[i][0],POSITIONS[i][1]){
             @Override public boolean mayPlace(ItemStack stack){return accepts(pattern(),slot,stack);}
             // Spare pieces stay visible/removable when a different pattern is selected.
@@ -26,7 +25,6 @@ public final class ReconstructionTableMenu extends AbstractContainerMenu {
         for(int row=0;row<3;row++)for(int col=0;col<9;col++)addSlot(new Slot(inventory,9+row*9+col,79+col*18,161+row*18));
         for(int col=0;col<9;col++)addSlot(new Slot(inventory,col,79+col*18,219));
     }
-    public boolean forge(){return container instanceof ReconstructionTableBlockEntity table?table.getBlockState().is(AncientForgeContent.CORE.get()):clientForge;}
     public int pattern(){return container instanceof ReconstructionTableBlockEntity table?table.pattern():clientPattern;}
     public static boolean accepts(int pattern,int slot,ItemStack stack){var p=ReconstructionPattern.byId(pattern);return p!=null&&slot>=0&&slot<5&&p.part(slot)!=null&&!stack.isEmpty()&&stack.is(p.part(slot));}
     /** Legacy callers default to the original five-piece pickaxe. */
@@ -34,11 +32,10 @@ public final class ReconstructionTableMenu extends AbstractContainerMenu {
     public int inserted(){int result=0;for(int i=0;i<5;i++)if(accepts(pattern(),i,container.getItem(i)))result++;return result;}
     public double previewScore(){var p=ReconstructionPattern.byId(pattern());if(p==null)return 0;var pieces=new ArrayList<ItemStack>();for(int slot:p.slots)pieces.add(container.getItem(slot));return ArtifactQuality.average(pieces);}
     public boolean hasSpareParts(){var p=ReconstructionPattern.byId(pattern());if(p==null)return false;for(int i=0;i<5;i++)if(p.part(i)==null&&!container.getItem(i).isEmpty())return true;return false;}
-    public boolean ready(){var p=ReconstructionPattern.byId(pattern());return p!=null&&inserted()==p.parts.size()&&!hasSpareParts()&&container.getItem(5).isEmpty();}
-    @Override public boolean stillValid(Player player){return container.stillValid(player);}
+    public boolean ready(){if(container instanceof ReconstructionTableBlockEntity t&&t.getBlockState().is(AncientForgeContent.CORE.get()))return false;var p=ReconstructionPattern.byId(pattern());return p!=null&&inserted()==p.parts.size()&&!hasSpareParts()&&container.getItem(5).isEmpty();}
+    @Override public boolean stillValid(Player player){return !(container instanceof ReconstructionTableBlockEntity t&&t.getBlockState().is(AncientForgeContent.CORE.get()))&&container.stillValid(player);}
     @Override public boolean clickMenuButton(Player player,int button){
         if(!(player instanceof net.minecraft.server.level.ServerPlayer)||player.containerMenu!=this||!stillValid(player)||!(container instanceof ReconstructionTableBlockEntity table))return false;
-        if(button==90&&forge()){table.alloying(true);((net.minecraft.server.level.ServerPlayer)player).openMenu(table);return true;}
         var selected=ReconstructionPattern.byId(button==0?1:button-10);
         if(selected!=null){table.pattern(selected.id);broadcastChanges();return true;}
         if(button!=1||!ready())return false;

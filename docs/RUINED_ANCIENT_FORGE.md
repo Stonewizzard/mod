@@ -1,6 +1,6 @@
 # Ruined Ancient Forge — tier I
 
-A repairable first step toward the ancient workshop. The hearth is a stone work basin with weathered copper bands; the surrounding masonry forms a foundation, two pillars, rear wall and broken-looking chimney. Tier I supports existing reconstruction patterns and ancient-metal alloying, retaining each component's quality, modifiers and provenance. No advanced editing, new mining ability, boss requirement or later-tier economy is implied by this first tier.
+A repairable first step toward the ancient workshop. The hearth is a stone work basin with weathered copper bands; the surrounding masonry forms a foundation, two pillars, rear wall and broken-looking chimney. Tier I handles ancient-metal alloying and artifact melting. Equipment assembly belongs to the separate Reconstruction Table. No advanced editing, new mining ability, boss requirement or later-tier economy is implied by this first tier.
 
 ## Acquisition
 
@@ -26,17 +26,17 @@ BBB              BBB              .B.              .B.
 
 Total: **one hearth + eighteen masonry blocks**. The occupied footprint is three wide by three deep, and four high including the foundation. Extra decoration is allowed; only the listed masonry is required. Do not block the interaction face.
 
-Complete the frame to automatically form one connected, weathered forge: a raised stone-and-bronze work pad, tapered supports, recessed soot-blackened firebox and broken-looking chimney. Each frame cell uses its own portion of a unified model, collision shape and purpose-made textures. Every face has explicit UV coordinates. Right-click any formed section to open the equipment-pattern screen. Stored input and output are kept in the core. Breaking the frame closes the menu and rejects assembly without consuming parts; repair restores access. Mining any formed section drops that section’s original masonry and restores the surviving frame. Mining the hearth returns the hearth and its stored inventory through native block drops, and restores the surviving frame. Original masonry states are saved on each formed section, including pack-provided states; assembly never erases containers.
+Complete the frame to automatically form one connected, weathered forge: a raised stone-and-bronze work pad, tapered supports, recessed soot-blackened firebox and broken-looking chimney. Each frame cell uses its own portion of a unified model, collision shape and purpose-made textures. Every face has explicit UV coordinates. Right-click any formed section to open the metallurgy screen directly. Stored input and output are kept in the core. Breaking the frame closes the menu and rejects processing without consuming stored inputs; repair restores access. Mining any formed section drops that section’s original masonry and restores the surviving frame. Mining the hearth returns the hearth and its stored inventory through native block drops, and restores the surviving frame. Original masonry states are saved on each formed section, including pack-provided states; formation never erases containers.
 
-The current output, or first input when no output exists, appears on the work pad. The wooden Reconstruction Table remains available; the forge uses the same patterns and assembly semantics while establishing the physical multiblock foundation for future tiers.
+The current output, or first input when no output exists, appears on the work pad. The Reconstruction Table handles pickaxes and other equipment. The forge no longer offers equipment patterns. Previously stored components and completed tools remain withdrawable from all six slots.
 
 ## Ancient alloying
 
-Select **Alloy** in the completed forge. One Ancient Scrap or Ancient Debris, one gold ingot and two iron ingots produce four Ancient Ingots. The alloy screen uses separate typed inputs and a shared output; stacks and shift-click are supported. Switch back with **Reconstruction**. Remove any old parts and output first: switching modes preserves all six stored slots. A missing frame or blocked output rejects a batch without consuming inputs. See [the Ancient Anvil reference](ANCIENT_ANVIL.md) for metal-block and anvil recipes.
+Open the completed forge. One Ancient Scrap or Ancient Debris, one gold ingot and two iron ingots produce four Ancient Ingots. The alloy screen uses separate typed inputs and a shared output; stacks and shift-click are supported. Remove any old parts and output first. All six stored slots, including legacy equipment from older worlds, are preserved. A missing frame or blocked output rejects a batch without consuming inputs. See [the Ancient Anvil reference](ANCIENT_ANVIL.md) for metal-block and anvil recipes.
 
 ## Melt artifacts
 
-Place an artifact in the Alloy screen’s left source slot and leave Gold/Iron empty. The action becomes **Melt**: one artifact produces one Ancient Scrap. All six artifact rarities are accepted, with one scrap each. The source artifact and any excavation progress are consumed only after validating the frame, empty spare slots and available scrap-output space. An existing ingot output must be collected first. An empty source never produces another scrap from the leftover output. See [Ancient Scrap](ANCIENT_SCRAP.md).
+Place an artifact in the metallurgy screen’s left source slot and leave Gold/Iron empty. The action becomes **Melt**: one artifact produces one Ancient Scrap. All six artifact rarities are accepted, with one scrap each. The source artifact and any excavation progress are consumed only after validating the frame, empty spare slots and available scrap-output space. An existing ingot output must be collected first. An empty source never produces another scrap from the leftover output. See [Ancient Scrap](ANCIENT_SCRAP.md).
 
 ## Ghost construction guide
 
@@ -75,4 +75,4 @@ To disable natural discovery in a pack, override the biome tag with `{"replace":
 
 ## Future compatibility
 
-The hearth's stable block ID, orientation and stored reconstruction data can remain the starting point for later tiers. Current structure validation is localized in `RuinedForgeStructure`; eligibility uses a masonry tag. Advanced forge functions, corruption, and Forgemaster materials need their own considered design. The Blood Magic-inspired expanding monument is now planned as a distinct **Ancient Anvil**, rather than a committed growth pattern for this forge.
+The hearth's stable block ID, orientation and stored inventory data can remain the starting point for later tiers. Current structure validation is localized in `RuinedForgeStructure`; eligibility uses a masonry tag. Advanced forge functions, corruption, and Forgemaster materials need their own considered design. The Blood Magic-inspired expanding monument is now planned as a distinct **Ancient Anvil**, rather than a committed growth pattern for this forge.

@@ -256,13 +256,13 @@ Craft reconstruction table: grid rows PPP / .C. / S.S. A dot means an empty cell
 
 ## The Ruined Ancient Forge
 
-The Ruined Ancient Forge is the first, small form of the ancient workshop. Complete its masonry to reconstruct equipment with the same recovered parts and patterns as the Reconstruction Table. It does not grant extra modifier rolls or change your pieces.
+The Ruined Ancient Forge is a small ancient metallurgy workshop. Complete its masonry to alloy Ancient Ingots and melt unwanted artifacts into Ancient Scrap. Assemble pickaxes and other equipment at the separate Reconstruction Table.
 
-The hearth holds five input pieces and an output. Completing the frame automatically forms one weathered stone-and-bronze forge. Right-click the hearth or any formed section to open it. Breaking a section restores the surviving original masonry and keeps the stored pieces safe. Breaking the hearth drops its inventory and the hearth itself.
+Completing the frame forms one weathered stone-and-bronze forge. Right-click the hearth or any formed section to open its metallurgy screen directly. Breaking a section restores the surviving masonry and keeps the contents safe. Breaking the hearth drops its inventory and the hearth itself.
 
-Open the completed forge and select Alloy in the upper bar. Place one Ancient Scrap or Ancient Debris in Scrap, one gold ingot in Gold, and two iron ingots in Iron. Press Alloy to make four Ancient Ingots. Ingredients and output can stack. Shift-click routes ingredients to their matching input.
+Open the completed forge. Place one Ancient Scrap or Ancient Debris in Scrap, one gold ingot in Gold, and two iron ingots in Iron. Press Alloy to make four Ancient Ingots. Ingredients and output can stack. Shift-click routes ingredients to their matching input.
 
-Both forge modes share stored slots. Switching to Alloy preserves all your parts; remove them, including the two stored-parts slots, before alloying. Collect the result before assembling equipment. Breaking the frame blocks both modes and preserves everything inside.
+The forge processes metals and artifacts. Its former equipment-assembly function is now only available at the Reconstruction Table. Old parts and finished tools stored in existing forges remain visible and can be withdrawn; collect those before processing. Breaking the frame stops metallurgy and preserves the stored contents.
 
 To recycle an artifact, place it in the left source slot with no gold or iron. The button becomes Melt; each artifact yields one Ancient Scrap. Collect an old output and remove spare components before starting a different process. Melting consumes the artifact, so reserve artifacts you want to excavate.
 
@@ -282,7 +282,7 @@ Exploration is optional. Craft the same hearth from four Ruined Forge Bricks, tw
 
 Packs can replace these recipes, change the masonry tag, or disable/add structure biomes with datapacks. The locator command is /locate structure examplemod:ruined_ancient_forge.
 
-This is a weathered starter forge. Advanced functions, Forgemaster rewards and future forge designs remain separate work. The planned expanding, Blood Magic-inspired structure will be the Ancient Anvil. Its exact layout and upgrades are not part of this first forge.
+This is a weathered starter forge for metallurgy. The Ancient Anvil is a separate structure with a standalone Tier 0 and a Tier 1 metal foundation. Later anvil tiers, advanced forge functions and Forgemaster rewards remain future progression.
 
 Craft ruined forge bricks: grid rows DD / DD. A dot means an empty cell. D = any stone crafting materials.
 
@@ -300,7 +300,7 @@ Right-click an adult, idle Cruncher while holding an artifact. It consumes one a
 
 The reward is delivered immediately. With a full inventory it drops at your feet. The existing wither-rose interaction remains the Cruncher’s food interaction.
 
-Open the completed forge and choose Alloy. Place an artifact in the left source slot; the screen changes to Artifact Melting and the action becomes Melt. Leave Gold and Iron empty. Press Melt to consume the artifact and make one Ancient Scrap.
+Open the completed forge. Place an artifact in the left source slot; the screen changes to Artifact Melting and the action becomes Melt. Leave Gold and Iron empty. Press Melt to consume the artifact and make one Ancient Scrap.
 
 Collect any previous output and remove stored spare components first. A full or incompatible output, leftover metals, or an incomplete frame stops melting without consuming the artifact.
 
@@ -316,7 +316,7 @@ Craft ancient scrap from netherite scrap: netherite scrap, in any arrangement.
 
 ## Ancient metal and alloying
 
-The repaired Ruined Ancient Forge can alloy ancient material with ordinary metals. Select Alloy in the forge, then use one Ancient Scrap OR Ancient Debris, one gold ingot, and two iron ingots to make four Ancient Ingots. No fuel or additional structure is needed for this first alloy.
+The repaired Ruined Ancient Forge can alloy ancient material with ordinary metals. Open the forge, then use one Ancient Scrap OR Ancient Debris, one gold ingot, and two iron ingots to make four Ancient Ingots. No fuel or additional structure is needed for this first alloy.
 
 Ancient Scrap comes from recycling artifacts with an adult Cruncher or the forge, and from Sniffers excavating exposed Ancient Debris. Netherite Scrap converts into nine Ancient Scrap at a crafting grid; it is not a direct alloy ingredient.
 

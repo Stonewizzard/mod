@@ -14,12 +14,12 @@ public final class ForgeAlloyScreen extends AbstractContainerScreen<ForgeAlloyMe
     private Button alloy;
     public ForgeAlloyScreen(ForgeAlloyMenu menu,Inventory inv,Component title){super(menu,inv,title,288,224);}
     private void send(int id){if(minecraft.getConnection()!=null)minecraft.getConnection().send(new ServerboundContainerButtonClickPacket(menu.containerId,id));}
-    @Override protected void init(){super.init();addRenderableWidget(Button.builder(Component.translatable("alloy.examplemod.reconstruction"),b->send(90)).bounds(leftPos+179,topPos+7,101,18).build());alloy=addRenderableWidget(Button.builder(Component.translatable("alloy.examplemod.alloy"),b->send(1)).bounds(leftPos+180,topPos+94,88,20).build());}
+    @Override protected void init(){super.init();alloy=addRenderableWidget(Button.builder(Component.translatable("alloy.examplemod.alloy"),b->send(1)).bounds(leftPos+180,topPos+94,88,20).build());}
     @Override public void extractBackground(GuiGraphicsExtractor g,int mx,int my,float partial){
         boolean melt=menu.melting();
         alloy.active=menu.ready();alloy.setMessage(Component.translatable(melt?"alloy.examplemod.melt":"alloy.examplemod.alloy"));
         g.fill(leftPos,topPos,leftPos+288,topPos+224,0xff28272a);g.fill(leftPos+2,topPos+2,leftPos+286,topPos+222,0xffc6c6c6);
-        g.fill(leftPos+7,topPos+7,leftPos+171,topPos+26,0xff33383e);text(g,melt?"Artifact Melting":"Ancient Alloying",13,12,0xfff1d7a4);
+        g.fill(leftPos+7,topPos+7,leftPos+281,topPos+26,0xff33383e);text(g,melt?"Artifact Melting":"Ancient Alloying",13,12,0xfff1d7a4);text(g,"TIER I",239,12,0xffc6b990);
         g.fill(leftPos+12,topPos+33,leftPos+276,topPos+121,0xff343638);
         text(g,melt?"Artifact":"Source",37,46,0xffd4c3a4);text(g,"Gold",85,46,0xffe6bd5b);text(g,"Iron",133,46,0xffc8d3db);text(g,">",166,65,0xffe6bd5b);
         text(g,"×1",44,81,0xffa5b0b2);text(g,melt?"":"×1",90,81,0xffa5b0b2);text(g,melt?"":"×2",136,81,0xffa5b0b2);
