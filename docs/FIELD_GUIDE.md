@@ -26,6 +26,8 @@ The visual direction draws on familiar mod guidebook category browsing, with ori
 - [Quality and scaling grades](#scaling-and-quality) — Equipment
 - [Reconstructing equipment](#reconstruction) — Equipment
 - [The Ruined Ancient Forge](#ruined-ancient-forge) — Stations
+- [Ancient metal and alloying](#ancient-alloy) — Stations
+- [The Ancient Anvil](#ancient-anvil) — Stations
 - [The reconstructed pickaxe](#pickaxe-core) — Equipment
 - [Tool levels and mastery](#levels) — Equipment
 - [The Ascender](#ascension) — Stations
@@ -253,6 +255,10 @@ The Ruined Ancient Forge is the first, small form of the ancient workshop. Compl
 
 The hearth holds five input pieces and an output. Completing the frame automatically forms one weathered stone-and-bronze forge. Right-click the hearth or any formed section to open it. Breaking a section restores the surviving original masonry and keeps the stored pieces safe. Breaking the hearth drops its inventory and the hearth itself.
 
+Open the completed forge and select Alloy in the upper bar. Place one Netherite Scrap or Ancient Debris in Scrap, one gold ingot in Gold, and two iron ingots in Iron. Press Alloy to make four Ancient Ingots. Ingredients and output can stack. Shift-click routes ingredients to their matching input.
+
+Both forge modes share stored slots. Switching to Alloy preserves all your parts; remove them, including the two stored-parts slots, before alloying. Collect the result before assembling equipment. Breaking the frame blocks both modes and preserves everything inside.
+
 The footprint is three blocks wide and three deep, four blocks tall including the foundation. The hearth sits at the center of the front edge, one block above the foundation. All layers below are read front row first. B is Ruined Forge Bricks, H is the hearth, and a dot is empty space.
 
 Foundation: BBB / BBB / BBB. Hearth level: .H. / B.B / BBB. One above the hearth: ... / B.B / .B. Two above the hearth: ... / ... / .B.
@@ -274,6 +280,40 @@ This is a weathered starter forge. Advanced functions, Forgemaster rewards and f
 Craft ruined forge bricks: grid rows DD / DD. A dot means an empty cell. D = any stone crafting materials.
 
 Craft ruined ancient forge: grid rows BCB / IFI / BCB. A dot means an empty cell. B = ruined forge bricks; C = copper block; I = iron ingot; F = blast furnace.
+
+<a id="ancient-alloy"></a>
+
+## Ancient metal and alloying
+
+The repaired Ruined Ancient Forge can alloy ancient material with ordinary metals. Select Alloy in the forge, then use one Netherite Scrap OR Ancient Debris, one gold ingot, and two iron ingots to make four Ancient Ingots. No fuel or additional structure is needed for this first alloy.
+
+Netherite Scrap is the vanilla scrap obtained by smelting Ancient Debris. Both forms are accepted directly. Artifacts, recovered component pieces, and Ancient Fragments are not alloy ingredients.
+
+Craft nine Ancient Ingots into a Block of Ancient Metal. Craft a block back into nine ingots. Three blocks and four ingots make one Ancient Anvil, following the ordinary anvil crafting shape.
+
+The alloy screen has separate Scrap, Gold, Iron and output slots, plus two preserved-part slots. It refuses to consume ingredients when the recipe is incomplete, the output will not fit, or old parts remain stored.
+
+Craft ancient metal block: grid rows III / III / III. A dot means an empty cell. I = ancient ingot.
+
+Craft ancient ingots from block: ancient metal block, in any arrangement.
+
+<a id="ancient-anvil"></a>
+
+## The Ancient Anvil
+
+The Ancient Anvil is a rune-carved metal anvil with warm inlays. Craft it like an ordinary anvil: three Blocks of Ancient Metal across the top, one Ancient Ingot in the middle, and three ingots across the bottom. This uses 31 ingots in total.
+
+Place the anvil on its own to establish Tier 0. It is a stationary workshop structure and does not fall like a vanilla anvil. Its foundation is a separate project from repairing the Ruined Ancient Forge.
+
+Build a complete 3 by 3 square of metal blocks directly one layer below the anvil, centered on it. All nine blocks are required, including the center. Iron, gold, copper, netherite and ancient metal qualify; you may mix them. Diamond, emerald and lapis blocks are not metal.
+
+The anvil automatically becomes Tier 1 when the foundation is complete. Removing or replacing a required metal downgrades it to Tier 0. The metals remain normal blocks and are never consumed. Breaking or relocating the anvil leaves its foundation in place.
+
+Right-click the anvil with an empty hand to see its tier and metal count. Show foundation guide displays the missing layer: cyan for air and amber for a wrong block that needs replacing. Only you see the guide. It clears when Tier 1 is complete or you leave the world.
+
+Tier 0 and Tier 1 establish the first stages of the planned growing ancient workshop. Later tiers, rituals and artifact-modification powers will be added separately.
+
+Craft ancient anvil: grid rows BBB / .I. / III. A dot means an empty cell. B = ancient metal block; I = ancient ingot.
 
 <a id="pickaxe-core"></a>
 

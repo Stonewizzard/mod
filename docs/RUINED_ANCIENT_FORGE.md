@@ -1,6 +1,6 @@
 # Ruined Ancient Forge — tier I
 
-A repairable first step toward the ancient workshop. The hearth is a stone work basin with weathered copper bands; the surrounding masonry forms a foundation, two pillars, rear wall and broken-looking chimney. Tier I uses existing reconstruction patterns and retains each component's quality, modifiers and provenance. No advanced editing, new mining ability, boss requirement or later-tier economy is implied by this first tier.
+A repairable first step toward the ancient workshop. The hearth is a stone work basin with weathered copper bands; the surrounding masonry forms a foundation, two pillars, rear wall and broken-looking chimney. Tier I supports existing reconstruction patterns and ancient-metal alloying, retaining each component's quality, modifiers and provenance. No advanced editing, new mining ability, boss requirement or later-tier economy is implied by this first tier.
 
 ## Acquisition
 
@@ -29,6 +29,10 @@ Total: **one hearth + eighteen masonry blocks**. The occupied footprint is three
 Complete the frame to automatically form one connected, weathered forge: a raised stone-and-bronze work pad, tapered supports, recessed soot-blackened firebox and broken-looking chimney. Each frame cell uses its own portion of a unified model, collision shape and purpose-made textures. Every face has explicit UV coordinates. Right-click any formed section to open the equipment-pattern screen. Stored input and output are kept in the core. Breaking the frame closes the menu and rejects assembly without consuming parts; repair restores access. Mining any formed section drops that section’s original masonry and restores the surviving frame. Mining the hearth returns the hearth and its stored inventory through native block drops, and restores the surviving frame. Original masonry states are saved on each formed section, including pack-provided states; assembly never erases containers.
 
 The current output, or first input when no output exists, appears on the work pad. The wooden Reconstruction Table remains available; the forge uses the same patterns and assembly semantics while establishing the physical multiblock foundation for future tiers.
+
+## Ancient alloying
+
+Select **Alloy** in the completed forge. One Netherite Scrap or Ancient Debris, one gold ingot and two iron ingots produce four Ancient Ingots. The alloy screen uses separate typed inputs and a shared output; stacks and shift-click are supported. Switch back with **Reconstruction**. Remove any old parts and output first: switching modes preserves all six stored slots. A missing frame or blocked output rejects a batch without consuming inputs. See [the Ancient Anvil reference](ANCIENT_ANVIL.md) for metal-block and anvil recipes.
 
 ## Ghost construction guide
 

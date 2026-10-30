@@ -22,6 +22,7 @@ public final class ClientVisualQa {
     private static boolean opened;
     private static volatile net.minecraft.core.BlockPos forgePosition;
     private static net.minecraft.core.BlockPos generatedForgePosition;private static boolean probeForgeWorldgen;
+    private static volatile net.minecraft.core.BlockPos anvilPosition;
     private static long sequence,frames,lastWrite;
     private static long commandId=-1;
 
@@ -66,6 +67,22 @@ public final class ClientVisualQa {
                                 if(action.equals("forge_part_view"))player.connection.teleport(11.5,forgePosition.getY(),10,0,14.5F);
                                 if(action.equals("forge_repair"))for(var part:com.example.examplemod.RuinedForgeStructure.PARTS)level.setBlock(part.at(forgePosition,net.minecraft.core.Direction.NORTH),com.example.examplemod.AncientForgeContent.BRICKS.get().defaultBlockState(),3);
                                 if(action.equals("forge_view")){if(close)player.connection.teleport(12.5,forgePosition.getY(),9.5,0,com.example.examplemod.ForgeAssembly.formed(level.getBlockState(forgePosition))?15:23);else player.connection.teleport(9.5,forgePosition.getY(),8,-34,5);}
+                            });
+                        }
+                        case "alloy_inventory"->{var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);player.getInventory().setItem(9,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.NETHERITE_SCRAP,2));player.getInventory().setItem(10,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.GOLD_INGOT,2));player.getInventory().setItem(11,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT,4));player.containerMenu.broadcastChanges();});}
+                        case "anvil_fixture","anvil_view","anvil_foundation","anvil_expose","anvil_damage"->{
+                            var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();boolean close=command.has("close")&&command.get("close").getAsBoolean();
+                            server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();if(action.equals("anvil_fixture")){
+                                anvilPosition=forgePosition.offset(7,0,0);
+                                for(int x=-2;x<=2;x++)for(int z=-3;z<=3;z++)for(int y=0;y<=3;y++)l.setBlock(anvilPosition.offset(x,y,z),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
+                                for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)l.setBlock(anvilPosition.offset(x,-1,z),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),3);
+                                player.getInventory().setItem(1,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.ANVIL_ITEM.get()));player.inventoryMenu.broadcastChanges();
+                                player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY(),anvilPosition.getZ()-3,0,25);
+                            }
+                            if(action.equals("anvil_expose"))for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)if(x!=0||z!=0)l.setBlock(anvilPosition.offset(x,-1,z),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
+                            if(action.equals("anvil_foundation"))for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)l.setBlock(anvilPosition.offset(x,-1,z),((x+z)%2==0?net.minecraft.world.level.block.Blocks.IRON_BLOCK:net.minecraft.world.level.block.Blocks.GOLD_BLOCK).defaultBlockState(),3);
+                            if(action.equals("anvil_damage"))l.setBlock(anvilPosition.offset(1,-1,1),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
+                            if(action.equals("anvil_view")){if(close)player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY(),anvilPosition.getZ()-2.5,0,17);else player.connection.teleport(anvilPosition.getX()-2.5,anvilPosition.getY(),anvilPosition.getZ()-3.5,-37,9);}
                             });
                         }
                         case "forge_probe_worldgen"->probeForgeWorldgen=true;
@@ -126,8 +143,12 @@ public final class ClientVisualQa {
             if(screen instanceof ReconstructionTableScreen forgeScreen){
                 var menu=forgeScreen.getMenu();state.addProperty("forgeMenu",menu.forge());state.addProperty("forgePattern",menu.pattern());state.addProperty("forgeOutput",!menu.getSlot(5).getItem().isEmpty());
                 var controls=new JsonArray();int left=(window.getGuiScaledWidth()-320)/2,top=(window.getGuiScaledHeight()-242)/2;
-                var b=new JsonObject();b.addProperty("id","forge_assemble");b.addProperty("enabled",menu.ready());b.addProperty("x",left+ReconstructionScreenView.BUILD_X);b.addProperty("y",top+ReconstructionScreenView.BUILD_Y);b.addProperty("width",ReconstructionScreenView.BUILD_W);b.addProperty("height",ReconstructionScreenView.BUILD_H);controls.add(b);state.add("controls",controls);
+                var b=new JsonObject();b.addProperty("id","forge_assemble");b.addProperty("enabled",menu.ready());b.addProperty("x",left+ReconstructionScreenView.BUILD_X);b.addProperty("y",top+ReconstructionScreenView.BUILD_Y);b.addProperty("width",ReconstructionScreenView.BUILD_W);b.addProperty("height",ReconstructionScreenView.BUILD_H);controls.add(b);
+                if(menu.forge()){var a=new JsonObject();a.addProperty("id","forge_alloy_tab");a.addProperty("enabled",true);a.addProperty("x",left+218);a.addProperty("y",top+8);a.addProperty("width",49);a.addProperty("height",16);controls.add(a);}
+                state.add("controls",controls);
             }
+            if(screen instanceof ForgeAlloyScreen alloy){var menu=alloy.getMenu();state.addProperty("alloyReady",menu.ready());state.addProperty("alloyCount",menu.getSlot(5).getItem().is(com.example.examplemod.AncientAnvilContent.INGOT.get())?menu.getSlot(5).getItem().getCount():0);state.addProperty("alloyScrap",menu.getSlot(0).getItem().getCount());state.addProperty("alloyGold",menu.getSlot(1).getItem().getCount());state.addProperty("alloyIron",menu.getSlot(2).getItem().getCount());}
+            if(anvilPosition!=null&&minecraft.level!=null){var a=minecraft.level.getBlockState(anvilPosition);boolean placed=a.is(com.example.examplemod.AncientAnvilContent.ANVIL.get());state.addProperty("anvilPlaced",placed);state.addProperty("anvilTier",placed?a.getValue(com.example.examplemod.AncientAnvilBlock.TIER):-1);state.addProperty("anvilMissing",com.example.examplemod.AncientAnvilBlockEntity.missing(minecraft.level,anvilPosition).size());state.addProperty("anvilGuide",AncientAnvilPreview.active(minecraft.level,anvilPosition));state.addProperty("aimedAtAnvil",minecraft.hitResult instanceof net.minecraft.world.phys.BlockHitResult hit&&hit.getBlockPos().equals(anvilPosition));}
             Path temporary=DIRECTORY.resolve("state.tmp");Files.writeString(temporary,JSON.toJson(state),StandardCharsets.UTF_8);
             Files.move(temporary,DIRECTORY.resolve("state.json"),StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE);
             if(sequence==1)ExampleMod.LOGGER.info("CLIENT_VISUAL_QA_READY: actual Minecraft client renderer running");

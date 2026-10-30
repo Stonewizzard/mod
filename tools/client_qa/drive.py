@@ -49,6 +49,15 @@ def click(id):
     seq=state['sequence'];process('xdotool','mousemove','--window',WINDOW,str(x),str(y),'click','1')
     wait_for(lambda s:s.get('sequence',0)>seq,'a rendered frame after click');time.sleep(.35);log('click '+id)
 
+def slot_click(x,y,shift=False):
+    s=observe();left=(s['guiWidth']-(288 if s.get('screen')=='ForgeAlloyScreen' else 320))/2
+    top=(s['guiHeight']-(224 if s.get('screen')=='ForgeAlloyScreen' else 242))/2
+    px,py=physical(s,left+x+8,top+y+8)
+    if shift:process('xdotool','keydown','Shift_L')
+    process('xdotool','mousemove','--window',WINDOW,str(px),str(py),'click','1')
+    if shift:process('xdotool','keyup','Shift_L')
+    time.sleep(.4)
+
 def capture(name):
     # Capture the X11 client window, after presentation. No drawing-plan reconstruction.
     time.sleep(.6);path=CAPTURES/(name+'.png')
@@ -185,6 +194,27 @@ def run():
     command('forge_view',close=True);expect(aimedAtForge=True);process('xdotool','click','3')
     expect(screen='ReconstructionTableScreen',forgeMenu=True,forgeOutput=True);capture('forge-repaired')
     process('xdotool','key','Escape');time.sleep(1);capture('forge-display-close');command('forge_view');time.sleep(1);capture('forge-display')
+    # A real player withdraws the pickaxe, switches mode and shift-clicks ingredients from inventory.
+    command('forge_view',close=True);expect(aimedAtForge=True);process('xdotool','click','3');expect(screen='ReconstructionTableScreen')
+    slot_click(277,73,shift=True);expect(forgeOutput=False);click('forge_alloy_tab');expect(screen='ForgeAlloyScreen')
+    command('alloy_inventory');time.sleep(.5)
+    for x in (63,81,99):slot_click(x,143,shift=True)
+    expect(alloyReady=True,alloyScrap=2,alloyGold=2,alloyIron=4);capture('forge-alloy-ready')
+    click_widget('Alloy');expect(alloyCount=4,alloyScrap=1,alloyGold=1,alloyIron=2);capture('forge-alloy-result')
+    click_widget('Alloy');expect(alloyCount=8,alloyReady=False,alloyScrap=0,alloyGold=0,alloyIron=0)
+    click_widget('Reconstruction');expect(screen='ReconstructionTableScreen',forgeOutput=True)
+    click('forge_alloy_tab');expect(screen='ForgeAlloyScreen',alloyCount=8);slot_click(190,61,shift=True);expect(alloyCount=0)
+    process('xdotool','key','Escape')
+    # Place the actual crafted block item with native right-click, then inspect both foundation tiers.
+    command('anvil_fixture');process('xdotool','key','2');time.sleep(.7);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0)
+    process('xdotool','key','1');command('anvil_view');capture('ancient-anvil-tier0')
+    command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','click','3');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel0')
+    click_widget('Show foundation guide');expect(screen='InGame',anvilGuide=True);command('anvil_expose');command('anvil_view');capture('ancient-anvil-guide')
+    command('anvil_foundation');expect(anvilTier=1,anvilMissing=0,anvilGuide=False);capture('ancient-anvil-tier1')
+    command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','click','3');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel1')
+    process('xdotool','key','Escape');command('anvil_damage');expect(anvilTier=0,anvilMissing=1)
+    command('anvil_foundation');expect(anvilTier=1,anvilMissing=0)
+    print('ANCIENT_ANVIL_NATIVE_PASS: actual block item placement, tier zero/one, mixed metal foundation, real panel/guide buttons, downgrade/repair; native inventory shift-click alloying, exact costs, stacked output, mode switching and withdrawal',flush=True)
     # Exercise native jigsaw generation, not only direct fixture placement or an NBT parser.
     command('forge_probe_worldgen')
     process('xdotool','key','t');time.sleep(.2)
