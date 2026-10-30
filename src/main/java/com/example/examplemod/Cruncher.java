@@ -37,6 +37,7 @@ import net.neoforged.neoforge.event.EventHooks;
 /** A passive, fire-immune sniffer relative which approaches geodes from the side. */
 public class Cruncher extends Animal {
     public static final int CRUNCH_TICKS = 40;
+    private int artifactChewTicks;
     public static final int TEST_BABY_AGE = -1200;
     private static final EntityDataAccessor<Boolean> CRUNCHING =
             SynchedEntityData.defineId(Cruncher.class, EntityDataSerializers.BOOLEAN);
@@ -58,6 +59,35 @@ public class Cruncher extends Animal {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 14.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.15).add(Attributes.TEMPT_RANGE, 10.0);
+    }
+
+    /** A player deliberately feeds one artifact; deliver the reward immediately, with a cosmetic chew. */
+    @Override
+    public net.minecraft.world.InteractionResult mobInteract(Player player, net.minecraft.world.InteractionHand hand) {
+        var artifact=player.getItemInHand(hand);
+        if(artifact.is(ArchaeologyTableMenu.ARTIFACTS)) {
+            if(!isAlive()||isBaby()||isCrunching())return net.minecraft.world.InteractionResult.PASS;
+            if(level() instanceof ServerLevel server) {
+                if(!player.getAbilities().instabuild)artifact.shrink(1);
+                var scrap=new ItemStack(AncientAnvilContent.SCRAP_ITEM.get());
+                if(!player.addItem(scrap)&&!scrap.isEmpty())server.addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(server,player.getX(),player.getY()+.5,player.getZ(),scrap));
+                artifactChewTicks=CRUNCH_TICKS;
+                entityData.set(CRUNCHING,true);
+                getNavigation().stop();
+                playSound(SoundEvents.GENERIC_EAT.value(),.8F,.7F);
+            }
+            return net.minecraft.world.InteractionResult.SUCCESS;
+        }
+        return super.mobInteract(player,hand);
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if(level() instanceof ServerLevel&&artifactChewTicks>0) {
+            getNavigation().stop();
+            entityData.set(CRUNCHING,--artifactChewTicks>0);
+        }
     }
 
     @Override
@@ -122,7 +152,7 @@ public class Cruncher extends Animal {
         @Override
         public boolean canUse() {
             if (!(level() instanceof ServerLevel level) || isBaby() || !isAlive()
-                    || tickCount < nextSearch || !EventHooks.canEntityGrief(level, Cruncher.this)) {
+                    || artifactChewTicks > 0 || tickCount < nextSearch || !EventHooks.canEntityGrief(level, Cruncher.this)) {
                 return false;
             }
             nextSearch = tickCount + 40;
@@ -171,7 +201,7 @@ public class Cruncher extends Animal {
 
         @Override
         public boolean canContinueToUse() {
-            return !finished && target != null && !isBaby() && isAlive() && timeout < 240
+            return !finished && artifactChewTicks == 0 && target != null && !isBaby() && isAlive() && timeout < 240
                     && level().getBlockState(target).is(ExampleMod.ANCIENT_GEODE.get())
                     && level() instanceof ServerLevel level && EventHooks.canEntityGrief(level, Cruncher.this);
         }

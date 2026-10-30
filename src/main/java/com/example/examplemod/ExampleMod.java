@@ -145,6 +145,7 @@ public class ExampleMod {
                 output.accept(AncientForgeContent.CORE_ITEM.get());
                 output.accept(AncientForgeContent.BRICKS_ITEM.get());
                 output.accept(AncientAnvilContent.ANVIL_ITEM.get());
+                output.accept(AncientAnvilContent.SCRAP_ITEM.get());
                 output.accept(AncientAnvilContent.INGOT.get());
                 output.accept(AncientAnvilContent.METAL_ITEM.get());
                 output.accept(AscenderContent.ITEM.get());
@@ -192,6 +193,7 @@ public class ExampleMod {
             modEventBus.addListener(ReconstructionTests::register);
             modEventBus.addListener(AncientForgeTests::register);
             modEventBus.addListener(AncientAnvilTests::register);
+            modEventBus.addListener(AncientScrapTests::register);
             modEventBus.addListener(PickaxeModifierTests::register);
             modEventBus.addListener(ModifierTierTests::register);
             modEventBus.addListener(InfluenceTests::register);
@@ -254,6 +256,7 @@ public class ExampleMod {
             event.accept(AncientAnvilContent.METAL_ITEM);
             event.accept(SNIFFER_SKULL_ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            event.accept(AncientAnvilContent.SCRAP_ITEM);
             event.accept(AncientAnvilContent.INGOT);
             ArchaeologyContent.artifacts().forEach(event::accept);
             ArchaeologyContent.materials().forEach(event::accept);

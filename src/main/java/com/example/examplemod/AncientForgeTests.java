@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-/** Actual tier-one world blocks, shared reconstruction, repair and world-template compatibility. */
+/** Actual tier-one world blocks, dedicated metallurgy, repair and world-template compatibility. */
 public final class AncientForgeTests {
     public static void register(net.neoforged.neoforge.event.RegisterGameTestsEvent event){
         var env=event.registerEnvironment(Identifier.fromNamespaceAndPath(ExampleMod.MODID,"ancient_forge_environment"));
@@ -40,18 +40,23 @@ public final class AncientForgeTests {
                 check(h,afterBricks-beforeBricks==1&&!ForgeAssembly.formed(level.getBlockState(core)),"Breaking a formed cell returns one original brick and unforms the forge");
                 for(int i=1;i<RuinedForgeStructure.PARTS.size();i++)check(h,level.getBlockState(RuinedForgeStructure.PARTS.get(i).at(core,front)).is(AncientForgeContent.BRICKS.get()),"Surviving masonry must restore in place without extra drops");
                 level.setBlock(broken,AncientForgeContent.BRICKS.get().defaultBlockState(),3);check(h,ForgeAssembly.form(level,core),"The repaired forge can form again");
-                var forge=(ReconstructionTableBlockEntity)level.getBlockEntity(core);var menu=new ReconstructionTableMenu(51,player.getInventory(),forge);player.containerMenu=menu;
-                check(h,menu.forge()&&menu.stillValid(player)&&RuinedForgeStructure.inspect(level,core,front).complete(),"Every orientation must validate and use the forge presentation");
-                check(h,menu.clickMenuButton(player,11),"The validated forge must allow a pickaxe pattern");
+                var forge=(ReconstructionTableBlockEntity)level.getBlockEntity(core);
+                var legacyMenu=new ReconstructionTableMenu(51,player.getInventory(),forge);player.containerMenu=legacyMenu;
                 var pieces=new ArrayList<ItemStack>();var finds=new ArtifactProfile.Find[]{ArtifactProfile.Find.PICKAXE_LEFT,ArtifactProfile.Find.PICKAXE_BRIDGE,ArtifactProfile.Find.PICKAXE_RIGHT,ArtifactProfile.Find.TOOL_CONNECTOR,ArtifactProfile.Find.TOOL_HANDLE};
                 for(int i=0;i<5;i++){var part=ArchaeologyContent.reward(new ExcavationStudy(new ArtifactProfile(710+i,1,ArtifactProfile.Matrix.SHALE,finds[i])));forge.setItem(i,part);pieces.add(part.copy());}
+                forge.pattern(1);
+                check(h,!legacyMenu.stillValid(player)&&!legacyMenu.ready()&&!legacyMenu.clickMenuButton(player,11)&&!legacyMenu.clickMenuButton(player,1)&&forge.getItem(5).isEmpty(),"A forged or stale reconstruction menu must never assemble equipment in a forge");
+                for(int i=0;i<5;i++)check(h,ItemStack.matches(forge.getItem(i),pieces.get(i)),"Removing forge assembly must preserve all legacy components");
+                // Model a tool produced before this update, not a new forge assembly operation.
+                var oldTool=ArtifactQuality.assemble(ReconstructionPattern.PICKAXE,pieces);forge.setItem(5,oldTool.copy());
+                var menu=forge.createMenu(52,player.getInventory());check(h,menu instanceof ForgeAlloyMenu,"Every repaired forge must open directly to metallurgy");player.containerMenu=menu;
+                check(h,menu.stillValid(player)&&!menu.clickMenuButton(player,90)&&!menu.clickMenuButton(player,1),"Legacy storage can be withdrawn, but cannot switch the forge back to reconstruction");
                 var missing=RuinedForgeStructure.PARTS.getLast().at(core,front);level.setBlock(missing,Blocks.AIR.defaultBlockState(),3);
-                check(h,!menu.stillValid(player)&&!menu.clickMenuButton(player,1)&&forge.getItem(5).isEmpty(),"Breaking the structure must immediately invalidate assembly without consuming components");
+                check(h,!menu.stillValid(player)&&!menu.clickMenuButton(player,1)&&ItemStack.matches(oldTool,forge.getItem(5)),"Breaking the structure must stop processing while preserving the existing output");
                 for(int i=0;i<5;i++)check(h,ItemStack.matches(forge.getItem(i),pieces.get(i)),"A broken frame must preserve every stored part");
-                level.setBlock(missing,AncientForgeContent.BRICKS.get().defaultBlockState(),3);
-                check(h,ForgeAssembly.form(level,core)&&menu.stillValid(player)&&menu.clickMenuButton(player,1)&&forge.getItem(5).is(ArchaeologyContent.PICKAXE.get()),"Repair must restore assembly using the saved parts");
-                check(h,!menu.clickMenuButton(player,1),"Assembly cannot duplicate an output");
-                var saved=forge.saveWithFullMetadata(level.registryAccess());var loaded=BlockEntity.loadStatic(core,forge.getBlockState(),saved,level.registryAccess());check(h,loaded instanceof ReconstructionTableBlockEntity restored&&ItemStack.matches(restored.getItem(5),forge.getItem(5))&&restored.pattern()==1,"Core inventory and pattern must survive native block-entity serialization");
+                level.setBlock(missing,AncientForgeContent.BRICKS.get().defaultBlockState(),3);check(h,ForgeAssembly.form(level,core)&&menu.stillValid(player),"Repair must restore metallurgy access");
+                var saved=forge.saveWithFullMetadata(level.registryAccess());saved.putBoolean("Alloying",false); // Obsolete mode flag in an old world.
+                var loaded=BlockEntity.loadStatic(core,forge.getBlockState(),saved,level.registryAccess());check(h,loaded instanceof ReconstructionTableBlockEntity restored&&ItemStack.matches(restored.getItem(5),oldTool)&&restored.createMenu(53,player.getInventory()) instanceof ForgeAlloyMenu,"Old inventory and tools persist, and legacy mode flags cannot restore equipment assembly");
                 // Persist an alternate masonry state, then verify it restores exactly on dismantling.
                 var original=Blocks.DEEPSLATE.defaultBlockState().setValue(RotatedPillarBlock.AXIS,front.getAxis());
                 var customAt=RuinedForgeStructure.PARTS.getLast().at(core,front);
@@ -68,7 +73,7 @@ public final class AncientForgeTests {
             recipe(h,2,2,Collections.nCopies(4,Items.COBBLESTONE),AncientForgeContent.BRICKS_ITEM.get(),4);
             var id=Identifier.fromNamespaceAndPath(ExampleMod.MODID,"ruined_ancient_forge");
             check(h,level.registryAccess().lookupOrThrow(Registries.STRUCTURE).get(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE,id)).isPresent()&&level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).get(net.minecraft.resources.ResourceKey.create(Registries.STRUCTURE_SET,id)).isPresent()&&level.registryAccess().lookupOrThrow(Registries.TEMPLATE_POOL).get(net.minecraft.resources.ResourceKey.create(Registries.TEMPLATE_POOL,id)).isPresent(),"Native worldgen registries must load the structure, sparse placement and start pool");
-            System.out.println("ANCIENT_FORGE_CHECK: PASS: four facings, real frame validation, repair/assembly, native persistence and drops, standalone recipes, loaded worldgen");h.succeed();
+            System.out.println("ANCIENT_FORGE_CHECK: PASS: four facings, real frame validation, repair/metallurgy + legacy storage, native persistence and drops, standalone recipes, loaded worldgen");h.succeed();
         }
     }
     /** Let the native GameTest loader read and place the exact same template used by the jigsaw pool. */

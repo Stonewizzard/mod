@@ -21,11 +21,11 @@ public final class ReconstructionTableScreen extends AbstractContainerScreen<Rec
             @Override public void texture(Identifier id,int x,int y,int w,int h,float u,float v,int sw,int sh,int tw,int th,int color){g.blit(RenderPipelines.GUI_TEXTURED,id,leftPos+x,topPos+y,u,v,w,h,sw,sh,tw,th,color);}
             @Override public void text(String text,int x,int y,int color){g.text(font,text,leftPos+x,topPos+y,color,false);}
             @Override public int textWidth(String text){return font.width(text);}
-        },state,menu.forge());
+        },state);
     }
     @Override protected void extractLabels(GuiGraphicsExtractor g,int mouseX,int mouseY){}
     @Override public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){
-        int button=menu.forge()&&ReconstructionScreenView.inside(event.x()-leftPos,event.y()-topPos,218,8,49,16)?90:ReconstructionScreenView.buttonAt(event.x()-leftPos,event.y()-topPos);
+        int button=ReconstructionScreenView.buttonAt(event.x()-leftPos,event.y()-topPos);
         if(button>=0){if(event.button()==InputConstants.MOUSE_BUTTON_LEFT&&minecraft.getConnection()!=null)minecraft.getConnection().send(new ServerboundContainerButtonClickPacket(menu.containerId,button));return true;}
         return super.mouseClicked(event,doubleClick);
     }

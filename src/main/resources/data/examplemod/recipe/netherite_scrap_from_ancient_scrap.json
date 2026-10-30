@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "SSS",
+    "SSS"
+  ],
+  "key": {
+    "S": "examplemod:ancient_scrap"
+  },
+  "result": {
+    "id": "minecraft:netherite_scrap",
+    "count": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:netherite_scrap"
+  ],
+  "result": {
+    "id": "examplemod:ancient_scrap",
+    "count": 9
+  }
+}

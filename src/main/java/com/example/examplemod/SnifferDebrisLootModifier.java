@@ -49,7 +49,7 @@ public class SnifferDebrisLootModifier extends LootModifier {
         if (!EventHooks.canEntityGrief(level, sniffer) || !level.destroyBlock(target, false, sniffer)) {
             return generatedLoot;
         }
-        generatedLoot.add(new ItemStack(Items.NETHERITE_SCRAP));
+        generatedLoot.add(new ItemStack(AncientAnvilContent.SCRAP_ITEM.get()));
         generatedLoot.add(ArchaeologyContent.specimen(context.getRandom(),false));
         if (context.getRandom().nextFloat() < CRUNCHER_EGG_CHANCE) {
             generatedLoot.add(new ItemStack(ExampleMod.CRUNCHER_EGG_ITEM.get()));
