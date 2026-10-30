@@ -21,11 +21,11 @@ Right-click empty-handed to view the tier, foundation count and native **Show fo
 
 ## Forge alloying
 
-The completed forge opens directly to metallurgy. It handles alloying and artifact melting; equipment patterns remain at the separate Reconstruction Table. An artifact in the source slot changes the action to **Melt** and yields one Ancient Scrap with no gold/iron cost. Its native-slot screen holds source, gold and iron inputs, two legacy-storage cells and the output. Shift-click routes inputs correctly; stacks and repeated batches are supported.
+The completed forge is operated in-world. Right-click inside its fireplace once per ingredient item, ignite with flint and steel, wait twenty seconds, then collect the result empty-handed. Black chimney smoke marks processing; pure white smoke marks ready output. One artifact alone melts into one Ancient Scrap through the same process. The front table and processing interface have been removed; equipment assembly stays at the separate Reconstruction Table.
 
-All six persisted slots are preserved. Remove any stored components or finished tools before processing. The operation validates the whole batch before consuming anything. Output overflow, a foreign output item, missing ingredients, a broken frame, or spare components reject the action without consumption. Breaking the hearth returns inventory through native drops. Old mode flags cannot restore forge equipment assembly.
+All six persisted slots are preserved and recoverable by empty-hand clicks. A batch reserves its ingredients until the final tick. Wrong/occupied output, leftover metals in artifact melting, missing ingredients, a broken frame, or spare components prevent ignition. Frame damage pauses a burning batch; repair resumes it. Core drops return ingredients if unfinished and output if finished. Save/reload preserves phase and progress.
 
-The alloy definition and counts live in `AncientAlloy`, shared by server and screen. `ForgeAlloyMenu` enforces ownership, distance, complete-frame and capacity checks. Foundation/source eligibility is tag-driven:
+Recipe definitions live in `AncientAlloy`; `ForgeProcess` handles interaction, reservation, timer, smoke and collection. Foundation/source eligibility is tag-driven:
 
 - `data/examplemod/tags/block/ancient_anvil_foundation.json`
 - `data/examplemod/tags/item/ancient_alloy_scrap.json`

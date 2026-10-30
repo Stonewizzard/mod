@@ -103,7 +103,6 @@ public class ExampleModClient {
     static void registerTableScreen(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event){
         event.register(ExampleMod.ARCHAEOLOGY_TABLE_MENU.get(),com.example.examplemod.client.ArchaeologyTableScreen::new);
         event.register(ReconstructionContent.MENU.get(),com.example.examplemod.client.ReconstructionTableScreen::new);
-        event.register(AncientAnvilContent.ALLOY_MENU.get(),com.example.examplemod.client.ForgeAlloyScreen::new);
         event.register(AscenderContent.MENU.get(),com.example.examplemod.client.AscenderScreen::new);
         event.register(ComponentStationContent.MENU.get(),com.example.examplemod.client.ComponentStationScreen::new);
     }

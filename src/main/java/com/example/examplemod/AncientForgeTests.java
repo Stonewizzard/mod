@@ -25,14 +25,14 @@ public final class AncientForgeTests {
         @Override protected MutableComponent typeDescription(){return Component.literal("Ruined Ancient Forge: repairable multiblock, preserved components and independent acquisition");}
         @Override public void run(GameTestHelper h){
             var level=h.getLevel();var core=h.absolutePos(new BlockPos(3,2,3));var player=h.makeMockServerPlayerInLevel();player.snapTo(core.getX()+.5,core.getY()+1,core.getZ()+.5);
-            check(h,RuinedForgeStructure.PARTS.size()==18,"The starter frame must use exactly eighteen masonry blocks");
+            check(h,RuinedForgeStructure.PARTS.size()==17,"The starter frame must use exactly seventeen masonry blocks; the core occupies the eighteenth cell");
             for(var front:Direction.Plane.HORIZONTAL){
                 for(var part:RuinedForgeStructure.PARTS)level.setBlock(part.at(core,front),Blocks.AIR.defaultBlockState(),3);
                 level.setBlock(core,AncientForgeContent.CORE.get().defaultBlockState().setValue(RuinedAncientForgeBlock.FACING,front),3);
                 check(h,!RuinedForgeStructure.inspect(level,core,front).complete(),"A lone core cannot act as a finished multiblock");
                 for(var part:RuinedForgeStructure.PARTS)level.setBlock(part.at(core,front),AncientForgeContent.BRICKS.get().defaultBlockState(),3);
                 check(h,ForgeAssembly.form(level,core)&&ForgeAssembly.formed(level.getBlockState(core)),"Repairing the frame must form the connected forge");
-                for(int i=0;i<RuinedForgeStructure.PARTS.size();i++){var at=RuinedForgeStructure.PARTS.get(i).at(core,front);check(h,FormedForgePartBlock.belongs(level,at,core,front,i),"Every frame cell must form with the correct facing and ownership");}
+                for(int i=0;i<RuinedForgeStructure.PARTS.size();i++){var at=RuinedForgeStructure.PARTS.get(i).at(core,front);check(h,FormedForgePartBlock.belongs(level,at,core,front,RuinedForgeStructure.PARTS.get(i).cell()),"Every frame cell must form with the correct facing and ownership");}
                 var broken=RuinedForgeStructure.PARTS.getFirst().at(core,front);var bounds=new net.minecraft.world.phys.AABB(core).inflate(5);
                 int beforeBricks=level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,bounds).stream().mapToInt(e->e.getItem().is(AncientForgeContent.BRICKS_ITEM.get())?e.getItem().getCount():0).sum();
                 level.destroyBlock(broken,true);
@@ -49,14 +49,13 @@ public final class AncientForgeTests {
                 for(int i=0;i<5;i++)check(h,ItemStack.matches(forge.getItem(i),pieces.get(i)),"Removing forge assembly must preserve all legacy components");
                 // Model a tool produced before this update, not a new forge assembly operation.
                 var oldTool=ArtifactQuality.assemble(ReconstructionPattern.PICKAXE,pieces);forge.setItem(5,oldTool.copy());
-                var menu=forge.createMenu(52,player.getInventory());check(h,menu instanceof ForgeAlloyMenu,"Every repaired forge must open directly to metallurgy");player.containerMenu=menu;
-                check(h,menu.stillValid(player)&&!menu.clickMenuButton(player,90)&&!menu.clickMenuButton(player,1),"Legacy storage can be withdrawn, but cannot switch the forge back to reconstruction");
+                check(h,forge.createMenu(52,player.getInventory())==null&&!forge.process.start(level),"The forge has no menu and preserves legacy inventory for empty-hand withdrawal");
                 var missing=RuinedForgeStructure.PARTS.getLast().at(core,front);level.setBlock(missing,Blocks.AIR.defaultBlockState(),3);
-                check(h,!menu.stillValid(player)&&!menu.clickMenuButton(player,1)&&ItemStack.matches(oldTool,forge.getItem(5)),"Breaking the structure must stop processing while preserving the existing output");
-                for(int i=0;i<5;i++)check(h,ItemStack.matches(forge.getItem(i),pieces.get(i)),"A broken frame must preserve every stored part");
-                level.setBlock(missing,AncientForgeContent.BRICKS.get().defaultBlockState(),3);check(h,ForgeAssembly.form(level,core)&&menu.stillValid(player),"Repair must restore metallurgy access");
-                var saved=forge.saveWithFullMetadata(level.registryAccess());saved.putBoolean("Alloying",false); // Obsolete mode flag in an old world.
-                var loaded=BlockEntity.loadStatic(core,forge.getBlockState(),saved,level.registryAccess());check(h,loaded instanceof ReconstructionTableBlockEntity restored&&ItemStack.matches(restored.getItem(5),oldTool)&&restored.createMenu(53,player.getInventory()) instanceof ForgeAlloyMenu,"Old inventory and tools persist, and legacy mode flags cannot restore equipment assembly");
+                check(h,!forge.process.start(level)&&ItemStack.matches(oldTool,forge.getItem(5)),"Breaking the structure preserves the existing output");
+                for(int i=0;i<5;i++)check(h,ItemStack.matches(forge.getItem(i),pieces.get(i)),"A broken frame preserves every stored part");
+                level.setBlock(missing,AncientForgeContent.BRICKS.get().defaultBlockState(),3);check(h,ForgeAssembly.form(level,core),"Repair restores the frame");
+                var saved=forge.saveWithFullMetadata(level.registryAccess());saved.putBoolean("Alloying",false);
+                var loaded=BlockEntity.loadStatic(core,forge.getBlockState(),saved,level.registryAccess());check(h,loaded instanceof ReconstructionTableBlockEntity restored&&ItemStack.matches(restored.getItem(5),oldTool)&&restored.createMenu(53,player.getInventory())==null,"Saved tools persist and obsolete flags cannot restore a forge menu");
                 // Persist an alternate masonry state, then verify it restores exactly on dismantling.
                 var original=Blocks.DEEPSLATE.defaultBlockState().setValue(RotatedPillarBlock.AXIS,front.getAxis());
                 var customAt=RuinedForgeStructure.PARTS.getLast().at(core,front);
@@ -82,7 +81,7 @@ public final class AncientForgeTests {
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
         @Override protected MutableComponent typeDescription(){return Component.literal("World-found forge template repairs into the same tier-one multiblock");}
         @Override public void run(GameTestHelper h){
-            var level=h.getLevel();var found=h.absolutePos(new BlockPos(3,2,2));
+            var level=h.getLevel();var found=h.absolutePos(new BlockPos(3,2,4));
             check(h,level.getBlockState(found).is(AncientForgeContent.CORE.get()),"The world template must contain a recoverable forge core");
             var damage=RuinedForgeStructure.inspect(level,found,Direction.NORTH);check(h,damage.missing().size()==2,"A found forge must require exactly two repairs rather than granting a complete workshop");
             for(var part:damage.missing())level.setBlock(part.at(found,Direction.NORTH),AncientForgeContent.BRICKS.get().defaultBlockState(),3);

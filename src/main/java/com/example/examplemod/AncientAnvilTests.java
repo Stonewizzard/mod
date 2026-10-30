@@ -37,25 +37,23 @@ public final class AncientAnvilTests {
             for(var part:RuinedForgeStructure.PARTS)l.setBlock(part.at(core,Direction.NORTH),AncientForgeContent.BRICKS.get().defaultBlockState(),3);
             l.setBlock(core,AncientForgeContent.CORE.get().defaultBlockState(),3);check(h,ForgeAssembly.form(l,core),"Alloying uses a real formed Ruined Forge");
             var forge=(ReconstructionTableBlockEntity)l.getBlockEntity(core);
-            var player=h.makeMockServerPlayerInLevel();player.snapTo(core.getX()+.5,core.getY()+1,core.getZ()+.5);var menu=new ForgeAlloyMenu(75,player.getInventory(),forge);player.containerMenu=menu;
             for(var source:List.of(AncientAnvilContent.SCRAP_ITEM.get(),Items.ANCIENT_DEBRIS)){
                 forge.setItem(0,new ItemStack(source));forge.setItem(1,ItemStack.EMPTY);forge.setItem(2,new ItemStack(Items.IRON_INGOT,2));forge.setItem(5,ItemStack.EMPTY);
-                check(h,!menu.clickMenuButton(player,1)&&forge.getItem(0).getCount()==1&&forge.getItem(2).getCount()==2,"Incomplete recipes preserve all ingredients");
-                forge.setItem(1,new ItemStack(Items.GOLD_INGOT));check(h,menu.ready()&&menu.clickMenuButton(player,1)&&forge.getItem(5).is(AncientAnvilContent.INGOT.get())&&forge.getItem(5).getCount()==4,"Either ancient scrap or debris alloys to four ancient ingots");
-                check(h,forge.getItem(0).isEmpty()&&forge.getItem(1).isEmpty()&&forge.getItem(2).isEmpty()&&!menu.clickMenuButton(player,1),"Alloying consumes exactly one batch and duplicate packets cannot produce extra ingots");
+                check(h,!forge.process.start(l)&&forge.getItem(0).getCount()==1,"Incomplete alloys preserve their ingredients");
+                forge.setItem(1,new ItemStack(Items.GOLD_INGOT));check(h,forge.process.start(l)&&!forge.process.start(l)&&forge.getItem(5).isEmpty(),"Ignition reserves one timed batch and cannot be repeated");
+                for(int tick=0;tick<ForgeProcess.DURATION;tick++)forge.process.tick(l);
+                check(h,forge.getItem(5).is(AncientAnvilContent.INGOT.get())&&forge.getItem(5).getCount()==4&&forge.getItem(0).isEmpty()&&forge.getItem(1).isEmpty()&&forge.getItem(2).isEmpty(),"Either source produces four ingots at the end of the timer, using exact costs");
             }
-            forge.setItem(0,new ItemStack(AncientAnvilContent.SCRAP_ITEM.get(),4));forge.setItem(1,new ItemStack(Items.GOLD_INGOT,4));forge.setItem(2,new ItemStack(Items.IRON_INGOT,8));forge.setItem(5,new ItemStack(AncientAnvilContent.INGOT.get(),61));
-            check(h,!menu.clickMenuButton(player,1)&&forge.getItem(2).getCount()==8,"Output overflow rejects the whole batch");
-            forge.setItem(5,new ItemStack(Items.DIAMOND));check(h,!menu.clickMenuButton(player,1)&&forge.getItem(0).getCount()==4,"Existing foreign outputs cannot be overwritten");forge.setItem(5,ItemStack.EMPTY);
-            forge.setItem(3,new ItemStack(ReconstructionContent.HANDLE.get()));check(h,!menu.ready(),"Switching modes preserves spare components and requires removing them before alloying");forge.setItem(3,ItemStack.EMPTY);
-            var damage=RuinedForgeStructure.PARTS.getLast().at(core,Direction.NORTH);l.destroyBlock(damage,false);check(h,!menu.stillValid(player)&&!menu.clickMenuButton(player,1)&&forge.getItem(0).getCount()==4,"Breaking the forge must block alloying without consuming ingredients");
-            l.setBlock(damage,AncientForgeContent.BRICKS.get().defaultBlockState(),3);check(h,ForgeAssembly.form(l,core)&&menu.clickMenuButton(player,1)&&forge.getItem(5).getCount()==4,"Repair resumes the same saved alloy project");
-            var saved=forge.saveWithFullMetadata(l.registryAccess());var loaded=BlockEntity.loadStatic(core,forge.getBlockState(),saved,l.registryAccess());check(h,loaded instanceof ReconstructionTableBlockEntity restored&&restored.getItem(2).getCount()==6&&restored.getItem(5).getCount()==4,"Forge ingredient stack counts and output persist across reloads");
-            var slot=player.getInventory().getItem(9);player.getInventory().setItem(9,new ItemStack(Items.IRON_INGOT,2));check(h,!menu.quickMoveStack(player,6).isEmpty()&&forge.getItem(2).getCount()==8,"Shift-click routes iron to its correct input");player.getInventory().setItem(9,slot);
+            forge.setItem(0,new ItemStack(AncientAnvilContent.SCRAP_ITEM.get(),4));forge.setItem(1,new ItemStack(Items.GOLD_INGOT,4));forge.setItem(2,new ItemStack(Items.IRON_INGOT,8));forge.setItem(5,new ItemStack(Items.DIAMOND));
+            check(h,!forge.process.start(l)&&forge.getItem(0).getCount()==4,"Uncollected output prevents starting another batch");forge.setItem(5,ItemStack.EMPTY);
+            forge.setItem(3,new ItemStack(ReconstructionContent.HANDLE.get()));check(h,!forge.process.ready(),"Legacy spare components must be collected first");forge.setItem(3,ItemStack.EMPTY);
+            var damage=RuinedForgeStructure.PARTS.getLast().at(core,Direction.NORTH);l.destroyBlock(damage,false);check(h,!forge.process.start(l)&&forge.getItem(0).getCount()==4,"An incomplete forge preserves ingredients and refuses ignition");
+            l.setBlock(damage,AncientForgeContent.BRICKS.get().defaultBlockState(),3);check(h,ForgeAssembly.form(l,core)&&forge.process.start(l),"Repair restores timed processing");for(int tick=0;tick<ForgeProcess.DURATION;tick++)forge.process.tick(l);
+            var saved=forge.saveWithFullMetadata(l.registryAccess());var loaded=BlockEntity.loadStatic(core,forge.getBlockState(),saved,l.registryAccess());check(h,loaded instanceof ReconstructionTableBlockEntity restored&&restored.getItem(2).getCount()==6&&restored.getItem(5).getCount()==4&&restored.process.finished(),"Ingredient remainders, finished output and ready state persist across reloads");
             var ingot=AncientAnvilContent.INGOT.get();var metal=AncientAnvilContent.METAL_ITEM.get();
             craft(h,3,3,List.of(metal,metal,metal,Items.AIR,ingot,Items.AIR,ingot,ingot,ingot),AncientAnvilContent.ANVIL_ITEM.get(),1);
             craft(h,3,3,Collections.nCopies(9,ingot),metal,1);craft(h,1,1,List.of(metal),ingot,9);
-            System.out.println("ANCIENT_ANVIL_CHECK: PASS: four facings, tier 0/1, mixed 3x3 metals, downgrade, unchanged foundation, both alloy sources, exact costs/output, overflow/duplicate/frame guards, stacked persistence, shift-click and native crafting");h.succeed();
+            System.out.println("ANCIENT_ANVIL_CHECK: PASS: four facings, tier 0/1, mixed 3x3 metals, downgrade, unchanged foundation, both alloy sources, exact costs/output, overflow/duplicate/frame guards, stacked persistence, timed in-world alloying and native crafting");h.succeed();
         }
     }
     private static void craft(GameTestHelper h,int w,int z,List<Item> in,Item out,int count){var input=net.minecraft.world.item.crafting.CraftingInput.of(w,z,in.stream().map(ItemStack::new).toList());var recipe=h.getLevel().getServer().getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,h.getLevel());check(h,recipe.isPresent()&&recipe.get().value().assemble(input).is(out)&&recipe.get().value().assemble(input).getCount()==count,"Crafting must resolve to the expected ancient metal item/count");}

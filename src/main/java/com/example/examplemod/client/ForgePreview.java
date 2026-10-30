@@ -23,8 +23,8 @@ public final class ForgePreview {
         if(state.is(AncientForgeContent.PART.get())){core=FormedForgePartBlock.core(core,state);state=level.getBlockState(core);}
         if(!state.is(AncientForgeContent.CORE.get()))return;
         var status=RuinedForgeStructure.inspect(level,core,state.getValue(RuinedAncientForgeBlock.FACING));
-        if(!status.complete()||event.getEntity().isShiftKeyDown()){
-            Minecraft.getInstance().gui.setScreen(new ForgeRepairScreen(core));event.setCancellationResult(InteractionResult.SUCCESS);event.setCanceled(true);
+        if(!status.complete()){
+            toggle(level,core);event.setCancellationResult(InteractionResult.SUCCESS);event.setCanceled(true);
         }
     }
     private ForgePreview(){}
