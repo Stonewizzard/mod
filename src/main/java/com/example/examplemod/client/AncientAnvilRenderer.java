@@ -33,6 +33,6 @@ public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAn
     @Override public void submit(State s,PoseStack p,SubmitNodeCollector c,CameraRenderState camera){
         for(var cell:s.cells){p.pushPose();p.translate(cell.x(),-1,cell.z());box(p,c,MATERIAL,cell.occupied()?0xD0FFD438:0x663CCFDF);p.popPose();}
         p.pushPose();p.translate(.5,0,.5);p.rotateDegrees(Axis.YP,switch(s.facing){case EAST->-90;case SOUTH->180;case WEST->90;default->0;});p.translate(-.5,0,-.5);
-        for(float x:new float[]{.195F,.785F}){p.pushPose();p.translate(x,1.001F,.39F);p.scale(.02F,.004F,.57F);box(p,c,GLOW,s.glow);p.popPose();}p.popPose();
+        for(float x:new float[]{.32F,.66F}){p.pushPose();p.translate(x,.813F,.44F);p.scale(.02F,.004F,.5F);box(p,c,GLOW,s.glow);p.popPose();}p.popPose();
     }
 }

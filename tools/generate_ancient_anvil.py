@@ -3,27 +3,26 @@ from pathlib import Path
 import json
 ROOT=Path(__file__).resolve().parents[1];RES=ROOT/'src/main/resources';ASSETS=RES/'assets/examplemod';DATA=RES/'data/examplemod'
 def j(p,v):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n')
-# Long axis is north/south. A stepped horn, broad heel, waisted body and foot are all inside the owned cell.
+# A broad working face, tapered horn and small foot. Whole-pixel geometry only.
+# Keep the starter anvil in its owned cell; larger future tiers can own more cells.
 boxes=[
- ([2,0,2],[14,2,14],'metal'),([3,2,3],[13,3,13],'gold'),
- ([4,3,5],[12,5,13],'metal'),([5,5,6],[11,9,12],'runes'),
- ([4,9,5],[12,10,13],'gold'),([4,10,6],[12,12,16],'metal'),
- ([3,12,6],[13,12.5,16],'gold'),([3,12.5,6],[13,15.5,16],'metal'),
- ([3,15.5,6],[13,16,16],'top'),
- ([4,12,4],[12,15,6],'metal'),([4,15,4],[12,15.5,6],'gold'),
- ([5,12.5,2],[11,14.5,4],'metal'),([5,14.5,2],[11,15,4],'gold'),
- ([6,13,1],[10,14.5,2],'metal'),([7,13.5,0],[9,14.5,1],'gold'),
- ([4,4,6],[5,9,12],'runes'),([11,4,6],[12,9,12],'runes')
+ ([3,0,3],[13,2,14],'metal'),
+ ([4,2,5],[12,3,13],'metal'),
+ ([5,3,7],[11,7,12],'runes'),
+ ([4,7,6],[12,9,14],'metal'),
+ ([3,9,6],[13,12,16],'metal'),
+ ([3,12,6],[13,13,16],'top'),
+ ([4,9,4],[12,12,6],'metal'),
+ ([5,10,2],[11,12,4],'metal'),
+ ([6,10,0],[10,11,2],'metal')
 ]
 tex={k:'examplemod:block/anvil_'+k for k in ('metal','gold','runes','top')};tex['particle']=tex['metal']
 def element(box):
  a,B,t=box;x,y,z=a;X,Y,Z=B
  uv={'north':[0,0,16,16],'south':[0,0,16,16],'west':[0,0,16,16],'east':[0,0,16,16],'up':[x,z,X,Z],'down':[x,16-Z,X,16-z]}
- if t=='top':uv['up']=[0,0,16,16]
- if t not in ('runes',):
-  uv.update(north=[16-X,16-Y,16-x,16-y],south=[x,16-Y,X,16-y],west=[z,16-Y,Z,16-y],east=[16-Z,16-Y,16-z,16-y])
+ uv.update(north=[16-X,16-Y,16-x,16-y],south=[x,16-Y,X,16-y],west=[z,16-Y,Z,16-y],east=[16-Z,16-Y,16-z,16-y])
  return {'from':a,'to':B,'faces':{f:{'texture':'#'+t,'uv':v} for f,v in uv.items()}}
-j(ASSETS/'models/block/ancient_anvil.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b) for b in boxes]})
+j(ASSETS/'models/block/ancient_anvil.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b) for b in boxes],'display':{'gui':{'rotation':[30,225,0],'translation':[0,1,0],'scale':[0.7,0.7,0.7]}}})
 j(ASSETS/'blockstates/ancient_anvil.json',{'variants':{f'facing={d},tier={t}':{'model':'examplemod:block/ancient_anvil','y':rot} for t in (0,1) for d,rot in [('north',0),('east',90),('south',180),('west',270)]}})
 j(ASSETS/'models/block/ancient_metal_block.json',{'parent':'minecraft:block/cube_bottom_top','textures':{'side':'examplemod:block/anvil_runes','bottom':'examplemod:block/anvil_metal','top':'examplemod:block/anvil_gold'}})
 j(ASSETS/'blockstates/ancient_metal_block.json',{'variants':{'':{'model':'examplemod:block/ancient_metal_block'}}})
