@@ -136,5 +136,7 @@
   "anvil.examplemod.tier1": "Tier 1 / foundation complete",
   "anvil.examplemod.foundation": "Metal foundation: %s / 9 blocks",
   "anvil.examplemod.metals": "Iron, gold, copper, netherite or ancient metal",
-  "anvil.examplemod.mixed": "Mixed metals count. Place them one layer below."
+  "anvil.examplemod.mixed": "Mixed metals count. Place them one layer below.",
+  "item.examplemod.ancient_scrap": "Ancient Scrap",
+  "alloy.examplemod.melt": "Melt"
 }

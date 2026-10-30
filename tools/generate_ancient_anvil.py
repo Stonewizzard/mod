@@ -30,6 +30,8 @@ j(ASSETS/'blockstates/ancient_metal_block.json',{'variants':{'':{'model':'exampl
 for name in ('ancient_anvil','ancient_metal_block'):
  j(ASSETS/f'items/{name}.json',{'model':{'type':'minecraft:model','model':'examplemod:block/'+name}})
  j(DATA/f'loot_table/blocks/{name}.json',{'type':'minecraft:block','pools':[{'rolls':1,'entries':[{'type':'minecraft:item','name':'examplemod:'+name}],'conditions':[{'condition':'minecraft:survives_explosion'}]}]})
+j(ASSETS/'items/ancient_scrap.json',{'model':{'type':'minecraft:model','model':'examplemod:item/ancient_scrap'}})
+j(ASSETS/'models/item/ancient_scrap.json',{'parent':'minecraft:item/generated','textures':{'layer0':'examplemod:item/ancient_scrap'}})
 j(ASSETS/'items/ancient_ingot.json',{'model':{'type':'minecraft:model','model':'examplemod:item/ancient_ingot'}})
 j(ASSETS/'models/item/ancient_ingot.json',{'parent':'minecraft:item/generated','textures':{'layer0':'examplemod:item/ancient_ingot'}})
 def recipe(name,pattern,key,result,count=1):j(DATA/f'recipe/{name}.json',{'type':'minecraft:crafting_shaped','category':'misc','pattern':pattern,'key':key,'result':{'id':'examplemod:'+result,'count':count}})
@@ -41,10 +43,14 @@ metals=['minecraft:copper_block','minecraft:iron_block','minecraft:gold_block','
 for i,v in enumerate(metals):
  if isinstance(v,dict):v['id']='#'+v['id']
 j(DATA/'tags/block/ancient_anvil_foundation.json',{'replace':False,'values':metals})
-j(DATA/'tags/item/ancient_alloy_scrap.json',{'replace':False,'values':['minecraft:netherite_scrap','minecraft:ancient_debris']})
+j(DATA/'tags/item/ancient_alloy_scrap.json',{'replace':False,'values':['examplemod:ancient_scrap','minecraft:ancient_debris']})
 p=RES/'data/minecraft/tags/block/mineable/pickaxe.json';d=json.loads(p.read_text());d['values']=list(dict.fromkeys(d['values']+['examplemod:ancient_anvil','examplemod:ancient_metal_block']));j(p,d)
 java=['package com.example.examplemod;','import net.minecraft.core.Direction;','import net.minecraft.world.phys.shapes.VoxelShape;','/** Generated with the block model by tools/generate_ancient_anvil.py. */','public final class AncientAnvilGeometry {','    private static final java.util.Map<Direction,VoxelShape> SHAPES=WorkshopShapes.rotations(new double[][]{']
 java += ['        {'+','.join(str(n) for n in a+B)+'}'+(',' if i<len(boxes)-1 else '') for i,(a,B,t) in enumerate(boxes)]
 java += ['    });','    public static VoxelShape shape(Direction facing){return SHAPES.get(facing);}','    private AncientAnvilGeometry(){}','}']
 (ROOT/'src/main/java/com/example/examplemod/AncientAnvilGeometry.java').write_text('\n'.join(java)+'\n')
 print('Authored Ancient Anvil model/collision, metal foundation tag, scrap input tag and three crafting recipes.')
+
+# Nugget-like reversible conversion. Exactly nine small ancient pieces equal one vanilla scrap.
+j(DATA/'recipe/netherite_scrap_from_ancient_scrap.json',{'type':'minecraft:crafting_shaped','category':'misc','pattern':['SSS','SSS','SSS'],'key':{'S':'examplemod:ancient_scrap'},'result':{'id':'minecraft:netherite_scrap','count':1}})
+j(DATA/'recipe/ancient_scrap_from_netherite_scrap.json',{'type':'minecraft:crafting_shapeless','category':'misc','ingredients':['minecraft:netherite_scrap'],'result':{'id':'examplemod:ancient_scrap','count':9}})

@@ -38,13 +38,13 @@ public final class AncientAnvilTests {
             l.setBlock(core,AncientForgeContent.CORE.get().defaultBlockState(),3);check(h,ForgeAssembly.form(l,core),"Alloying uses a real formed Ruined Forge");
             var forge=(ReconstructionTableBlockEntity)l.getBlockEntity(core);forge.alloying(true);
             var player=h.makeMockServerPlayerInLevel();player.snapTo(core.getX()+.5,core.getY()+1,core.getZ()+.5);var menu=new ForgeAlloyMenu(75,player.getInventory(),forge);player.containerMenu=menu;
-            for(var source:List.of(Items.NETHERITE_SCRAP,Items.ANCIENT_DEBRIS)){
+            for(var source:List.of(AncientAnvilContent.SCRAP_ITEM.get(),Items.ANCIENT_DEBRIS)){
                 forge.setItem(0,new ItemStack(source));forge.setItem(1,ItemStack.EMPTY);forge.setItem(2,new ItemStack(Items.IRON_INGOT,2));forge.setItem(5,ItemStack.EMPTY);
                 check(h,!menu.clickMenuButton(player,1)&&forge.getItem(0).getCount()==1&&forge.getItem(2).getCount()==2,"Incomplete recipes preserve all ingredients");
-                forge.setItem(1,new ItemStack(Items.GOLD_INGOT));check(h,menu.ready()&&menu.clickMenuButton(player,1)&&forge.getItem(5).is(AncientAnvilContent.INGOT.get())&&forge.getItem(5).getCount()==4,"Either vanilla scrap or debris alloys to four ancient ingots");
+                forge.setItem(1,new ItemStack(Items.GOLD_INGOT));check(h,menu.ready()&&menu.clickMenuButton(player,1)&&forge.getItem(5).is(AncientAnvilContent.INGOT.get())&&forge.getItem(5).getCount()==4,"Either ancient scrap or debris alloys to four ancient ingots");
                 check(h,forge.getItem(0).isEmpty()&&forge.getItem(1).isEmpty()&&forge.getItem(2).isEmpty()&&!menu.clickMenuButton(player,1),"Alloying consumes exactly one batch and duplicate packets cannot produce extra ingots");
             }
-            forge.setItem(0,new ItemStack(Items.NETHERITE_SCRAP,4));forge.setItem(1,new ItemStack(Items.GOLD_INGOT,4));forge.setItem(2,new ItemStack(Items.IRON_INGOT,8));forge.setItem(5,new ItemStack(AncientAnvilContent.INGOT.get(),61));
+            forge.setItem(0,new ItemStack(AncientAnvilContent.SCRAP_ITEM.get(),4));forge.setItem(1,new ItemStack(Items.GOLD_INGOT,4));forge.setItem(2,new ItemStack(Items.IRON_INGOT,8));forge.setItem(5,new ItemStack(AncientAnvilContent.INGOT.get(),61));
             check(h,!menu.clickMenuButton(player,1)&&forge.getItem(2).getCount()==8,"Output overflow rejects the whole batch");
             forge.setItem(5,new ItemStack(Items.DIAMOND));check(h,!menu.clickMenuButton(player,1)&&forge.getItem(0).getCount()==4,"Existing foreign outputs cannot be overwritten");forge.setItem(5,ItemStack.EMPTY);
             forge.setItem(3,new ItemStack(ReconstructionContent.HANDLE.get()));check(h,!menu.ready(),"Switching modes preserves spare components and requires removing them before alloying");forge.setItem(3,ItemStack.EMPTY);
