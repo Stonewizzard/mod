@@ -18,7 +18,6 @@ public final class AncientAnvilContent {
     public static final DeferredBlock<AncientAnvilBlock> ANVIL=ExampleMod.BLOCKS.registerBlock("ancient_anvil",AncientAnvilBlock::new,p->p.strength(5,1200).sound(SoundType.ANVIL).noOcclusion().lightLevel(s->s.getValue(AncientAnvilBlock.TIER)==1?7:3));
     public static final DeferredItem<BlockItem> ANVIL_ITEM=ExampleMod.ITEMS.registerSimpleBlockItem("ancient_anvil",ANVIL);
     public static final DeferredHolder<BlockEntityType<?>,BlockEntityType<AncientAnvilBlockEntity>> ENTITY=ExampleMod.BLOCK_ENTITIES.register("ancient_anvil",()->new BlockEntityType<>(AncientAnvilBlockEntity::new,ANVIL.get()));
-    public static final DeferredHolder<MenuType<?>,MenuType<ForgeAlloyMenu>> ALLOY_MENU=ExampleMod.MENUS.register("forge_alloying",()->new MenuType<>(ForgeAlloyMenu::new,FeatureFlags.DEFAULT_FLAGS));
     public static final TagKey<Block> FOUNDATION=TagKey.create(Registries.BLOCK,Identifier.fromNamespaceAndPath(ExampleMod.MODID,"ancient_anvil_foundation"));
     public static final TagKey<Item> SCRAP=TagKey.create(Registries.ITEM,Identifier.fromNamespaceAndPath(ExampleMod.MODID,"ancient_alloy_scrap"));
     public static void register(){}

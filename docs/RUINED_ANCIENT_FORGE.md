@@ -1,12 +1,12 @@
 # Ruined Ancient Forge — tier I
 
-A repairable first step toward the ancient workshop. The hearth is a stone work basin with weathered copper bands; the surrounding masonry forms a foundation, two pillars, rear wall and broken-looking chimney. Tier I handles ancient-metal alloying and artifact melting. Equipment assembly belongs to the separate Reconstruction Table. No advanced editing, new mining ability, boss requirement or later-tier economy is implied by this first tier.
+A repairable first step toward the ancient workshop. The hearth is the recessed back-center fireplace with weathered copper bands; the surrounding masonry forms a foundation, two pillars, rear wall and broken-looking chimney. Tier I handles ancient-metal alloying and artifact melting. Equipment assembly belongs to the separate Reconstruction Table. No advanced editing, new mining ability, boss requirement or later-tier economy is implied by this first tier.
 
 ## Acquisition
 
 Implemented: two routes to the same recoverable hearth.
 
-1. **World discovery.** A small ruined workshop may appear in eligible newly generated Overworld terrain. It contains the hearth and sixteen of the eighteen required bricks. Repair the two missing bricks or relocate the hearth and salvage the masonry. The structure has no unique loot chest or guardian.
+1. **World discovery.** A small ruined workshop may appear in eligible newly generated Overworld terrain. It contains the hearth and fifteen of the seventeen required bricks. Repair the two missing bricks or relocate the hearth and salvage the masonry. The structure has no unique loot chest or guardian.
 2. **Reconstruction recipe.** Craft the hearth with four Ruined Forge Bricks, two copper blocks, two iron ingots, and a blast furnace. The frame's bricks are crafted four at a time from four items in `minecraft:stone_crafting_materials`. This route needs no particular biome, new chunks, archaeological luck, revived mob, vault, or boss. Packs can replace the normal vanilla ingredients as needed.
 
 The structure set uses random spread with spacing 48 chunks and separation 24; these are placement parameters, not a promised distance to a find. Biome and terrain eligibility can further reduce actual appearances. The crafting route is intentionally available without a long structure hunt.
@@ -19,35 +19,42 @@ Read each row from the front of the hearth toward the rear. `B` is a Ruined Forg
 
 ```text
 Foundation       Hearth level     Hearth + 1       Hearth + 2
-BBB              .H.              ...              ...
+BBB              ...              ...              ...
 BBB              B.B              B.B              ...
-BBB              BBB              .B.              .B.
+BBB              BHB              .B.              .B.
 ```
 
-Total: **one hearth + eighteen masonry blocks**. The occupied footprint is three wide by three deep, and four high including the foundation. Extra decoration is allowed; only the listed masonry is required. Do not block the interaction face.
+Total: **one hearth + seventeen masonry blocks**. The occupied footprint is three wide by three deep, and four high including the foundation. Extra decoration is allowed; only the listed masonry is required. Do not block the interaction face.
 
-Complete the frame to automatically form one connected, weathered forge: a raised stone-and-bronze work pad, tapered supports, recessed soot-blackened firebox and broken-looking chimney. Each frame cell uses its own portion of a unified model, collision shape and purpose-made textures. Every face has explicit UV coordinates. Right-click any formed section to open the metallurgy screen directly. Stored input and output are kept in the core. Breaking the frame closes the menu and rejects processing without consuming stored inputs; repair restores access. Mining any formed section drops that section’s original masonry and restores the surviving frame. Mining the hearth returns the hearth and its stored inventory through native block drops, and restores the surviving frame. Original masonry states are saved on each formed section, including pack-provided states; formation never erases containers.
+Complete the frame to form the existing weathered stone-and-bronze forge. The fireplace core replaces the former back-center masonry cell, and the front table is removed. The other seventeen formed-cell models, textures, explicit UVs and collision geometry are unchanged. Ingredients and finished output appear inside the fireplace. The forge has no processing screen or repair panel. Equipment remains at the Reconstruction Table.
 
-The current output, or first input when no output exists, appears on the work pad. The Reconstruction Table handles pickaxes and other equipment. The forge no longer offers equipment patterns. Previously stored components and completed tools remain withdrawable from all six slots.
+Breaking a frame section returns its original masonry and restores surviving cells. Breaking the core returns its inventory through native drops. Stored original block states remain intact, including pack-provided masonry. Formation does not overwrite containers.
 
-## Ancient alloying
+## In-world processing
 
-Open the completed forge. One Ancient Scrap or Ancient Debris, one gold ingot and two iron ingots produce four Ancient Ingots. The alloy screen uses separate typed inputs and a shared output; stacks and shift-click are supported. Remove any old parts and output first. All six stored slots, including legacy equipment from older worlds, are preserved. A missing frame or blocked output rejects a batch without consuming inputs. See [the Ancient Anvil reference](ANCIENT_ANVIL.md) for metal-block and anvil recipes.
+1. Right-click inside the fireplace once per ingredient item: **1 Ancient Scrap or Ancient Debris + 1 gold ingot + 2 iron ingots**. Inputs appear inside it.
+2. Use **flint and steel** on the fireplace. One successful ignition costs one durability; repeated clicks do not consume more or reset the timer.
+3. **Black smoke** rises from the chimney during the **20-second** process. Flames appear in the firebox without placing world fire.
+4. **Pure white smoke** signals completion. Right-click with an empty hand to collect **4 Ancient Ingots**. White smoke stops when output is collected.
 
-## Melt artifacts
+To melt an artifact, insert **one artifact alone**, ignite, and collect **one Ancient Scrap** after twenty seconds. All six rarities are accepted. The alloy recipe and recycling quantities are unchanged.
 
-Place an artifact in the metallurgy screen’s left source slot and leave Gold/Iron empty. The action becomes **Melt**: one artifact produces one Ancient Scrap. All six artifact rarities are accepted, with one scrap each. The source artifact and any excavation progress are consumed only after validating the frame, empty spare slots and available scrap-output space. An existing ingot output must be collected first. An empty source never produces another scrap from the leftover output. See [Ancient Scrap](ANCIENT_SCRAP.md).
+An empty-hand click retrieves the output first, then staged inputs/legacy storage one stack per click. Uncollected output, spare parts and incompatible recipes prevent ignition. Held items are never consumed on a rejected interaction. Materials stay reserved in their original slots during heating; they cannot be removed or automated out. Only the finishing tick consumes the exact recipe and creates output. Destroying the core before completion returns raw ingredients rather than granting an instant finished alloy. Missing or unloaded frame cells pause progress, and repair resumes it. Phase, remaining ticks, all item data and completed output survive save/reload.
+
+## Old-world migration
+
+Saved front-table cores are recognized by the missing pre-update layout version. They relocate two blocks back into their existing fireplace, preserve all six inventory slots and item metadata, and return the one displaced masonry block once. Stable cell indices keep all other formed sections in their original world positions. Migration is idempotent. If the target contains an unexpected block or container, relocation waits instead of overwriting it. Clear that target and click or reload to retry. New block placements and new ruins already use the back-center core.
 
 ## Ghost construction guide
 
-Right-click an **incomplete hearth with an empty hand** to open a small repair panel. **Show ghost layout** superimposes the eighteen-cell pattern in the world: cyan for missing masonry and amber for a space occupied by the wrong block. Place actual bricks to repair it. Correctly placed masonry disappears from the preview. Click the hearth again and use **Hide ghost layout** to turn it off; the preview also clears on formation, core removal or world change. It is client-local and never modifies the world or another player's display. Shift-right-click the hearth with an empty hand to inspect repair status.
+Empty-hand right-click an **incomplete fireplace** to toggle the local ghost guide directly. Cyan shows the seventeen missing frame positions; amber shows incorrect occupied positions. Click again to hide. It clears on formation, core removal or world change. No inventory or repair screen opens, and the preview never modifies server blocks.
 
 The overlay deliberately shows required full-block placement cells rather than the finished sculpted geometry. It follows all four hearth facings and does not obscure existing correct frame blocks.
 
 ## Testing commands
 
 - `/give @s examplemod:ruined_ancient_forge`
-- `/give @s examplemod:ruined_forge_bricks 18`
+- `/give @s examplemod:ruined_forge_bricks 17`
 - `/locate structure examplemod:ruined_ancient_forge`
 - `/place structure examplemod:ruined_ancient_forge` — uses the native jigsaw structure placement.
 - `/place template examplemod:ruined_ancient_forge` — places the authored damaged workshop template for inspection.

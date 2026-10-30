@@ -22,12 +22,15 @@ public final class FormedForgePartBlock extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING=BlockStateProperties.HORIZONTAL_FACING;
     public FormedForgePartBlock(BlockBehaviour.Properties properties){super(properties);registerDefaultState(stateDefinition.any().setValue(INDEX,0).setValue(FACING,Direction.NORTH));}
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(INDEX,FACING);}
-    public static BlockPos core(BlockPos pos,BlockState state){var part=RuinedForgeStructure.PARTS.get(state.getValue(INDEX));var front=state.getValue(FACING);return pos.relative(front.getClockWise(),-part.x()).relative(front.getOpposite(),-part.z()).above(-part.y());}
+    public static BlockPos core(BlockPos pos,BlockState state){var part=RuinedForgeStructure.CELLS.get(state.getValue(INDEX));var front=state.getValue(FACING);return pos.relative(front.getClockWise(),-part.x()).relative(front.getOpposite(),-part.z()).above(-part.y());}
     public static boolean belongs(Level level,BlockPos at,BlockPos core,Direction facing,int index){var s=level.getBlockState(at);return s.is(AncientForgeContent.PART.get())&&s.getValue(INDEX)==index&&s.getValue(FACING)==facing&&core(at,s).equals(core)&&level.getBlockEntity(at) instanceof ForgePartBlockEntity;}
     @Override public BlockEntity newBlockEntity(BlockPos pos,BlockState state){return new ForgePartBlockEntity(pos,state);}
     @Override protected RenderShape getRenderShape(BlockState state){return RenderShape.MODEL;}
     @Override protected VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){return ForgeGeometry.shape(state.getValue(INDEX),state.getValue(FACING));}
-    @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){var core=core(pos,state);var hearth=level.getBlockState(core);return hearth.is(AncientForgeContent.CORE.get())?AncientForgeContent.CORE.get().useWithoutItem(hearth,level,core,player,hit):InteractionResult.PASS;}
+    @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){var core=core(pos,state);var hearth=level.getBlockState(core);return hearth.is(AncientForgeContent.CORE.get())?ForgeProcess.frameInteraction(level,core,player):InteractionResult.PASS;}
+    @Override protected InteractionResult useItemOn(ItemStack stack,BlockState state,Level level,BlockPos pos,Player player,net.minecraft.world.InteractionHand hand,BlockHitResult hit){
+        return stack.is(net.minecraft.world.item.Items.FLINT_AND_STEEL)||AncientAlloy.accepts(0,stack)||AncientAlloy.accepts(1,stack)||AncientAlloy.accepts(2,stack)?ForgeProcess.frameInteraction(level,core(pos,state),player):InteractionResult.PASS;
+    }
     @Override protected void affectNeighborsAfterRemoval(BlockState state,ServerLevel level,BlockPos pos,boolean moving){super.affectNeighborsAfterRemoval(state,level,pos,moving);if(!level.getBlockState(pos).is(this))ForgeAssembly.dismantle(level,core(pos,state),state.getValue(FACING));}
     @Override protected List<ItemStack> getDrops(BlockState state,LootParams.Builder builder){
         if(builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof ForgePartBlockEntity part)return part.original().getDrops(builder);

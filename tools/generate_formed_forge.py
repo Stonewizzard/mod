@@ -18,8 +18,9 @@ for x,y,z in parts:
  elif y==1:boxes=[b([0,0,0],[16,1,14],'bronze'),b([0,1,0],[16,4,14],'stone'),b([2,4,2],[14,10,14],'stone'),b([4,10,4],[12,16,14],'soot')]
  else:boxes=[b([4,0,4],[6,12,14],'soot'),b([10,0,4],[12,12,14],'soot'),b([6,0,4],[10,12,6],'soot'),b([6,0,12],[10,12,14],'soot'),b([3,12,3],[6,16,15],'stone'),b([10,12,3],[13,14,15],'stone'),b([6,12,3],[10,14,6],'stone'),b([6,12,12],[10,15,15],'stone')]
  geometry.append(boxes)
-geometry.append([b([1,0,1],[4,9,15],'stone'),b([12,0,1],[15,9,15],'stone'),b([0,9,0],[16,11,16],'bronze'),b([0,11,0],[16,13,16],'soot'),b([4,13,4],[12,13.5,12],'ash')])
-geometry.append([b([1,0,1],[15,3,15],'stone'),b([0,3,0],[16,4,16],'bronze'),b([2,4,2],[4,10,14],'stone'),b([12,4,2],[14,8,14],'stone'),b([4,4,12],[12,9,14],'soot'),b([4,4,4],[12,5,12],'ash')])
+# The firebox replaces the old front work table. All other formed cells are unchanged.
+geometry.append(geometry[14])
+geometry.append(geometry[14])
 def element(box):
  (x,y,z),(X,Y,Z),t=box
  uv={'north':[16-X,16-Y,16-x,16-y],'south':[x,16-Y,X,16-y],'west':[z,16-Y,Z,16-y],'east':[16-Z,16-Y,16-z,16-y],'up':[x,z,X,Z],'down':[x,16-Z,X,16-z]}

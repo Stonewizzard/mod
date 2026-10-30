@@ -24,14 +24,8 @@ public final class RuinedAncientForgeBlock extends BaseEntityBlock {
     @Override protected VoxelShape getShape(BlockState state,BlockGetter level,BlockPos pos,CollisionContext context){
         return ForgeGeometry.shape(state.getValue(FORMED)?18:19,state.getValue(FACING));
     }
-    @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){
-        if(player instanceof ServerPlayer server){
-            var status=RuinedForgeStructure.inspect(level,pos,state.getValue(FACING));
-            if(!status.complete())server.connection.send(new net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket(status.message()));
-            else if(level.getBlockEntity(pos) instanceof ReconstructionTableBlockEntity forge&&ForgeAssembly.form(server.level(),pos))server.openMenu(forge);
-        }
-        return InteractionResult.SUCCESS;
-    }
+    @Override protected InteractionResult useWithoutItem(BlockState state,Level level,BlockPos pos,Player player,BlockHitResult hit){return ForgeProcess.interact(level,pos,player,net.minecraft.world.InteractionHand.MAIN_HAND);}
+    @Override protected InteractionResult useItemOn(net.minecraft.world.item.ItemStack stack,BlockState state,Level level,BlockPos pos,Player player,net.minecraft.world.InteractionHand hand,BlockHitResult hit){return ForgeProcess.interact(level,pos,player,hand);}
     @Override public <T extends net.minecraft.world.level.block.entity.BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(Level level,BlockState state,net.minecraft.world.level.block.entity.BlockEntityType<T> type){return level instanceof net.minecraft.server.level.ServerLevel?createTickerHelper(type,ReconstructionContent.ENTITY.get(),ForgeAssembly::tick):null;}
     @Override protected void affectNeighborsAfterRemoval(BlockState state,net.minecraft.server.level.ServerLevel level,BlockPos pos,boolean moving){super.affectNeighborsAfterRemoval(state,level,pos,moving);if(!level.getBlockState(pos).is(this))ForgeAssembly.dismantle(level,pos,state.getValue(FACING));}
     @Override protected BlockState rotate(BlockState state,Rotation rotation){return state.setValue(FACING,rotation.rotate(state.getValue(FACING)));}

@@ -258,23 +258,23 @@ Craft reconstruction table: grid rows PPP / .C. / S.S. A dot means an empty cell
 
 The Ruined Ancient Forge is a small ancient metallurgy workshop. Complete its masonry to alloy Ancient Ingots and melt unwanted artifacts into Ancient Scrap. Assemble pickaxes and other equipment at the separate Reconstruction Table.
 
-Completing the frame forms one weathered stone-and-bronze forge. Right-click the hearth or any formed section to open its metallurgy screen directly. Breaking a section restores the surviving masonry and keeps the contents safe. Breaking the hearth drops its inventory and the hearth itself.
+Completing the frame forms the same weathered stone-and-bronze forge. Its core is the recessed fireplace at the back; there is no front table. Ingredients and finished metal appear inside the fireplace. There is no forge inventory screen.
 
-Open the completed forge. Place one Ancient Scrap or Ancient Debris in Scrap, one gold ingot in Gold, and two iron ingots in Iron. Press Alloy to make four Ancient Ingots. Ingredients and output can stack. Shift-click routes ingredients to their matching input.
+Right-click inside the completed fireplace with one Ancient Scrap or Ancient Debris, one gold ingot and two iron ingots. Each click adds one item. Light it with flint and steel to begin a twenty-second batch. Black smoke rises from the chimney while it works; pure white smoke means the four Ancient Ingots are ready. Empty-hand right-click the fireplace to collect them.
 
-The forge processes metals and artifacts. Its former equipment-assembly function is now only available at the Reconstruction Table. Old parts and finished tools stored in existing forges remain visible and can be withdrawn; collect those before processing. Breaking the frame stops metallurgy and preserves the stored contents.
+An empty-hand click collects the output first, then returns staged ingredients or old stored parts one stack at a time. Ingredients are reserved while heating. Breaking the frame pauses the timer; repairing it resumes the batch. Mining the core drops the original ingredients if the batch has not finished. Saving and reloading preserves progress.
 
-To recycle an artifact, place it in the left source slot with no gold or iron. The button becomes Melt; each artifact yields one Ancient Scrap. Collect an old output and remove spare components before starting a different process. Melting consumes the artifact, so reserve artifacts you want to excavate.
+To recycle an artifact, put one artifact in the empty fireplace without metals, then light it with flint and steel. After twenty seconds it yields one Ancient Scrap. All six rarities yield one scrap each. Equipment assembly remains at the Reconstruction Table.
 
-The footprint is three blocks wide and three deep, four blocks tall including the foundation. The hearth sits at the center of the front edge, one block above the foundation. All layers below are read front row first. B is Ruined Forge Bricks, H is the hearth, and a dot is empty space.
+The footprint stays three blocks wide, three deep, and four tall including the foundation. Place the core at the back-center fireplace, not the front. Read the following layers from front to back. B is a Ruined Forge Brick, H is the hearth core, and a dot is empty space.
 
-Foundation: BBB / BBB / BBB. Hearth level: .H. / B.B / BBB. One above the hearth: ... / B.B / .B. Two above the hearth: ... / ... / .B.
+Foundation: BBB / BBB / BBB. Hearth level: ... / B.B / BHB. One above the hearth: ... / B.B / .B. Two above the hearth: ... / ... / .B.
 
-Use one hearth and eighteen Ruined Forge Bricks. The two side pillars are behind the hearth; the chimney is centered at the back. The frame rotates with the hearth. The completed structure forms a connected work pad, firebox, supports and chimney.
+Use one hearth and seventeen Ruined Forge Bricks. The side pillars, fireplace, chimney and existing textures keep their previous shape; only the old front table is removed. Existing front-table cores relocate to the fireplace when their saved chunk loads, preserving stored items and returning the displaced brick.
 
-Right-click an incomplete hearth with an empty hand, then choose Show ghost layout. Translucent cyan blocks mark missing masonry. Amber marks spaces occupied by another block: clear those spaces before placing bricks. The preview never places or consumes blocks.
+Empty-hand right-click an incomplete fireplace to toggle its ghost layout directly in the world. Cyan marks missing masonry; amber marks spaces occupied by the wrong block. The guide opens no screen and never places, consumes or changes blocks.
 
-Click the incomplete hearth again to hide the layout. Only you see your preview, and it disappears when the forge forms or you leave the world. Shift-right-click the hearth with an empty hand to inspect repair status.
+Click the incomplete fireplace again to hide the guide. Only you see it. It clears when the forge forms, the core is removed or the world changes.
 
 Small ruined workshops occasionally generate in plains, forests, taigas and savannas in newly generated terrain. A found workshop contains a removable hearth and most of its frame, with two bricks missing. Repair it there or take the materials home.
 
@@ -300,9 +300,9 @@ Right-click an adult, idle Cruncher while holding an artifact. It consumes one a
 
 The reward is delivered immediately. With a full inventory it drops at your feet. The existing wither-rose interaction remains the Cruncher’s food interaction.
 
-Open the completed forge. Place an artifact in the left source slot; the screen changes to Artifact Melting and the action becomes Melt. Leave Gold and Iron empty. Press Melt to consume the artifact and make one Ancient Scrap.
+Right-click an empty completed fireplace with one artifact. Leave gold and iron out. Light the forge with flint and steel and wait twenty seconds. Collect the Ancient Scrap with an empty hand when chimney smoke becomes white.
 
-Collect any previous output and remove stored spare components first. A full or incompatible output, leftover metals, or an incomplete frame stops melting without consuming the artifact.
+Collect any previous output and stored spare components first. Ingredients are consumed only when processing finishes. A broken frame pauses the timer; repair resumes it. Breaking the core before completion returns the original artifact.
 
 Craft nine Ancient Scrap into one vanilla Netherite Scrap. Craft one Netherite Scrap back into nine Ancient Scrap, just like an ingot and its nuggets. These conversions preserve the same quantity of material.
 
@@ -316,13 +316,13 @@ Craft ancient scrap from netherite scrap: netherite scrap, in any arrangement.
 
 ## Ancient metal and alloying
 
-The repaired Ruined Ancient Forge can alloy ancient material with ordinary metals. Open the forge, then use one Ancient Scrap OR Ancient Debris, one gold ingot, and two iron ingots to make four Ancient Ingots. No fuel or additional structure is needed for this first alloy.
+Alloy one Ancient Scrap OR Ancient Debris, one gold ingot and two iron ingots in the repaired Ruined Forge. Right-click the fireplace once per ingredient item, then ignite it with flint and steel. After twenty seconds, black chimney smoke changes to white. Empty-hand right-click to collect four Ancient Ingots. Ignition costs one flint-and-steel durability and needs no separate fuel.
 
 Ancient Scrap comes from recycling artifacts with an adult Cruncher or the forge, and from Sniffers excavating exposed Ancient Debris. Netherite Scrap converts into nine Ancient Scrap at a crafting grid; it is not a direct alloy ingredient.
 
 Craft nine Ancient Ingots into a Block of Ancient Metal. Craft a block back into nine ingots. Three blocks and four ingots make one Ancient Anvil, following the ordinary anvil crafting shape.
 
-The alloy screen has separate Scrap, Gold, Iron and output slots, plus two preserved-part slots. It refuses to consume ingredients when the recipe is incomplete, the output will not fit, or old parts remain stored.
+The forge has no processing screen. Ingredients and results appear physically in its fireplace. Empty-hand clicks return the output first, then staged ingredients or legacy parts. A reserved batch cannot be altered; damage pauses its timer and repair resumes it.
 
 Craft ancient metal block: grid rows III / III / III. A dot means an empty cell. I = ancient ingot.
 

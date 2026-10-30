@@ -51,7 +51,7 @@ for x in range(7):
 parts=[(x,-1,z) for x in (-1,0,1) for z in range(3)]+[(x,y,1) for x in (-1,1) for y in (0,1)]+[(x,0,2) for x in (-1,0,1)]+[(0,y,2) for y in (1,2)]
 for x,y,z in parts:
  if (x,y,z) not in [(-1,1,1),(0,2,2)]:blocks[x+3,y+2,z+2]=1
-blocks[3,2,2]=6
+blocks[3,2,4]=6
 # Foundation/ground supports, so the core sits above a raised ancient plinth.
 for x in range(2,5):
  for z in range(2,5):blocks[x,0,z]=3
@@ -61,7 +61,7 @@ blocks[1,1,5]=5
 for x in range(1,6):
  for z in range(1,6):
   for y in range(1,5):blocks.setdefault((x,y,z),0)
-nbt={'size':ints([7,5,7]),'palette':(9,(10,palette)),'blocks':(9,(10,[{'pos':ints(pos),'state':(3,state)} for pos,state in sorted(blocks.items())])),'entities':(9,(10,[]))}
+nbt={'size':ints([7,5,7]),'palette':(9,(10,palette)),'blocks':(9,(10,[{'pos':ints(pos),'state':(3,state),**({'nbt':(10,{'id':(8,'examplemod:reconstruction_table'),'ForgeLayout':(3,2)})} if state==6 else {})} for pos,state in sorted(blocks.items())])),'entities':(9,(10,[]))}
 out=RES/'data/examplemod/structure/ruined_ancient_forge.nbt';out.parent.mkdir(parents=True,exist_ok=True)
 with out.open('wb') as f:
  with gzip.GzipFile(filename='',mode='wb',fileobj=f,mtime=0) as g:g.write(b'\x0a'+string('')+payload(10,nbt))
