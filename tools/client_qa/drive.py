@@ -211,7 +211,7 @@ def run():
 
     # Place the actual crafted block item with native right-click, then inspect both foundation tiers.
     command('anvil_fixture');process('xdotool','key','2');time.sleep(.7);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0)
-    process('xdotool','key','1');command('anvil_view');capture('ancient-anvil-tier0')
+    process('xdotool','key','9');command('anvil_view');capture('ancient-anvil-tier0')
     command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','click','3');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel0')
     click_widget('Show foundation guide');expect(screen='InGame',anvilGuide=True);command('anvil_expose');command('anvil_view');capture('ancient-anvil-guide')
     command('anvil_foundation');expect(anvilTier=1,anvilMissing=0,anvilGuide=False);capture('ancient-anvil-tier1')
