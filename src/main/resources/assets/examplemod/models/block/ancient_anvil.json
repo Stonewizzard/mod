@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "metal": "minecraft:block/netherite_block",
-    "face": "minecraft:block/anvil_top",
-    "foot": "minecraft:block/polished_blackstone",
+    "metal": "minecraft:block/anvil",
+    "face": "minecraft:block/anvil",
+    "foot": "minecraft:block/anvil",
     "trim": "minecraft:block/cut_copper",
     "gold": "minecraft:block/gold_block",
-    "particle": "minecraft:block/netherite_block"
+    "particle": "minecraft:block/anvil"
   },
   "elements": [
     {

@@ -5,16 +5,16 @@ ROOT=Path(__file__).resolve().parents[1];RES=ROOT/'src/main/resources';ASSETS=RE
 def j(p,v):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n')
 # A full work face and long horn span 3 x 1 x 2 REAL owned cells. Units are vanilla pixels.
 boxes=[
- ([2,0,-2],[14,4,22],'foot'),([3,4,0],[13,6,20],'trim'),
- ([4,6,3],[12,9,17],'metal'),([5,9,5],[11,16,15],'metal'),
- ([3,16,0],[13,19,27],'metal'),([2,19,-3],[14,24,30],'metal'),
- ([2,23,-3],[14,24,30],'face'),
+ ([2,0,-2],[14,4,22],'foot'),([3,4,0],[13,5,20],'trim'),
+ ([4,5,2],[12,8,18],'metal'),([5,8,4],[11,11,17],'metal'),([5,11,5],[11,16,16],'metal'),
+ ([4,16,3],[12,18,24],'metal'),([3,18,0],[13,20,28],'metal'),
+ ([2,20,-3],[14,23,30],'metal'),([3,23,-2],[13,24,29],'face'),
  ([4,18,-8],[12,22,-3],'metal'),([5,18,-12],[11,21,-8],'metal'),([6,18,-16],[10,20,-12],'metal'),
- # One recessed-looking maker's seal on the front of the waist, rather than rune wallpaper.
- ([6,10,4],[10,11,5],'gold'),([6,14,4],[10,15,5],'gold'),([6,11,4],[7,14,5],'gold'),([9,11,4],[10,14,5],'gold')
+ # A small hammer mark in the metal, not a tiled panel of symbols.
+ ([7,11,4],[9,14,5],'gold'),([6,14,4],[10,15,5],'gold')
 ]
 compact=[([2,0,2],[14,3,14],'foot'),([5,3,5],[11,10,12],'metal'),([3,10,4],[13,15,16],'metal'),([3,14,4],[13,15,16],'face'),([5,11,0],[11,14,4],'metal')]
-tex={'metal':'minecraft:block/netherite_block','face':'minecraft:block/anvil_top','foot':'minecraft:block/polished_blackstone','trim':'minecraft:block/cut_copper','gold':'minecraft:block/gold_block','particle':'minecraft:block/netherite_block'}
+tex={'metal':'minecraft:block/anvil','face':'minecraft:block/anvil','foot':'minecraft:block/anvil','trim':'minecraft:block/cut_copper','gold':'minecraft:block/gold_block','particle':'minecraft:block/anvil'}
 cells=[(0,0),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
 def element(box):
  a,B,t=box;x,y,z=a;X,Y,Z=B

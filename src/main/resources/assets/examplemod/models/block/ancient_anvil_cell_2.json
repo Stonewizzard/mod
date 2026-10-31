@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "metal": "minecraft:block/netherite_block",
-    "face": "minecraft:block/anvil_top",
-    "foot": "minecraft:block/polished_blackstone",
+    "metal": "minecraft:block/anvil",
+    "face": "minecraft:block/anvil",
+    "foot": "minecraft:block/anvil",
     "trim": "minecraft:block/cut_copper",
     "gold": "minecraft:block/gold_block",
-    "particle": "minecraft:block/netherite_block"
+    "particle": "minecraft:block/anvil"
   },
   "elements": [
     {
@@ -85,7 +85,7 @@
       ],
       "to": [
         13,
-        6,
+        5,
         4
       ],
       "faces": {
@@ -93,7 +93,7 @@
           "texture": "#trim",
           "uv": [
             3,
-            10,
+            11,
             13,
             12
           ]
@@ -102,7 +102,7 @@
           "texture": "#trim",
           "uv": [
             3,
-            10,
+            11,
             13,
             12
           ]
@@ -111,7 +111,7 @@
           "texture": "#trim",
           "uv": [
             0,
-            10,
+            11,
             4,
             12
           ]
@@ -120,7 +120,7 @@
           "texture": "#trim",
           "uv": [
             12,
-            10,
+            11,
             16,
             12
           ]
@@ -148,49 +148,49 @@
     {
       "from": [
         4,
-        6,
+        5,
         0
       ],
       "to": [
         12,
-        9,
-        1
+        8,
+        2
       ],
       "faces": {
         "north": {
           "texture": "#metal",
           "uv": [
             4,
-            7,
+            8,
             12,
-            10
+            11
           ]
         },
         "south": {
           "texture": "#metal",
           "uv": [
             4,
-            7,
+            8,
             12,
-            10
+            11
           ]
         },
         "west": {
           "texture": "#metal",
           "uv": [
             0,
-            7,
-            1,
-            10
+            8,
+            2,
+            11
           ]
         },
         "east": {
           "texture": "#metal",
           "uv": [
-            15,
-            7,
+            14,
+            8,
             16,
-            10
+            11
           ]
         },
         "up": {
@@ -199,15 +199,83 @@
             4,
             0,
             12,
-            1
+            2
           ]
         },
         "down": {
           "texture": "#metal",
           "uv": [
             4,
-            15,
+            14,
             12,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        8,
+        0
+      ],
+      "to": [
+        11,
+        11,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal",
+          "uv": [
+            5,
+            5,
+            11,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#metal",
+          "uv": [
+            5,
+            5,
+            11,
+            8
+          ]
+        },
+        "west": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            5,
+            1,
+            8
+          ]
+        },
+        "east": {
+          "texture": "#metal",
+          "uv": [
+            15,
+            5,
+            16,
+            8
+          ]
+        },
+        "up": {
+          "texture": "#metal",
+          "uv": [
+            5,
+            0,
+            11,
+            1
+          ]
+        },
+        "down": {
+          "texture": "#metal",
+          "uv": [
+            5,
+            15,
+            11,
             16
           ]
         }

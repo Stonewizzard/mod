@@ -1,23 +1,23 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "metal": "minecraft:block/netherite_block",
-    "face": "minecraft:block/anvil_top",
-    "foot": "minecraft:block/polished_blackstone",
+    "metal": "minecraft:block/anvil",
+    "face": "minecraft:block/anvil",
+    "foot": "minecraft:block/anvil",
     "trim": "minecraft:block/cut_copper",
     "gold": "minecraft:block/gold_block",
-    "particle": "minecraft:block/netherite_block"
+    "particle": "minecraft:block/anvil"
   },
   "elements": [
     {
       "from": [
         2,
-        3,
+        4,
         13
       ],
       "to": [
         14,
-        8,
+        7,
         16
       ],
       "faces": {
@@ -25,36 +25,36 @@
           "texture": "#metal",
           "uv": [
             2,
-            8,
+            9,
             14,
-            13
+            12
           ]
         },
         "south": {
           "texture": "#metal",
           "uv": [
             2,
-            8,
+            9,
             14,
-            13
+            12
           ]
         },
         "west": {
           "texture": "#metal",
           "uv": [
             13,
-            8,
+            9,
             16,
-            13
+            12
           ]
         },
         "east": {
           "texture": "#metal",
           "uv": [
             0,
-            8,
+            9,
             3,
-            13
+            12
           ]
         },
         "up": {
@@ -79,12 +79,12 @@
     },
     {
       "from": [
-        2,
+        3,
         7,
-        13
+        14
       ],
       "to": [
-        14,
+        13,
         8,
         16
       ],
@@ -92,25 +92,25 @@
         "north": {
           "texture": "#face",
           "uv": [
-            2,
+            3,
             8,
-            14,
+            13,
             9
           ]
         },
         "south": {
           "texture": "#face",
           "uv": [
-            2,
+            3,
             8,
-            14,
+            13,
             9
           ]
         },
         "west": {
           "texture": "#face",
           "uv": [
-            13,
+            14,
             8,
             16,
             9
@@ -121,26 +121,26 @@
           "uv": [
             0,
             8,
-            3,
+            2,
             9
           ]
         },
         "up": {
           "texture": "#face",
           "uv": [
-            2,
-            13,
+            3,
             14,
+            13,
             16
           ]
         },
         "down": {
           "texture": "#face",
           "uv": [
-            2,
+            3,
             0,
-            14,
-            3
+            13,
+            2
           ]
         }
       }

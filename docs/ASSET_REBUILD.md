@@ -31,8 +31,8 @@ bindings and physical item displays, with a vanilla green-wool work mat.
 The anvil spans three blocks along its facing axis, one block wide, and two owned
 block layers. The work face is 1.5 blocks above its base. A broad heel, long stepped
 horn, solid waist and heavy foot replace the compressed single-cell silhouette.
-It uses recognizable vanilla metal/stone materials with one small gold maker's
-seal. It has six actual owned cells with matching rotated selection/collision.
+It uses Minecraft's continuous anvil-metal material, a thin copper foot trim, and one
+small gold hammer mark. It has six actual owned cells with matching rotated selection/collision.
 
 The recipe, item ID, stationary behavior, Tier 0, and centered 3x3 Tier 1 metal
 foundation remain unchanged. New placements need clear space. Saved anvils remain
