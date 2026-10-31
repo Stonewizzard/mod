@@ -14,6 +14,7 @@ def validate_image(im,rule):
  if min(box[0],box[1],32-box[2],32-box[3])<1:errors.append('clipped margin')
  longest=max(box[2]-box[0],box[3]-box[1])
  if not rule['min_longest']<=longest<=rule['max_longest']:errors.append('wrong visual size for item role')
+ if 'aspect_range' in rule and not rule['aspect_range'][0]<=(box[2]-box[0])/(box[3]-box[1])<=rule['aspect_range'][1]:errors.append('wrong aspect ratio for item role')
  groups=regions(opaque(im),True)
  if any(len(g)==1 for g in groups):errors.append('loose one-pixel fleck')
  if len(groups)>1 and not rule.get('separate_fragments'):errors.append('unapproved disconnected silhouette')
@@ -37,7 +38,7 @@ def main():
     path=ASSETS/'models'/(model.split(':',1)[1]+'.json')
     if not path.exists():fail.append(name+': missing item model')
  for p in (ASSETS/'textures/item').glob('*.png'):
-  if Image.open(p).size==(32,32) and p.stem not in manifest:fail.append(p.name+': classify new generic item in the manifest')
+  if p.stem not in manifest:fail.append(p.name+': classify new generic item in the manifest')
  for i in range(6):
   model=json.loads((ASSETS/'models/block'/f'ancient_anvil_cell_{i}.json').read_text())
   for e in model['elements']:

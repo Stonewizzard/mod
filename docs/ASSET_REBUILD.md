@@ -55,7 +55,7 @@ python tools/audit_minecraft_assets.py
 python tools/test_asset_guardrails.py
 ```
 
-CI checks 44 item profiles and six negative controls. Native Minecraft review adds
+CI checks 44 item profiles and seven negative controls. Native Minecraft review adds
 vanilla iron/gold comparison, main/offhand held cutouts, dropped ingot, original
 artifact artwork, masonry tiling, and all four large-anvil orientations. Screenshots
 remain in workflow artifacts instead of being embedded in large chat/log messages.
