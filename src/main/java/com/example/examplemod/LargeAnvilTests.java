@@ -34,9 +34,9 @@ public final class LargeAnvilTests {
             level.destroyBlock(blocked,false);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));check(h,level.getBlockState(core).getValue(AncientAnvilBlock.LARGE),"Clearing space upgrades the same saved anvil without another item");
             level.destroyBlock(core,false);
             // A new footprint must not intersect a living creature.
-            var pig=h.spawn(net.minecraft.world.entity.EntityType.PIG,new BlockPos(3,3,2));pig.setNoAi(true);
+            var creature=h.spawn(ExampleMod.CRUNCHER.get(),new BlockPos(3,3,2));creature.setNoAi(true);
             level.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));
-            check(h,!level.getBlockState(core).getValue(AncientAnvilBlock.LARGE),"Automatic expansion waits for living entities to move away");pig.discard();AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));check(h,level.getBlockState(core).getValue(AncientAnvilBlock.LARGE),"Safe expansion resumes after the obstruction leaves");
+            check(h,!level.getBlockState(core).getValue(AncientAnvilBlock.LARGE),"Automatic expansion waits for living entities to move away");creature.discard();AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));check(h,level.getBlockState(core).getValue(AncientAnvilBlock.LARGE),"Safe expansion resumes after the obstruction leaves");
             System.out.println("LARGE_ANVIL_CHECK: PASS: six actual owned cells, four facings, all24 harvesting paths recover once, foundation preservation, old-world fallback, container/entity protection and safe expansion");h.succeed();
         }
     }
