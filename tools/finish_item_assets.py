@@ -55,7 +55,14 @@ def build():
   if p.stem in ['ancient_ingot','ancient_scrap']:continue
   # Keep the approved original artwork and color detail. Stone specimens are intentionally readable.
   target=24 if p.stem.endswith('ancient_artifact') or p.stem=='ancient_artifact' else None
-  result[p.stem]=envelope(Image.open(p),target)
+  art=Image.open(p).convert('RGBA')
+  if p.stem in ['ancient_shovel_head','ancient_spear_tip']:
+   # These old sprites had an unrelated detached footer, not a real tool component.
+   for group in regions({(x,y) for y in range(art.height) for x in range(art.width) if art.getpixel((x,y))[3]>=128},True):
+    if len(group)<6:
+     for point in group:art.putpixel(point,(0,0,0,0))
+   target=26
+  result[p.stem]=envelope(art,target)
  result.update(metals());return result
 
 def main():

@@ -16,7 +16,7 @@ coordinates. Alpha is binary; silhouettes have no pinholes or floating pixels.
 
 Original source art for the other generic items is preserved. Technical finishing
 makes their cutout alpha solid, removes isolated one-pixel debris, keeps clear
-borders, and gives artifacts a readable 24px extent. It preserves each item's RGB
+borders, removes the unrelated footer specks from the shovel/spear heads, and gives artifacts a readable 24px extent. It preserves each item's RGB
 artwork and shape rather than repainting tools/parts into one generic style.
 Intentional fragment gaps and the resonance frame are documented exceptions.
 
@@ -24,7 +24,7 @@ Forge masonry, soot, copper and ash now reference Minecraft's actual deepslate
 bricks, polished blackstone, cut copper and basalt textures. They share vanilla
 pixel density and tiling. Forge geometry, direct interaction, processing and
 chimney behavior are unchanged. The furniture keeps its original vanilla wood
-bindings and physical item displays.
+bindings and physical item displays, with a vanilla green-wool work mat.
 
 ## Larger Ancient Anvil
 

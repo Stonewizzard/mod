@@ -88,21 +88,19 @@
   },
   "ancient_shovel_head": {
     "legacy_artwork": true,
-    "min_longest": 26,
-    "max_longest": 30,
+    "min_longest": 24,
+    "max_longest": 28,
     "allowed_holes": [],
-    "separate_fragments": true,
-    "model": true,
-    "exception_reason": "Intentional separated archaeological fragments or open resonance frame retained from original artwork."
+    "separate_fragments": false,
+    "model": true
   },
   "ancient_spear_tip": {
     "legacy_artwork": true,
-    "min_longest": 26,
-    "max_longest": 30,
+    "min_longest": 24,
+    "max_longest": 28,
     "allowed_holes": [],
-    "separate_fragments": true,
-    "model": true,
-    "exception_reason": "Intentional separated archaeological fragments or open resonance frame retained from original artwork."
+    "separate_fragments": false,
+    "model": true
   },
   "ancient_sword_blade": {
     "legacy_artwork": true,
