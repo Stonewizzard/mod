@@ -1,0 +1,84 @@
+{
+  "variants": {
+    "facing=north,cell=1": {
+      "model": "examplemod:block/ancient_anvil_cell_1",
+      "y": 0
+    },
+    "facing=east,cell=1": {
+      "model": "examplemod:block/ancient_anvil_cell_1",
+      "y": 90
+    },
+    "facing=south,cell=1": {
+      "model": "examplemod:block/ancient_anvil_cell_1",
+      "y": 180
+    },
+    "facing=west,cell=1": {
+      "model": "examplemod:block/ancient_anvil_cell_1",
+      "y": 270
+    },
+    "facing=north,cell=2": {
+      "model": "examplemod:block/ancient_anvil_cell_2",
+      "y": 0
+    },
+    "facing=east,cell=2": {
+      "model": "examplemod:block/ancient_anvil_cell_2",
+      "y": 90
+    },
+    "facing=south,cell=2": {
+      "model": "examplemod:block/ancient_anvil_cell_2",
+      "y": 180
+    },
+    "facing=west,cell=2": {
+      "model": "examplemod:block/ancient_anvil_cell_2",
+      "y": 270
+    },
+    "facing=north,cell=3": {
+      "model": "examplemod:block/ancient_anvil_cell_3",
+      "y": 0
+    },
+    "facing=east,cell=3": {
+      "model": "examplemod:block/ancient_anvil_cell_3",
+      "y": 90
+    },
+    "facing=south,cell=3": {
+      "model": "examplemod:block/ancient_anvil_cell_3",
+      "y": 180
+    },
+    "facing=west,cell=3": {
+      "model": "examplemod:block/ancient_anvil_cell_3",
+      "y": 270
+    },
+    "facing=north,cell=4": {
+      "model": "examplemod:block/ancient_anvil_cell_4",
+      "y": 0
+    },
+    "facing=east,cell=4": {
+      "model": "examplemod:block/ancient_anvil_cell_4",
+      "y": 90
+    },
+    "facing=south,cell=4": {
+      "model": "examplemod:block/ancient_anvil_cell_4",
+      "y": 180
+    },
+    "facing=west,cell=4": {
+      "model": "examplemod:block/ancient_anvil_cell_4",
+      "y": 270
+    },
+    "facing=north,cell=5": {
+      "model": "examplemod:block/ancient_anvil_cell_5",
+      "y": 0
+    },
+    "facing=east,cell=5": {
+      "model": "examplemod:block/ancient_anvil_cell_5",
+      "y": 90
+    },
+    "facing=south,cell=5": {
+      "model": "examplemod:block/ancient_anvil_cell_5",
+      "y": 180
+    },
+    "facing=west,cell=5": {
+      "model": "examplemod:block/ancient_anvil_cell_5",
+      "y": 270
+    }
+  }
+}

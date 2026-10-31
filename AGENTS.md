@@ -1,6 +1,6 @@
 # Repository workflow
 
-For generic item sprites, block materials and item model changes, read and follow
-[the Minecraft asset skill](.agents/skills/minecraft-assets/SKILL.md).
-Asset validation commands in that skill are required for asset changes.
-Never merge pull requests automatically.
+Read [.agents/skills/minecraft-assets/SKILL.md](.agents/skills/minecraft-assets/SKILL.md)
+for generic item sprites, block materials, models, and multiblock artwork.
+Keep each item's identity. Asset checks catch rendering defects; they do not authorize
+replacing an entire art style. Never merge pull requests automatically.

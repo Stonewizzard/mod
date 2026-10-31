@@ -11,9 +11,9 @@ import net.minecraft.server.packs.resources.ResourceManager;
 /** Asset contracts only; the native-client screenshots remain the visual acceptance check. */
 public final class AncientForgeVisualRegression {
     public static void run(ResourceManager resources)throws Exception{
-        for(String name:new String[]{"stone","soot","bronze","ash"})try(var input=resources.getResourceOrThrow(id("textures/block/forge_"+name+".png")).open()){
+        for(String name:new String[]{"deepslate_bricks","polished_blackstone","cut_copper","basalt_top"})try(var input=resources.getResourceOrThrow(Identifier.withDefaultNamespace("textures/block/"+name+".png")).open()){
             var png=ImageIO.read(input);
-            if(png==null||png.getWidth()!=32||png.getHeight()!=32)throw new IllegalStateException("Invalid custom forge texture: "+name);
+            if(png==null||png.getWidth()!=16||png.getHeight()!=16)throw new IllegalStateException("Invalid custom forge texture: "+name);
         }
         for(int cell=0;cell<20;cell++){
             String model=cell<18?"formed_forge_"+cell:cell==18?"ruined_ancient_forge_formed":"ruined_ancient_forge";
@@ -30,7 +30,7 @@ public final class AncientForgeVisualRegression {
             }
         }
         if(read(resources,"blockstates/formed_ruined_forge.json").getAsJsonObject("variants").size()!=72||read(resources,"blockstates/ruined_ancient_forge.json").getAsJsonObject("variants").size()!=8)throw new IllegalStateException("Missing formed/unformed forge rotations");
-        System.out.println("ANCIENT_FORGE_VISUAL_CHECK: PASS: four custom textures, twenty bounded models, explicit noncollapsed UVs, all formed/unformed rotations");
+        System.out.println("ANCIENT_FORGE_VISUAL_CHECK: PASS: four vanilla-resolution materials, twenty bounded models, explicit noncollapsed UVs, all formed/unformed rotations");
     }
     private static Identifier id(String path){return Identifier.fromNamespaceAndPath(ExampleMod.MODID,path);}
     private static JsonObject read(ResourceManager resources,String path)throws Exception{try(var input=resources.getResourceOrThrow(id(path)).open()){return JsonParser.parseReader(new InputStreamReader(input,StandardCharsets.UTF_8)).getAsJsonObject();}}

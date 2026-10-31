@@ -38,7 +38,3 @@ run/
 **/src/generated/**/.cache/
 repo/
 !**/src/**/repo/
-
-### Python asset tools ###
-__pycache__/
-*.py[cod]

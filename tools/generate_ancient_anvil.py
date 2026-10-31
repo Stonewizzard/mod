@@ -3,31 +3,46 @@ from pathlib import Path
 import json
 ROOT=Path(__file__).resolve().parents[1];RES=ROOT/'src/main/resources';ASSETS=RES/'assets/examplemod';DATA=RES/'data/examplemod'
 def j(p,v):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n')
-# A broad working face, tapered horn and small foot. Whole-pixel geometry only.
-# Keep the starter anvil in its owned cell; larger future tiers can own more cells.
+# A full work face and long horn span 3 x 1 x 2 REAL owned cells. Units are vanilla pixels.
 boxes=[
- ([3,0,3],[13,2,14],'metal'),
- ([4,2,5],[12,3,13],'metal'),
- ([5,3,7],[11,7,12],'runes'),
- ([4,7,6],[12,9,14],'metal'),
- ([3,9,6],[13,12,16],'metal'),
- ([3,12,6],[13,13,16],'top'),
- ([4,9,4],[12,12,6],'metal'),
- ([5,10,2],[11,12,4],'metal'),
- ([6,10,0],[10,11,2],'metal')
+ ([2,0,-2],[14,4,22],'foot'),([3,4,0],[13,5,20],'trim'),
+ ([4,5,2],[12,8,18],'metal'),([5,8,4],[11,11,17],'metal'),([5,11,5],[11,16,16],'metal'),
+ ([4,16,3],[12,18,24],'metal'),([3,18,0],[13,20,28],'metal'),
+ ([2,20,-3],[14,23,30],'metal'),([3,23,-2],[13,24,29],'face'),
+ ([4,18,-8],[12,22,-3],'metal'),([5,18,-12],[11,21,-8],'metal'),([6,18,-16],[10,20,-12],'metal'),
+ # A small hammer mark in the metal, not a tiled panel of symbols.
+ ([7,11,4],[9,14,5],'gold'),([6,14,4],[10,15,5],'gold')
 ]
-tex={k:'examplemod:block/anvil_'+k for k in ('metal','gold','runes','top')};tex['particle']=tex['metal']
+compact=[([2,0,2],[14,3,14],'foot'),([5,3,5],[11,10,12],'metal'),([3,10,4],[13,15,16],'metal'),([3,14,4],[13,15,16],'face'),([5,11,0],[11,14,4],'metal')]
+tex={'metal':'minecraft:block/anvil','face':'minecraft:block/anvil','foot':'minecraft:block/anvil','trim':'minecraft:block/cut_copper','gold':'minecraft:block/gold_block','particle':'minecraft:block/anvil'}
+cells=[(0,0),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
 def element(box):
  a,B,t=box;x,y,z=a;X,Y,Z=B
- uv={'north':[0,0,16,16],'south':[0,0,16,16],'west':[0,0,16,16],'east':[0,0,16,16],'up':[x,z,X,Z],'down':[x,16-Z,X,16-z]}
- uv.update(north=[16-X,16-Y,16-x,16-y],south=[x,16-Y,X,16-y],west=[z,16-Y,Z,16-y],east=[16-Z,16-Y,16-z,16-y])
+ uv={'north':[16-X,16-Y,16-x,16-y],'south':[x,16-Y,X,16-y],'west':[z,16-Y,Z,16-y],'east':[16-Z,16-Y,16-z,16-y],'up':[x,z,X,Z],'down':[x,16-Z,X,16-z]}
  return {'from':a,'to':B,'faces':{f:{'texture':'#'+t,'uv':v} for f,v in uv.items()}}
-j(ASSETS/'models/block/ancient_anvil.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b) for b in boxes],'display':{'gui':{'rotation':[30,225,0],'translation':[0,1,0],'scale':[0.7,0.7,0.7]}}})
-j(ASSETS/'blockstates/ancient_anvil.json',{'variants':{f'facing={d},tier={t}':{'model':'examplemod:block/ancient_anvil','y':rot} for t in (0,1) for d,rot in [('north',0),('east',90),('south',180),('west',270)]}})
-j(ASSETS/'models/block/ancient_metal_block.json',{'parent':'minecraft:block/cube_bottom_top','textures':{'side':'examplemod:block/anvil_runes','bottom':'examplemod:block/anvil_metal','top':'examplemod:block/anvil_gold'}})
+def clip(box,y,z):
+ a,B,t=box;lo=[max(a[0],0),max(a[1],y*16),max(a[2],z*16)];hi=[min(B[0],16),min(B[1],y*16+16),min(B[2],z*16+16)]
+ if any(l>=h for l,h in zip(lo,hi)):return None
+ return ([lo[0],lo[1]-y*16,lo[2]-z*16],[hi[0],hi[1]-y*16,hi[2]-z*16],t)
+meshes=[]
+for i,(y,z) in enumerate(cells):
+ mesh=[c for b in boxes if (c:=clip(b,y,z))];meshes.append(mesh)
+ j(ASSETS/f'models/block/ancient_anvil_cell_{i}.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b) for b in mesh]})
+j(ASSETS/'models/block/ancient_anvil.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b) for b in compact]})
+# A dedicated item preview centers/scales the complete silhouette; held blocks must fit an ordinary item envelope.
+preview=[]
+for a,B,t in boxes:
+ e=element(([8+(a[0]-8)/3,4+a[1]/3,a[2]/3+16/3],[8+(B[0]-8)/3,4+B[1]/3,B[2]/3+16/3],t))
+ for f in e['faces'].values():f['uv']=[0,0,16,16]
+ preview.append(e)
+j(ASSETS/'models/block/ancient_anvil_item.json',{'parent':'minecraft:block/block','textures':tex,'elements':preview,'display':{'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[.625,.625,.625]}}})
+rots=[('north',0),('east',90),('south',180),('west',270)]
+j(ASSETS/'blockstates/ancient_anvil.json',{'variants':{f'facing={d},tier={tier},large={str(large).lower()}':{'model':'examplemod:block/'+('ancient_anvil_cell_0' if large else 'ancient_anvil'),'y':rot} for tier in (0,1) for large in (False,True) for d,rot in rots}})
+j(ASSETS/'blockstates/ancient_anvil_part.json',{'variants':{f'facing={d},cell={i}':{'model':f'examplemod:block/ancient_anvil_cell_{i}','y':rot} for i in range(1,6) for d,rot in rots}})
+j(ASSETS/'models/block/ancient_metal_block.json',{'parent':'minecraft:block/cube_bottom_top','textures':{'side':'minecraft:block/netherite_block','bottom':'minecraft:block/polished_blackstone','top':'minecraft:block/cut_copper'}})
 j(ASSETS/'blockstates/ancient_metal_block.json',{'variants':{'':{'model':'examplemod:block/ancient_metal_block'}}})
 for name in ('ancient_anvil','ancient_metal_block'):
- j(ASSETS/f'items/{name}.json',{'model':{'type':'minecraft:model','model':'examplemod:block/'+name}})
+ j(ASSETS/f'items/{name}.json',{'model':{'type':'minecraft:model','model':'examplemod:block/'+('ancient_anvil_item' if name=='ancient_anvil' else name)}})
  j(DATA/f'loot_table/blocks/{name}.json',{'type':'minecraft:block','pools':[{'rolls':1,'entries':[{'type':'minecraft:item','name':'examplemod:'+name}],'conditions':[{'condition':'minecraft:survives_explosion'}]}]})
 j(ASSETS/'items/ancient_scrap.json',{'model':{'type':'minecraft:model','model':'examplemod:item/ancient_scrap'}})
 j(ASSETS/'models/item/ancient_scrap.json',{'parent':'minecraft:item/generated','textures':{'layer0':'examplemod:item/ancient_scrap'}})
@@ -44,10 +59,11 @@ for i,v in enumerate(metals):
 j(DATA/'tags/block/ancient_anvil_foundation.json',{'replace':False,'values':metals})
 j(DATA/'tags/item/ancient_alloy_scrap.json',{'replace':False,'values':['examplemod:ancient_scrap','minecraft:ancient_debris']})
 p=RES/'data/minecraft/tags/block/mineable/pickaxe.json';d=json.loads(p.read_text());d['values']=list(dict.fromkeys(d['values']+['examplemod:ancient_anvil','examplemod:ancient_metal_block']));j(p,d)
-java=['package com.example.examplemod;','import net.minecraft.core.Direction;','import net.minecraft.world.phys.shapes.VoxelShape;','/** Generated with the block model by tools/generate_ancient_anvil.py. */','public final class AncientAnvilGeometry {','    private static final java.util.Map<Direction,VoxelShape> SHAPES=WorkshopShapes.rotations(new double[][]{']
-java += ['        {'+','.join(str(n) for n in a+B)+'}'+(',' if i<len(boxes)-1 else '') for i,(a,B,t) in enumerate(boxes)]
-java += ['    });','    public static VoxelShape shape(Direction facing){return SHAPES.get(facing);}','    private AncientAnvilGeometry(){}','}']
+java=['package com.example.examplemod;','import net.minecraft.core.Direction;','import net.minecraft.world.phys.shapes.VoxelShape;','/** Generated with six owned cell models by tools/generate_ancient_anvil.py. */','public final class AncientAnvilGeometry {']
+def shape(mesh):return 'WorkshopShapes.rotations(new double[][]{'+','.join('{'+','.join(str(n) for n in a+B)+'}' for a,B,t in mesh)+'})'
+java+=['    private static final java.util.Map<Direction,VoxelShape> COMPACT='+shape(compact)+';','    private static final java.util.List<java.util.Map<Direction,VoxelShape>> CELLS=java.util.List.of('+','.join(shape(mesh) for mesh in meshes)+');','    public static VoxelShape shape(Direction facing){return COMPACT.get(facing);}','    public static VoxelShape cell(int cell,Direction facing){return CELLS.get(cell).get(facing);}','    private AncientAnvilGeometry(){}','}']
 (ROOT/'src/main/java/com/example/examplemod/AncientAnvilGeometry.java').write_text('\n'.join(java)+'\n')
+p=RES/'data/minecraft/tags/block/mineable/pickaxe.json';d=json.loads(p.read_text());d['values']=list(dict.fromkeys(d['values']+['examplemod:ancient_anvil_part']));j(p,d)
 print('Authored Ancient Anvil model/collision, metal foundation tag, scrap input tag and five crafting recipes.')
 
 # Nugget-like reversible conversion. Exactly nine small ancient pieces equal one vanilla scrap.

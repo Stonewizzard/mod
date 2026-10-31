@@ -193,6 +193,7 @@ public class ExampleMod {
             modEventBus.addListener(ReconstructionTests::register);
             modEventBus.addListener(AncientForgeTests::register);
             modEventBus.addListener(AncientAnvilTests::register);
+            modEventBus.addListener(LargeAnvilTests::register);
             modEventBus.addListener(AncientScrapTests::register);
             modEventBus.addListener(FireboxProcessTests::register);
             modEventBus.addListener(PickaxeModifierTests::register);
