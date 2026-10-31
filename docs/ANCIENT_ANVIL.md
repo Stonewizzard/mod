@@ -1,6 +1,15 @@
-# Ancient Anvil — first foundation
+# Ancient Anvil
 
-The Ancient Anvil is a distinct workshop structure from the Ruined Ancient Forge. Its stepped horn, broad heel, waisted body, carved gold panels and circular work-face seal interpret the supplied monumental-anvil reference in Minecraft geometry. Four custom 32×32 materials use explicit UVs; model and collision geometry share `tools/generate_ancient_anvil.py`. Warm, full-bright inlays gently pulse and brighten at Tier 1.
+A three-block-long, one-block-wide anvil with a broad work face, a long stepped horn,
+a solid waist and a heavy foot. Its work surface is 1.5 blocks high. Six real owned
+cells span two block layers; its geometry and collision are generated together.
+It uses vanilla metal materials, restrained copper trim and one gold maker's seal.
+The dense rune wallpaper, tiny layered plates and pulse strips are removed.
+
+Placement requires clear space one block ahead, one behind, and above the three
+positions. Existing cramped anvils keep a compact fallback until that space is clear.
+Neither containers nor creatures are overwritten. Breaking any section recovers one
+anvil, clears the other owned sections, and preserves the foundation.
 
 ## Progression
 

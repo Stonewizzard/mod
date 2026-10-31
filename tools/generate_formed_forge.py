@@ -4,7 +4,7 @@ import json
 ROOT=Path(__file__).resolve().parents[1];RES=ROOT/'src/main/resources';OUT=RES/'assets/examplemod'
 def j(p,v):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n')
 parts=[(x,-1,z) for x in (-1,0,1) for z in range(3)]+[(x,y,1) for x in (-1,1) for y in (0,1)]+[(x,0,2) for x in (-1,0,1)]+[(0,y,2) for y in (1,2)]
-textures={n:'examplemod:block/forge_'+n for n in ('stone','soot','bronze','ash')};textures['particle']=textures['stone']
+textures={'stone':'minecraft:block/deepslate_bricks','soot':'minecraft:block/polished_blackstone','bronze':'minecraft:block/cut_copper','ash':'minecraft:block/basalt_top'};textures['particle']=textures['stone']
 def b(a,B,t):return [a,B,t]
 geometry=[]
 for x,y,z in parts:

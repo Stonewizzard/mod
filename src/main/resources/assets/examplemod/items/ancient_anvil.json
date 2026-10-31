@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "examplemod:block/ancient_anvil"
+    "model": "examplemod:block/ancient_anvil_item"
   }
 }

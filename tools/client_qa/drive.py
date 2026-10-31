@@ -210,7 +210,7 @@ def run():
     print('ANCIENT_FORGE_NATIVE_PASS: no processing or repair UI, removed front table, fireplace ingredient deposits, flint ignition, timed alloy/melt, black/white chimney smoke, pause/repair, legacy withdrawal and collected output',flush=True)
 
     # Place the actual crafted block item with native right-click, then inspect both foundation tiers.
-    command('anvil_fixture');process('xdotool','key','2');time.sleep(.7);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0)
+    command('anvil_fixture');process('xdotool','key','2');time.sleep(.7);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0,anvilLarge=True)
     process('xdotool','key','9');command('anvil_view');capture('ancient-anvil-tier0')
     command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','click','3');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel0')
     click_widget('Show foundation guide');expect(screen='InGame',anvilGuide=True);command('anvil_expose');command('anvil_view');capture('ancient-anvil-guide')
@@ -231,6 +231,17 @@ def run():
     process('xdotool','key','Return');expect(generatedForge=True)
     command('forge_generated_view');time.sleep(1);capture('forge-world-ruin')
     print('ANCIENT_FORGE_NATIVE_PASS: in-world metallurgy, legacy storage recovery, frame interruption, repair, saved output and fireplace display',flush=True)
+    # Compare against real vanilla assets and inspect all owned-cell orientations.
+    command('assets_scene');expect(assetsLarge=True,assetsCells=6,assetsFacing='NORTH')
+    process('xdotool','key','3');capture('assets-ingot-held')
+    process('xdotool','key','4');capture('assets-scrap-held')
+    process('xdotool','key','5');capture('assets-artifact-held')
+    command('assets_offhand');process('xdotool','key','1');capture('assets-ingot-offhand')
+    command('assets_right_hand');process('xdotool','key','3');time.sleep(.4);process('xdotool','key','q');expect(assetsIngotDropped=True);time.sleep(1);command('assets_drop_view');capture('assets-ingot-dropped')
+    process('xdotool','key','9')
+    for facing in ['NORTH','EAST','SOUTH','WEST']:
+        command('assets_anvil_view',facing=facing);expect(assetsLarge=True,assetsCells=6,assetsFacing=facing);capture('large-anvil-'+facing.lower())
+    print('ASSET_NATIVE_PASS: vanilla ingot comparison, main/offhand cutouts, dropped ingot, original artifact identity, vanilla material tiling and six owned anvil cells in all four orientations',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
     print('CLIENT_VISUAL_QA_PASS: Workshop Manual item, illustrated browsing and OS input task paths',flush=True)
 

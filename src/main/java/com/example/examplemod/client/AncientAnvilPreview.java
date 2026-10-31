@@ -12,6 +12,6 @@ public final class AncientAnvilPreview {
     public static boolean active(net.minecraft.world.level.Level l,BlockPos p){return l==world&&p.equals(core);}
     public static void toggle(ClientLevel l,BlockPos p){if(world!=l){world=l;core=null;}core=p.equals(core)?null:p.immutable();}
     public static void tick(net.neoforged.neoforge.client.event.ClientTickEvent.Post e){var l=Minecraft.getInstance().level;if(world!=l){world=l;core=null;}if(core!=null&&(!l.hasChunkAt(core)||!l.getBlockState(core).is(AncientAnvilContent.ANVIL.get())||AncientAnvilBlockEntity.missing(l,core).isEmpty()))core=null;}
-    public static void click(PlayerInteractEvent.RightClickBlock e){if(e.getLevel() instanceof ClientLevel l&&e.getHand()==InteractionHand.MAIN_HAND&&e.getItemStack().isEmpty()&&l.getBlockState(e.getPos()).is(AncientAnvilContent.ANVIL.get())){Minecraft.getInstance().gui.setScreen(new AncientAnvilScreen(e.getPos()));e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);}}
+    public static void click(PlayerInteractEvent.RightClickBlock e){if(e.getLevel() instanceof ClientLevel l&&e.getHand()==InteractionHand.MAIN_HAND&&e.getItemStack().isEmpty()){var at=e.getPos();var state=l.getBlockState(at);if(state.is(AncientAnvilContent.PART.get())){at=AncientAnvilPartBlock.core(at,state);state=l.getBlockState(at);}if(state.is(AncientAnvilContent.ANVIL.get())){Minecraft.getInstance().gui.setScreen(new AncientAnvilScreen(at));e.setCancellationResult(InteractionResult.SUCCESS);e.setCanceled(true);}}}
     private AncientAnvilPreview(){}
 }

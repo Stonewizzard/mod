@@ -1,0 +1,362 @@
+{
+  "ancient_artifact": {
+    "legacy_artwork": true,
+    "min_longest": 22,
+    "max_longest": 26,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "ancient_axe_head": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "ancient_field_guide": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "ancient_fragments": {
+    "legacy_artwork": true,
+    "min_longest": 24,
+    "max_longest": 28,
+    "allowed_holes": [
+      5
+    ],
+    "separate_fragments": true,
+    "model": true,
+    "exception_reason": "Intentional separated archaeological fragments or open resonance frame retained from original artwork."
+  },
+  "ancient_hoe_head": {
+    "legacy_artwork": true,
+    "min_longest": 19,
+    "max_longest": 23,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "ancient_ingot": {
+    "legacy_artwork": false,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "ancient_mace_head": {
+    "legacy_artwork": true,
+    "min_longest": 21,
+    "max_longest": 25,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "ancient_pickaxe_head": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "ancient_scrap": {
+    "legacy_artwork": false,
+    "min_longest": 20,
+    "max_longest": 24,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "ancient_shovel_head": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": true,
+    "model": true,
+    "exception_reason": "Intentional separated archaeological fragments or open resonance frame retained from original artwork."
+  },
+  "ancient_spear_tip": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": true,
+    "model": true,
+    "exception_reason": "Intentional separated archaeological fragments or open resonance frame retained from original artwork."
+  },
+  "ancient_sword_blade": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "ancient_tool_connector": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "ancient_tool_handle": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "archaeology_drill": {
+    "legacy_artwork": true,
+    "min_longest": 25,
+    "max_longest": 29,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "archaeology_hammer": {
+    "legacy_artwork": true,
+    "min_longest": 24,
+    "max_longest": 28,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "brush_guide": {
+    "legacy_artwork": true,
+    "min_longest": 24,
+    "max_longest": 28,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": false
+  },
+  "cruncher_egg": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "epic_ancient_artifact": {
+    "legacy_artwork": true,
+    "min_longest": 22,
+    "max_longest": 26,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "legendary_ancient_artifact": {
+    "legacy_artwork": true,
+    "min_longest": 22,
+    "max_longest": 26,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "magnifying_glass": {
+    "legacy_artwork": true,
+    "min_longest": 24,
+    "max_longest": 28,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "pickaxe_head_bridge": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "pickaxe_left_tip": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "pickaxe_right_tip": {
+    "legacy_artwork": true,
+    "min_longest": 25,
+    "max_longest": 29,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "precision_brush": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "precision_drill": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "precision_hammer": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "precision_lens": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "rare_ancient_artifact": {
+    "legacy_artwork": true,
+    "min_longest": 22,
+    "max_longest": 26,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "resonant_brush": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "resonant_core": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [
+      12
+    ],
+    "separate_fragments": true,
+    "model": true,
+    "exception_reason": "Intentional separated archaeological fragments or open resonance frame retained from original artwork."
+  },
+  "resonant_drill": {
+    "legacy_artwork": true,
+    "min_longest": 25,
+    "max_longest": 29,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "resonant_hammer": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "resonant_lens": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "restored_ancient_axe": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "restored_ancient_hoe": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "restored_ancient_mace": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "restored_ancient_pickaxe": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "restored_ancient_shovel": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "restored_ancient_spear": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "restored_ancient_sword": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "skulk_parasite_spawn_egg": {
+    "legacy_artwork": true,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "uncommon_ancient_artifact": {
+    "legacy_artwork": true,
+    "min_longest": 22,
+    "max_longest": 26,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "unique_ancient_artifact": {
+    "legacy_artwork": true,
+    "min_longest": 22,
+    "max_longest": 26,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  }
+}
