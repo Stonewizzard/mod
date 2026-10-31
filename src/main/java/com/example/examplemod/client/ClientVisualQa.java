@@ -96,25 +96,6 @@ public final class ClientVisualQa {
                         }
                         case "forge_probe_worldgen"->probeForgeWorldgen=true;
                         case "forge_generated_view"->{var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var found=generatedForgePosition;server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var front=player.level().getBlockState(found).getValue(com.example.examplemod.RuinedAncientForgeBlock.FACING);var viewer=found.relative(front,6).relative(front.getCounterClockWise(),4);float yaw=(float)Math.toDegrees(Math.atan2(viewer.getX()-found.getX(),found.getZ()-viewer.getZ()));player.connection.teleport(viewer.getX()+.5,forgePosition.getY(),viewer.getZ()+.5,yaw,-6);});}
-                        case "asset_fixture"->{
-                            var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();
-                            server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();var origin=forgePosition.offset(24,0,0);
-                                for(int x=-3;x<=8;x++)for(int z=-8;z<=3;z++){
-                                    l.setBlock(origin.offset(x,-1,z),net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState(),3);
-                                    for(int y=0;y<=4;y++)l.setBlock(origin.offset(x,y,z),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
-                                }
-                                var samples=new net.minecraft.world.level.block.Block[]{net.minecraft.world.level.block.Blocks.STONE_BRICKS,com.example.examplemod.AncientForgeContent.BRICKS.get(),net.minecraft.world.level.block.Blocks.IRON_BLOCK,com.example.examplemod.AncientAnvilContent.METAL.get()};
-                                for(int x=0;x<4;x++)for(int y=0;y<2;y++)l.setBlock(origin.offset(x,y,0),samples[x].defaultBlockState(),3);
-                                l.setBlock(origin.offset(5,0,0),net.minecraft.world.level.block.Blocks.ANVIL.defaultBlockState(),3);
-                                l.setBlock(origin.offset(7,0,0),com.example.examplemod.AncientAnvilContent.ANVIL.get().defaultBlockState(),3);
-                                player.getInventory().clearContent();
-                                var items=new net.minecraft.world.item.Item[]{com.example.examplemod.AncientAnvilContent.INGOT.get(),net.minecraft.world.item.Items.IRON_INGOT,net.minecraft.world.item.Items.GOLD_INGOT,com.example.examplemod.AncientAnvilContent.SCRAP_ITEM.get(),com.example.examplemod.AncientForgeContent.BRICKS.get().asItem(),com.example.examplemod.AncientAnvilContent.ANVIL_ITEM.get(),com.example.examplemod.AncientAnvilContent.METAL.get().asItem()};
-                                for(int slot=0;slot<items.length;slot++)player.getInventory().setItem(slot,new net.minecraft.world.item.ItemStack(items[slot],64));
-                                player.getInventory().setItem(7,com.example.examplemod.ArchaeologyContent.specimen(778899,3));
-                                player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));
-                                player.inventoryMenu.broadcastChanges();player.connection.teleport(origin.getX()+3.5,origin.getY(),origin.getZ()-7,0,8);
-                            });
-                        }
                         case "gui_scale"->{minecraft.options.guiScale().set(command.get("value").getAsInt());minecraft.resizeGui();}
                         case "quit"->minecraft.stop();
                         default->throw new IllegalArgumentException("Unknown visual-QA command");

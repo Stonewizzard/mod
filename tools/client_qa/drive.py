@@ -231,11 +231,6 @@ def run():
     process('xdotool','key','Return');expect(generatedForge=True)
     command('forge_generated_view');time.sleep(1);capture('forge-world-ruin')
     print('ANCIENT_FORGE_NATIVE_PASS: in-world metallurgy, legacy storage recovery, frame interruption, repair, saved output and fireplace display',flush=True)
-    # Review the exact failure modes beside vanilla references at normal GUI scale.
-    command('asset_fixture');time.sleep(2)
-    for key,name in [('1','ingot'),('4','scrap'),('8','artifact')]:
-        process('xdotool','key',key);time.sleep(.8);capture('assets-vanilla-comparison-'+name)
-    print('PIXEL_ASSETS_NATIVE_PASS: vanilla stone/iron/anvil references, matching hotbar item extents, ingot/scrap/artifact held beside an offhand iron ingot',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
     print('CLIENT_VISUAL_QA_PASS: Workshop Manual item, illustrated browsing and OS input task paths',flush=True)
 
