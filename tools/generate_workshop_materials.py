@@ -18,7 +18,7 @@ MATERIALS = {
     'forge_ash': ('basalt_top', ['2a2824','39352e','4c4539','615746','756a56','8b7e65','a3967e']),
     'forge_bronze': ('cut_copper', ['493524','60462b','795a34','94703e','ad874c','c29c60']),
     'anvil_iron': ('anvil', ['342e28','3d362e','463e34','50473c','5a5144','655c4e','716855']),
-    'anvil_workface': ('anvil', ['655f52','746c5d','827969','908774','9e9480','aca28b','bab098']),
+    'anvil_workface': ('anvil', ['41423e','4d4f49','5a5c55','676b62','767b70','878c80','9a9f91']),
 }
 
 def exports():

@@ -20,3 +20,6 @@ Review in the actual Minecraft client: warm forge beside ordinary masonry, finis
 fireplace, anvil from all four orientations, and the complete anvil as a held item.
 The native fixture replaces its own anvil without break particles for clear captures;
 real player harvesting and one-item recovery remain covered by gameplay tests.
+
+The first native review caught a pale, stone-like workface and a blunt horn. The
+revised pass uses darker neutral steel on top and a narrower five-step taper.

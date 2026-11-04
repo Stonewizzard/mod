@@ -19,10 +19,11 @@ boxes=[
  ([2,25,22],[9,27,25],'face'),([12,25,22],[14,27,25],'face'),
  ([9,24,22],[12,24.5,25],'foot'),
  # Broad horn root tapers gradually; the workface joins it at the same height.
- ([3,21,-8],[13,26,-3],'metal'),([4,22,-12],[12,26,-8],'metal'),
- ([5,23,-15],[11,26,-12],'metal'),([6,24,-16],[10,26,-15],'metal'),
- ([4,26,-7],[12,27,-2],'face'),([5,26,-11],[11,27,-7],'face'),
- ([6,26,-14],[10,27,-11],'face')
+ ([3,21,-7],[13,26,-3],'metal'),([4,22,-10],[12,26,-7],'metal'),
+ ([5,23,-12],[11,26,-10],'metal'),([6,24,-14],[10,26,-12],'metal'),
+ ([7,25,-16],[9,26,-14],'metal'),
+ ([4,26,-6],[12,27,-2],'face'),([5,26,-9],[11,27,-6],'face'),
+ ([6,26,-11],[10,27,-9],'face'),([7,26,-13],[9,27,-11],'face')
 ]
 # Recessed maker's seals on both cheeks of the waist. A bronze stepped ring and
 # split chevron are geometry, never repeated rune wallpaper stretched onto a face.
