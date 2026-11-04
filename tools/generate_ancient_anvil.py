@@ -33,7 +33,7 @@ for x,X in ((3.5,4),(12,12.5)):
  for y,z,Y,Z in ((10,10,11,14),(15,10,16,14),(11,9,15,10),(11,14,15,15),
                   (11,11,12,13),(12,11,14,12),(14,12,15,13)):
   boxes.append(([lo,y,z],[hi,Y,Z],'trim'))
-compact=[([2,0,2],[14,3,14],'foot'),([5,3,5],[11,10,12],'metal'),([3,10,4],[13,15,16],'metal'),([3,14,4],[13,15,16],'face'),([5,11,0],[11,14,4],'metal')]
+compact=[([2,0,2],[14,3,14],'foot'),([5,3,5],[11,10,12],'metal'),([3,10,4],[13,14,16],'metal'),([3,14,4],[13,15,16],'face'),([5,11,0],[11,14,4],'metal')]
 tex={'metal':'examplemod:block/anvil_iron','face':'examplemod:block/anvil_workface_edge','workface':'examplemod:block/anvil_workface','foot':'examplemod:block/forge_soot','trim':'examplemod:block/forge_bronze','particle':'examplemod:block/anvil_iron'}
 cells=[(0,0),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
 def element(box,cell_z=0):
