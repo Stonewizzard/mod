@@ -1,25 +1,61 @@
 ---
 name: minecraft-assets
-description: Author and validate Stonewizzard/mod generic item sprites, block materials and their models with vanilla Minecraft pixel scale.
+description: Preserve this mod's artwork while preventing Minecraft alpha, scale, UV and owned-cell model defects.
 ---
 
-Use this workflow when adding or changing generic items, block textures or item models.
-Read tools/generate_pixel_assets.py and tools/check_pixel_assets.py first.
+Use this for generic items, block materials and their models. The user rejected PR #50's
+blanket sprite replacement. Do not reapply that art style or repaint every item with one
+procedural silhouette. Reuse approved artwork and make a targeted change first.
 
-1. Author on a **16×16 logical grid**. Existing UI code expects 32×32 PNGs, so export each logical pixel as exactly 2×2 pixels with nearest-neighbor scaling. A 32px file is not permission to add 32px detail. Never blur or antialias.
-2. Use a small, named palette (maximum 24 colors), broad shade clusters, a clear silhouette and consistent upper-left highlights. Compare stone against vanilla stone bricks; compare metal against vanilla ingots. Avoid photographic noise, gradients and dense rune wallpaper.
-3. Generic items use binary alpha: 0 or 255. Keep a one-logical-pixel clear margin, an 11–14px longest dimension and intentional proportions. Ingots should occupy about 14×8px, not a small patch in a large transparent canvas. Narrow handles remain narrow; do not stretch them to fill the square.
-4. Draw closed silhouettes. Check enclosed transparent pixels and detached flecks. A ring or separate fragments require an explicit, documented validator exception, not disabling the check globally. Inspect held items as well as flat icons: partial alpha and tiny holes can cause bad extrusion sides.
-5. Add the asset to the deterministic generator; do not hand-patch its generated PNG. New shape families should have their own authored silhouettes. Components must not contain leftover handles from assembled tools. Reuse a palette and lighting style without erasing functional differences between items.
-6. Use `minecraft:item/generated` for ordinary ingredients and `minecraft:item/handheld` when appropriate for tools. Connect the modern `items/<id>.json` to the correct model. Avoid per-item GUI/hand scale overrides as a substitute for fixing sprite occupancy. Block faces use explicit UVs at one logical texel per model unit. Generate collision and geometry together.
-7. Run:
-   ```sh
-   python -m pip install -r tools/requirements-assets.txt
-   python tools/generate_pixel_assets.py
-   python tools/generate_pixel_assets.py --check
-   python tools/check_pixel_assets.py
-   python tools/test_pixel_asset_checks.py
-   ```
-8. Review a nearest-neighbor contact sheet on light and dark backgrounds. Run the repository build/client checks and Real Minecraft visual QA. Inspect a hotbar beside a vanilla ingot, held items in both hands, dropped items, block tiling beside vanilla blocks, and all four custom-model facings. State explicitly when native client review is unavailable.
+## Start with evidence
 
-Multiblock structures still require owned-cell placement/removal, rotation, saved-world compatibility, collision and in-game iteration. Do not enlarge a single block's render model into unowned neighbor cells to fake a multiblock. Preserve existing registry IDs and gameplay when doing an art pass. Never merge PRs automatically.
+Read tools/finish_item_assets.py, tools/audit_minecraft_assets.py and
+ tools/item-asset-manifest.json. Inspect the original source and the actual native held
+item beside vanilla iron before deciding a shape is bad. Ask for screenshots only if
+necessary; large chat images have caused a 4 MiB request limit. Keep full captures in
+workflow artifacts, not base64 logs.
+
+## Generic items
+
+- Prefer a native 16px art grid for new ordinary materials, with clear clustered shading
+  and a silhouette appropriate to its role. Keep the existing detailed artifact/tool
+  artwork unless the user explicitly requests a redesign. Existing 32px artwork is an
+  intentional compatibility choice, not a reason to flatten it into anonymous shapes.
+- Existing UI renderers use 32px image coordinates. Pack native 16px sprites at exact 2x
+  nearest-neighbor; keep intentional legacy detail at 32px. Never blur or antialias.
+- Ordinary generated item sprites need alpha 0 or 255. Tiny translucent pixels can look
+  fine in a flat preview and produce missing extrusion faces in hand.
+- An ingot should be close to vanilla's 14x9 logical silhouette. Scrap can be smaller
+  (about 11x9). Handles stay thin. Check the item's visible bounds, not just file size.
+  Do not use arbitrary first-person or GUI scale overrides to hide a tiny sprite.
+- Keep a transparent border. No accidental interior pinholes or isolated one-pixel
+  flecks. Genuine separated fragments/open frames need an explicit reason in the
+  manifest; do not generate exceptions automatically to make a failure disappear.
+- Preserve source artwork in tools/asset_sources. The finisher is technical cleanup,
+  not a new art director. Do not repaint its output by hand. Add the modern item/model
+  wiring and an appropriate profile for every new generic sprite.
+
+## Block materials and custom structures
+
+Prefer Minecraft's actual 16px material references for familiar stone, iron, wood and
+copper. A custom material should add recognizable identity, not photographic noise.
+UVs use model units consistently, with no stretched rune wallpaper on tiny faces.
+The enlarged Ancient Anvil uses six owned cells. Never put a large render mesh through
+unowned blocks. Generate its meshes and per-cell collision together. Test all four
+orientations, occupied space, old-world fallback, harvesting any part, and exactly one
+item drop. Do not overwrite neighboring containers or foundation blocks.
+
+## Required checks and review
+
+```sh
+python -m pip install -r tools/requirements-assets.txt
+python tools/finish_item_assets.py --check
+python tools/audit_minecraft_assets.py
+python tools/test_asset_guardrails.py
+```
+
+After editing source art, run the finisher without --check, then inspect a nearest-
+neighbor before/after sheet. Run the repository's build/client tests and actual Minecraft
+window QA. Review hotbar beside vanilla ingots, main/offhand extrusion, dropped items,
+block tiling beside vanilla masonry, and all anvil orientations. A passing validator
+is not proof that the art looks good. State any missing visual verification honestly.

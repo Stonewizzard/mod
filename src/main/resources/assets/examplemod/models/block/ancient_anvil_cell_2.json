@@ -1,0 +1,285 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "metal": "minecraft:block/anvil",
+    "face": "minecraft:block/anvil",
+    "foot": "minecraft:block/anvil",
+    "trim": "minecraft:block/cut_copper",
+    "gold": "minecraft:block/gold_block",
+    "particle": "minecraft:block/anvil"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        0
+      ],
+      "to": [
+        14,
+        4,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#foot",
+          "uv": [
+            2,
+            12,
+            14,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#foot",
+          "uv": [
+            2,
+            12,
+            14,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#foot",
+          "uv": [
+            0,
+            12,
+            6,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#foot",
+          "uv": [
+            10,
+            12,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#foot",
+          "uv": [
+            2,
+            0,
+            14,
+            6
+          ]
+        },
+        "down": {
+          "texture": "#foot",
+          "uv": [
+            2,
+            10,
+            14,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        0
+      ],
+      "to": [
+        13,
+        5,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#trim",
+          "uv": [
+            3,
+            11,
+            13,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#trim",
+          "uv": [
+            3,
+            11,
+            13,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#trim",
+          "uv": [
+            0,
+            11,
+            4,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#trim",
+          "uv": [
+            12,
+            11,
+            16,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#trim",
+          "uv": [
+            3,
+            0,
+            13,
+            4
+          ]
+        },
+        "down": {
+          "texture": "#trim",
+          "uv": [
+            3,
+            12,
+            13,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        5,
+        0
+      ],
+      "to": [
+        12,
+        8,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal",
+          "uv": [
+            4,
+            8,
+            12,
+            11
+          ]
+        },
+        "south": {
+          "texture": "#metal",
+          "uv": [
+            4,
+            8,
+            12,
+            11
+          ]
+        },
+        "west": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            8,
+            2,
+            11
+          ]
+        },
+        "east": {
+          "texture": "#metal",
+          "uv": [
+            14,
+            8,
+            16,
+            11
+          ]
+        },
+        "up": {
+          "texture": "#metal",
+          "uv": [
+            4,
+            0,
+            12,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#metal",
+          "uv": [
+            4,
+            14,
+            12,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        8,
+        0
+      ],
+      "to": [
+        11,
+        11,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal",
+          "uv": [
+            5,
+            5,
+            11,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#metal",
+          "uv": [
+            5,
+            5,
+            11,
+            8
+          ]
+        },
+        "west": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            5,
+            1,
+            8
+          ]
+        },
+        "east": {
+          "texture": "#metal",
+          "uv": [
+            15,
+            5,
+            16,
+            8
+          ]
+        },
+        "up": {
+          "texture": "#metal",
+          "uv": [
+            5,
+            0,
+            11,
+            1
+          ]
+        },
+        "down": {
+          "texture": "#metal",
+          "uv": [
+            5,
+            15,
+            11,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

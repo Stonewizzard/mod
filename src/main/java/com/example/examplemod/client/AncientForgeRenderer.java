@@ -42,7 +42,7 @@ public final class AncientForgeRenderer implements BlockEntityRenderer<Reconstru
     @Override public void submit(State state,PoseStack stack,SubmitNodeCollector collector,CameraRenderState camera){
         for(var ghost:state.ghosts){
             stack.pushPose();stack.translate(ghost.x(),ghost.y(),ghost.z());
-            collector.order(1).submitModel(ghostModel,new net.minecraft.client.renderer.entity.state.LivingEntityRenderState(),stack,net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(net.minecraft.resources.Identifier.fromNamespaceAndPath(ExampleMod.MODID,"textures/block/forge_stone.png")),15728880,OverlayTexture.NO_OVERLAY,ghost.occupied()?0xD0FFD438:0x663CCFDF,null,0);
+            collector.order(1).submitModel(ghostModel,new net.minecraft.client.renderer.entity.state.LivingEntityRenderState(),stack,net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(net.minecraft.resources.Identifier.withDefaultNamespace("textures/block/deepslate_bricks.png")),15728880,OverlayTexture.NO_OVERLAY,ghost.occupied()?0xD0FFD438:0x663CCFDF,null,0);
             stack.popPose();
         }
         for(int i=0;i<state.items.size();i++){

@@ -332,9 +332,13 @@ Craft ancient ingots from block: ancient metal block, in any arrangement.
 
 ## The Ancient Anvil
 
+The anvil is now a physical three-block-long structure, one block wide, with a work face one and a half blocks high. Leave the three positions and the space above them clear. Its horn and heel occupy actual neighboring blocks. Breaking any section recovers one anvil and leaves the foundation intact.
+
 The Ancient Anvil is a rune-carved metal anvil with warm inlays. Craft it like an ordinary anvil: three Blocks of Ancient Metal across the top, one Ancient Ingot in the middle, and three ingots across the bottom. This uses 31 ingots in total.
 
 Place the anvil on its own to establish Tier 0. It is a stationary workshop structure and does not fall like a vanilla anvil. Its foundation is a separate project from repairing the Ruined Ancient Forge.
+
+Existing anvils expand automatically when they have clear space. A cramped anvil stays compact rather than replacing a chest or trapping a creature. Clear the space and let it expand; the same item and foundation remain valid.
 
 Build a complete 3 by 3 square of metal blocks directly one layer below the anvil, centered on it. All nine blocks are required, including the center. Iron, gold, copper, netherite and ancient metal qualify; you may mix them. Diamond, emerald and lapis blocks are not metal.
 

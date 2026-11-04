@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "side": "examplemod:block/anvil_runes",
-    "bottom": "examplemod:block/anvil_metal",
-    "top": "examplemod:block/anvil_gold"
+    "side": "minecraft:block/netherite_block",
+    "bottom": "minecraft:block/polished_blackstone",
+    "top": "minecraft:block/cut_copper"
   }
 }

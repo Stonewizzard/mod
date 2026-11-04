@@ -13,6 +13,7 @@
     "examplemod:ruined_forge_bricks",
     "examplemod:formed_ruined_forge",
     "examplemod:ancient_anvil",
-    "examplemod:ancient_metal_block"
+    "examplemod:ancient_metal_block",
+    "examplemod:ancient_anvil_part"
   ]
 }

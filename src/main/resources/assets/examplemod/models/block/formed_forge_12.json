@@ -2,11 +2,11 @@
   "parent": "minecraft:block/block",
   "ambientocclusion": true,
   "textures": {
-    "stone": "examplemod:block/forge_stone",
-    "soot": "examplemod:block/forge_soot",
-    "bronze": "examplemod:block/forge_bronze",
-    "ash": "examplemod:block/forge_ash",
-    "particle": "examplemod:block/forge_stone"
+    "stone": "minecraft:block/deepslate_bricks",
+    "soot": "minecraft:block/polished_blackstone",
+    "bronze": "minecraft:block/cut_copper",
+    "ash": "minecraft:block/basalt_top",
+    "particle": "minecraft:block/deepslate_bricks"
   },
   "elements": [
     {

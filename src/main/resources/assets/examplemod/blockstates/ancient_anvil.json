@@ -1,35 +1,67 @@
 {
   "variants": {
-    "facing=north,tier=0": {
+    "facing=north,tier=0,large=false": {
       "model": "examplemod:block/ancient_anvil",
       "y": 0
     },
-    "facing=east,tier=0": {
+    "facing=east,tier=0,large=false": {
       "model": "examplemod:block/ancient_anvil",
       "y": 90
     },
-    "facing=south,tier=0": {
+    "facing=south,tier=0,large=false": {
       "model": "examplemod:block/ancient_anvil",
       "y": 180
     },
-    "facing=west,tier=0": {
+    "facing=west,tier=0,large=false": {
       "model": "examplemod:block/ancient_anvil",
       "y": 270
     },
-    "facing=north,tier=1": {
+    "facing=north,tier=0,large=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 0
+    },
+    "facing=east,tier=0,large=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 90
+    },
+    "facing=south,tier=0,large=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 180
+    },
+    "facing=west,tier=0,large=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 270
+    },
+    "facing=north,tier=1,large=false": {
       "model": "examplemod:block/ancient_anvil",
       "y": 0
     },
-    "facing=east,tier=1": {
+    "facing=east,tier=1,large=false": {
       "model": "examplemod:block/ancient_anvil",
       "y": 90
     },
-    "facing=south,tier=1": {
+    "facing=south,tier=1,large=false": {
       "model": "examplemod:block/ancient_anvil",
       "y": 180
     },
-    "facing=west,tier=1": {
+    "facing=west,tier=1,large=false": {
       "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    },
+    "facing=north,tier=1,large=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 0
+    },
+    "facing=east,tier=1,large=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 90
+    },
+    "facing=south,tier=1,large=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 180
+    },
+    "facing=west,tier=1,large=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
       "y": 270
     }
   }
