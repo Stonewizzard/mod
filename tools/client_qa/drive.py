@@ -241,6 +241,7 @@ def run():
     process('xdotool','key','9')
     for facing in ['NORTH','EAST','SOUTH','WEST']:
         command('assets_anvil_view',facing=facing);expect(assetsLarge=True,assetsCells=6,assetsFacing=facing);capture('large-anvil-'+facing.lower())
+    command('assets_anvil_detail');capture('ancient-anvil-workface-detail')
     process('xdotool','key','7');capture('assets-anvil-held')
     print('ASSET_NATIVE_PASS: vanilla ingot comparison, main/offhand cutouts, dropped ingot, original artifact identity, vanilla material tiling and six owned anvil cells in all four orientations',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))

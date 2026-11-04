@@ -50,10 +50,14 @@ for i,(y,z) in enumerate(cells):
 j(ASSETS/'models/block/ancient_anvil.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b) for b in compact]})
 # A dedicated item preview centers/scales the complete silhouette; held blocks must fit an ordinary item envelope.
 preview=[]
-for a,B,t in boxes:
- e=element(([8+(a[0]-8)/3,4+a[1]/3,a[2]/3+16/3],[8+(B[0]-8)/3,4+B[1]/3,B[2]/3+16/3],t))
- for f in e['faces'].values():f['uv']=[0,0,16,16]
- preview.append(e)
+for (y,z),mesh in zip(cells,meshes):
+ for a,B,t in mesh:
+  # Keep the WORLD face UVs. Shrinking geometry must not stretch an entire tile
+  # across every tiny bronze mark or change the item's material pattern.
+  e=element((a,B,t))
+  for key,corner in (('from',a),('to',B)):
+   e[key]=[8+(corner[0]-8)/3,4+(corner[1]+y*16)/3,(corner[2]+z*16)/3+16/3]
+  preview.append(e)
 j(ASSETS/'models/block/ancient_anvil_item.json',{'parent':'minecraft:block/block','textures':tex,'elements':preview,'display':{'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[.625,.625,.625]}}})
 rots=[('north',0),('east',90),('south',180),('west',270)]
 j(ASSETS/'blockstates/ancient_anvil.json',{'variants':{f'facing={d},tier={tier},large={str(large).lower()}':{'model':'examplemod:block/'+('ancient_anvil_cell_0' if large else 'ancient_anvil'),'y':rot} for tier in (0,1) for large in (False,True) for d,rot in rots}})
