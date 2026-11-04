@@ -109,7 +109,7 @@ public final class ClientVisualQa {
                                     player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));
                                 }
                                 if(action.equals("assets_scene")||action.equals("assets_anvil_view")){
-                                    l.destroyBlock(assetsAnvil,false);l.setBlock(assetsAnvil,com.example.examplemod.AncientAnvilContent.ANVIL.get().defaultBlockState().setValue(com.example.examplemod.AncientAnvilBlock.FACING,facing),3);com.example.examplemod.AncientAnvilBlockEntity.refresh(l,assetsAnvil,l.getBlockState(assetsAnvil));
+                                    l.setBlock(assetsAnvil,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);l.setBlock(assetsAnvil,com.example.examplemod.AncientAnvilContent.ANVIL.get().defaultBlockState().setValue(com.example.examplemod.AncientAnvilBlock.FACING,facing),3);com.example.examplemod.AncientAnvilBlockEntity.refresh(l,assetsAnvil,l.getBlockState(assetsAnvil));
                                     var view=assetsAnvil.relative(facing,5).relative(facing.getCounterClockWise(),3);float yaw=(float)Math.toDegrees(Math.atan2(view.getX()-assetsAnvil.getX(),assetsAnvil.getZ()-view.getZ()));player.connection.teleport(view.getX()+.5,assetsAnvil.getY(),view.getZ()+.5,yaw,0);
                                 }
                                 if(action.equals("assets_offhand")){player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.INGOT.get()));}

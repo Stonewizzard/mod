@@ -1,0 +1,51 @@
+"""Palette-only warm workshop materials. Preserve the native 16px clusters exactly.
+
+The source tiles and explicit palettes are versioned; this is not a noise generator.
+Run with --check in CI to catch stale material exports.
+"""
+from pathlib import Path
+import argparse
+import io
+from PIL import Image
+
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE = ROOT / 'tools/asset_sources/workshop-materials'
+OUTPUT = ROOT / 'src/main/resources/assets/examplemod/textures/block'
+# Darkest to lightest, one colour per original colour. Never change the pixel layout.
+MATERIALS = {
+    'forge_stone': ('deepslate_bricks', ['211d1a','302820','41362a','524435','635340','76644d','89775e']),
+    'forge_soot': ('polished_blackstone', ['171512','211c18','2b241e','352e26','41372d','4d4235']),
+    'forge_ash': ('basalt_top', ['2a2824','39352e','4c4539','615746','756a56','8b7e65','a3967e']),
+    'forge_bronze': ('cut_copper', ['493524','60462b','795a34','94703e','ad874c','c29c60']),
+    'anvil_iron': ('anvil', ['342e28','3d362e','463e34','50473c','5a5144','655c4e','716855']),
+    'anvil_workface': ('anvil', ['655f52','746c5d','827969','908774','9e9480','aca28b','bab098']),
+}
+
+def exports():
+    for name, (source, palette) in MATERIALS.items():
+        tile = Image.open(SOURCE / (source + '.png')).convert('RGB')
+        assert tile.size == (16, 16), source
+        pixels = [tile.getpixel((x,y)) for y in range(16) for x in range(16)]
+        colours = sorted(set(pixels), key=lambda c: (sum(c), c))
+        assert len(colours) == len(palette), (source, len(colours))
+        mapping = dict(zip(colours, [tuple(bytes.fromhex(c)) for c in palette]))
+        result = Image.new('RGB', (16, 16))
+        result.putdata([mapping[c] for c in pixels])
+        yield name, result
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--check', action='store_true')
+    args = parser.parse_args()
+    OUTPUT.mkdir(parents=True, exist_ok=True)
+    stale = []
+    for name, im in exports():
+        path = OUTPUT / (name + '.png')
+        buffer = io.BytesIO(); im.save(buffer, format='PNG')
+        if args.check:
+            if not path.exists() or path.read_bytes() != buffer.getvalue(): stale.append(name)
+        else: path.write_bytes(buffer.getvalue())
+    if stale: raise SystemExit('Stale workshop materials: ' + ', '.join(stale))
+    print('PASS: six native 16px warm materials; original pixel clusters preserved.')
+
+if __name__ == '__main__': main()

@@ -1,12 +1,11 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "metal": "minecraft:block/anvil",
-    "face": "minecraft:block/anvil",
-    "foot": "minecraft:block/anvil",
-    "trim": "minecraft:block/cut_copper",
-    "gold": "minecraft:block/gold_block",
-    "particle": "minecraft:block/anvil"
+    "metal": "examplemod:block/anvil_iron",
+    "face": "examplemod:block/anvil_workface",
+    "foot": "examplemod:block/forge_soot",
+    "trim": "examplemod:block/forge_bronze",
+    "particle": "examplemod:block/anvil_iron"
   },
   "elements": [
     {

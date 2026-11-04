@@ -3,18 +3,37 @@ from pathlib import Path
 import json
 ROOT=Path(__file__).resolve().parents[1];RES=ROOT/'src/main/resources';ASSETS=RES/'assets/examplemod';DATA=RES/'data/examplemod'
 def j(p,v):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n')
-# A full work face and long horn span 3 x 1 x 2 REAL owned cells. Units are vanilla pixels.
+# Broad shoulders, an inset workface and a long horn span 3 x 1 x 2 owned cells.
+# All bevels are whole native pixels; silhouettes/collision come from the same boxes.
 boxes=[
- ([2,0,-2],[14,4,22],'foot'),([3,4,0],[13,5,20],'trim'),
- ([4,5,2],[12,8,18],'metal'),([5,8,4],[11,11,17],'metal'),([5,11,5],[11,16,16],'metal'),
- ([4,16,3],[12,18,24],'metal'),([3,18,0],[13,20,28],'metal'),
- ([2,20,-3],[14,23,30],'metal'),([3,23,-2],[13,24,29],'face'),
- ([4,18,-8],[12,22,-3],'metal'),([5,18,-12],[11,21,-8],'metal'),([6,18,-16],[10,20,-12],'metal'),
- # A small hammer mark in the metal, not a tiled panel of symbols.
- ([7,11,4],[9,14,5],'gold'),([6,14,4],[10,15,5],'gold')
+ ([1,0,-3],[15,3,23],'foot'),([2,3,-2],[14,4,22],'metal'),
+ ([3,4,0],[13,5,20],'trim'),([3,5,1],[13,7,20],'metal'),
+ ([4,7,4],[12,17,18],'metal'),([3,15,3],[13,18,22],'metal'),
+ ([2,18,0],[14,20,27],'metal'),([1,20,-4],[15,22,29],'metal'),
+ # The head has a lower bevel, heavy cheeks and a distinct polished working plate.
+ ([1,22,-3],[15,24,30],'metal'),
+ ([1,24,-3],[15,25,22],'metal'),([1,24,25],[15,25,30],'metal'),
+ ([1,24,22],[9,25,25],'metal'),([12,24,22],[15,25,25],'metal'),
+ # Four plates surround a real recessed hardie/tool hole in the heel.
+ ([2,25,-2],[14,27,22],'face'),([2,25,25],[14,27,29],'face'),
+ ([2,25,22],[9,27,25],'face'),([12,25,22],[14,27,25],'face'),
+ ([9,24,22],[12,24.5,25],'foot'),
+ # Broad horn root tapers gradually; the workface joins it at the same height.
+ ([3,21,-8],[13,26,-3],'metal'),([4,22,-12],[12,26,-8],'metal'),
+ ([5,23,-15],[11,26,-12],'metal'),([6,24,-16],[10,26,-15],'metal'),
+ ([4,26,-7],[12,27,-2],'face'),([5,26,-11],[11,27,-7],'face'),
+ ([6,26,-14],[10,27,-11],'face')
 ]
+# Recessed maker's seals on both cheeks of the waist. A bronze stepped ring and
+# split chevron are geometry, never repeated rune wallpaper stretched onto a face.
+for x,X in ((3.5,4),(12,12.5)):
+ boxes.append(([x,9,8],[X,17,16],'foot'))
+ lo,hi=(x-.25,x) if x<8 else (X,X+.25)
+ for y,z,Y,Z in ((10,10,11,14),(15,10,16,14),(11,9,15,10),(11,14,15,15),
+                  (11,11,12,13),(12,11,14,12),(14,12,15,13)):
+  boxes.append(([lo,y,z],[hi,Y,Z],'trim'))
 compact=[([2,0,2],[14,3,14],'foot'),([5,3,5],[11,10,12],'metal'),([3,10,4],[13,15,16],'metal'),([3,14,4],[13,15,16],'face'),([5,11,0],[11,14,4],'metal')]
-tex={'metal':'minecraft:block/anvil','face':'minecraft:block/anvil','foot':'minecraft:block/anvil','trim':'minecraft:block/cut_copper','gold':'minecraft:block/gold_block','particle':'minecraft:block/anvil'}
+tex={'metal':'examplemod:block/anvil_iron','face':'examplemod:block/anvil_workface','foot':'examplemod:block/forge_soot','trim':'examplemod:block/forge_bronze','particle':'examplemod:block/anvil_iron'}
 cells=[(0,0),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
 def element(box):
  a,B,t=box;x,y,z=a;X,Y,Z=B
