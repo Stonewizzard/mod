@@ -37,7 +37,8 @@ permissions:
   contents: read
 jobs:
   minecraft-window:
-    runs-on: ubuntu-latest
+    # Keep the native graphics/capture stack stable across ubuntu-latest releases.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
