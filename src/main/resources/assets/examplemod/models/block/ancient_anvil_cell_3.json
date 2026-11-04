@@ -2,7 +2,8 @@
   "parent": "minecraft:block/block",
   "textures": {
     "metal": "examplemod:block/anvil_iron",
-    "face": "examplemod:block/anvil_workface",
+    "face": "examplemod:block/anvil_workface_edge",
+    "workface": "examplemod:block/anvil_workface",
     "foot": "examplemod:block/forge_soot",
     "trim": "examplemod:block/forge_bronze",
     "particle": "examplemod:block/anvil_iron"
@@ -52,7 +53,7 @@
           "uv": [
             0,
             10,
-            4,
+        4,
             12
           ]
         },
@@ -186,7 +187,7 @@
         "east": {
           "texture": "#metal",
           "uv": [
-      0,
+            0,
             7,
             3,
             8
@@ -261,12 +262,12 @@
           ]
         },
         "up": {
-          "texture": "#face",
+          "texture": "#workface",
           "uv": [
             2,
+            4.666666666666667,
             14,
-            14,
-            16
+            5.333333333333333
           ]
         },
         "down": {
@@ -669,12 +670,12 @@
           ]
         },
         "up": {
-          "texture": "#face",
+          "texture": "#workface",
           "uv": [
             4,
-            10,
+            3.3333333333333335,
             12,
-            14
+            4.666666666666667
           ]
         },
         "down": {
@@ -737,12 +738,12 @@
           ]
         },
         "up": {
-          "texture": "#face",
+          "texture": "#workface",
           "uv": [
             5,
-            7,
+            2.3333333333333335,
             11,
-            10
+            3.3333333333333335
           ]
         },
         "down": {
@@ -805,12 +806,12 @@
           ]
         },
         "up": {
-          "texture": "#face",
+          "texture": "#workface",
           "uv": [
             6,
-            5,
+            1.6666666666666667,
             10,
-            7
+            2.3333333333333335
           ]
         },
         "down": {
@@ -873,12 +874,12 @@
           ]
         },
         "up": {
-          "texture": "#face",
+          "texture": "#workface",
           "uv": [
             7,
-            3,
+            1.0,
             9,
-            5
+            1.6666666666666667
           ]
         },
         "down": {

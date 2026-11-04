@@ -2,7 +2,8 @@
   "parent": "minecraft:block/block",
   "textures": {
     "metal": "examplemod:block/anvil_iron",
-    "face": "examplemod:block/anvil_workface",
+    "face": "examplemod:block/anvil_workface_edge",
+    "workface": "examplemod:block/anvil_workface",
     "foot": "examplemod:block/forge_soot",
     "trim": "examplemod:block/forge_bronze",
     "particle": "examplemod:block/anvil_iron"
@@ -261,12 +262,12 @@
           ]
         },
         "up": {
-          "texture": "#face",
+          "texture": "#workface",
           "uv": [
             3,
-            4,
+            6.666666666666667,
             13,
-            16
+            10.666666666666666
           ]
         },
         "down": {

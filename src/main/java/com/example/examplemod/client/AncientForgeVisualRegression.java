@@ -13,7 +13,7 @@ public final class AncientForgeVisualRegression {
     public static void run(ResourceManager resources)throws Exception{
         for(String name:new String[]{"forge_stone","forge_soot","forge_bronze","forge_ash","anvil_iron","anvil_workface"})try(var input=resources.getResourceOrThrow(id("textures/block/"+name+".png")).open()){
             var png=ImageIO.read(input);
-            if(png==null||png.getWidth()!=16||png.getHeight()!=16)throw new IllegalStateException("Invalid custom forge texture: "+name);
+            if(png==null||png.getWidth()!=16||png.getHeight()!=(name.equals("anvil_workface")?48:16))throw new IllegalStateException("Invalid custom workshop texture: "+name);
         }
         for(int cell=0;cell<20;cell++){
             String model=cell<18?"formed_forge_"+cell:cell==18?"ruined_ancient_forge_formed":"ruined_ancient_forge";

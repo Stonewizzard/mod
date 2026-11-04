@@ -14,7 +14,7 @@ together. The old-world compact fallback remains available when neighbors block 
 
 Material sources and palettes live in `tools/asset_sources/workshop-materials` and
 `tools/generate_workshop_materials.py`. `--check` verifies exact exports in CI.
-All source clusters remain intact: no resampling, smoothing or added noise.
+Forge and body source clusters remain intact: no resampling or added noise.
 
 Review in the actual Minecraft client: warm forge beside ordinary masonry, finished
 fireplace, anvil from all four orientations, and the complete anvil as a held item.
@@ -23,3 +23,10 @@ real player harvesting and one-item recovery remain covered by gameplay tests.
 
 The first native review caught a pale, stone-like workface and a blunt horn. The
 revised pass uses darker neutral steel on top and a narrower five-step taper.
+
+The follow-up workface pass keeps that palette and all geometry. The top now has
+an authored 16x48 indexed skin: a continuous plate with crisp edge shading and
+small, deliberate hammer/scuff marks. It uses 16 texels per block, with the UVs
+following global Z across all three cells. Narrow plate sides keep the previous
+material. Client validation checks native texel density and continuity at every
+owned-cell boundary.

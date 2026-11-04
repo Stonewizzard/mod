@@ -34,12 +34,17 @@ for x,X in ((3.5,4),(12,12.5)):
                   (11,11,12,13),(12,11,14,12),(14,12,15,13)):
   boxes.append(([lo,y,z],[hi,Y,Z],'trim'))
 compact=[([2,0,2],[14,3,14],'foot'),([5,3,5],[11,10,12],'metal'),([3,10,4],[13,15,16],'metal'),([3,14,4],[13,15,16],'face'),([5,11,0],[11,14,4],'metal')]
-tex={'metal':'examplemod:block/anvil_iron','face':'examplemod:block/anvil_workface','foot':'examplemod:block/forge_soot','trim':'examplemod:block/forge_bronze','particle':'examplemod:block/anvil_iron'}
+tex={'metal':'examplemod:block/anvil_iron','face':'examplemod:block/anvil_workface_edge','workface':'examplemod:block/anvil_workface','foot':'examplemod:block/forge_soot','trim':'examplemod:block/forge_bronze','particle':'examplemod:block/anvil_iron'}
 cells=[(0,0),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
-def element(box):
+def element(box,cell_z=0):
  a,B,t=box;x,y,z=a;X,Y,Z=B
  uv={'north':[16-X,16-Y,16-x,16-y],'south':[x,16-Y,X,16-y],'west':[z,16-Y,Z,16-y],'east':[16-Z,16-Y,16-z,16-y],'up':[x,z,X,Z],'down':[x,16-Z,X,16-z]}
- return {'from':a,'to':B,'faces':{f:{'texture':'#'+t,'uv':v} for f,v in uv.items()}}
+ faces={f:{'texture':'#'+t,'uv':v} for f,v in uv.items()}
+ if t=='face':
+  # A continuous 16x48 top: U stays 1:1; V spans 48 native pixels in 16 UV units.
+  # Keep the global Z coordinate across owned-cell splits, including the horn.
+  faces['up']={'texture':'#workface','uv':[x,(z+cell_z*16+16)/3,X,(Z+cell_z*16+16)/3]}
+ return {'from':a,'to':B,'faces':faces}
 def clip(box,y,z):
  a,B,t=box;lo=[max(a[0],0),max(a[1],y*16),max(a[2],z*16)];hi=[min(B[0],16),min(B[1],y*16+16),min(B[2],z*16+16)]
  if any(l>=h for l,h in zip(lo,hi)):return None
@@ -47,7 +52,7 @@ def clip(box,y,z):
 meshes=[]
 for i,(y,z) in enumerate(cells):
  mesh=[c for b in boxes if (c:=clip(b,y,z))];meshes.append(mesh)
- j(ASSETS/f'models/block/ancient_anvil_cell_{i}.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b) for b in mesh]})
+ j(ASSETS/f'models/block/ancient_anvil_cell_{i}.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b,z) for b in mesh]})
 j(ASSETS/'models/block/ancient_anvil.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b) for b in compact]})
 # A dedicated item preview centers/scales the complete silhouette; held blocks must fit an ordinary item envelope.
 preview=[]
@@ -55,7 +60,7 @@ for (y,z),mesh in zip(cells,meshes):
  for a,B,t in mesh:
   # Keep the WORLD face UVs. Shrinking geometry must not stretch an entire tile
   # across every tiny bronze mark or change the item's material pattern.
-  e=element((a,B,t))
+  e=element((a,B,t),z)
   for key,corner in (('from',a),('to',B)):
    e[key]=[8+(corner[0]-8)/3,4+(corner[1]+y*16)/3,(corner[2]+z*16)/3+16/3]
   preview.append(e)
