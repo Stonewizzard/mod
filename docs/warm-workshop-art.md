@@ -6,7 +6,7 @@ The actual block model uses native pixel materials, not the concept painting.
 
 The 3x3 plinth has four hollow bronze connection sockets and inset amber circuits.
 A substantial armored head, pointed bronze-bound horn and raised square heel sit
-on broad shoulders. The forging surface has an inset octagonal seal, sixteen
+on broad shoulders. The forging surface has an inset octagonal seal, eight
 short glyphs and a central forge sigil. Four large bronze-framed rune plaques
 face outward. Selected rune pixels emit light; the working metal stays shaded.
 

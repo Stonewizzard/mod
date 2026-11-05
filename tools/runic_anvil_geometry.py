@@ -47,15 +47,15 @@ for a,b in [((-9,6.025,-7),(25,6.05,-6)),((-9,6.025,22),(25,6.05,23)),
 
 # Broad shoulders and a deeply supported waist, rather than a tall narrow post.
 octagon(-6,-4,22,20,7,10,3,'metal')
-octagon(-4,-2,20,18,10,12,2,'metal')
+octagon(-3,-2,19,18,10,12,2,'metal')
 octagon(-2,0,18,16,12,18,2,'metal')
-octagon(-5,-3,21,19,18,21,3,'metal')
+octagon(-3,-3,19,19,18,21,3,'metal')
 octagon(-8,-6,24,22,21,23,4,'metal')
 
 # A substantial anvil head; the main working surface is a runic octagonal seal.
-octagon(-10,-7,26,23,23,26.5,5,'metal')
-octagon(-11,-8,27,24,26.5,28,5,'bronze')
-octagon(-9,-7,25,23,28,29,4,'steel')
+octagon(-8,-2,24,24,23,27,4,'metal')
+octagon(-9,-3,25,25,27,28,4,'bronze')
+octagon(-7,-1,23,23,28,29,3,'steel')
 # Only the upper face receives the continuous 48x48 seal; emissive pixels sit just above it.
 for a,b,t in boxes[:]:
  if t=='steel' and a[1]==28:
@@ -63,30 +63,33 @@ for a,b,t in boxes[:]:
   box((a[0],29.015,a[2]),(b[0],29.025,b[2]),'top_glow',True)
 
 # The raised, square heel balances the pointed horn, with a heavy bronze cuff.
-box((-3,23,23),(19,30,31),'metal')
-box((-4,24,23),(20,30.5,25),'bronze')
-box((-2,30,25),(18,31,30),'steel')
+box((-2,23,24),(18,30,31),'metal')
+box((-3,24,23),(19,30.5,25),'bronze')
+box((-1,30,25),(17,31,31),'steel')
+# A second cuff marks the horn's neck without stretching the runic working face.
+box((-1,26.5,-2),(17,29.3,0),'bronze')
 
 # Intentional raised rune plaques and corner armor. Their top/bottom attach to
 # the broad shoulders; the narrower body is visible behind the flanking ribs.
-box((-6.5,9,0),(-5.5,22,16),'panel_ew')
-box((21.5,9,0),(22.5,22,16),'panel_ew')
+box((-4.5,9,0),(-3.5,22,16),'panel_ew')
+box((19.5,9,0),(20.5,22,16),'panel_ew')
 box((0,9,-5.5),(16,22,-4.5),'panel_ns')
 box((0,9,20.5),(16,22,21.5),'panel_ns')
-for x in (-7,22):
+for x in (-5,20):
  for z in (-1,15):box((x,9,z),(x+1,22,z+2),'bronze')
 for z in (-6,21):
  for x in (-1,15):box((x,9,z),(x+2,22,z+1),'bronze')
-box((-6.53,9,0),(-6.52,22,16),'rune_w',True)
-box((22.52,9,0),(22.53,22,16),'rune_e',True)
+box((-4.53,9,0),(-4.52,22,16),'rune_w',True)
+box((20.52,9,0),(20.53,22,16),'rune_e',True)
 box((0,9,-5.53),(16,22,-5.52),'rune_n',True)
 box((0,9,21.52),(16,22,21.53),'rune_s',True)
 
 # A bronze-bound, genuine diagonal horn, not a stack of tiny cuboid teeth.
-horn={'from':[1,7,-12],'to':[15,11.5,2],
-      'rotation':{'origin':[8,9.25,-5],'axis':'y','angle':45,'rescale':False},
+horn={'from':[.75,6.5,-12.75],'to':[15.25,12.95,1.75],
+      'rotation':{'origin':[8,9.725,-5.5],'axis':'y','angle':45,'rescale':False},
       'faces':{f:{'texture':'#horn' if f=='up' else '#metal','uv':[1,1,15,15] if f in ('up','down') else [1,7,15,11.5]} for f in ('up','down','north','south','west','east')}}
-radius=math.sqrt(98)
+horn_origin=horn['rotation']['origin']
+radius=(horn['to'][0]-horn['from'][0])/math.sqrt(2)
 
 def clip(b,cell):
  a,B,t=b;offset=[v*16 for v in cell]
@@ -117,13 +120,14 @@ def element(b,cell):
 def horn_collision(cell):
  cx,cy,cz=cell
  if cy!=1:return []
- lo=max(-5-radius,cz*16);hi=min(-5+radius,cz*16+16)
+ ox,_,oz=horn_origin
+ lo=max(oz-radius,cz*16);hi=min(oz+radius,cz*16+16)
  if lo>=hi:return []
  cuts=sorted(set([lo,hi]+[float(n) for n in range(math.ceil(lo),math.floor(hi)+1)]));result=[]
  for a,b in zip(cuts,cuts[1:]):
-  nearest=0 if a<=-5<=b else min(abs(a+5),abs(b+5));half=radius-nearest
-  L=max(8-half,cx*16);R=min(8+half,cx*16+16)
-  if L<R:result.append(([L-cx*16,7,a-cz*16],[R-cx*16,11.5,b-cz*16],'metal'))
+  nearest=0 if a<=oz<=b else min(abs(a-oz),abs(b-oz));half=radius-nearest
+  L=max(ox-half,cx*16);R=min(ox+half,cx*16+16)
+  if L<R:result.append(([L-cx*16,horn['from'][1],a-cz*16],[R-cx*16,horn['to'][1],b-cz*16],'metal'))
  return result
 
 collisions=[];models=[]
@@ -162,7 +166,8 @@ java += ['    private static java.util.Map<Direction,VoxelShape> cell'+str(i)+'(
 vertices=[]
 for i in range(8):
  x=horn['to' if i&1 else 'from'][0];y=horn['to' if i&2 else 'from'][1]+16;z=horn['to' if i&4 else 'from'][2]
- c=math.sqrt(.5);vertices.append((8+(x-8)*c+(z+5)*c,y,-5-(x-8)*c+(z+5)*c))
+ ox,_,oz=horn_origin
+ c=math.sqrt(.5);vertices.append((ox+(x-ox)*c+(z-oz)*c,y,oz-(x-ox)*c+(z-oz)*c))
 edges=[(vertices[i],vertices[i^(1<<axis)]) for i in range(8) for axis in range(3) if not i&(1<<axis)]
 def rotated_point(p,turn):
  x,y,z=p
