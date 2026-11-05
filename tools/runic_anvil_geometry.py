@@ -5,13 +5,14 @@ indices 0..5 are deliberately stable for old saved blockstates.
 """
 from pathlib import Path
 import copy,json,math
+import anvil_horn
 
 ROOT=Path(__file__).resolve().parents[1];ASSETS=ROOT/'src/main/resources/assets/examplemod'
 def j(p,v):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n')
 cells=[(0,0,0),(0,0,-1),(0,0,1),(0,1,-1),(0,1,0),(0,1,1)]
 cells += [(x,y,z) for x in (-1,1) for y in (0,1) for z in (-1,0,1)]
-textures={'metal':'examplemod:block/runic_anvil_metal','steel':'examplemod:block/anvil_workface_edge',
- 'bronze':'examplemod:block/forge_bronze','soot':'examplemod:block/forge_soot',
+textures={'metal':'examplemod:block/runic_anvil_metal','steel':'examplemod:block/runic_anvil_edge',
+ 'bronze':'examplemod:block/runic_anvil_frame','soot':'examplemod:block/forge_soot',
  'top':'examplemod:block/runic_anvil_top','top_glow':'examplemod:block/runic_anvil_top_glow',
  'panel':'examplemod:block/runic_anvil_panel','panel_glow':'examplemod:block/runic_anvil_panel_glow',
  'ember':'examplemod:block/runic_anvil_ember','horn':'examplemod:block/runic_anvil_horn',
@@ -66,8 +67,7 @@ for a,b,t in boxes[:]:
 box((-2,23,24),(18,30,31),'metal')
 box((-3,24,23),(19,30.5,25),'bronze')
 box((-1,30,25),(17,31,31),'steel')
-# A second cuff marks the horn's neck without stretching the runic working face.
-box((-1,26.5,-2),(17,29.3,0),'bronze')
+# The horn joins the working surface directly; no bulky cuff across its neck.
 
 # Intentional raised rune plaques and corner armor. Their top/bottom attach to
 # the broad shoulders; the narrower body is visible behind the flanking ribs.
@@ -84,12 +84,9 @@ box((20.52,9,0),(20.53,22,16),'rune_e',True)
 box((0,9,-5.53),(16,22,-5.52),'rune_n',True)
 box((0,9,21.52),(16,22,21.53),'rune_s',True)
 
-# A bronze-bound, genuine diagonal horn, not a stack of tiny cuboid teeth.
-horn={'from':[.75,6.5,-12.75],'to':[15.25,12.95,1.75],
-      'rotation':{'origin':[8,9.725,-5.5],'axis':'y','angle':45,'rescale':False},
-      'faces':{f:{'texture':'#horn' if f=='up' else '#metal','uv':[1,1,15,15] if f in ('up','down') else [1,7,15,11.5]} for f in ('up','down','north','south','west','east')}}
-horn_origin=horn['rotation']['origin']
-radius=(horn['to'][0]-horn['from'][0])/math.sqrt(2)
+# Static OBJ geometry gives the horn a real bevel and rising underside. It is
+# baked once, entirely inside the upper front owned cell, with no entity renderer.
+anvil_horn.write_models(ASSETS/'models/block')
 
 def clip(b,cell):
  a,B,t=b;offset=[v*16 for v in cell]
@@ -117,28 +114,18 @@ def element(b,cell):
  if t in ('top_glow','ember') or t.startswith('rune_'):e.update({'shade':False,'light_emission':15})
  return e
 
-def horn_collision(cell):
- cx,cy,cz=cell
- if cy!=1:return []
- ox,_,oz=horn_origin
- lo=max(oz-radius,cz*16);hi=min(oz+radius,cz*16+16)
- if lo>=hi:return []
- cuts=sorted(set([lo,hi]+[float(n) for n in range(math.ceil(lo),math.floor(hi)+1)]));result=[]
- for a,b in zip(cuts,cuts[1:]):
-  nearest=0 if a<=oz<=b else min(abs(a-oz),abs(b-oz));half=radius-nearest
-  L=max(ox-half,cx*16);R=min(ox+half,cx*16+16)
-  if L<R:result.append(([L-cx*16,horn['from'][1],a-cz*16],[R-cx*16,horn['to'][1],b-cz*16],'metal'))
- return result
-
 collisions=[];models=[]
 for i,cell in enumerate(cells):
  mesh=[c for b in boxes if (c:=clip(b,cell))]
- collisions.append(mesh+horn_collision(cell))
+ collisions.append(mesh+anvil_horn.collision(cell))
  elements=[element(b,cell) for b in mesh]
  elements += [element(c,cell) for b in decor if (c:=clip(b,cell))]
- if i==4:elements.append(copy.deepcopy(horn))
  models.append(elements)
- j(ASSETS/f'models/block/ancient_anvil_cell_{i}.json',{'parent':'minecraft:block/block','render_type':'minecraft:cutout','ambientocclusion':True,'textures':textures,'elements':elements})
+ result={'parent':'minecraft:block/block','render_type':'minecraft:cutout','ambientocclusion':True,'textures':textures,'elements':elements}
+ if i==3:
+  body=copy.deepcopy(result)
+  result.pop('elements');result.update({'loader':'neoforge:composite','children':{'body':body,'horn':anvil_horn.model()}})
+ j(ASSETS/f'models/block/ancient_anvil_cell_{i}.json',result)
 j(ASSETS/'anvil_layout.json',{'version':2,'footprint':[3,3,2],'cells':[{'index':i,'x':x,'y':y,'z':z} for i,(x,y,z) in enumerate(cells)]})
 
 # Ordinary block-item envelope: uniformly shrink the FULL broad anvil, never skew it.
@@ -149,7 +136,9 @@ for (cx,cy,cz),elements in zip(cells,models):
   e=copy.deepcopy(source);e['from']=scaled(e['from']);e['to']=scaled(e['to'])
   if 'rotation' in e:e['rotation']['origin']=scaled(e['rotation']['origin'])
   preview.append(e)
-j(ASSETS/'models/block/ancient_anvil_item.json',{'parent':'minecraft:block/block','render_type':'minecraft:cutout','textures':textures,'elements':preview,'display':{'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[.625,.625,.625]}}})
+j(ASSETS/'models/block/ancient_anvil_item.json',{'parent':'minecraft:block/block','render_type':'minecraft:cutout','textures':textures,
+ 'loader':'neoforge:composite','children':{'body':{'parent':'minecraft:block/block','textures':textures,'elements':preview},'horn':anvil_horn.model(True)},
+ 'display':{'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[.625,.625,.625]}}})
 rots=[('north',0),('east',90),('south',180),('west',270)]
 j(ASSETS/'blockstates/ancient_anvil.json',{'variants':{f'facing={d},tier={tier},large={str(large).lower()},monumental={str(wide).lower()}':{'model':'examplemod:block/'+('ancient_anvil_cell_0' if large and wide else 'legacy_ancient_anvil_cell_0' if large else 'ancient_anvil'),'y':rot} for tier in (0,1) for large in (False,True) for wide in (False,True) for d,rot in rots}})
 j(ASSETS/'blockstates/ancient_anvil_part.json',{'variants':{f'facing={d},cell={i},monumental={str(wide).lower()}':{'model':f'examplemod:block/'+('legacy_' if not wide and i<6 else '')+f'ancient_anvil_cell_{i}','y':rot} for i in range(1,len(cells)) for wide in (False,True) for d,rot in rots}})
@@ -163,12 +152,7 @@ java=['package com.example.examplemod;','import net.minecraft.core.Direction;','
  '    public static VoxelShape cell(int cell,Direction facing){return CELLS.get(cell).get(facing);}',
  '    public static VoxelShape outlineBody(Direction facing){return OUTLINE.get(facing);}']
 java += ['    private static java.util.Map<Direction,VoxelShape> cell'+str(i)+'(){return '+shape(mesh)+';}' for i,mesh in enumerate(collisions)]
-vertices=[]
-for i in range(8):
- x=horn['to' if i&1 else 'from'][0];y=horn['to' if i&2 else 'from'][1]+16;z=horn['to' if i&4 else 'from'][2]
- ox,_,oz=horn_origin
- c=math.sqrt(.5);vertices.append((ox+(x-ox)*c+(z-oz)*c,y,oz-(x-ox)*c+(z-oz)*c))
-edges=[(vertices[i],vertices[i^(1<<axis)]) for i in range(8) for axis in range(3) if not i&(1<<axis)]
+edges=[(anvil_horn.VERTICES[a],anvil_horn.VERTICES[b]) for a,b in anvil_horn.EDGES]
 def rotated_point(p,turn):
  x,y,z=p
  for _ in range(turn):x,z=16-z,x

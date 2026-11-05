@@ -95,7 +95,7 @@ public final class ClientVisualQa {
                             if(action.equals("anvil_view")){if(close)player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY(),anvilPosition.getZ()-2.5,0,17);else player.connection.teleport(anvilPosition.getX()-1.5,anvilPosition.getY(),anvilPosition.getZ()-2.5,-34,16);}
                             });
                         }
-                        case "assets_scene","assets_anvil_view","assets_anvil_detail","assets_offhand","assets_right_hand","assets_drop_view"->{
+                        case "assets_scene","assets_anvil_view","assets_anvil_detail","assets_anvil_profile","assets_anvil_rear","assets_offhand","assets_right_hand","assets_drop_view"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();var facing=command.has("facing")?net.minecraft.core.Direction.valueOf(command.get("facing").getAsString()):net.minecraft.core.Direction.NORTH;
                             server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();
                                 if(action.equals("assets_scene")){
@@ -118,6 +118,14 @@ public final class ClientVisualQa {
                                     l.setBlock(view,net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),3);
                                     float yaw=(float)Math.toDegrees(Math.atan2(view.getX()-assetsAnvil.getX(),assetsAnvil.getZ()-view.getZ()));
                                     player.connection.teleport(view.getX()+.5,assetsAnvil.getY()+1,view.getZ()+.5,yaw,19);
+                                }
+                                if(action.equals("assets_anvil_profile")||action.equals("assets_anvil_rear")){
+                                    var front=l.getBlockState(assetsAnvil).getValue(com.example.examplemod.AncientAnvilBlock.FACING);
+                                    boolean rear=action.equals("assets_anvil_rear");
+                                    var view=rear?assetsAnvil.relative(front.getOpposite(),4).relative(front.getClockWise(),3):assetsAnvil.relative(front,1).relative(front.getClockWise(),5);
+                                    if(rear)l.setBlock(view,net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),3);
+                                    float yaw=(float)Math.toDegrees(Math.atan2(view.getX()-assetsAnvil.getX(),assetsAnvil.getZ()-view.getZ()));
+                                    player.connection.teleport(view.getX()+.5,assetsAnvil.getY()+(rear?1:0),view.getZ()+.5,yaw,rear?16:5);
                                 }
                                 if(action.equals("assets_offhand")){player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.INGOT.get()));}
                                 if(action.equals("assets_right_hand")){player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));player.getInventory().setItem(2,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.INGOT.get()));}

@@ -250,6 +250,8 @@ def run():
     process('xdotool','key','9')
     for facing in ['NORTH','EAST','SOUTH','WEST']:
         command('assets_anvil_view',facing=facing);expect(assetsLarge=True,assetsCells=18,assetsFacing=facing);capture('large-anvil-'+facing.lower())
+    for angle in ('profile','rear'):
+        command('assets_anvil_'+angle);process('xdotool','key','F1');capture('runic-anvil-'+angle);process('xdotool','key','F1')
     command('assets_anvil_detail');capture('ancient-anvil-workface-detail')
     process('xdotool','key','F1');capture('ancient-anvil-clean');process('xdotool','key','F1')
     native_chat_command('time set midnight')

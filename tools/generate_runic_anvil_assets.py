@@ -10,6 +10,8 @@ def exports():
     colours={k:tuple(bytes.fromhex(v)) for k,v in palette.items()}
     for source,name,size,glow in [
         ('metal','runic_anvil_metal',(16,16),False),
+        ('edge','runic_anvil_edge',(16,16),False),
+        ('frame','runic_anvil_frame',(16,16),False),
         ('top','runic_anvil_top',(48,48),True),
         ('panel','runic_anvil_panel',(16,16),True),
         ('horn','runic_anvil_horn',(16,16),False),
@@ -19,6 +21,14 @@ def exports():
         assert len(rows)==size[1] and all(len(row)==size[0] for row in rows),(source,size)
         assert all(c in colours for row in rows for c in row),source
         image=Image.new('RGB',size);image.putdata([colours[c] for row in rows for c in row])
+        if source=='ember':
+            # Cooled crust and moving hot cores, using the same sharp native
+            # texels as the inlay rather than a flat gold/neon stripe.
+            image=Image.new('RGB',(size[0],size[1]*5))
+            for frame in range(5):
+                tile=Image.new('RGB',size)
+                tile.putdata([colours[rows[y][(x+frame)%size[0]]] for y in range(size[1]) for x in range(size[0])])
+                image.paste(tile,(0,frame*size[1]))
         yield name,image
         if glow:
             # A slow native texture animation breathes gently, without block
@@ -30,7 +40,7 @@ def exports():
             yield name+'_glow',mask
 
 def metadata():
-    for name,size in [('runic_anvil_top_glow',48),('runic_anvil_panel_glow',16)]:
+    for name,size in [('runic_anvil_top_glow',48),('runic_anvil_panel_glow',16),('runic_anvil_ember',16)]:
         yield name,{'animation':{'width':size,'height':size,'frametime':8,'frames':[0,1,2,3,4,3,2,1],'interpolate':True}}
 
 if __name__=='__main__':

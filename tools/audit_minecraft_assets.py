@@ -1,9 +1,38 @@
 """Fail on rendering defects, not on whether all artwork has the same aesthetic."""
 from pathlib import Path
 import json,math,itertools
+from collections import Counter
 from PIL import Image
 from finish_item_assets import pixels,opaque,regions,holes
 ROOT=Path(__file__).resolve().parents[1];ASSETS=ROOT/'src/main/resources/assets/examplemod'
+
+def obj_mesh(path):
+ vertices=[];uvs=[];faces=[]
+ for line in path.read_text().splitlines():
+  words=line.split()
+  if not words:continue
+  if words[0]=='v':vertices.append(tuple(map(float,words[1:4])))
+  elif words[0]=='vt':uvs.append(tuple(map(float,words[1:3])))
+  elif words[0]=='f':faces.append(tuple(int(v.split('/')[0])-1 for v in words[1:]))
+ return vertices,uvs,faces
+
+def validate_horn_mesh(vertices,uvs,faces,preview=False):
+ errors=[]
+ if not vertices or not faces:return ['missing tapered horn mesh']
+ if any(v<0 or v>1 for p in vertices for v in p):errors.append('horn escapes its owned block or item envelope')
+ if any(v<0 or v>1 for p in uvs for v in p):errors.append('horn UV escapes its native tile')
+ edges=Counter();directed=Counter();volume=0
+ for face in faces:
+  if len(face)!=3 or any(i<0 or i>=len(vertices) for i in face):return ['invalid horn triangle']
+  for a,b in zip(face,face[1:]+face[:1]):edges[tuple(sorted((a,b)))]+=1;directed[(a,b)]+=1
+  a,b,c=[vertices[i] for i in face]
+  volume+=a[0]*(b[1]*c[2]-b[2]*c[1])+a[1]*(b[2]*c[0]-b[0]*c[2])+a[2]*(b[0]*c[1]-b[1]*c[0])
+ if any(n!=2 for n in edges.values()) or any(n!=directed[(b,a)] for (a,b),n in directed.items()):errors.append('horn mesh is open or has inconsistent winding')
+ if volume<=0:errors.append('horn faces point inward')
+ if not preview:
+  front=min(p[2] for p in vertices);tip=[p for p in vertices if abs(p[2]-front)<1e-7]
+  if (max(p[0] for p in tip)-min(p[0] for p in tip))*16>3.25 or (max(p[1] for p in tip)-min(p[1] for p in tip))*16>1.3:errors.append('horn has a blunt full-height tip')
+ return errors
 
 def validate_image(im,rule):
  im=im.convert('RGBA');errors=[]
@@ -42,7 +71,8 @@ def main():
  layout=json.loads((ASSETS/"anvil_layout.json").read_text())["cells"]
  for i in range(len(layout)):
   model=json.loads((ASSETS/'models/block'/f'ancient_anvil_cell_{i}.json').read_text())
-  for e in model['elements']:
+  body=model.get('children',{}).get('body',model)
+  for e in body['elements']:
    if 'rotation' not in e:
     if any(v<0 or v>16 for k in ['from','to'] for v in e[k]):fail.append(f'anvil cell{i}: geometry escapes its owned block')
    else:
@@ -54,6 +84,9 @@ def main():
     for x,y,z in itertools.product(*zip(e['from'],e['to'])):
      X=ox+(x-ox)*c+(z-oZ)*s+oxCell*16;Z=oZ-(x-ox)*s+(z-oZ)*c+oz*16;Y=y+oy*16
      if not (-16<=X<=32 and 0<=Y<=32 and -16<=Z<=32):fail.append(f'anvil cell{i}: rotated geometry escapes the owned assembly')
+ for preview in (False,True):
+  path=ASSETS/'models/block'/('ancient_anvil_horn'+('_item' if preview else '')+'.obj')
+  fail += [path.name+': '+error for error in validate_horn_mesh(*obj_mesh(path),preview)]
  if fail:raise SystemExit('\n'.join(fail))
  print(f'PASS: {len(manifest)} sprites: alpha, visual size, margins, pinholes, flecks, model wiring; eighteen owned anvil cells.')
 if __name__=='__main__':main()

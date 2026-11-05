@@ -4,8 +4,8 @@
   "ambientocclusion": true,
   "textures": {
     "metal": "examplemod:block/runic_anvil_metal",
-    "steel": "examplemod:block/anvil_workface_edge",
-    "bronze": "examplemod:block/forge_bronze",
+    "steel": "examplemod:block/runic_anvil_edge",
+    "bronze": "examplemod:block/runic_anvil_frame",
     "soot": "examplemod:block/forge_soot",
     "top": "examplemod:block/runic_anvil_top",
     "top_glow": "examplemod:block/runic_anvil_top_glow",
@@ -745,84 +745,6 @@
       },
       "shade": false,
       "light_emission": 15
-    },
-    {
-      "from": [
-        0.75,
-        6.5,
-        -12.75
-      ],
-      "to": [
-        15.25,
-        12.95,
-        1.75
-      ],
-      "rotation": {
-        "origin": [
-          8,
-          9.725,
-          -5.5
-        ],
-        "axis": "y",
-        "angle": 45,
-        "rescale": false
-      },
-      "faces": {
-        "up": {
-          "texture": "#horn",
-          "uv": [
-            1,
-            1,
-            15,
-            15
-          ]
-        },
-        "down": {
-          "texture": "#metal",
-          "uv": [
-            1,
-            1,
-            15,
-            15
-          ]
-        },
-        "north": {
-          "texture": "#metal",
-          "uv": [
-            1,
-            7,
-            15,
-            11.5
-          ]
-        },
-        "south": {
-          "texture": "#metal",
-          "uv": [
-            1,
-            7,
-            15,
-            11.5
-          ]
-        },
-        "west": {
-          "texture": "#metal",
-          "uv": [
-            1,
-            7,
-            15,
-            11.5
-          ]
-        },
-        "east": {
-          "texture": "#metal",
-          "uv": [
-            1,
-            7,
-            15,
-            11.5
-          ]
-        }
-      }
     }
   ]
 }

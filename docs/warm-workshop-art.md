@@ -1,34 +1,37 @@
 # Runic smithing centerpiece
 
-The Ancient Anvil is a broad, grounded centerpiece for a future surrounding rune
-structure. Its design reference is [the concept sheet](images/runic-anvil-concept.jpg).
-The actual block model uses native pixel materials, not the concept painting.
+The Ancient Anvil sits on an eighteen-cell (3x3x2) plinth for the future surrounding
+runic structure. Four hollow sockets, large carved side glyphs and an inset forge
+seal establish its identity. Its metal uses the actual vanilla anvil pixel pattern
+in a warm charcoal palette; structural bands are cooled iron. Molten channels
+have red-orange edges, pale hot cores and darker crust instead of flat gold lines.
+The source artwork is native indexed pixel data, not filtered image generation.
 
-The 3x3 plinth has four hollow bronze connection sockets and inset amber circuits.
-A substantial armored head, pointed bronze-bound horn and raised square heel sit
-on broad shoulders. The forging surface has an inset octagonal seal, eight
-short glyphs and a central forge sigil. Four large bronze-framed rune plaques
-face outward. Selected rune pixels emit light; the working metal stays shaded.
+The horn is a closed static OBJ mesh, baked by NeoForge's built-in OBJ/composite
+model loaders. Its width and underside taper towards a thin, beveled tip; it is
+not a vertically extruded diamond or a stack of small cubes. All of it fits within
+the upper front owned cell. `tools/anvil_horn.py` generates world/item meshes,
+collision envelopes and the actual selection edges. No per-frame entity renderer
+or additional runtime dependency is required. UVs retain native pixel density,
+including on the uniformly scaled item. Collision strips conservatively follow
+the sloped surface within one native pixel; the outline follows mesh edges.
 
-Geometry, clipped physical collision, item preview and the true-edge assembled
-outline share `tools/runic_anvil_geometry.py`. Material palettes and indexed
-sources live in `tools/asset_sources/runic-anvil`; their compiler participates in
-`generate_workshop_materials.py --check`. The 48x48 top maps one texel to one
-Minecraft model pixel over three blocks. There is no filtered or photographic
-texture, random noise or independently stretched glyph wallpaper.
+`tools/runic_anvil_geometry.py` builds the remaining clipped block meshes, physics,
+item and blockstates. Materials are in `tools/asset_sources/runic-anvil`; the
+compiler participates in `generate_workshop_materials.py --check`. The 48x48 top
+skin maps one texel per Minecraft model pixel continuously across cell boundaries.
+Rune glow masks use binary alpha. Native texture animation supplies a slow heat
+pulse and moving lava cores without block ticks or particles. The previous concept
+sheet remains a reference for the broad silhouette, not the current material spec.
 
-The broader model reserves eighteen real cells (3x3x2). The original indices
-0..5 remain stable. Old saved cores and parts default to `monumental=false` and
-use frozen six-cell models/geometry until the full footprint is clear of blocks,
-containers and living entities. Expansion claims the outer cells before switching
-central models. Blocked legacy anvils keep their old footprint and inventories;
-no neighboring block is overwritten. Clearing the room permits automatic upgrade.
+Original indices 0..5 remain stable. Saved six-cell assemblies retain frozen old
+models until the full footprint is clear, then expand safely. Adjacent containers,
+entities and the centered metal foundation remain protected. Tier 0/Tier 1,
+crafting and one-item recovery are unchanged. Raised foundation-guide markers stay
+visible around the plinth. The approved brown forge textures are unchanged.
 
-The Tier 0/Tier 1 rules, centered 3x3 metal foundation, recipes and one-item recovery
-remain. Breaking any of the eighteen cells recovers one anvil. Selection uses the
-assembled silhouette and actual horn edges, not per-cell collision stair steps.
-The foundation guide includes raised wire markers so its target locations remain
-visible around the wider plinth. The approved brown forge artwork is unchanged.
-
-Native review captures include day/night views, the rune seal, all four facings,
-held item, foundation guide, and real OS-driven placement and interactions.
+Asset checks cover closed/outward mesh faces, ownership, native UVs and the thin
+horn tip, including negative controls for an open mesh, displaced vertex and blunt
+tip. Gameplay checks exercise 72 harvesting paths, migration and obstruction.
+Native Minecraft captures include the original offending angle, side profile,
+rear, day/night, four block orientations, the item and foundation guide.

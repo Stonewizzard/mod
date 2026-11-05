@@ -4,8 +4,8 @@
   "ambientocclusion": true,
   "textures": {
     "metal": "examplemod:block/runic_anvil_metal",
-    "steel": "examplemod:block/anvil_workface_edge",
-    "bronze": "examplemod:block/forge_bronze",
+    "steel": "examplemod:block/runic_anvil_edge",
+    "bronze": "examplemod:block/runic_anvil_frame",
     "soot": "examplemod:block/forge_soot",
     "top": "examplemod:block/runic_anvil_top",
     "top_glow": "examplemod:block/runic_anvil_top_glow",
