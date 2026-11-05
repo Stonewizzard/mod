@@ -42,8 +42,8 @@ for x in (-9,25):
               ((x-2,7,z-3),(x+2,10,z-2)),((x-2,7,z+2),(x+2,10,z+3))]:box(a,b,'bronze')
   # The same bronze straps continue down the plinth, anchoring the sockets.
   box((x-1.5,0,z-4.03),(x+1.5,7,z-3.97),'bronze',True)
-for a,b in [((-9,6.025,-7),(25,6.05,-6)),((-9,6.025,22),(25,6.05,23)),
-            ((-9,6.025,-6),(-8,6.05,22)),((24,6.025,-6),(25,6.05,22))]:box(a,b,'ember',True)
+for a,b in [((-9,7.025,-7),(25,7.05,-6)),((-9,7.025,22),(25,7.05,23)),
+            ((-9,7.025,-6),(-8,7.05,22)),((24,7.025,-6),(25,7.05,22))]:box(a,b,'ember',True)
 
 # Broad shoulders and a deeply supported waist, rather than a tall narrow post.
 octagon(-6,-4,22,20,7,10,3,'metal')
