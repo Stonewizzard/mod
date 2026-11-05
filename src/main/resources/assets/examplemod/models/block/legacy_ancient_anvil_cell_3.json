@@ -1,0 +1,149 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "metal": "examplemod:block/anvil_iron",
+    "face": "examplemod:block/anvil_workface_edge",
+    "workface": "examplemod:block/anvil_workface",
+    "foot": "examplemod:block/forge_soot",
+    "trim": "examplemod:block/forge_bronze",
+    "particle": "examplemod:block/anvil_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        7,
+        15
+      ],
+      "to": [
+        15,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal",
+          "uv": [
+            1,
+            7,
+            15,
+            9
+          ]
+        },
+        "south": {
+          "texture": "#metal",
+          "uv": [
+            1,
+            7,
+            15,
+            9
+          ]
+        },
+        "west": {
+          "texture": "#metal",
+          "uv": [
+            15,
+            7,
+            16,
+            9
+          ]
+        },
+        "east": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            7,
+            1,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#metal",
+          "uv": [
+            1,
+            15,
+            15,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#metal",
+          "uv": [
+            1,
+            0,
+            15,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        9,
+        15
+      ],
+      "to": [
+        15,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal",
+          "uv": [
+            1,
+            6,
+            15,
+            7
+          ]
+        },
+        "south": {
+          "texture": "#metal",
+          "uv": [
+            1,
+            6,
+            15,
+            7
+          ]
+        },
+        "west": {
+          "texture": "#metal",
+          "uv": [
+            15,
+            6,
+            16,
+            7
+          ]
+        },
+        "east": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            6,
+            1,
+            7
+          ]
+        },
+        "up": {
+          "texture": "#metal",
+          "uv": [
+            1,
+            15,
+            15,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#metal",
+          "uv": [
+            1,
+            0,
+            15,
+            1
+          ]
+        }
+      }
+    }
+  ]
+}

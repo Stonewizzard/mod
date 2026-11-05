@@ -64,6 +64,15 @@ def capture(name):
     process('import','-window',WINDOW or 'root','-depth','8',str(path))
     (CAPTURES/(name+'.json')).write_text(json.dumps(observe(),indent=2));log('screenshot '+name)
 
+def native_chat_command(value):
+    # Wait for the native chat screen before typing. Sending slash and text in
+    # the same frame can lose the slash and turn "time" into an ordinary chat.
+    expect(screen='InGame');time.sleep(.2)
+    process('xdotool','key','t');expect(screen='ChatScreen');time.sleep(.2)
+    process('xdotool','key','ctrl+a')
+    process('xdotool','type','--clearmodifiers','--delay','45','/'+value)
+    process('xdotool','key','Return');expect(screen='InGame');time.sleep(1.4)
+
 def expect(**fields):
     return wait_for(lambda s:all(s.get(k)==v for k,v in fields.items()),str(fields))
 
@@ -232,7 +241,7 @@ def run():
     command('forge_generated_view');time.sleep(1);capture('forge-world-ruin')
     print('ANCIENT_FORGE_NATIVE_PASS: in-world metallurgy, legacy storage recovery, frame interruption, repair, saved output and fireplace display',flush=True)
     # Compare against real vanilla assets and inspect all owned-cell orientations.
-    command('assets_scene');expect(assetsLarge=True,assetsCells=6,assetsFacing='NORTH')
+    command('assets_scene');expect(assetsLarge=True,assetsCells=18,assetsFacing='NORTH')
     process('xdotool','key','3');capture('assets-ingot-held')
     process('xdotool','key','4');capture('assets-scrap-held')
     process('xdotool','key','5');capture('assets-artifact-held')
@@ -240,9 +249,28 @@ def run():
     command('assets_right_hand');process('xdotool','key','3');time.sleep(.4);process('xdotool','key','q');expect(assetsIngotDropped=True);time.sleep(1);command('assets_drop_view');capture('assets-ingot-dropped')
     process('xdotool','key','9')
     for facing in ['NORTH','EAST','SOUTH','WEST']:
-        command('assets_anvil_view',facing=facing);expect(assetsLarge=True,assetsCells=6,assetsFacing=facing);capture('large-anvil-'+facing.lower())
+        command('assets_anvil_view',facing=facing);expect(assetsLarge=True,assetsCells=18,assetsFacing=facing);capture('large-anvil-'+facing.lower())
+    for angle in ('profile','rear'):
+        command('assets_anvil_'+angle);process('xdotool','key','F1');capture('runic-anvil-'+angle);process('xdotool','key','F1')
+    command('assets_anvil_detail');capture('ancient-anvil-workface-detail')
+    process('xdotool','key','F1');capture('ancient-anvil-clean');process('xdotool','key','F1')
+    native_chat_command('time set midnight')
+    process('xdotool','key','F1');capture('runic-anvil-night');process('xdotool','key','F1')
+    native_chat_command('time set day')
     process('xdotool','key','7');capture('assets-anvil-held')
-    print('ASSET_NATIVE_PASS: vanilla ingot comparison, main/offhand cutouts, dropped ingot, original artifact identity, vanilla material tiling and six owned anvil cells in all four orientations',flush=True)
+    # The selected Foundry design must place through the normal craftable item.
+    for design in ('foundry',):
+        command('anvil_sample_item',design=design);process('xdotool','key','1');time.sleep(.7)
+        process('xdotool','click','3');expect(assetsLarge=True,assetsCells=18,assetsDesign=design.upper(),sampleInventory=0)
+        process('xdotool','key','9');command('assets_anvil_detail')
+        process('xdotool','key','F1');capture('anvil-sample-'+design+'-day');process('xdotool','key','F1')
+        if design=='foundry':
+            time.sleep(.8);process('xdotool','key','F1');capture('anvil-sample-foundry-flow');process('xdotool','key','F1')
+        command('assets_anvil_profile');process('xdotool','key','F1');capture('anvil-sample-'+design+'-profile');process('xdotool','key','F1')
+        command('assets_anvil_detail');native_chat_command('time set midnight')
+        process('xdotool','key','F1');capture('anvil-sample-'+design+'-night');process('xdotool','key','F1');native_chat_command('time set day')
+    print('ANVIL_SELECTED_NATIVE_PASS: normal Ancient Anvil item places the selected Foundry design, all eighteen cells, survival item consumption and day/night/profile captures',flush=True)
+    print('ASSET_NATIVE_PASS: vanilla ingot comparison, main/offhand cutouts, dropped ingot, original artifact identity, vanilla material tiling and eighteen owned anvil cells in all four orientations',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
     print('CLIENT_VISUAL_QA_PASS: Workshop Manual item, illustrated browsing and OS input task paths',flush=True)
 

@@ -15,7 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
-/** Foundation guide only; the anvil body is baked across its six owned cells. */
+/** Foundation guide only; the anvil body is baked across its eighteen owned cells. */
 public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAnvilBlockEntity,AncientAnvilRenderer.State> {
     private final ForgeGhostModel cube=new ForgeGhostModel();
     private static final Identifier MATERIAL=Identifier.withDefaultNamespace("textures/block/deepslate_bricks.png");
@@ -29,6 +29,6 @@ public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAn
     }
     private void box(PoseStack p,SubmitNodeCollector c,Identifier texture,int color){c.order(1).submitModel(cube,new LivingEntityRenderState(),p,RenderTypes.entityTranslucent(texture),15728880,OverlayTexture.NO_OVERLAY,color,null,0);}
     @Override public void submit(State s,PoseStack p,SubmitNodeCollector c,CameraRenderState camera){
-        for(var cell:s.cells){p.pushPose();p.translate(cell.x(),-1,cell.z());box(p,c,MATERIAL,cell.occupied()?0xD0FFD438:0x663CCFDF);p.popPose();}
+        for(var cell:s.cells){p.pushPose();p.translate(cell.x(),-1,cell.z());box(p,c,MATERIAL,cell.occupied()?0xD0FFD438:0x663CCFDF);c.submitShapeOutline(p,net.minecraft.world.phys.shapes.Shapes.box(-.005,0,-.005,1.005,1.6,1.005),RenderTypes.lines(),cell.occupied()?0xFFFFD438:0xFF3CCFDF,2f,false);p.popPose();}
     }
 }

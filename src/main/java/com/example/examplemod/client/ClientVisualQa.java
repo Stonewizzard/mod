@@ -95,7 +95,21 @@ public final class ClientVisualQa {
                             if(action.equals("anvil_view")){if(close)player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY(),anvilPosition.getZ()-2.5,0,17);else player.connection.teleport(anvilPosition.getX()-1.5,anvilPosition.getY(),anvilPosition.getZ()-2.5,-34,16);}
                             });
                         }
-                        case "assets_scene","assets_anvil_view","assets_offhand","assets_right_hand","assets_drop_view"->{
+                        case "anvil_sample_item"->{
+                            var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var design=com.example.examplemod.AncientAnvilDesign.valueOf(command.get("design").getAsString().toUpperCase(java.util.Locale.ROOT));
+                            server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();
+                                l.destroyBlock(assetsAnvil,false);
+                                for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++){
+                                    l.setBlock(assetsAnvil.offset(x,-1,z),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),3);
+                                    for(int y=0;y<=3;y++)l.setBlock(assetsAnvil.offset(x,y,z),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
+                                }
+                                for(var mob:l.getEntitiesOfClass(net.minecraft.world.entity.Mob.class,new net.minecraft.world.phys.AABB(assetsAnvil).inflate(8)))mob.discard();
+                                player.getInventory().clearContent();player.getInventory().setItem(0,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.item(design)));
+                                player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,net.minecraft.world.item.ItemStack.EMPTY);player.inventoryMenu.broadcastChanges();
+                                player.connection.teleport(assetsAnvil.getX()+.5,assetsAnvil.getY(),assetsAnvil.getZ()-3,0,25);
+                            });
+                        }
+                        case "assets_scene","assets_anvil_view","assets_anvil_detail","assets_anvil_profile","assets_anvil_rear","assets_offhand","assets_right_hand","assets_drop_view"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();var facing=command.has("facing")?net.minecraft.core.Direction.valueOf(command.get("facing").getAsString()):net.minecraft.core.Direction.NORTH;
                             server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();
                                 if(action.equals("assets_scene")){
@@ -109,8 +123,23 @@ public final class ClientVisualQa {
                                     player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));
                                 }
                                 if(action.equals("assets_scene")||action.equals("assets_anvil_view")){
-                                    l.destroyBlock(assetsAnvil,false);l.setBlock(assetsAnvil,com.example.examplemod.AncientAnvilContent.ANVIL.get().defaultBlockState().setValue(com.example.examplemod.AncientAnvilBlock.FACING,facing),3);com.example.examplemod.AncientAnvilBlockEntity.refresh(l,assetsAnvil,l.getBlockState(assetsAnvil));
+                                    l.setBlock(assetsAnvil,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);l.setBlock(assetsAnvil,com.example.examplemod.AncientAnvilContent.ANVIL.get().defaultBlockState().setValue(com.example.examplemod.AncientAnvilBlock.FACING,facing),3);com.example.examplemod.AncientAnvilBlockEntity.refresh(l,assetsAnvil,l.getBlockState(assetsAnvil));
                                     var view=assetsAnvil.relative(facing,5).relative(facing.getCounterClockWise(),3);float yaw=(float)Math.toDegrees(Math.atan2(view.getX()-assetsAnvil.getX(),assetsAnvil.getZ()-view.getZ()));player.connection.teleport(view.getX()+.5,assetsAnvil.getY(),view.getZ()+.5,yaw,0);
+                                }
+                                if(action.equals("assets_anvil_detail")){
+                                    var front=l.getBlockState(assetsAnvil).getValue(com.example.examplemod.AncientAnvilBlock.FACING);
+                                    var view=assetsAnvil.relative(front,3).relative(front.getCounterClockWise(),2);
+                                    l.setBlock(view,net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),3);
+                                    float yaw=(float)Math.toDegrees(Math.atan2(view.getX()-assetsAnvil.getX(),assetsAnvil.getZ()-view.getZ()));
+                                    player.connection.teleport(view.getX()+.5,assetsAnvil.getY()+1,view.getZ()+.5,yaw,19);
+                                }
+                                if(action.equals("assets_anvil_profile")||action.equals("assets_anvil_rear")){
+                                    var front=l.getBlockState(assetsAnvil).getValue(com.example.examplemod.AncientAnvilBlock.FACING);
+                                    boolean rear=action.equals("assets_anvil_rear");
+                                    var view=rear?assetsAnvil.relative(front.getOpposite(),4).relative(front.getClockWise(),3):assetsAnvil.relative(front,1).relative(front.getClockWise(),5);
+                                    if(rear)l.setBlock(view,net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),3);
+                                    float yaw=(float)Math.toDegrees(Math.atan2(view.getX()-assetsAnvil.getX(),assetsAnvil.getZ()-view.getZ()));
+                                    player.connection.teleport(view.getX()+.5,assetsAnvil.getY()+(rear?1:0),view.getZ()+.5,yaw,rear?16:5);
                                 }
                                 if(action.equals("assets_offhand")){player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.INGOT.get()));}
                                 if(action.equals("assets_right_hand")){player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));player.getInventory().setItem(2,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.INGOT.get()));}
@@ -184,7 +213,7 @@ public final class ClientVisualQa {
             if(anvilPosition!=null&&minecraft.level!=null){var a=minecraft.level.getBlockState(anvilPosition);boolean placed=a.is(com.example.examplemod.AncientAnvilContent.ANVIL.get());state.addProperty("anvilPlaced",placed);state.addProperty("anvilLarge",placed&&a.getValue(com.example.examplemod.AncientAnvilBlock.LARGE));state.addProperty("anvilTier",placed?a.getValue(com.example.examplemod.AncientAnvilBlock.TIER):-1);state.addProperty("anvilMissing",com.example.examplemod.AncientAnvilBlockEntity.missing(minecraft.level,anvilPosition).size());state.addProperty("anvilGuide",AncientAnvilPreview.active(minecraft.level,anvilPosition));state.addProperty("aimedAtAnvil",minecraft.hitResult instanceof net.minecraft.world.phys.BlockHitResult hit&&(hit.getBlockPos().equals(anvilPosition)||minecraft.level.getBlockState(hit.getBlockPos()).is(com.example.examplemod.AncientAnvilContent.PART.get())&&com.example.examplemod.AncientAnvilPartBlock.core(hit.getBlockPos(),minecraft.level.getBlockState(hit.getBlockPos())).equals(anvilPosition)));}
             if(minecraft.player!=null){int count=0;for(int i=0;i<36;i++)if(minecraft.player.getInventory().getItem(i).is(com.example.examplemod.AncientAnvilContent.SCRAP_ITEM.get()))count+=minecraft.player.getInventory().getItem(i).getCount();state.addProperty("scrapInventory",count);state.addProperty("holdingArtifact",minecraft.player.getMainHandItem().is(com.example.examplemod.ArchaeologyTableMenu.ARTIFACTS));}
             if(feedCruncherId>=0&&minecraft.level!=null){state.addProperty("aimedAtCruncher",minecraft.hitResult instanceof net.minecraft.world.phys.EntityHitResult hit&&hit.getEntity().getId()==feedCruncherId);state.addProperty("cruncherChewing",minecraft.level.getEntity(feedCruncherId) instanceof com.example.examplemod.Cruncher c&&c.isCrunching());}
-            if(assetsAnvil!=null&&minecraft.level!=null){var s=minecraft.level.getBlockState(assetsAnvil);boolean anvil=s.is(com.example.examplemod.AncientAnvilContent.ANVIL.get());state.addProperty("assetsLarge",anvil&&s.getValue(com.example.examplemod.AncientAnvilBlock.LARGE));if(anvil){var facing=s.getValue(com.example.examplemod.AncientAnvilBlock.FACING);state.addProperty("assetsFacing",facing.name());int count=1;for(var c:com.example.examplemod.AncientAnvilStructure.CELLS)if(c.index()!=0&&com.example.examplemod.AncientAnvilStructure.belongs(minecraft.level,c.at(assetsAnvil,facing),assetsAnvil,facing,c.index()))count++;state.addProperty("assetsCells",count);}state.addProperty("assetsIngotDropped",!minecraft.level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(minecraft.player.blockPosition()).inflate(8),e->e.getItem().is(com.example.examplemod.AncientAnvilContent.INGOT.get())).isEmpty());}
+            if(assetsAnvil!=null&&minecraft.level!=null){var s=minecraft.level.getBlockState(assetsAnvil);boolean anvil=s.is(com.example.examplemod.AncientAnvilContent.ANVIL.get());state.addProperty("assetsLarge",anvil&&s.getValue(com.example.examplemod.AncientAnvilBlock.LARGE));if(anvil){var facing=s.getValue(com.example.examplemod.AncientAnvilBlock.FACING);state.addProperty("assetsFacing",facing.name());state.addProperty("assetsDesign",s.getValue(com.example.examplemod.AncientAnvilBlock.DESIGN).name());state.addProperty("sampleInventory",minecraft.player.getInventory().getItem(0).getCount());int count=1;for(var c:com.example.examplemod.AncientAnvilStructure.CELLS)if(c.index()!=0&&com.example.examplemod.AncientAnvilStructure.belongs(minecraft.level,c.at(assetsAnvil,facing),assetsAnvil,facing,c.index()))count++;state.addProperty("assetsCells",count);}state.addProperty("assetsIngotDropped",!minecraft.level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,new net.minecraft.world.phys.AABB(minecraft.player.blockPosition()).inflate(8),e->e.getItem().is(com.example.examplemod.AncientAnvilContent.INGOT.get())).isEmpty());}
             Path temporary=DIRECTORY.resolve("state.tmp");Files.writeString(temporary,JSON.toJson(state),StandardCharsets.UTF_8);
             Files.move(temporary,DIRECTORY.resolve("state.json"),StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE);
             if(sequence==1)ExampleMod.LOGGER.info("CLIENT_VISUAL_QA_READY: actual Minecraft client renderer running");
