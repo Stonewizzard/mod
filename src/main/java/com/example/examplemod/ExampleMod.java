@@ -145,6 +145,7 @@ public class ExampleMod {
                 output.accept(AncientForgeContent.CORE_ITEM.get());
                 output.accept(AncientForgeContent.BRICKS_ITEM.get());
                 output.accept(AncientAnvilContent.ANVIL_ITEM.get());
+                AncientAnvilContent.SAMPLES.values().forEach(item->output.accept(item.get()));
                 output.accept(AncientAnvilContent.SCRAP_ITEM.get());
                 output.accept(AncientAnvilContent.INGOT.get());
                 output.accept(AncientAnvilContent.METAL_ITEM.get());

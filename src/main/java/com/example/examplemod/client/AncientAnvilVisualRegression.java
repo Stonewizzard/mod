@@ -23,17 +23,27 @@ public final class AncientAnvilVisualRegression {
                 if(animation.get("width").getAsInt()!=size||animation.get("height").getAsInt()!=size||animation.getAsJsonArray("frames").size()!=8)throw new IllegalStateException("Invalid slow rune animation");
             }
         }
+        for(String name:new String[]{"runic_anvil_horn_long","runic_anvil_edge_long","runic_anvil_metal_long","runic_anvil_fall"})try(var in=r.getResourceOrThrow(id("textures/block/"+name+".png")).open()){
+            var png=ImageIO.read(in);boolean horizontal=name.equals("runic_anvil_metal_long"),fall=name.endsWith("_fall");
+            if(png==null||png.getWidth()!=(horizontal?32:16)||png.getHeight()!=(fall?256:horizontal?16:32))throw new IllegalStateException("Invalid native long-horn/fall texture");
+            if(fall){var a=json(r,"textures/block/"+name+".png.mcmeta").getAsJsonObject("animation");if(a.getAsJsonArray("frames").size()!=16||a.get("frametime").getAsInt()!=3)throw new IllegalStateException("Lava fall must animate downward");}
+        }
         var layout=json(r,"anvil_layout.json").getAsJsonArray("cells");
         if(layout.size()!=18||AncientAnvilStructure.CELLS.size()!=18)throw new IllegalStateException("Wrong centerpiece reservation");
+        var designs=json(r,"anvil_designs.json").getAsJsonArray("designs");
+        if(designs.size()!=4)throw new IllegalStateException("Missing design comparison models");
+        for(var raw:designs){
+            var config=raw.getAsJsonObject();String prefix=config.get("prefix").getAsString(),name=config.get("id").getAsString();
+            String suffix=name.equals("base")?"":"_"+name;int headOffset=config.get("headOffset").getAsInt();
         int luminous=0;
         for(int cell=0;cell<layout.size();cell++){
             var offset=AncientAnvilStructure.CELLS.get(cell);var declared=layout.get(cell).getAsJsonObject();
             if(declared.get("x").getAsInt()!=offset.x()||declared.get("y").getAsInt()!=offset.y()||declared.get("z").getAsInt()!=offset.z())throw new IllegalStateException("Model/physics layout mismatch");
-            var model=json(r,"models/block/ancient_anvil_cell_"+cell+".json");
+            var model=json(r,"models/block/"+prefix+"_cell_"+cell+".json");
             var body=cell==3?model.getAsJsonObject("children").getAsJsonObject("body"):model;
             if(cell==3){
                 if(!model.get("loader").getAsString().equals("neoforge:composite")||!model.getAsJsonObject("children").getAsJsonObject("horn").get("loader").getAsString().equals("neoforge:obj"))throw new IllegalStateException("Missing baked tapered horn");
-                try(var in=r.getResourceOrThrow(id("models/block/ancient_anvil_horn.obj")).open()){
+                try(var in=r.getResourceOrThrow(id("models/block/ancient_anvil_horn"+suffix+".obj")).open()){
                     if(in.readAllBytes().length<500)throw new IllegalStateException("Empty tapered horn mesh");
                 }
             }
@@ -48,16 +58,17 @@ public final class AncientAnvilVisualRegression {
                     String texture=face.get("texture").getAsString();
                     if(f.getKey().equals("up")&&(texture.equals("#top")||texture.equals("#top_glow"))){
                         var a=e.getAsJsonArray("from");var b=e.getAsJsonArray("to");
-                        if(Math.abs(uv.get(0).getAsDouble()*3-(a.get(0).getAsDouble()+offset.x()*16+16))>1e-5||Math.abs(uv.get(2).getAsDouble()*3-(b.get(0).getAsDouble()+offset.x()*16+16))>1e-5||Math.abs(uv.get(1).getAsDouble()*3-(a.get(2).getAsDouble()+offset.z()*16+16))>1e-5||Math.abs(uv.get(3).getAsDouble()*3-(b.get(2).getAsDouble()+offset.z()*16+16))>1e-5)throw new IllegalStateException("Stretched or disconnected seal skin");
+                        if(Math.abs(uv.get(0).getAsDouble()*3-(a.get(0).getAsDouble()+offset.x()*16+16))>1e-5||Math.abs(uv.get(2).getAsDouble()*3-(b.get(0).getAsDouble()+offset.x()*16+16))>1e-5||Math.abs(uv.get(1).getAsDouble()*3-(a.get(2).getAsDouble()+offset.z()*16-headOffset+16))>1e-5||Math.abs(uv.get(3).getAsDouble()*3-(b.get(2).getAsDouble()+offset.z()*16-headOffset+16))>1e-5)throw new IllegalStateException("Stretched or disconnected seal skin");
                     }
                 }
             }
         }
         if(luminous<20)throw new IllegalStateException("Missing inset rune emission");
-        if(json(r,"blockstates/ancient_anvil_part.json").getAsJsonObject("variants").size()!=136||json(r,"blockstates/ancient_anvil.json").getAsJsonObject("variants").size()!=32)throw new IllegalStateException("Missing legacy/current anvil variants");
+        }
+        if(json(r,"blockstates/ancient_anvil_part.json").getAsJsonObject("variants").size()!=544||json(r,"blockstates/ancient_anvil.json").getAsJsonObject("variants").size()!=128)throw new IllegalStateException("Missing legacy/current anvil variants");
         for(int cell=0;cell<6;cell++)if(json(r,"models/block/legacy_ancient_anvil_cell_"+cell+".json").getAsJsonArray("elements").isEmpty())throw new IllegalStateException("Missing saved-world compatibility model");
-        for(var facing:net.minecraft.core.Direction.Plane.HORIZONTAL){
-            int[] diagonal={0};var outline=AncientAnvilOutline.shape(facing);
+        for(var design:AncientAnvilDesign.values())for(var facing:net.minecraft.core.Direction.Plane.HORIZONTAL){
+            int[] diagonal={0};var outline=AncientAnvilOutline.shape(design,facing);
             outline.forAllEdges((x,y,z,X,Y,Z)->{if(Math.abs(X-x)>.01&&Math.abs(Z-z)>.01)diagonal[0]++;});
             var bounds=outline.bounds();if(diagonal[0]<12||bounds.maxY<1.9||Math.max(bounds.getXsize(),bounds.getZsize())<2.5)throw new IllegalStateException("Centerpiece silhouette or true horn edges missing");
         }

@@ -11,9 +11,10 @@ import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
 
 /** Render the actual assembled silhouette, never the nose's collision staircase. */
 public final class AncientAnvilOutline {
-    private static final Map<Direction,VoxelShape> SHAPES=new EnumMap<>(Direction.class);
-    static { for(var facing:Direction.Plane.HORIZONTAL)SHAPES.put(facing,new Edges(facing)); }
-    public static VoxelShape shape(Direction facing){return SHAPES.get(facing);}
+    private static final Map<AncientAnvilDesign,Map<Direction,VoxelShape>> SHAPES=new EnumMap<>(AncientAnvilDesign.class);
+    static {for(var design:AncientAnvilDesign.values()){var facings=new EnumMap<Direction,VoxelShape>(Direction.class);for(var facing:Direction.Plane.HORIZONTAL)facings.put(facing,new Edges(design,facing));SHAPES.put(design,facings);}}
+    public static VoxelShape shape(Direction facing){return shape(AncientAnvilDesign.BASE,facing);}
+    public static VoxelShape shape(AncientAnvilDesign design,Direction facing){return SHAPES.get(design).get(facing);}
 
     public static void extract(ExtractBlockOutlineRenderStateEvent event){
         var level=event.getLevel();var state=event.getBlockState();var at=event.getBlockPos();
@@ -25,7 +26,7 @@ public final class AncientAnvilOutline {
         if(!owner.is(AncientAnvilContent.ANVIL.get())||!owner.getValue(AncientAnvilBlock.LARGE)||!owner.getValue(AncientAnvilBlock.MONUMENTAL))return;
         var facing=owner.getValue(AncientAnvilBlock.FACING);
         for(var cell:AncientAnvilStructure.CELLS)if(cell.index()!=0&&!AncientAnvilStructure.belongs(level,cell.at(core,facing),core,facing,cell.index()))return;
-        var position=core.immutable();var outline=shape(facing);boolean contrast=event.isHighContrast();
+        var position=core.immutable();var outline=shape(owner.getValue(AncientAnvilBlock.DESIGN),facing);boolean contrast=event.isHighContrast();
         // Extract immutable data here. Rendering never captures or reads the level.
         event.addCustomRenderer((renderState,collector,poses,levelState)->{
             var camera=levelState.cameraRenderState.pos;
@@ -41,10 +42,10 @@ public final class AncientAnvilOutline {
     private static final class Edges extends VoxelShape {
         private final List<double[]> lines;
         private final DoubleList[] coordinates=new DoubleList[3];
-        Edges(Direction facing){
+        Edges(AncientAnvilDesign design,Direction facing){
             super(solid());var edges=new ArrayList<double[]>();
-            AncientAnvilGeometry.outlineBody(facing).forAllEdges((x,y,z,X,Y,Z)->edges.add(new double[]{x,y,z,X,Y,Z}));
-            for(var edge:AncientAnvilGeometry.noseEdges(facing))edges.add(edge.clone());
+            AncientAnvilGeometry.outlineBody(design,facing).forAllEdges((x,y,z,X,Y,Z)->edges.add(new double[]{x,y,z,X,Y,Z}));
+            for(var edge:AncientAnvilGeometry.noseEdges(design,facing))edges.add(edge.clone());
             lines=List.copyOf(edges);
             for(int axis=0;axis<3;axis++){
                 double lo=Double.POSITIVE_INFINITY,hi=Double.NEGATIVE_INFINITY;

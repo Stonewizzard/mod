@@ -49,7 +49,8 @@ Never put a large render mesh through
 unowned blocks. Generate its meshes and per-cell collision together. Test all four
 orientations, occupied space, old-world fallback, harvesting any part, and exactly one
 item drop. Do not overwrite neighboring containers or foundation blocks.
-The tapered nose is a closed static OBJ baked inside the upper front owned cell.
+The tapered nose is a closed static OBJ. Creative design samples also extend
+into the already-owned upper center cell, claimed before the horn cell appears.
 Its mesh, conservative collision and visible edges share `tools/anvil_horn.py`.
 Validate mesh ownership, outward winding, closed faces, native UVs and the thin
 tip. Selection outlines use actual mesh edges, not conservative collision strips.

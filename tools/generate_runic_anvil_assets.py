@@ -30,6 +30,17 @@ def exports():
                 tile.putdata([colours[rows[y][(x+frame)%size[0]]] for y in range(size[1]) for x in range(size[0])])
                 image.paste(tile,(0,frame*size[1]))
         yield name,image
+        if source in ('horn','edge','metal'):
+            horizontal=source=='metal'
+            long=Image.new('RGB',(32,16) if horizontal else (16,32))
+            long.paste(image,(0,0));long.paste(image,(16,0) if horizontal else (0,16))
+            yield name+'_long',long
+        if source=='ember':
+            falling=Image.new('RGB',(16,16*16))
+            for frame in range(16):
+                tile=Image.new('RGB',(16,16));tile.putdata([colours[rows[(y-frame)%16][x]] for y in range(16) for x in range(16)])
+                falling.paste(tile,(0,frame*16))
+            yield 'runic_anvil_fall',falling
         if glow:
             # A slow native texture animation breathes gently, without block
             # ticks, particle spam or changing the sharp binary-alpha silhouette.
@@ -42,6 +53,7 @@ def exports():
 def metadata():
     for name,size in [('runic_anvil_top_glow',48),('runic_anvil_panel_glow',16),('runic_anvil_ember',16)]:
         yield name,{'animation':{'width':size,'height':size,'frametime':8,'frames':[0,1,2,3,4,3,2,1],'interpolate':True}}
+    yield 'runic_anvil_fall',{'animation':{'width':16,'height':16,'frametime':3,'frames':list(range(16)),'interpolate':True}}
 
 if __name__=='__main__':
     output=ROOT/'src/main/resources/assets/examplemod/textures/block'

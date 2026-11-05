@@ -35,3 +35,7 @@ horn tip, including negative controls for an open mesh, displaced vertex and blu
 tip. Gameplay checks exercise 72 harvesting paths, migration and obstruction.
 Native Minecraft captures include the original offending angle, side profile,
 rear, day/night, four block orientations, the item and foundation guide.
+
+See [the design comparison](anvil-design-options.md) for the three Creative samples,
+longer horns, narrower-waist alternatives and four corner lava falls. The baseline
+model and recipes are retained while a visual direction is selected.

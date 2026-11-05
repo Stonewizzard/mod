@@ -16,10 +16,11 @@ def obj_mesh(path):
   elif words[0]=='f':faces.append(tuple(int(v.split('/')[0])-1 for v in words[1:]))
  return vertices,uvs,faces
 
-def validate_horn_mesh(vertices,uvs,faces,preview=False):
+def validate_horn_mesh(vertices,uvs,faces,preview=False,design='base'):
  errors=[]
  if not vertices or not faces:return ['missing tapered horn mesh']
- if any(v<0 or v>1 for p in vertices for v in p):errors.append('horn escapes its owned block or item envelope')
+ limits=(1,1,1 if preview or design=='base' else 1.25)
+ if any(v<0 or v>limits[i]+1e-8 for p in vertices for i,v in enumerate(p)):errors.append('horn escapes its owned cells or item envelope')
  if any(v<0 or v>1 for p in uvs for v in p):errors.append('horn UV escapes its native tile')
  edges=Counter();directed=Counter();volume=0
  for face in faces:
@@ -31,7 +32,8 @@ def validate_horn_mesh(vertices,uvs,faces,preview=False):
  if volume<=0:errors.append('horn faces point inward')
  if not preview:
   front=min(p[2] for p in vertices);tip=[p for p in vertices if abs(p[2]-front)<1e-7]
-  if (max(p[0] for p in tip)-min(p[0] for p in tip))*16>3.25 or (max(p[1] for p in tip)-min(p[1] for p in tip))*16>1.3:errors.append('horn has a blunt full-height tip')
+  width={'base':3.25,'foundry':4.25,'spillway':8.25,'columns':6.25}[design]
+  if (max(p[0] for p in tip)-min(p[0] for p in tip))*16>width or (max(p[1] for p in tip)-min(p[1] for p in tip))*16>(1.3 if design=='base' else 2):errors.append('horn has a blunt full-height tip')
  return errors
 
 def validate_image(im,rule):
@@ -69,24 +71,27 @@ def main():
  for p in (ASSETS/'textures/item').glob('*.png'):
   if p.stem not in manifest:fail.append(p.name+': classify new generic item in the manifest')
  layout=json.loads((ASSETS/"anvil_layout.json").read_text())["cells"]
- for i in range(len(layout)):
-  model=json.loads((ASSETS/'models/block'/f'ancient_anvil_cell_{i}.json').read_text())
-  body=model.get('children',{}).get('body',model)
-  for e in body['elements']:
-   if 'rotation' not in e:
-    if any(v<0 or v>16 for k in ['from','to'] for v in e[k]):fail.append(f'anvil cell{i}: geometry escapes its owned block')
-   else:
-    # The single faceted horn spans two ACTUALLY owned cells. Validate its real
-    # rotated corners against that eighteen-cell volume, not its unrotated input box.
-    r=e['rotation'];oxCell,oy,oz=[layout[i][k] for k in ('x','y','z')]
-    if r['axis']!='y' or r.get('rescale') or r['angle']!=45:fail.append(f'anvil cell{i}: unsupported unverified rotation');continue
-    ox,_,oZ=r['origin'];c=math.cos(math.radians(r['angle']));s=math.sin(math.radians(r['angle']))
-    for x,y,z in itertools.product(*zip(e['from'],e['to'])):
-     X=ox+(x-ox)*c+(z-oZ)*s+oxCell*16;Z=oZ-(x-ox)*s+(z-oZ)*c+oz*16;Y=y+oy*16
-     if not (-16<=X<=32 and 0<=Y<=32 and -16<=Z<=32):fail.append(f'anvil cell{i}: rotated geometry escapes the owned assembly')
- for preview in (False,True):
-  path=ASSETS/'models/block'/('ancient_anvil_horn'+('_item' if preview else '')+'.obj')
-  fail += [path.name+': '+error for error in validate_horn_mesh(*obj_mesh(path),preview)]
+ designs=json.loads((ASSETS/'anvil_designs.json').read_text())['designs']
+ for config in designs:
+  for i in range(len(layout)):
+   model=json.loads((ASSETS/'models/block'/f'{config["prefix"]}_cell_{i}.json').read_text())
+   body=model.get('children',{}).get('body',model)
+   for e in body['elements']:
+    if 'rotation' not in e:
+     if any(v<0 or v>16 for k in ['from','to'] for v in e[k]):fail.append(f'anvil cell{i}: geometry escapes its owned block')
+    else:
+     # The single faceted horn spans two ACTUALLY owned cells. Validate its real
+     # rotated corners against that eighteen-cell volume, not its unrotated input box.
+     r=e['rotation'];oxCell,oy,oz=[layout[i][k] for k in ('x','y','z')]
+     if r['axis']!='y' or r.get('rescale') or r['angle']!=45:fail.append(f'anvil cell{i}: unsupported unverified rotation');continue
+     ox,_,oZ=r['origin'];c=math.cos(math.radians(r['angle']));s=math.sin(math.radians(r['angle']))
+     for x,y,z in itertools.product(*zip(e['from'],e['to'])):
+      X=ox+(x-ox)*c+(z-oZ)*s+oxCell*16;Z=oZ-(x-ox)*s+(z-oZ)*c+oz*16;Y=y+oy*16
+      if not (-16<=X<=32 and 0<=Y<=32 and -16<=Z<=32):fail.append(f'anvil cell{i}: rotated geometry escapes the owned assembly')
+  for preview in (False,True):
+   suffix='' if config['id']=='base' else '_'+config['id']
+   path=ASSETS/'models/block'/('ancient_anvil_horn'+suffix+('_item' if preview else '')+'.obj')
+   fail += [path.name+': '+error for error in validate_horn_mesh(*obj_mesh(path),preview,config['id'])]
  if fail:raise SystemExit('\n'.join(fail))
  print(f'PASS: {len(manifest)} sprites: alpha, visual size, margins, pinholes, flecks, model wiring; eighteen owned anvil cells.')
 if __name__=='__main__':main()
