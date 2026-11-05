@@ -64,6 +64,15 @@ def capture(name):
     process('import','-window',WINDOW or 'root','-depth','8',str(path))
     (CAPTURES/(name+'.json')).write_text(json.dumps(observe(),indent=2));log('screenshot '+name)
 
+def native_chat_command(value):
+    # Wait for the native chat screen before typing. Sending slash and text in
+    # the same frame can lose the slash and turn "time" into an ordinary chat.
+    expect(screen='InGame');time.sleep(.2)
+    process('xdotool','key','t');expect(screen='ChatScreen');time.sleep(.2)
+    process('xdotool','key','ctrl+a')
+    process('xdotool','type','--clearmodifiers','--delay','45','/'+value)
+    process('xdotool','key','Return');expect(screen='InGame');time.sleep(1.4)
+
 def expect(**fields):
     return wait_for(lambda s:all(s.get(k)==v for k,v in fields.items()),str(fields))
 
@@ -243,9 +252,9 @@ def run():
         command('assets_anvil_view',facing=facing);expect(assetsLarge=True,assetsCells=18,assetsFacing=facing);capture('large-anvil-'+facing.lower())
     command('assets_anvil_detail');capture('ancient-anvil-workface-detail')
     process('xdotool','key','F1');capture('ancient-anvil-clean');process('xdotool','key','F1')
-    process('xdotool','key','slash');process('xdotool','type','--clearmodifiers','--delay','45','time set midnight');process('xdotool','key','Return');time.sleep(1.4)
+    native_chat_command('time set midnight')
     process('xdotool','key','F1');capture('runic-anvil-night');process('xdotool','key','F1')
-    process('xdotool','key','slash');process('xdotool','type','--clearmodifiers','--delay','45','time set day');process('xdotool','key','Return');time.sleep(.6)
+    native_chat_command('time set day')
     process('xdotool','key','7');capture('assets-anvil-held')
     print('ASSET_NATIVE_PASS: vanilla ingot comparison, main/offhand cutouts, dropped ingot, original artifact identity, vanilla material tiling and eighteen owned anvil cells in all four orientations',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
