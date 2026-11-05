@@ -1,36 +1,34 @@
-# Warm ruined workshop art
+# Runic smithing centerpiece
 
-The forge keeps its coarse native Minecraft texture layout and full silhouette.
-Its palette is umber masonry, warm charcoal, aged brown bronze and pale ash.
-The fireplace interaction, process, chimney, preview guide and item sprites remain
-as before. No return to the old noisy 32px masonry.
+The Ancient Anvil is a broad, grounded centerpiece for a future surrounding rune
+structure. Its design reference is [the concept sheet](images/runic-anvil-concept.jpg).
+The actual block model uses native pixel materials, not the concept painting.
 
-The Ancient Anvil keeps the warm pedestal, bronze collar and small maker seals.
-Its redesigned upper assembly has a shorter, thicker striking head and one
-faceted nose set below the face. The old thin cap and repeated little plates
-along the horn are gone. A square hardie hole sits near the heel. A restrained
-bronze forge mark is worked into the steel face.
+The 3x3 plinth has four hollow bronze connection sockets and inset amber circuits.
+A substantial armored head, pointed bronze-bound horn and raised square heel sit
+on broad shoulders. The forging surface has an inset octagonal seal, sixteen
+short glyphs and a central forge sigil. Four large bronze-framed rune plaques
+face outward. Selected rune pixels emit light; the working metal stays shaded.
 
-The indexed 16x48 top skin uses fine native anvil-top clusters, a dark chamfered rim
-and the existing steel/bronze palette. It covers three blocks at 16 texels per
-block; global UVs keep its pixel scale and pattern continuous between cells.
-It is not stretched across the head. Item previews retain the world face UVs.
+Geometry, clipped physical collision, item preview and the true-edge assembled
+outline share `tools/runic_anvil_geometry.py`. Material palettes and indexed
+sources live in `tools/asset_sources/runic-anvil`; their compiler participates in
+`generate_workshop_materials.py --check`. The 48x48 top maps one texel to one
+Minecraft model pixel over three blocks. There is no filtered or photographic
+texture, random noise or independently stretched glyph wallpaper.
 
-The same six owned cells and tier-zero/tier-one foundation remain. The head mesh
-and collision are generated together by `tools/generate_ancient_anvil.py`.
-The safe compact fallback remains available in cramped saved worlds. The nose is
-one native 45-degree element spanning two owned upper cells. Its collision is
-derived from that rotated square in clipped, conservative native-pixel strips;
-none escapes its own cell. Asset checks validate the actual rotated corners
-against the full six-cell owned volume.
+The broader model reserves eighteen real cells (3x3x2). The original indices
+0..5 remain stable. Old saved cores and parts default to `monumental=false` and
+use frozen six-cell models/geometry until the full footprint is clear of blocks,
+containers and living entities. Expansion claims the outer cells before switching
+central models. Blocked legacy anvils keep their old footprint and inventories;
+no neighboring block is overwritten. Clearing the room permits automatic upgrade.
 
-Selection rendering uses the assembled metal silhouette and the nose's actual
-diagonal edges through Minecraft's native outline submission. It does not outline
-collision strips or the borders between owned cells. Physical collision/picking
-remain bounded to their individual cells. High-contrast outlines are supported.
+The Tier 0/Tier 1 rules, centered 3x3 metal foundation, recipes and one-item recovery
+remain. Breaking any of the eighteen cells recovers one anvil. Selection uses the
+assembled silhouette and actual horn edges, not per-cell collision stair steps.
+The foundation guide includes raised wire markers so its target locations remain
+visible around the wider plinth. The approved brown forge artwork is unchanged.
 
-Material sources/palettes live in `tools/asset_sources/workshop-materials` and
-`tools/generate_workshop_materials.py`; `--check` verifies their exports in CI.
-Native review captures include all four facings, the workface close-up, held item
-and an extra F1 view through real OS input for unobstructed artwork inspection.
-Both normal and F1 captures are saved; screenshots do not replace gameplay tests.
+Native review captures include day/night views, the rune seal, all four facings,
+held item, foundation guide, and real OS-driven placement and interactions.

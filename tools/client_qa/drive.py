@@ -232,7 +232,7 @@ def run():
     command('forge_generated_view');time.sleep(1);capture('forge-world-ruin')
     print('ANCIENT_FORGE_NATIVE_PASS: in-world metallurgy, legacy storage recovery, frame interruption, repair, saved output and fireplace display',flush=True)
     # Compare against real vanilla assets and inspect all owned-cell orientations.
-    command('assets_scene');expect(assetsLarge=True,assetsCells=6,assetsFacing='NORTH')
+    command('assets_scene');expect(assetsLarge=True,assetsCells=18,assetsFacing='NORTH')
     process('xdotool','key','3');capture('assets-ingot-held')
     process('xdotool','key','4');capture('assets-scrap-held')
     process('xdotool','key','5');capture('assets-artifact-held')
@@ -240,11 +240,14 @@ def run():
     command('assets_right_hand');process('xdotool','key','3');time.sleep(.4);process('xdotool','key','q');expect(assetsIngotDropped=True);time.sleep(1);command('assets_drop_view');capture('assets-ingot-dropped')
     process('xdotool','key','9')
     for facing in ['NORTH','EAST','SOUTH','WEST']:
-        command('assets_anvil_view',facing=facing);expect(assetsLarge=True,assetsCells=6,assetsFacing=facing);capture('large-anvil-'+facing.lower())
+        command('assets_anvil_view',facing=facing);expect(assetsLarge=True,assetsCells=18,assetsFacing=facing);capture('large-anvil-'+facing.lower())
     command('assets_anvil_detail');capture('ancient-anvil-workface-detail')
     process('xdotool','key','F1');capture('ancient-anvil-clean');process('xdotool','key','F1')
+    process('xdotool','key','slash');process('xdotool','type','--clearmodifiers','--delay','45','time set midnight');process('xdotool','key','Return');time.sleep(1.4)
+    process('xdotool','key','F1');capture('runic-anvil-night');process('xdotool','key','F1')
+    process('xdotool','key','slash');process('xdotool','type','--clearmodifiers','--delay','45','time set day');process('xdotool','key','Return');time.sleep(.6)
     process('xdotool','key','7');capture('assets-anvil-held')
-    print('ASSET_NATIVE_PASS: vanilla ingot comparison, main/offhand cutouts, dropped ingot, original artifact identity, vanilla material tiling and six owned anvil cells in all four orientations',flush=True)
+    print('ASSET_NATIVE_PASS: vanilla ingot comparison, main/offhand cutouts, dropped ingot, original artifact identity, vanilla material tiling and eighteen owned anvil cells in all four orientations',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
     print('CLIENT_VISUAL_QA_PASS: Workshop Manual item, illustrated browsing and OS input task paths',flush=True)
 

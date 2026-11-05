@@ -7,6 +7,7 @@ Run with --check in CI to catch stale material exports.
 from pathlib import Path
 import argparse
 import io
+import json
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,6 +45,8 @@ def exports():
     result = Image.new('RGB', (16,48))
     result.putdata([colours[int(c)] for row in rows for c in row])
     yield 'anvil_workface', result
+    from generate_runic_anvil_assets import exports as runic_exports
+    yield from runic_exports()
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -57,7 +60,13 @@ def main():
         if args.check:
             if not path.exists() or path.read_bytes() != buffer.getvalue(): stale.append(name)
         else: path.write_bytes(buffer.getvalue())
+    from generate_runic_anvil_assets import metadata
+    for name,value in metadata():
+        path=OUTPUT/(name+'.png.mcmeta');data=(json.dumps(value,indent=2)+'\n').encode()
+        if args.check:
+            if not path.exists() or path.read_bytes()!=data:stale.append(name+' metadata')
+        else:path.write_bytes(data)
     if stale: raise SystemExit('Stale workshop materials: ' + ', '.join(stale))
-    print('PASS: six 16px palette-swap materials and one continuous 16x48 anvil workface; 16 texels per block.')
+    print('PASS: approved workshop materials, legacy anvil skin and native-grid runic centerpiece exports.')
 
 if __name__ == '__main__': main()

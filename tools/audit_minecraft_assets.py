@@ -39,20 +39,21 @@ def main():
     if not path.exists():fail.append(name+': missing item model')
  for p in (ASSETS/'textures/item').glob('*.png'):
   if p.stem not in manifest:fail.append(p.name+': classify new generic item in the manifest')
- for i in range(6):
+ layout=json.loads((ASSETS/"anvil_layout.json").read_text())["cells"]
+ for i in range(len(layout)):
   model=json.loads((ASSETS/'models/block'/f'ancient_anvil_cell_{i}.json').read_text())
   for e in model['elements']:
    if 'rotation' not in e:
     if any(v<0 or v>16 for k in ['from','to'] for v in e[k]):fail.append(f'anvil cell{i}: geometry escapes its owned block')
    else:
     # The single faceted horn spans two ACTUALLY owned cells. Validate its real
-    # rotated corners against that six-cell volume, not its unrotated input box.
-    r=e['rotation'];oy,oz=[(0,0),(0,-1),(0,1),(1,-1),(1,0),(1,1)][i]
+    # rotated corners against that eighteen-cell volume, not its unrotated input box.
+    r=e['rotation'];oxCell,oy,oz=[layout[i][k] for k in ('x','y','z')]
     if r['axis']!='y' or r.get('rescale') or r['angle']!=45:fail.append(f'anvil cell{i}: unsupported unverified rotation');continue
     ox,_,oZ=r['origin'];c=math.cos(math.radians(r['angle']));s=math.sin(math.radians(r['angle']))
     for x,y,z in itertools.product(*zip(e['from'],e['to'])):
-     X=ox+(x-ox)*c+(z-oZ)*s;Z=oZ-(x-ox)*s+(z-oZ)*c+oz*16;Y=y+oy*16
-     if not (0<=X<=16 and 0<=Y<=32 and -16<=Z<=32):fail.append(f'anvil cell{i}: rotated geometry escapes the owned assembly')
+     X=ox+(x-ox)*c+(z-oZ)*s+oxCell*16;Z=oZ-(x-ox)*s+(z-oZ)*c+oz*16;Y=y+oy*16
+     if not (-16<=X<=32 and 0<=Y<=32 and -16<=Z<=32):fail.append(f'anvil cell{i}: rotated geometry escapes the owned assembly')
  if fail:raise SystemExit('\n'.join(fail))
- print(f'PASS: {len(manifest)} sprites: alpha, visual size, margins, pinholes, flecks, model wiring; six owned anvil cells.')
+ print(f'PASS: {len(manifest)} sprites: alpha, visual size, margins, pinholes, flecks, model wiring; eighteen owned anvil cells.')
 if __name__=='__main__':main()

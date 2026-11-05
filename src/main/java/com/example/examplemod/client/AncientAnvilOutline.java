@@ -22,7 +22,7 @@ public final class AncientAnvilOutline {
         else if(state.is(AncientAnvilContent.PART.get()))core=AncientAnvilPartBlock.core(at,state);
         else return;
         var owner=level.getBlockState(core);
-        if(!owner.is(AncientAnvilContent.ANVIL.get())||!owner.getValue(AncientAnvilBlock.LARGE))return;
+        if(!owner.is(AncientAnvilContent.ANVIL.get())||!owner.getValue(AncientAnvilBlock.LARGE)||!owner.getValue(AncientAnvilBlock.MONUMENTAL))return;
         var facing=owner.getValue(AncientAnvilBlock.FACING);
         for(var cell:AncientAnvilStructure.CELLS)if(cell.index()!=0&&!AncientAnvilStructure.belongs(level,cell.at(core,facing),core,facing,cell.index()))return;
         var position=core.immutable();var outline=shape(facing);boolean contrast=event.isHighContrast();
@@ -31,7 +31,7 @@ public final class AncientAnvilOutline {
             var camera=levelState.cameraRenderState.pos;
             poses.pushPose();poses.translate(position.getX()-camera.x,position.getY()-camera.y,position.getZ()-camera.z);
             if(contrast)collector.submitShapeOutline(poses,outline,RenderTypes.lines(),0xFF000000,5f,false);
-            collector.submitShapeOutline(poses,outline,RenderTypes.lines(),contrast?0xFFFFFFFF:0x66000000,contrast?3f:2.5f,false);
+            collector.submitShapeOutline(poses,outline,RenderTypes.lines(),contrast?0xFFFFFFFF:0x66000000,contrast?3f:1.5f,false);
             poses.popPose();return true;
         });
     }
