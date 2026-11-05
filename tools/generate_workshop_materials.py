@@ -21,7 +21,8 @@ MATERIALS = {
     'anvil_iron': ('anvil', ['342e28','3d362e','463e34','50473c','5a5144','655c4e','716855']),
     'anvil_workface_edge': ('anvil', ['41423e','4d4f49','5a5c55','676b62','767b70','878c80','9a9f91']),
 }
-WORKFACE_PALETTE = ['41423e','4d4f49','5a5c55','676b62','767b70','878c80','9a9f91']
+# Keep the established steel, with the same muted bronze already used on the base.
+WORKFACE_PALETTE = ['41423e','4d4f49','5a5c55','676b62','767b70','878c80','9a9f91','795a34','ad874c']
 
 def exports():
     for name, (source, palette) in MATERIALS.items():
@@ -39,7 +40,7 @@ def exports():
     rows = [r for r in (SOURCE/'anvil-workface.pixels').read_text().splitlines() if r and not r.startswith('#')]
     assert len(rows) == 48 and all(len(r) == 16 for r in rows), 'workface must be 16x48 native pixels'
     colours = [tuple(bytes.fromhex(c)) for c in WORKFACE_PALETTE]
-    assert all(c in '0123456' for row in rows for c in row), 'unknown workface colour'
+    assert all(c in '012345678' for row in rows for c in row), 'unknown workface colour'
     result = Image.new('RGB', (16,48))
     result.putdata([colours[int(c)] for row in rows for c in row])
     yield 'anvil_workface', result

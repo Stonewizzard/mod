@@ -10,10 +10,11 @@ seams and texture coordinates. The forge uses brown masonry, warm charcoal and
 aged bronze; the anvil body uses warm iron. No resampling or procedural noise.
 
 `anvil-workface.pixels` is a separately authored indexed source for the top. It
-uses the approved seven steel colours, sharp one-pixel edges and small grouped
-wear marks. Its 16x48 atlas covers three blocks at **16 texels per block**, with
-continuous UVs across the owned cells. It is not stretched over the head. The
-old mottled material remains only on the narrow workface sides.
+uses the established steel colours and two existing bronze shades for its small
+forge mark. Fine clusters reference Minecraft's `anvil_top`, with a darker rim
+around the thick striking face and descending horn. The 16x48 atlas covers three
+blocks at **16 texels per block**, with continuous UVs across the owned cells.
+The narrow workface sides retain the prior material.
 
 The user approved the coarse material pattern in PR #51 and requested the earlier
 brown palette. Do not restore the old 32px noise textures or repaint item sprites.

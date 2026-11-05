@@ -3,27 +3,26 @@ from pathlib import Path
 import json
 ROOT=Path(__file__).resolve().parents[1];RES=ROOT/'src/main/resources';ASSETS=RES/'assets/examplemod';DATA=RES/'data/examplemod'
 def j(p,v):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n')
-# Broad shoulders, an inset workface and a long horn span 3 x 1 x 2 owned cells.
-# All bevels are whole native pixels; silhouettes/collision come from the same boxes.
+# A solid forged head with a descending horn spans 3 x 1 x 2 owned cells.
+# Keep the existing pedestal. Head silhouettes/collision share the same boxes.
 boxes=[
  ([1,0,-3],[15,3,23],'foot'),([2,3,-2],[14,4,22],'metal'),
  ([3,4,0],[13,5,20],'trim'),([3,5,1],[13,7,20],'metal'),
  ([4,7,4],[12,17,18],'metal'),([3,15,3],[13,18,22],'metal'),
- ([2,18,0],[14,20,27],'metal'),([1,20,-4],[15,22,29],'metal'),
- # The head has a lower bevel, heavy cheeks and a distinct polished working plate.
- ([1,22,-3],[15,24,30],'metal'),
- ([1,24,-3],[15,25,22],'metal'),([1,24,25],[15,25,30],'metal'),
- ([1,24,22],[9,25,25],'metal'),([12,24,22],[15,25,25],'metal'),
- # Four plates surround a real recessed hardie/tool hole in the heel.
- ([2,25,-2],[14,27,22],'face'),([2,25,25],[14,27,29],'face'),
- ([2,25,22],[9,27,25],'face'),([12,25,22],[14,27,25],'face'),
- ([9,24,22],[12,24.5,25],'foot'),
- # Broad horn root tapers gradually; the workface joins it at the same height.
- ([3,21,-7],[13,26,-3],'metal'),([4,22,-10],[12,26,-7],'metal'),
- ([5,23,-12],[11,26,-10],'metal'),([6,24,-14],[10,26,-12],'metal'),
- ([7,25,-16],[9,26,-14],'metal'),
- ([4,26,-6],[12,27,-2],'face'),([5,26,-9],[11,27,-6],'face'),
- ([6,26,-11],[10,27,-9],'face'),([7,26,-13],[9,27,-11],'face')
+ ([3,18,1],[13,21,24],'metal'),([2,21,0],[14,23,27],'metal'),
+ # One thick head, without the separate terraced cap/teeth on the old horn.
+ ([1,23,-1],[15,25,28],'metal'),
+ ([1,25,-1],[15,26,21],'metal'),([1,25,24],[15,26,28],'metal'),
+ ([1,25,21],[9,26,24],'metal'),([12,25,21],[15,26,24],'metal'),
+ # The flat striking face is set into a dark chamfered rim. The heel has one
+ # recessed square hardie hole, kept clear through both cap and cheek layers.
+ ([2,26,0],[14,28,21],'face'),([2,26,24],[14,28,27],'face'),
+ ([2,26,21],[9,28,24],'face'),([12,26,21],[14,28,24],'face'),
+ ([9,25,21],[12,25.5,24],'foot'),
+ # The nose is a solid taper falling away from the striking face, like an anvil,
+ # rather than a row of little plates continuing its flat surface.
+ ([3,23,-4],[13,27,0],'horn'),([4,23,-7],[12,26,-4],'horn'),
+ ([5,23,-10],[11,25,-7],'horn'),([7,23,-12],[9,24,-10],'horn')
 ]
 # Recessed maker's seals on both cheeks of the waist. A bronze stepped ring and
 # split chevron are geometry, never repeated rune wallpaper stretched onto a face.
@@ -39,8 +38,8 @@ cells=[(0,0),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
 def element(box,cell_z=0):
  a,B,t=box;x,y,z=a;X,Y,Z=B
  uv={'north':[16-X,16-Y,16-x,16-y],'south':[x,16-Y,X,16-y],'west':[z,16-Y,Z,16-y],'east':[16-Z,16-Y,16-z,16-y],'up':[x,z,X,Z],'down':[x,16-Z,X,16-z]}
- faces={f:{'texture':'#'+t,'uv':v} for f,v in uv.items()}
- if t=='face':
+ faces={f:{'texture':'#'+('metal' if t=='horn' else t),'uv':v} for f,v in uv.items()}
+ if t in ('face','horn'):
   # A continuous 16x48 top: U stays 1:1; V spans 48 native pixels in 16 UV units.
   # Keep the global Z coordinate across owned-cell splits, including the horn.
   faces['up']={'texture':'#workface','uv':[x,(z+cell_z*16+16)/3,X,(Z+cell_z*16+16)/3]}
