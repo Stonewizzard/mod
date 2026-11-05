@@ -34,6 +34,7 @@ public class ExampleModClient {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ForgePreview::tick);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.AncientAnvilPreview::click);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.AncientAnvilPreview::tick);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.AncientAnvilOutline::extract);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::tooltip);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::scroll);
         // Allows NeoForge to create a config screen for this mod's configs.
@@ -75,10 +76,6 @@ public class ExampleModClient {
     static void checkSculkRendering(net.neoforged.neoforge.data.event.GatherDataEvent.Client event) {
         if (Boolean.getBoolean("examplemod.sculkRenderCheck")) {
             try {
-                for(var method:net.minecraft.client.renderer.SubmitNodeCollector.class.getMethods()){
-                    System.out.println("OUTLINE_API "+method);
-                    if(method.getName().equals("order"))for(var ordered:method.getReturnType().getMethods())System.out.println("OUTLINE_ORDERED_API "+ordered);
-                }
                 com.example.examplemod.client.FieldGuideVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.ComponentStationVisualRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));
                 com.example.examplemod.client.PickaxeTooltipRegression.run(event.getResourceManager(net.minecraft.server.packs.PackType.CLIENT_RESOURCES));

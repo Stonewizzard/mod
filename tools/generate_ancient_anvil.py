@@ -20,6 +20,9 @@ boxes=[
  ([2,26,21],[9,28,24],'face'),([12,26,21],[14,28,24],'face'),
  ([9,25,21],[12,25.5,24],'foot'),
 ]
+# Selection follows the substantial metal silhouette, without tiny decorative
+# seal edges or the per-cell splits used by collision and block ownership.
+outline_boxes=list(boxes)
 # Recessed maker's seals on both cheeks of the waist. A bronze stepped ring and
 # split chevron are geometry, never repeated rune wallpaper stretched onto a face.
 for x,X in ((3.5,4),(12,12.5)):
@@ -112,7 +115,20 @@ j(DATA/'tags/item/ancient_alloy_scrap.json',{'replace':False,'values':['examplem
 p=RES/'data/minecraft/tags/block/mineable/pickaxe.json';d=json.loads(p.read_text());d['values']=list(dict.fromkeys(d['values']+['examplemod:ancient_anvil','examplemod:ancient_metal_block']));j(p,d)
 java=['package com.example.examplemod;','import net.minecraft.core.Direction;','import net.minecraft.world.phys.shapes.VoxelShape;','/** Generated with six owned cell models by tools/generate_ancient_anvil.py. */','public final class AncientAnvilGeometry {']
 def shape(mesh):return 'WorkshopShapes.rotations(new double[][]{'+','.join('{'+','.join(str(n) for n in a+B)+'}' for a,B,t in mesh)+'})'
-java+=['    private static final java.util.Map<Direction,VoxelShape> COMPACT='+shape(compact)+';','    private static final java.util.List<java.util.Map<Direction,VoxelShape>> CELLS=java.util.List.of('+','.join(shape(mesh) for mesh in collision_meshes)+');','    public static VoxelShape shape(Direction facing){return COMPACT.get(facing);}','    public static VoxelShape cell(int cell,Direction facing){return CELLS.get(cell).get(facing);}','    private AncientAnvilGeometry(){}','}']
+java+=['    private static final java.util.Map<Direction,VoxelShape> COMPACT='+shape(compact)+';','    private static final java.util.List<java.util.Map<Direction,VoxelShape>> CELLS=java.util.List.of('+','.join(shape(mesh) for mesh in collision_meshes)+');','    private static final java.util.Map<Direction,VoxelShape> OUTLINE= '+shape(outline_boxes).replace('WorkshopShapes.rotations','WorkshopShapes.wholeRotations')+';','    public static VoxelShape shape(Direction facing){return COMPACT.get(facing);}','    public static VoxelShape cell(int cell,Direction facing){return CELLS.get(cell).get(facing);}','    public static VoxelShape outlineBody(Direction facing){return OUTLINE.get(facing);}']
+# Actual nose edges, derived from the render element rather than the collision
+# strips. The client submits these through Minecraft's ordinary outline pipeline.
+vertices=[]
+for i in range(8):
+ x=horn['to' if i&1 else 'from'][0];y=horn['to' if i&2 else 'from'][1]+16;z=horn['to' if i&4 else 'from'][2]
+ c=math.sqrt(.5);vertices.append((8+(x-8)*c+z*c,y,-(x-8)*c+z*c))
+edges=[(vertices[i],vertices[i^(1<<axis)]) for i in range(8) for axis in range(3) if not i&(1<<axis)]
+def rotated_point(p,turn):
+ x,y,z=p
+ for _ in range(turn):x,z=16-z,x
+ return [v/16 for v in (x,y,z)]
+java.append('    private static final java.util.List<double[][]> NOSE_EDGES=java.util.List.of('+','.join('new double[][]{'+','.join('{'+','.join(str(v) for p in edge for v in rotated_point(p,turn))+'}' for edge in edges)+'}' for turn in range(4))+');')
+java+=['    public static double[][] noseEdges(Direction facing){return NOSE_EDGES.get(switch(facing){case EAST->1;case SOUTH->2;case WEST->3;default->0;});}','    private AncientAnvilGeometry(){}','}']
 (ROOT/'src/main/java/com/example/examplemod/AncientAnvilGeometry.java').write_text('\n'.join(java)+'\n')
 p=RES/'data/minecraft/tags/block/mineable/pickaxe.json';d=json.loads(p.read_text());d['values']=list(dict.fromkeys(d['values']+['examplemod:ancient_anvil_part']));j(p,d)
 print('Authored Ancient Anvil model/collision, metal foundation tag, scrap input tag and five crafting recipes.')

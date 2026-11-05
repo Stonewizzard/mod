@@ -35,7 +35,12 @@ public final class AncientAnvilVisualRegression {
                     throw new IllegalStateException("Stretched or discontinuous workface texels in cell "+cell);
             }
         }
-        System.out.println("ANCIENT_ANVIL_VISUAL_CHECK: PASS: continuous workface at 16 texels per block, native-resolution edge materials, six owned bounded explicit-UV cells, transparent ingot/scrap margins");
+        for(var facing:net.minecraft.core.Direction.Plane.HORIZONTAL){
+            int[] diagonal={0};var outline=AncientAnvilOutline.shape(facing);
+            outline.forAllEdges((x,y,z,X,Y,Z)->{if(Math.abs(X-x)>.01&&Math.abs(Z-z)>.01)diagonal[0]++;});
+            if(diagonal[0]!=8||outline.bounds().maxY<1.7)throw new IllegalStateException("Anvil outline lost its true nose diagonals or striking face");
+        }
+        System.out.println("ANCIENT_ANVIL_VISUAL_CHECK: PASS: continuous workface at 16 texels per block, true-diagonal whole-assembly outlines in all four facings, native-resolution edge materials, six owned bounded explicit-UV cells, transparent ingot/scrap margins");
     }
     private static void ownedGeometry(JsonObject e,int cell){
         if(!e.has("rotation")){
