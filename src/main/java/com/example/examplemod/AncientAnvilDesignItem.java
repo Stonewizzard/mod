@@ -4,7 +4,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.*;
 
-/** Creative-only comparison item; delegates placement without replacing Block.asItem(). */
+/** Legacy comparison item retained for saved stacks; delegates placement without replacing Block.asItem(). */
 public final class AncientAnvilDesignItem extends Item {
     private final AncientAnvilDesign design;
     public AncientAnvilDesignItem(Properties properties,AncientAnvilDesign design){super(properties);this.design=design;}

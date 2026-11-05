@@ -258,9 +258,8 @@ def run():
     process('xdotool','key','F1');capture('runic-anvil-night');process('xdotool','key','F1')
     native_chat_command('time set day')
     process('xdotool','key','7');capture('assets-anvil-held')
-    # Place each actual creative comparison item through native right-click.
-    # Same position, facing, camera and time of day make the silhouettes comparable.
-    for design in ('base','foundry','spillway','columns'):
+    # The selected Foundry design must place through the normal craftable item.
+    for design in ('foundry',):
         command('anvil_sample_item',design=design);process('xdotool','key','1');time.sleep(.7)
         process('xdotool','click','3');expect(assetsLarge=True,assetsCells=18,assetsDesign=design.upper(),sampleInventory=0)
         process('xdotool','key','9');command('assets_anvil_detail')
@@ -270,7 +269,7 @@ def run():
         command('assets_anvil_profile');process('xdotool','key','F1');capture('anvil-sample-'+design+'-profile');process('xdotool','key','F1')
         command('assets_anvil_detail');native_chat_command('time set midnight')
         process('xdotool','key','F1');capture('anvil-sample-'+design+'-night');process('xdotool','key','F1');native_chat_command('time set day')
-    print('ANVIL_DESIGN_NATIVE_PASS: all four actual items place with their selected design, all eighteen cells, survival item consumption and matched day/night/profile captures',flush=True)
+    print('ANVIL_SELECTED_NATIVE_PASS: normal Ancient Anvil item places the selected Foundry design, all eighteen cells, survival item consumption and day/night/profile captures',flush=True)
     print('ASSET_NATIVE_PASS: vanilla ingot comparison, main/offhand cutouts, dropped ingot, original artifact identity, vanilla material tiling and eighteen owned anvil cells in all four orientations',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
     print('CLIENT_VISUAL_QA_PASS: Workshop Manual item, illustrated browsing and OS input task paths',flush=True)

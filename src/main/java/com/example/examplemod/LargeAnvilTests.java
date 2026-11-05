@@ -18,6 +18,8 @@ public final class LargeAnvilTests {
         @Override protected MutableComponent typeDescription(){return Component.literal("Large Ancient Anvil: eighteen owned cells, all facings, no overwritten blocks, one recovery item");}
         @Override public void run(GameTestHelper h){
             check(h,AncientAnvilContent.ANVIL.get().asItem()==AncientAnvilContent.ANVIL_ITEM.get(),"Design samples never replace the normal block item");
+            check(h,AncientAnvilDesign.of(AncientAnvilContent.ANVIL_ITEM.get())==AncientAnvilDesign.FOUNDRY&&AncientAnvilContent.ANVIL.get().defaultBlockState().getValue(AncientAnvilBlock.DESIGN)==AncientAnvilDesign.FOUNDRY,"Normal anvil placement defaults to the selected Foundry design");
+            check(h,AncientAnvilContent.item(AncientAnvilDesign.FOUNDRY)==AncientAnvilContent.ANVIL_ITEM.get(),"Selected anvils recover as the normal craftable item");
             var level=h.getLevel();var core=h.absolutePos(new BlockPos(3,2,3));var player=h.makeMockServerPlayerInLevel();player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);player.snapTo(core.getX()+6,core.getY(),core.getZ()+6);player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND_PICKAXE));
             for(var design:AncientAnvilDesign.values())for(var front:Direction.Plane.HORIZONTAL)for(int mined=0;mined<AncientAnvilStructure.CELLS.size();mined++){
                 for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)level.setBlock(core.offset(x,-1,z),((x+z)%2==0?Blocks.IRON_BLOCK:Blocks.GOLD_BLOCK).defaultBlockState(),3);

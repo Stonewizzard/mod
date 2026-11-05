@@ -19,7 +19,7 @@ public final class AncientAnvilStructure {
     private static final ThreadLocal<Set<Key>> CHANGING=ThreadLocal.withInitial(HashSet::new);
     public static boolean belongs(Level level,BlockPos at,BlockPos core,Direction facing,int cell){var s=level.getBlockState(at);return s.is(AncientAnvilContent.PART.get())&&s.getValue(AncientAnvilPartBlock.FACING)==facing&&s.getValue(AncientAnvilPartBlock.CELL)==cell&&AncientAnvilPartBlock.core(at,s).equals(core);}
     public static boolean room(Level level,BlockPos core,Direction facing,boolean entities){
-        return room(level,core,facing,entities,AncientAnvilDesign.BASE);
+        return room(level,core,facing,entities,AncientAnvilDesign.FOUNDRY);
     }
     public static boolean room(Level level,BlockPos core,Direction facing,boolean entities,AncientAnvilDesign design){
         for(var cell:CELLS){var at=cell.at(core,facing);if(!level.hasChunkAt(at)||!level.getWorldBorder().isWithinBounds(at))return false;

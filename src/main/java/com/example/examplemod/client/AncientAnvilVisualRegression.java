@@ -13,6 +13,7 @@ public final class AncientAnvilVisualRegression {
     private static Identifier id(String path){return Identifier.fromNamespaceAndPath("examplemod",path);}
     private static JsonObject json(ResourceManager r,String path)throws Exception{try(var in=r.getResourceOrThrow(id(path)).open()){return JsonParser.parseReader(new InputStreamReader(in,StandardCharsets.UTF_8)).getAsJsonObject();}}
     public static void run(ResourceManager r)throws Exception{
+        if(!json(r,"items/ancient_anvil.json").getAsJsonObject("model").get("model").getAsString().equals("examplemod:block/ancient_anvil_foundry_item"))throw new IllegalStateException("Normal anvil item must display the selected Foundry artwork");
         for(String name:new String[]{"runic_anvil_metal","runic_anvil_edge","runic_anvil_frame","runic_anvil_top","runic_anvil_top_glow","runic_anvil_panel","runic_anvil_panel_glow","runic_anvil_horn","runic_anvil_ember"})try(var in=r.getResourceOrThrow(id("textures/block/"+name+".png")).open()){
             var png=ImageIO.read(in);int size=name.startsWith("runic_anvil_top")?48:16;
             boolean animated=name.endsWith("_glow")||name.endsWith("_ember");

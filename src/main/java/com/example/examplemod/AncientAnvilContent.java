@@ -20,7 +20,9 @@ public final class AncientAnvilContent {
     public static final DeferredItem<BlockItem> ANVIL_ITEM=ExampleMod.ITEMS.registerSimpleBlockItem("ancient_anvil",ANVIL);
     public static final java.util.Map<AncientAnvilDesign,DeferredItem<AncientAnvilDesignItem>> SAMPLES=new java.util.EnumMap<>(AncientAnvilDesign.class);
     static {for(var design:AncientAnvilDesign.values())if(design!=AncientAnvilDesign.BASE)SAMPLES.put(design,ExampleMod.ITEMS.registerItem("ancient_anvil_"+design.getSerializedName(),p->new AncientAnvilDesignItem(p,design),p->p));}
-    public static Item item(AncientAnvilDesign design){return design==AncientAnvilDesign.BASE?ANVIL_ITEM.get():SAMPLES.get(design).get();}
+    // Keep old sample IDs registered for saved stacks/placed blocks, but the
+    // selected Foundry design is crafted and recovered as the normal anvil.
+    public static Item item(AncientAnvilDesign design){return design==AncientAnvilDesign.BASE||design==AncientAnvilDesign.FOUNDRY?ANVIL_ITEM.get():SAMPLES.get(design).get();}
     public static final DeferredHolder<BlockEntityType<?>,BlockEntityType<AncientAnvilBlockEntity>> ENTITY=ExampleMod.BLOCK_ENTITIES.register("ancient_anvil",()->new BlockEntityType<>(AncientAnvilBlockEntity::new,ANVIL.get()));
     public static final TagKey<Block> FOUNDATION=TagKey.create(Registries.BLOCK,Identifier.fromNamespaceAndPath(ExampleMod.MODID,"ancient_anvil_foundation"));
     public static final TagKey<Item> SCRAP=TagKey.create(Registries.ITEM,Identifier.fromNamespaceAndPath(ExampleMod.MODID,"ancient_alloy_scrap"));

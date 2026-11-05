@@ -20,7 +20,7 @@ public final class AncientAnvilBlock extends BaseEntityBlock {
     public static final BooleanProperty MONUMENTAL=BooleanProperty.create("monumental");
     public static final IntegerProperty TIER=IntegerProperty.create("tier",0,1);
     public static final EnumProperty<AncientAnvilDesign> DESIGN=EnumProperty.create("design",AncientAnvilDesign.class);
-    public AncientAnvilBlock(BlockBehaviour.Properties properties){super(properties);registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH).setValue(TIER,0).setValue(LARGE,false).setValue(MONUMENTAL,false).setValue(DESIGN,AncientAnvilDesign.BASE));}
+    public AncientAnvilBlock(BlockBehaviour.Properties properties){super(properties);registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH).setValue(TIER,0).setValue(LARGE,false).setValue(MONUMENTAL,false).setValue(DESIGN,AncientAnvilDesign.FOUNDRY));}
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(FACING,TIER,LARGE,MONUMENTAL,DESIGN);}
     @Override public BlockState getStateForPlacement(BlockPlaceContext c){var facing=c.getHorizontalDirection().getOpposite();var design=AncientAnvilDesign.of(c.getItemInHand().getItem());return AncientAnvilStructure.room(c.getLevel(),c.getClickedPos(),facing,true,design)?defaultBlockState().setValue(FACING,facing).setValue(DESIGN,design):null;}
     @Override public void setPlacedBy(Level level,BlockPos pos,BlockState state,net.minecraft.world.entity.LivingEntity placer,net.minecraft.world.item.ItemStack stack){super.setPlacedBy(level,pos,state,placer,stack);if(level instanceof ServerLevel server)AncientAnvilBlockEntity.refresh(server,pos,state);}
