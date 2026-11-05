@@ -24,6 +24,11 @@ derived from that rotated square in clipped, conservative native-pixel strips;
 none escapes its own cell. Asset checks validate the actual rotated corners
 against the full six-cell owned volume.
 
+Selection rendering uses the assembled metal silhouette and the nose's actual
+diagonal edges through Minecraft's native outline submission. It does not outline
+collision strips or the borders between owned cells. Physical collision/picking
+remain bounded to their individual cells. High-contrast outlines are supported.
+
 Material sources/palettes live in `tools/asset_sources/workshop-materials` and
 `tools/generate_workshop_materials.py`; `--check` verifies their exports in CI.
 Native review captures include all four facings, the workface close-up, held item

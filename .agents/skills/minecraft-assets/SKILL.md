@@ -47,6 +47,9 @@ The enlarged Ancient Anvil uses six owned cells. Never put a large render mesh t
 unowned blocks. Generate its meshes and per-cell collision together. Test all four
 orientations, occupied space, old-world fallback, harvesting any part, and exactly one
 item drop. Do not overwrite neighboring containers or foundation blocks.
+For the faceted nose, validate its actual rotated corners against the complete
+owned volume and derive clipped collision from that render element. Selection
+outlines must use the actual model edges, not conservative collision strips.
 
 ## Required checks and review
 

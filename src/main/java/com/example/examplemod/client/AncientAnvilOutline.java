@@ -53,7 +53,7 @@ public final class AncientAnvilOutline {
             }
         }
         private static DiscreteVoxelShape solid(){var shape=new BitSetDiscreteVoxelShape(1,1,1);shape.fill(0,0,0);return shape;}
-        @Override protected DoubleList getCoords(Direction.Axis axis){return coordinates[axis.ordinal()];}
+        @Override public DoubleList getCoords(Direction.Axis axis){return coordinates[axis.ordinal()];}
         @Override public void forAllEdges(Shapes.DoubleLineConsumer consumer){for(var e:lines)consumer.consume(e[0],e[1],e[2],e[3],e[4],e[5]);}
     }
     private AncientAnvilOutline(){}
