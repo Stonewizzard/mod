@@ -1,6 +1,6 @@
 """Author the starter Ancient Anvil's explicit-UV block model, collision and ordinary recipes."""
 from pathlib import Path
-import json
+import json,math,copy
 ROOT=Path(__file__).resolve().parents[1];RES=ROOT/'src/main/resources';ASSETS=RES/'assets/examplemod';DATA=RES/'data/examplemod'
 def j(p,v):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n')
 # A solid forged head with a descending horn spans 3 x 1 x 2 owned cells.
@@ -19,10 +19,6 @@ boxes=[
  ([2,26,0],[14,28,21],'face'),([2,26,24],[14,28,27],'face'),
  ([2,26,21],[9,28,24],'face'),([12,26,21],[14,28,24],'face'),
  ([9,25,21],[12,25.5,24],'foot'),
- # The nose is a solid taper falling away from the striking face, like an anvil,
- # rather than a row of little plates continuing its flat surface.
- ([3,23,-4],[13,27,0],'horn'),([4,23,-7],[12,26,-4],'horn'),
- ([5,23,-10],[11,25,-7],'horn'),([7,23,-12],[9,24,-10],'horn')
 ]
 # Recessed maker's seals on both cheeks of the waist. A bronze stepped ring and
 # split chevron are geometry, never repeated rune wallpaper stretched onto a face.
@@ -38,8 +34,8 @@ cells=[(0,0),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
 def element(box,cell_z=0):
  a,B,t=box;x,y,z=a;X,Y,Z=B
  uv={'north':[16-X,16-Y,16-x,16-y],'south':[x,16-Y,X,16-y],'west':[z,16-Y,Z,16-y],'east':[16-Z,16-Y,16-z,16-y],'up':[x,z,X,Z],'down':[x,16-Z,X,16-z]}
- faces={f:{'texture':'#'+('metal' if t=='horn' else t),'uv':v} for f,v in uv.items()}
- if t in ('face','horn'):
+ faces={f:{'texture':'#'+t,'uv':v} for f,v in uv.items()}
+ if t=='face':
   # A continuous 16x48 top: U stays 1:1; V spans 48 native pixels in 16 UV units.
   # Keep the global Z coordinate across owned-cell splits, including the horn.
   faces['up']={'texture':'#workface','uv':[x,(z+cell_z*16+16)/3,X,(Z+cell_z*16+16)/3]}
@@ -48,20 +44,47 @@ def clip(box,y,z):
  a,B,t=box;lo=[max(a[0],0),max(a[1],y*16),max(a[2],z*16)];hi=[min(B[0],16),min(B[1],y*16+16),min(B[2],z*16+16)]
  if any(l>=h for l,h in zip(lo,hi)):return None
  return ([lo[0],lo[1]-y*16,lo[2]-z*16],[hi[0],hi[1]-y*16,hi[2]-z*16],t)
-meshes=[]
+# One native 45-degree element makes a true pointed nose without stair-step teeth.
+# Its rear half embeds in the head. Its forward half occupies the owned north
+# upper cell. Input coordinates follow Minecraft's supported -16..32 model range.
+horn=element(([3,7,-5],[13,9.75,5],'face'))
+for direction,face in horn['faces'].items():face['uv']=[3,3,13,13] if direction in ('up','down') else [3,7,13,9.75]
+horn['faces']['up']={'texture':'#face','uv':[3,3,13,13]}
+horn['rotation']={'origin':[8,8.375,0],'axis':'y','angle':45,'rescale':False}
+radius=math.sqrt(50)
+def horn_collision(y,z):
+ # Conservative native-pixel strips follow the same rotated square. The largest
+ # departure from the diagonal is one model pixel, like vanilla non-cubic shapes.
+ # Keep every strip clipped to its own cell; no collision through an empty cell.
+ if y!=1:return []
+ lo=max(-radius,z*16);hi=min(radius,z*16+16)
+ if lo>=hi:return []
+ cuts=sorted(set([lo,hi]+[float(n) for n in range(math.ceil(lo),math.floor(hi)+1)]));result=[]
+ for a,b in zip(cuts,cuts[1:]):
+  nearest=0 if a<=0<=b else min(abs(a),abs(b));half=radius-nearest
+  result.append(([8-half,7,a-z*16],[8+half,9.75,b-z*16],'face'))
+ return result
+meshes=[];collision_meshes=[];model_elements=[]
 for i,(y,z) in enumerate(cells):
  mesh=[c for b in boxes if (c:=clip(b,y,z))];meshes.append(mesh)
- j(ASSETS/f'models/block/ancient_anvil_cell_{i}.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b,z) for b in mesh]})
+ collision_meshes.append(mesh+horn_collision(y,z))
+ elements=[element(b,z) for b in mesh]
+ if i==4:elements.append(copy.deepcopy(horn))
+ model_elements.append(elements)
+ j(ASSETS/f'models/block/ancient_anvil_cell_{i}.json',{'parent':'minecraft:block/block','textures':tex,'elements':elements})
 j(ASSETS/'models/block/ancient_anvil.json',{'parent':'minecraft:block/block','textures':tex,'elements':[element(b) for b in compact]})
 # A dedicated item preview centers/scales the complete silhouette; held blocks must fit an ordinary item envelope.
 preview=[]
-for (y,z),mesh in zip(cells,meshes):
- for a,B,t in mesh:
+for (y,z),elements in zip(cells,model_elements):
+ for source in elements:
   # Keep the WORLD face UVs. Shrinking geometry must not stretch an entire tile
   # across every tiny bronze mark or change the item's material pattern.
-  e=element((a,B,t),z)
-  for key,corner in (('from',a),('to',B)):
+  e=copy.deepcopy(source)
+  def scaled(corner):return [8+(corner[0]-8)/3,4+(corner[1]+y*16)/3,(corner[2]+z*16)/3+16/3]
+  for key in ('from','to'):
+   corner=e[key]
    e[key]=[8+(corner[0]-8)/3,4+(corner[1]+y*16)/3,(corner[2]+z*16)/3+16/3]
+  if 'rotation' in e:e['rotation']['origin']=scaled(e['rotation']['origin'])
   preview.append(e)
 j(ASSETS/'models/block/ancient_anvil_item.json',{'parent':'minecraft:block/block','textures':tex,'elements':preview,'display':{'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[.625,.625,.625]}}})
 rots=[('north',0),('east',90),('south',180),('west',270)]
@@ -89,7 +112,7 @@ j(DATA/'tags/item/ancient_alloy_scrap.json',{'replace':False,'values':['examplem
 p=RES/'data/minecraft/tags/block/mineable/pickaxe.json';d=json.loads(p.read_text());d['values']=list(dict.fromkeys(d['values']+['examplemod:ancient_anvil','examplemod:ancient_metal_block']));j(p,d)
 java=['package com.example.examplemod;','import net.minecraft.core.Direction;','import net.minecraft.world.phys.shapes.VoxelShape;','/** Generated with six owned cell models by tools/generate_ancient_anvil.py. */','public final class AncientAnvilGeometry {']
 def shape(mesh):return 'WorkshopShapes.rotations(new double[][]{'+','.join('{'+','.join(str(n) for n in a+B)+'}' for a,B,t in mesh)+'})'
-java+=['    private static final java.util.Map<Direction,VoxelShape> COMPACT='+shape(compact)+';','    private static final java.util.List<java.util.Map<Direction,VoxelShape>> CELLS=java.util.List.of('+','.join(shape(mesh) for mesh in meshes)+');','    public static VoxelShape shape(Direction facing){return COMPACT.get(facing);}','    public static VoxelShape cell(int cell,Direction facing){return CELLS.get(cell).get(facing);}','    private AncientAnvilGeometry(){}','}']
+java+=['    private static final java.util.Map<Direction,VoxelShape> COMPACT='+shape(compact)+';','    private static final java.util.List<java.util.Map<Direction,VoxelShape>> CELLS=java.util.List.of('+','.join(shape(mesh) for mesh in collision_meshes)+');','    public static VoxelShape shape(Direction facing){return COMPACT.get(facing);}','    public static VoxelShape cell(int cell,Direction facing){return CELLS.get(cell).get(facing);}','    private AncientAnvilGeometry(){}','}']
 (ROOT/'src/main/java/com/example/examplemod/AncientAnvilGeometry.java').write_text('\n'.join(java)+'\n')
 p=RES/'data/minecraft/tags/block/mineable/pickaxe.json';d=json.loads(p.read_text());d['values']=list(dict.fromkeys(d['values']+['examplemod:ancient_anvil_part']));j(p,d)
 print('Authored Ancient Anvil model/collision, metal foundation tag, scrap input tag and five crafting recipes.')

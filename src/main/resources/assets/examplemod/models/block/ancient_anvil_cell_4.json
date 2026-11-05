@@ -620,6 +620,84 @@
           ]
         }
       }
+    },
+    {
+      "from": [
+        3,
+        7,
+        -5
+      ],
+      "to": [
+        13,
+        9.75,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#face",
+          "uv": [
+            3,
+            7,
+            13,
+            9.75
+          ]
+        },
+        "south": {
+          "texture": "#face",
+          "uv": [
+            3,
+            7,
+            13,
+            9.75
+          ]
+        },
+        "west": {
+          "texture": "#face",
+          "uv": [
+            3,
+            7,
+            13,
+            9.75
+          ]
+        },
+        "east": {
+          "texture": "#face",
+          "uv": [
+            3,
+            7,
+            13,
+            9.75
+          ]
+        },
+        "up": {
+          "texture": "#face",
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ]
+        },
+        "down": {
+          "texture": "#face",
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8.375,
+          0
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      }
     }
   ]
 }

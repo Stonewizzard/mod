@@ -12,7 +12,8 @@ aged bronze; the anvil body uses warm iron. No resampling or procedural noise.
 `anvil-workface.pixels` is a separately authored indexed source for the top. It
 uses the established steel colours and two existing bronze shades for its small
 forge mark. Fine clusters reference Minecraft's `anvil_top`, with a darker rim
-around the thick striking face and descending horn. The 16x48 atlas covers three
+around the thick striking face. The separate faceted nose uses native-resolution
+steel from the same palette. The 16x48 atlas covers three
 blocks at **16 texels per block**, with continuous UVs across the owned cells.
 The narrow workface sides retain the prior material.
 

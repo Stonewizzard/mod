@@ -6,8 +6,8 @@ The fireplace interaction, process, chimney, preview guide and item sprites rema
 as before. No return to the old noisy 32px masonry.
 
 The Ancient Anvil keeps the warm pedestal, bronze collar and small maker seals.
-Its redesigned upper assembly has a shorter, thicker striking head and a solid
-horn that descends from the face. The old thin cap and repeated little plates
+Its redesigned upper assembly has a shorter, thicker striking head and one
+faceted nose set below the face. The old thin cap and repeated little plates
 along the horn are gone. A square hardie hole sits near the heel. A restrained
 bronze forge mark is worked into the steel face.
 
@@ -18,7 +18,11 @@ It is not stretched across the head. Item previews retain the world face UVs.
 
 The same six owned cells and tier-zero/tier-one foundation remain. The head mesh
 and collision are generated together by `tools/generate_ancient_anvil.py`.
-The safe compact fallback remains available in cramped saved worlds.
+The safe compact fallback remains available in cramped saved worlds. The nose is
+one native 45-degree element spanning two owned upper cells. Its collision is
+derived from that rotated square in clipped, conservative native-pixel strips;
+none escapes its own cell. Asset checks validate the actual rotated corners
+against the full six-cell owned volume.
 
 Material sources/palettes live in `tools/asset_sources/workshop-materials` and
 `tools/generate_workshop_materials.py`; `--check` verifies their exports in CI.
