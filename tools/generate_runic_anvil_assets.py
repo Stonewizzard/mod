@@ -8,6 +8,32 @@ SOURCE=ROOT/'tools/asset_sources/runic-anvil'
 def exports():
     palette=json.loads((SOURCE/'palette.json').read_text())
     colours={k:tuple(bytes.fromhex(v)) for k,v in palette.items()}
+    # Shared world-coordinate skin: one native texel per model pixel on plate AND horn.
+    metal=[r for r in (SOURCE/'metal.pixels').read_text().splitlines() if r and not r.startswith('#')]
+    # A sparse frame spans the entire square; the horn remains bare continuous metal.
+    marks={}
+    def line(x,z,X,Z,c):
+        for i in range(max(abs(X-x),abs(Z-z))+1):
+            n=max(abs(X-x),abs(Z-z),1);marks[round(x+(X-x)*i/n),round(z+(Z-z)*i/n)]=c
+    for a,b in [((4,-2),(28,-2)),((4,25),(28,25)),((2,0),(2,23)),((30,0),(30,23))]:line(*a,*b,'7')
+    for x,z in [(5,0),(27,0),(5,23),(27,23)]:
+        for dx,dz,c in [(0,-1,'B'),(1,0,'C'),(0,1,'B'),(-1,0,'C'),(0,0,'D')]:marks[x+dx,z+dz]=c
+    for x,z in [(16,4),(23,11),(16,18),(9,11),(16,-3),(29,11),(3,11)]:
+        marks[x,z]='D';marks[x,z+1]='C';marks[x+1,z]='B'
+    line(12,11,20,11,'C');line(16,7,16,15,'C')
+    for x,z in [(16,11),(15,10),(17,12),(17,10),(15,12)]:marks[x,z]='D'
+    skin=Image.new('RGB',(64,64));mask=Image.new('RGBA',(64,64*5))
+    for y in range(64):
+        for x in range(64):
+            c=metal[(y-32)%16][x%16]
+            mark=marks.get((x,y-32),' ')
+            if mark in '789BCD':c=mark
+            skin.putpixel((x,y),colours[c])
+            if mark in 'BCD':
+                for frame,factor in enumerate((.84,.88,.94,.98,1.0)):
+                    mask.putpixel((x,y+64*frame),(*(round(v*factor) for v in colours[mark]),255))
+    yield 'expanded_anvil_surface',skin
+    yield 'expanded_anvil_surface_glow',mask
     for source,name,size,glow in [
         ('metal','runic_anvil_metal',(16,16),False),
         ('edge','runic_anvil_edge',(16,16),False),
@@ -30,6 +56,11 @@ def exports():
                 tile.putdata([colours[rows[y][(x+frame)%size[0]]] for y in range(size[1]) for x in range(size[0])])
                 image.paste(tile,(0,frame*size[1]))
         yield name,image
+        if source in ('horn','edge'):
+            expanded=Image.new('RGB',(32,32))
+            for x in (0,16):
+                for y in (0,16):expanded.paste(image,(x,y))
+            yield 'expanded_anvil_horn_'+('surface' if source=='horn' else 'edge'),expanded
         if source in ('horn','edge','metal'):
             horizontal=source=='metal'
             long=Image.new('RGB',(32,16) if horizontal else (16,32))
@@ -51,7 +82,7 @@ def exports():
             yield name+'_glow',mask
 
 def metadata():
-    for name,size in [('runic_anvil_top_glow',48),('runic_anvil_panel_glow',16),('runic_anvil_ember',16)]:
+    for name,size in [('expanded_anvil_surface_glow',64),('runic_anvil_top_glow',48),('runic_anvil_panel_glow',16),('runic_anvil_ember',16)]:
         yield name,{'animation':{'width':size,'height':size,'frametime':8,'frames':[0,1,2,3,4,3,2,1],'interpolate':True}}
     yield 'runic_anvil_fall',{'animation':{'width':16,'height':16,'frametime':3,'frames':list(range(16)),'interpolate':True}}
 

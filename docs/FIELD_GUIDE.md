@@ -332,7 +332,7 @@ Craft ancient ingots from block: ancient metal block, in any arrangement.
 
 ## The Ancient Anvil
 
-The anvil is now a physical three-block-long structure, one block wide, with a work face one and a half blocks high. Leave the three positions and the space above them clear. Its horn and heel occupy actual neighboring blocks. Breaking any section recovers one anvil and leaves the foundation intact.
+The Foundry anvil has a longer tapered horn and a broad, extended rune-carved working face. Reserve a 4 by 4 area with two clear block layers. Breaking any section recovers one anvil and its placed ingredients; the foundation stays intact.
 
 The Ancient Anvil is a rune-carved metal anvil with warm inlays. Craft it like an ordinary anvil: three Blocks of Ancient Metal across the top, one Ancient Ingot in the middle, and three ingots across the bottom. This uses 31 ingots in total.
 
@@ -340,11 +340,21 @@ Place the anvil on its own to establish Tier 0. It is a stationary workshop stru
 
 Existing anvils expand automatically when they have clear space. A cramped anvil stays compact rather than replacing a chest or trapping a creature. Clear the space and let it expand; the same item and foundation remain valid.
 
-Build a complete 3 by 3 square of metal blocks directly one layer below the anvil, centered on it. All nine blocks are required, including the center. Iron, gold, copper, netherite and ancient metal qualify; you may mix them. Diamond, emerald and lapis blocks are not metal.
+There are thirteen workpiece positions: the center, four diagonal corners, four inner arms, and four outer rim or heel positions. Aim at a position to highlight it. Right-click with an item to put one there. An empty hand takes it back; another item swaps it. Shift + empty-hand right-click opens the foundation guide.
+
+Place the recipe ingredients, then hit the anvil with an Iron Forge Hammer. Either left-click strikes or right-click use works. Accepted strikes make a sound and show work progress; unmatched ingredients cost no durability. Changing an ingredient resets work. The finished item appears in the center. Right-click the center to collect it before starting another recipe.
+
+Iron Forge Hammer recipe: three iron ingots across the top and two sticks down the middle. It lasts 250 accepted strikes. More hammer tiers and anvil recipes can be added later.
+
+Tier 0 is sufficient. Put one deepslate or cobbled deepslate in each of the four diagonal corner positions, and one gold ingot in the center. Leave every other position empty. Strike four times with the Iron Forge Hammer to make one Runestone.
+
+Runestone is a blank prepared stone base. Later recipes will inscribe specific functional Ancient Runes on it. It has no crafting-grid recipe.
+
+Build a complete 4 by 4 square of metal blocks directly one layer below the anvil. All 16 blocks are required. Shift + empty-hand right-click opens the foundation guide so you can see the exact offset and orientation. Iron, gold, copper, netherite and ancient metal qualify; you may mix them. Gem blocks do not qualify.
 
 The anvil automatically becomes Tier 1 when the foundation is complete. Removing or replacing a required metal downgrades it to Tier 0. The metals remain normal blocks and are never consumed. Breaking or relocating the anvil leaves its foundation in place.
 
-Right-click the anvil with an empty hand to see its tier and metal count. Show foundation guide displays the missing layer: cyan for air and amber for a wrong block that needs replacing. Only you see the guide. It clears when Tier 1 is complete or you leave the world.
+Shift + empty-hand right-click opens the tier and foundation count. Show foundation guide marks missing blocks: cyan for air and amber for wrong occupied blocks. A blocked old anvil also shows the space it needs to expand safely. Only you see the guide. It clears when the enlarged anvil and Tier 1 foundation are complete or you leave the world.
 
 Tier 0 and Tier 1 establish the first stages of the planned growing ancient workshop. Later tiers, rituals and artifact-modification powers will be added separately.
 

@@ -13,7 +13,7 @@ public final class AncientAnvilVisualRegression {
     private static Identifier id(String path){return Identifier.fromNamespaceAndPath("examplemod",path);}
     private static JsonObject json(ResourceManager r,String path)throws Exception{try(var in=r.getResourceOrThrow(id(path)).open()){return JsonParser.parseReader(new InputStreamReader(in,StandardCharsets.UTF_8)).getAsJsonObject();}}
     public static void run(ResourceManager r)throws Exception{
-        if(!json(r,"items/ancient_anvil.json").getAsJsonObject("model").get("model").getAsString().equals("examplemod:block/ancient_anvil_foundry_item"))throw new IllegalStateException("Normal anvil item must display the selected Foundry artwork");
+        if(!json(r,"items/ancient_anvil.json").getAsJsonObject("model").get("model").getAsString().equals("examplemod:block/expanded_anvil_item"))throw new IllegalStateException("Normal anvil item must display the selected Foundry artwork");
         for(String name:new String[]{"runic_anvil_metal","runic_anvil_edge","runic_anvil_frame","runic_anvil_top","runic_anvil_top_glow","runic_anvil_panel","runic_anvil_panel_glow","runic_anvil_horn","runic_anvil_ember"})try(var in=r.getResourceOrThrow(id("textures/block/"+name+".png")).open()){
             var png=ImageIO.read(in);int size=name.startsWith("runic_anvil_top")?48:16;
             boolean animated=name.endsWith("_glow")||name.endsWith("_ember");
@@ -30,7 +30,7 @@ public final class AncientAnvilVisualRegression {
             if(fall){var a=json(r,"textures/block/"+name+".png.mcmeta").getAsJsonObject("animation");if(a.getAsJsonArray("frames").size()!=16||a.get("frametime").getAsInt()!=3)throw new IllegalStateException("Lava fall must animate downward");}
         }
         var layout=json(r,"anvil_layout.json").getAsJsonArray("cells");
-        if(layout.size()!=18||AncientAnvilStructure.CELLS.size()!=18)throw new IllegalStateException("Wrong centerpiece reservation");
+        if(layout.size()!=18||AncientAnvilStructure.CELLS.size()!=32)throw new IllegalStateException("Wrong centerpiece reservation");
         var designs=json(r,"anvil_designs.json").getAsJsonArray("designs");
         if(designs.size()!=4)throw new IllegalStateException("Missing design comparison models");
         for(var raw:designs){
@@ -66,14 +66,22 @@ public final class AncientAnvilVisualRegression {
         }
         if(luminous<20)throw new IllegalStateException("Missing inset rune emission");
         }
-        if(json(r,"blockstates/ancient_anvil_part.json").getAsJsonObject("variants").size()!=544||json(r,"blockstates/ancient_anvil.json").getAsJsonObject("variants").size()!=128)throw new IllegalStateException("Missing legacy/current anvil variants");
+        if(json(r,"blockstates/ancient_anvil_part.json").getAsJsonObject("variants").size()!=1984||json(r,"blockstates/ancient_anvil.json").getAsJsonObject("variants").size()!=256)throw new IllegalStateException("Missing legacy/current anvil variants");
         for(int cell=0;cell<6;cell++)if(json(r,"models/block/legacy_ancient_anvil_cell_"+cell+".json").getAsJsonArray("elements").isEmpty())throw new IllegalStateException("Missing saved-world compatibility model");
         for(var design:AncientAnvilDesign.values())for(var facing:net.minecraft.core.Direction.Plane.HORIZONTAL){
             int[] diagonal={0};var outline=AncientAnvilOutline.shape(design,facing);
             outline.forAllEdges((x,y,z,X,Y,Z)->{if(Math.abs(X-x)>.01&&Math.abs(Z-z)>.01)diagonal[0]++;});
             var bounds=outline.bounds();if(diagonal[0]<12||bounds.maxY<1.9||Math.max(bounds.getXsize(),bounds.getZsize())<2.5)throw new IllegalStateException("Centerpiece silhouette or true horn edges missing");
         }
-        System.out.println("ANCIENT_ANVIL_VISUAL_CHECK: PASS: eighteen owned cells, native-density continuous rune seal, binary-alpha emissive inlays, broad assembly silhouettes in four facings, legacy/current variants");
+        var expanded=json(r,"anvil_expanded_layout.json").getAsJsonArray("cells");
+        if(expanded.size()!=32)throw new IllegalStateException("Expanded assembly needs thirty-two owned cells");
+        for(int i=0;i<32;i++){
+            var cell=AncientAnvilStructure.CELLS.get(i);var model=json(r,"models/block/expanded_anvil_cell_"+i+".json");var body=model.has("children")?model.getAsJsonObject("children").getAsJsonObject("body"):model;
+            for(var raw:body.getAsJsonArray("elements"))ownedGeometry(raw.getAsJsonObject(),cell);
+            for(var facing:net.minecraft.core.Direction.Plane.HORIZONTAL){var shape=ExpandedAncientAnvilGeometry.cell(i,facing);if(!shape.isEmpty()){var b=shape.bounds();if(b.minX<0||b.maxX>1||b.minY<0||b.maxY>1||b.minZ<0||b.maxZ>1)throw new IllegalStateException("Expanded collision escapes ownership");}}
+        }
+        for(var facing:net.minecraft.core.Direction.Plane.HORIZONTAL)if(Math.max(AncientAnvilOutline.expanded(facing).bounds().getXsize(),AncientAnvilOutline.expanded(facing).bounds().getZsize())<3.5)throw new IllegalStateException("Longer horn missing from outline");
+        System.out.println("ANCIENT_ANVIL_VISUAL_CHECK: PASS: thirty-two expanded and eighteen frozen legacy cells, native-density continuous rune seal, binary-alpha emissive inlays, broad assembly silhouettes in four facings, legacy/current variants");
     }
     private static void ownedGeometry(JsonObject e,AncientAnvilStructure.Cell offset){
         if(!e.has("rotation")){

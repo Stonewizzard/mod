@@ -125,6 +125,46 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='anvil-surfaces':
+        process('xdotool','key','Escape');expect(screen='InGame')
+        command('forge_fixture') # supplies scene origin, no forge processing test
+        # Place the actual crafted block item with native right-click, then inspect both foundation tiers.
+        command('anvil_fixture');process('xdotool','key','2');time.sleep(.7);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0,anvilLarge=True)
+        process('xdotool','key','9');command('anvil_view');capture('ancient-anvil-tier0')
+        command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','keydown','Shift_L');time.sleep(.3);process('xdotool','click','3');time.sleep(.2);process('xdotool','keyup','Shift_L');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel0')
+        click_widget('Show foundation guide');expect(screen='InGame',anvilGuide=True);command('anvil_expose');command('anvil_view');capture('ancient-anvil-guide')
+        command('anvil_foundation');expect(anvilTier=1,anvilMissing=0,anvilGuide=False);capture('ancient-anvil-tier1')
+        command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','keydown','Shift_L');time.sleep(.3);process('xdotool','click','3');time.sleep(.2);process('xdotool','keyup','Shift_L');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel1')
+        process('xdotool','key','Escape');command('anvil_damage');expect(anvilTier=0,anvilMissing=1)
+        command('anvil_foundation');expect(anvilTier=1,anvilMissing=0)
+        print('ANCIENT_ANVIL_NATIVE_PASS: actual block item placement, tier zero/one, mixed metal foundation, real panel/guide buttons, downgrade/repair; in-world timed alloying, exact costs and legacy-inventory withdrawal',flush=True)
+        # Place every ingredient through native OS input, then forge and collect the actual result.
+        command('smithing_fixture');expect(anvilTier=0,smithInputs=0,smithWork=0)
+        corners=('north_west','north_east','south_west','south_east')
+        process('xdotool','key','1');time.sleep(.3)
+        for count,slot in enumerate(corners,1):
+            command('smithing_aim',slot=slot);expect(smithAim=slot);process('xdotool','click','3');expect(smithInputs=count)
+        process('xdotool','key','2');command('smithing_aim',slot='center');expect(smithAim='center');process('xdotool','click','3');expect(smithInputs=5)
+        capture('anvil-smithing-ingredients')
+        process('xdotool','key','9');time.sleep(.2);process('xdotool','keydown','Shift_L');time.sleep(.3);process('xdotool','click','3');time.sleep(.2);process('xdotool','keyup','Shift_L');expect(screen='AncientAnvilScreen',smithInputs=5);process('xdotool','key','Escape');expect(screen='InGame',smithInputs=5)
+        process('xdotool','key','3');time.sleep(.5);capture('anvil-smithing-hammer-held')
+        for work in (1,2):
+            process('xdotool','click','1');expect(smithWork=work,smithOutput=False,smithHammerDamage=work);time.sleep(.55)
+        capture('anvil-smithing-work')
+        process('xdotool','click','3');expect(smithWork=3,smithHammerDamage=3);time.sleep(.55)
+        process('xdotool','click','3');expect(smithInputs=0,smithWork=0,smithOutput=True,smithHammerDamage=4)
+        process('xdotool','key','9');capture('anvil-smithing-runestone-ready')
+        process('xdotool','click','3');expect(smithOutput=False,smithRunes=1)
+        # Outer/inner spots are usable too, including the raised rear heel.
+        for slot in ('north_outer','east_outer','south_outer','west_outer','north_inner','east_inner','south_inner','west_inner'):
+            process('xdotool','key','4');command('smithing_aim',slot=slot);expect(smithAim=slot);process('xdotool','click','3');expect(smithInputs=1)
+            process('xdotool','key','9');time.sleep(.2);process('xdotool','click','3');expect(smithInputs=0)
+        command('smithing_aim',slot='center');process('xdotool','key','3');capture('anvil-smithing-complete')
+        print('ANVIL_SMITHING_NATIVE_PASS: actual native thirteen-position placement and retrieval, tier0 Runestone recipe, center input/output, left- and right-click iron hammer strikes, exact durability and result collection',flush=True)
+        command('assets_scene');expect(assetsLarge=True,assetsCells=32)
+        command('assets_anvil_detail');process('xdotool','key','F1');capture('ancient-anvil-clean');process('xdotool','key','F1')
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-surfaces','captures':len(list(CAPTURES.glob('*.png')))},indent=2))
+        return
     command('seed_books');time.sleep(1)
     process('xdotool','key','Escape');wait_for(lambda s:s.get('screen')!='FieldGuideScreen','fixture book closing')
     capture('00-workshop-manual-item')
@@ -221,13 +261,36 @@ def run():
     # Place the actual crafted block item with native right-click, then inspect both foundation tiers.
     command('anvil_fixture');process('xdotool','key','2');time.sleep(.7);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0,anvilLarge=True)
     process('xdotool','key','9');command('anvil_view');capture('ancient-anvil-tier0')
-    command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','click','3');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel0')
+    command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','keydown','Shift_L');time.sleep(.3);process('xdotool','click','3');time.sleep(.2);process('xdotool','keyup','Shift_L');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel0')
     click_widget('Show foundation guide');expect(screen='InGame',anvilGuide=True);command('anvil_expose');command('anvil_view');capture('ancient-anvil-guide')
     command('anvil_foundation');expect(anvilTier=1,anvilMissing=0,anvilGuide=False);capture('ancient-anvil-tier1')
-    command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','click','3');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel1')
+    command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','keydown','Shift_L');time.sleep(.3);process('xdotool','click','3');time.sleep(.2);process('xdotool','keyup','Shift_L');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel1')
     process('xdotool','key','Escape');command('anvil_damage');expect(anvilTier=0,anvilMissing=1)
     command('anvil_foundation');expect(anvilTier=1,anvilMissing=0)
     print('ANCIENT_ANVIL_NATIVE_PASS: actual block item placement, tier zero/one, mixed metal foundation, real panel/guide buttons, downgrade/repair; in-world timed alloying, exact costs and legacy-inventory withdrawal',flush=True)
+    # Place every ingredient through native OS input, then forge and collect the actual result.
+    command('smithing_fixture');expect(anvilTier=0,smithInputs=0,smithWork=0)
+    corners=('north_west','north_east','south_west','south_east')
+    process('xdotool','key','1');time.sleep(.3)
+    for count,slot in enumerate(corners,1):
+        command('smithing_aim',slot=slot);expect(smithAim=slot);process('xdotool','click','3');expect(smithInputs=count)
+    process('xdotool','key','2');command('smithing_aim',slot='center');expect(smithAim='center');process('xdotool','click','3');expect(smithInputs=5)
+    capture('anvil-smithing-ingredients')
+    process('xdotool','key','9');time.sleep(.2);process('xdotool','keydown','Shift_L');time.sleep(.3);process('xdotool','click','3');time.sleep(.2);process('xdotool','keyup','Shift_L');expect(screen='AncientAnvilScreen',smithInputs=5);process('xdotool','key','Escape');expect(screen='InGame',smithInputs=5)
+    process('xdotool','key','3');time.sleep(.5);capture('anvil-smithing-hammer-held')
+    for work in (1,2):
+        process('xdotool','click','1');expect(smithWork=work,smithOutput=False,smithHammerDamage=work);time.sleep(.55)
+    capture('anvil-smithing-work')
+    process('xdotool','click','3');expect(smithWork=3,smithHammerDamage=3);time.sleep(.55)
+    process('xdotool','click','3');expect(smithInputs=0,smithWork=0,smithOutput=True,smithHammerDamage=4)
+    process('xdotool','key','9');capture('anvil-smithing-runestone-ready')
+    process('xdotool','click','3');expect(smithOutput=False,smithRunes=1)
+    # Outer/inner spots are usable too, including the raised rear heel.
+    for slot in ('north_outer','east_outer','south_outer','west_outer','north_inner','east_inner','south_inner','west_inner'):
+        process('xdotool','key','4');command('smithing_aim',slot=slot);expect(smithAim=slot);process('xdotool','click','3');expect(smithInputs=1)
+        process('xdotool','key','9');time.sleep(.2);process('xdotool','click','3');expect(smithInputs=0)
+    command('smithing_aim',slot='center');process('xdotool','key','3');capture('anvil-smithing-complete')
+    print('ANVIL_SMITHING_NATIVE_PASS: actual native thirteen-position placement and retrieval, tier0 Runestone recipe, center input/output, left- and right-click iron hammer strikes, exact durability and result collection',flush=True)
     # Explicit player feeding uses native right-click on a real adult entity in survival.
     previous_scrap=observe()['scrapInventory'];command('feed_fixture');process('xdotool','key','1')
     expect(holdingArtifact=True,aimedAtCruncher=True);capture('cruncher-feeding-ready')
@@ -241,7 +304,7 @@ def run():
     command('forge_generated_view');time.sleep(1);capture('forge-world-ruin')
     print('ANCIENT_FORGE_NATIVE_PASS: in-world metallurgy, legacy storage recovery, frame interruption, repair, saved output and fireplace display',flush=True)
     # Compare against real vanilla assets and inspect all owned-cell orientations.
-    command('assets_scene');expect(assetsLarge=True,assetsCells=18,assetsFacing='NORTH')
+    command('assets_scene');expect(assetsLarge=True,assetsCells=32,assetsFacing='NORTH')
     process('xdotool','key','3');capture('assets-ingot-held')
     process('xdotool','key','4');capture('assets-scrap-held')
     process('xdotool','key','5');capture('assets-artifact-held')
@@ -249,7 +312,7 @@ def run():
     command('assets_right_hand');process('xdotool','key','3');time.sleep(.4);process('xdotool','key','q');expect(assetsIngotDropped=True);time.sleep(1);command('assets_drop_view');capture('assets-ingot-dropped')
     process('xdotool','key','9')
     for facing in ['NORTH','EAST','SOUTH','WEST']:
-        command('assets_anvil_view',facing=facing);expect(assetsLarge=True,assetsCells=18,assetsFacing=facing);capture('large-anvil-'+facing.lower())
+        command('assets_anvil_view',facing=facing);expect(assetsLarge=True,assetsCells=32,assetsFacing=facing);capture('large-anvil-'+facing.lower())
     for angle in ('profile','rear'):
         command('assets_anvil_'+angle);process('xdotool','key','F1');capture('runic-anvil-'+angle);process('xdotool','key','F1')
     command('assets_anvil_detail');capture('ancient-anvil-workface-detail')
@@ -261,7 +324,7 @@ def run():
     # The selected Foundry design must place through the normal craftable item.
     for design in ('foundry',):
         command('anvil_sample_item',design=design);process('xdotool','key','1');time.sleep(.7)
-        process('xdotool','click','3');expect(assetsLarge=True,assetsCells=18,assetsDesign=design.upper(),sampleInventory=0)
+        process('xdotool','click','3');expect(assetsLarge=True,assetsCells=32,assetsDesign=design.upper(),sampleInventory=0)
         process('xdotool','key','9');command('assets_anvil_detail')
         process('xdotool','key','F1');capture('anvil-sample-'+design+'-day');process('xdotool','key','F1')
         if design=='foundry':
@@ -270,7 +333,7 @@ def run():
         command('assets_anvil_detail');native_chat_command('time set midnight')
         process('xdotool','key','F1');capture('anvil-sample-'+design+'-night');process('xdotool','key','F1');native_chat_command('time set day')
     print('ANVIL_SELECTED_NATIVE_PASS: normal Ancient Anvil item places the selected Foundry design, all eighteen cells, survival item consumption and day/night/profile captures',flush=True)
-    print('ASSET_NATIVE_PASS: vanilla ingot comparison, main/offhand cutouts, dropped ingot, original artifact identity, vanilla material tiling and eighteen owned anvil cells in all four orientations',flush=True)
+    print('ASSET_NATIVE_PASS: vanilla ingot comparison, main/offhand cutouts, dropped ingot, original artifact identity, vanilla material tiling and thirty-two owned anvil cells in all four orientations',flush=True)
     (QA/'result.json').write_text(json.dumps({'pass':True,'renderer':'actual Minecraft client; X11 software OpenGL','input':'xdotool -> X11 -> SDL -> native widgets','captures':len(list(CAPTURES.glob('*.png'))),'inWorld':True},indent=2))
     print('CLIENT_VISUAL_QA_PASS: Workshop Manual item, illustrated browsing and OS input task paths',flush=True)
 

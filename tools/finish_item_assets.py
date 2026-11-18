@@ -63,7 +63,8 @@ def build():
      for point in group:art.putpixel(point,(0,0,0,0))
    target=26
   result[p.stem]=envelope(art,target)
- result.update(metals());return result
+ from generate_smithing_assets import item_exports
+ result.update(metals());result.update(item_exports());return result
 
 def main():
  parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args();result=build();bad=[]

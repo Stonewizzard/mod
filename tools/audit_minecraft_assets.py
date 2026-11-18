@@ -92,6 +92,25 @@ def main():
    suffix='' if config['id']=='base' else '_'+config['id']
    path=ASSETS/'models/block'/('ancient_anvil_horn'+suffix+('_item' if preview else '')+'.obj')
    fail += [path.name+': '+error for error in validate_horn_mesh(*obj_mesh(path),preview,config['id'])]
+ expanded=json.loads((ASSETS/'anvil_expanded_layout.json').read_text())
+ if expanded['footprint']!=[4,4,2] or len(expanded['cells'])!=32 or expanded['cells'][:18]!=layout:fail.append('Expanded layout must preserve every frozen cell index')
+ for cell in expanded['cells']:
+  i=cell['index'];model=json.loads((ASSETS/'models/block'/f'expanded_anvil_cell_{i}.json').read_text());body=model.get('children',{}).get('body',model)
+  for e in body['elements']:
+   if any(v<0 or v>16 for k in ['from','to'] for v in e[k]):fail.append(f'expanded cell{i}: geometry escapes owned block')
+   for f in e['faces'].values():
+    if any(v<0 or v>16 for v in f['uv']):fail.append(f'expanded cell{i}: UV escapes native tile')
+  if i in expanded['hornCells']:
+   verts,uvs,faces=obj_mesh(ASSETS/'models/block'/f'expanded_anvil_horn_cell_{i}.obj')
+   if any(v< -1e-8 or v>1+1e-8 for p in verts for v in p):fail.append(f'expanded horn cell{i}: mesh outside owned cell')
+   if any(v<0 or v>1 for p in uvs for v in p):fail.append(f'expanded horn cell{i}: UV outside tile')
+ # Deduplicate shared OBJ coordinates before checking the complete horn hull's closure.
+ for preview in (False,True):
+  verts,uvs,faces=obj_mesh(ASSETS/'models/block'/('expanded_anvil_horn'+('_item' if preview else '')+'.obj'))
+  unique={v:i for i,v in enumerate(dict.fromkeys(verts))};mapped=[tuple(unique[verts[i]] for i in face) for face in faces];vertices=list(unique)
+  if not preview:vertices=[((x+1)/4,y/2,(z+2)/4) for x,y,z in vertices]
+  errors=validate_horn_mesh(vertices,uvs,mapped,True)
+  fail.extend('expanded horn: '+e for e in errors)
  if fail:raise SystemExit('\n'.join(fail))
- print(f'PASS: {len(manifest)} sprites: alpha, visual size, margins, pinholes, flecks, model wiring; eighteen owned anvil cells.')
+ print(f'PASS: {len(manifest)} sprites: alpha, visual size, margins, pinholes, flecks, model wiring; 32 expanded cells, preserved legacy cells, clipped closed horn and native-grid items.')
 if __name__=='__main__':main()

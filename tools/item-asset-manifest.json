@@ -392,5 +392,13 @@
       0.8,
       1.25
     ]
+  },
+  "iron_forge_hammer": {
+    "legacy_artwork": false,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
   }
 }

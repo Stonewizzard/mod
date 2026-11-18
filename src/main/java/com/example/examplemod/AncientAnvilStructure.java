@@ -6,15 +6,18 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 
-/** A grounded 3x3x2 centerpiece. Legacy indices 0..5 stay stable in saved worlds. */
+/** A 4x4x2 owned assembly. The original six/eighteen cell indices remain stable. */
 public final class AncientAnvilStructure {
     public record Cell(int index,int x,int y,int z){public BlockPos at(BlockPos core,Direction facing){return core.relative(facing.getClockWise(),x).relative(facing.getOpposite(),z).above(y);}}
     public static final List<Cell> CELLS=cells();
     private static List<Cell> cells(){
         var result=new ArrayList<Cell>(List.of(new Cell(0,0,0,0),new Cell(1,0,0,-1),new Cell(2,0,0,1),new Cell(3,0,1,-1),new Cell(4,0,1,0),new Cell(5,0,1,1)));
         for(int x:new int[]{-1,1})for(int y=0;y<2;y++)for(int z=-1;z<=1;z++)result.add(new Cell(result.size(),x,y,z));
+        for(int y=0;y<2;y++)for(int x:new int[]{-1,0,1})result.add(new Cell(result.size(),x,y,-2));
+        for(int y=0;y<2;y++)for(int z=-2;z<=1;z++)result.add(new Cell(result.size(),2,y,z));
         return List.copyOf(result);
     }
+    public static List<BlockPos> foundation(BlockPos core,Direction facing){var result=new ArrayList<BlockPos>();for(int x=-1;x<=2;x++)for(int z=-2;z<=1;z++)result.add(core.relative(facing.getClockWise(),x).relative(facing.getOpposite(),z).below());return List.copyOf(result);}
     private record Key(ServerLevel level,BlockPos core){}
     private static final ThreadLocal<Set<Key>> CHANGING=ThreadLocal.withInitial(HashSet::new);
     public static boolean belongs(Level level,BlockPos at,BlockPos core,Direction facing,int cell){var s=level.getBlockState(at);return s.is(AncientAnvilContent.PART.get())&&s.getValue(AncientAnvilPartBlock.FACING)==facing&&s.getValue(AncientAnvilPartBlock.CELL)==cell&&AncientAnvilPartBlock.core(at,s).equals(core);}
@@ -24,22 +27,22 @@ public final class AncientAnvilStructure {
     public static boolean room(Level level,BlockPos core,Direction facing,boolean entities,AncientAnvilDesign design){
         for(var cell:CELLS){var at=cell.at(core,facing);if(!level.hasChunkAt(at)||!level.getWorldBorder().isWithinBounds(at))return false;
             if(cell.index()!=0&&!belongs(level,at,core,facing,cell.index())&&(!level.getBlockState(at).isAir()||level.getBlockEntity(at)!=null))return false;
-            if(entities){var shape=AncientAnvilGeometry.cell(design,cell.index(),facing);for(var e:level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new net.minecraft.world.phys.AABB(at)))if(!e.isSpectator())for(var box:shape.toAabbs())if(box.move(at).intersects(e.getBoundingBox()))return false;}
+            if(entities){var shape=ExpandedAncientAnvilGeometry.cell(cell.index(),facing);for(var e:level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,new net.minecraft.world.phys.AABB(at)))if(!e.isSpectator())for(var box:shape.toAabbs())if(box.move(at).intersects(e.getBoundingBox()))return false;}
         }
         return true;
     }
     public static boolean form(ServerLevel level,BlockPos core){
         var state=level.getBlockState(core);if(!state.is(AncientAnvilContent.ANVIL.get()))return false;
         var facing=state.getValue(AncientAnvilBlock.FACING);
-        var design=state.getValue(AncientAnvilBlock.DESIGN);
+        var design=AncientAnvilDesign.FOUNDRY;
         // Do not dismantle a saved assembly just because a neighboring chunk is unloaded.
         for(var cell:CELLS)if(!level.hasChunkAt(cell.at(core,facing)))return false;
-        boolean complete=state.getValue(AncientAnvilBlock.MONUMENTAL)&&CELLS.stream().filter(c->c.index()!=0).allMatch(c->belongs(level,c.at(core,facing),core,facing,c.index())&&level.getBlockState(c.at(core,facing)).getValue(AncientAnvilPartBlock.MONUMENTAL)&&level.getBlockState(c.at(core,facing)).getValue(AncientAnvilPartBlock.DESIGN)==design);
+        boolean complete=state.getValue(AncientAnvilBlock.EXPANDED)&&CELLS.stream().filter(c->c.index()!=0).allMatch(c->belongs(level,c.at(core,facing),core,facing,c.index())&&level.getBlockState(c.at(core,facing)).getValue(AncientAnvilPartBlock.EXPANDED)&&level.getBlockState(c.at(core,facing)).getValue(AncientAnvilPartBlock.DESIGN)==design);
         if(!room(level,core,facing,!complete,design)){
             // A blocked legacy six-cell anvil keeps its old, safely bounded meshes.
-            if(state.getValue(AncientAnvilBlock.MONUMENTAL)){
+            if(state.getValue(AncientAnvilBlock.EXPANDED)){
                 clear(level,core,facing);
-                level.setBlock(core,state.setValue(AncientAnvilBlock.LARGE,false).setValue(AncientAnvilBlock.MONUMENTAL,false),Block.UPDATE_ALL);
+                level.setBlock(core,state.setValue(AncientAnvilBlock.LARGE,false).setValue(AncientAnvilBlock.MONUMENTAL,false).setValue(AncientAnvilBlock.EXPANDED,false),Block.UPDATE_ALL);
             }
             return false;
         }
@@ -48,15 +51,15 @@ public final class AncientAnvilStructure {
         try{
             // Claim the surrounding cells before upgrading the central models.
             var order=new ArrayList<>(CELLS);order.sort(Comparator.comparingInt(c->c.index()==3?2:c.index()<6?1:0));
-            for(var cell:order)if(cell.index()!=0){var at=cell.at(core,facing);if(belongs(level,at,core,facing,cell.index())&&level.getBlockState(at).getValue(AncientAnvilPartBlock.MONUMENTAL)&&level.getBlockState(at).getValue(AncientAnvilPartBlock.DESIGN)==design)continue;
-                if(!level.setBlock(at,AncientAnvilContent.PART.get().defaultBlockState().setValue(AncientAnvilPartBlock.FACING,facing).setValue(AncientAnvilPartBlock.CELL,cell.index()).setValue(AncientAnvilPartBlock.MONUMENTAL,true).setValue(AncientAnvilPartBlock.DESIGN,design),Block.UPDATE_ALL))return false;
+            for(var cell:order)if(cell.index()!=0){var at=cell.at(core,facing);if(belongs(level,at,core,facing,cell.index())&&level.getBlockState(at).getValue(AncientAnvilPartBlock.EXPANDED)&&level.getBlockState(at).getValue(AncientAnvilPartBlock.DESIGN)==design)continue;
+                if(!level.setBlock(at,AncientAnvilContent.PART.get().defaultBlockState().setValue(AncientAnvilPartBlock.FACING,facing).setValue(AncientAnvilPartBlock.CELL,cell.index()).setValue(AncientAnvilPartBlock.MONUMENTAL,true).setValue(AncientAnvilPartBlock.EXPANDED,true).setValue(AncientAnvilPartBlock.DESIGN,design),Block.UPDATE_ALL))return false;
             }
-            level.setBlock(core,state.setValue(AncientAnvilBlock.LARGE,true).setValue(AncientAnvilBlock.MONUMENTAL,true),Block.UPDATE_ALL);success=true;return true;
+            level.setBlock(core,state.setValue(AncientAnvilBlock.LARGE,true).setValue(AncientAnvilBlock.MONUMENTAL,true).setValue(AncientAnvilBlock.EXPANDED,true).setValue(AncientAnvilBlock.DESIGN,design),Block.UPDATE_ALL);success=true;return true;
         }finally{
             CHANGING.get().remove(key);
             if(!success){
                 clear(level,core,facing);var remaining=level.getBlockState(core);
-                if(remaining.is(AncientAnvilContent.ANVIL.get()))level.setBlock(core,remaining.setValue(AncientAnvilBlock.LARGE,false).setValue(AncientAnvilBlock.MONUMENTAL,false),Block.UPDATE_ALL);
+                if(remaining.is(AncientAnvilContent.ANVIL.get()))level.setBlock(core,remaining.setValue(AncientAnvilBlock.LARGE,false).setValue(AncientAnvilBlock.MONUMENTAL,false).setValue(AncientAnvilBlock.EXPANDED,false),Block.UPDATE_ALL);
             }
         }
     }

@@ -25,3 +25,8 @@ The corner lava is an animated visual element. Compatibility tests retain all 28
 part/orientation/design recovery paths and legacy footprint/container protection.
 Native QA verifies the normal item places Foundry in survival, along with its
 ordinary held model, all four facings, guide and day/night/profile captures.
+
+
+The selected Foundry design is now extended for physical smithing. Current layout and
+controls are in [Ancient Anvil](ANCIENT_ANVIL.md); the earlier sample layouts stay frozen
+for saved-world compatibility. The normal item uses 32 owned cells and a 4×4 foundation.
