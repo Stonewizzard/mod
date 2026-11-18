@@ -35,7 +35,7 @@ public final class AncientAnvilTests {
                 l.setBlock(missing,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==1&&l.getBlockState(missing).is(AncientAnvilContent.RUNESTONE.get()),"Runestone qualifies without being consumed or converted");
                 l.destroyBlock(core,false);check(h,l.getBlockState(missing).is(AncientAnvilContent.RUNESTONE.get()),"Removing the anvil must leave the foundation intact");
             }
-            check(h,!Blocks.IRON_BLOCK.defaultBlockState().is(AncientAnvilContent.FOUNDATION)&&!Blocks.GOLD_BLOCK.defaultBlockState().is(AncientAnvilContent.FOUNDATION)&&!Blocks.COPPER_BLOCK.defaultBlockState().is(AncientAnvilContent.FOUNDATION),"Metal blocks are excluded from the default Runestone foundation tag");
+            check(h,!Blocks.IRON_BLOCK.defaultBlockState().is(AncientAnvilContent.FOUNDATION)&&!Blocks.GOLD_BLOCK.defaultBlockState().is(AncientAnvilContent.FOUNDATION)&&!net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace("copper_block")).defaultBlockState().is(AncientAnvilContent.FOUNDATION),"Metal blocks are excluded from the default Runestone foundation tag");
             for(var part:RuinedForgeStructure.PARTS)l.setBlock(part.at(core,Direction.NORTH),AncientForgeContent.BRICKS.get().defaultBlockState(),3);
             l.setBlock(core,AncientForgeContent.CORE.get().defaultBlockState(),3);check(h,ForgeAssembly.form(l,core),"Alloying uses a real formed Ruined Forge");
             var forge=(ReconstructionTableBlockEntity)l.getBlockEntity(core);

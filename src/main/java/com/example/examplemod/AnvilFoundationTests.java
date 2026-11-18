@@ -40,8 +40,8 @@ public final class AnvilFoundationTests {
             check(h,!AnvilFoundation.placeNext(player,core)&&placed(level,core)==1&&player.getInventory().getItem(5).getCount()==2,"Same-tick requests cannot bypass placement rate");
             h.runAtTickTime(8,()->{aim.run();player.setShiftKeyDown(true);check(h,AnvilFoundation.placeNext(player,core)&&placed(level,core)==2&&player.getInventory().getItem(5).getCount()==1,"A later request places one more block");});
             h.runAtTickTime(16,()->{
-                aim.run();player.setShiftKeyDown(true);Consumer<BlockEvent.EntityPlaceEvent> cancel=e->{if(e.getEntity()==player)e.setCanceled(true);};NeoForge.EVENT_BUS.addListener(cancel);
-                try{check(h,!AnvilFoundation.placeNext(player,core)&&placed(level,core)==2&&player.getInventory().getItem(5).getCount()==1,"A cancelled native placement restores the block and item cost");}finally{NeoForge.EVENT_BUS.removeListener(cancel);}
+                aim.run();player.setShiftKeyDown(true);boolean[] listening={true};Consumer<BlockEvent.EntityPlaceEvent> cancel=e->{if(listening[0]&&e.getEntity()==player)e.setCanceled(true);};NeoForge.EVENT_BUS.addListener(cancel);
+                try{check(h,!AnvilFoundation.placeNext(player,core)&&placed(level,core)==2&&player.getInventory().getItem(5).getCount()==1,"A cancelled native placement restores the block and item cost");}finally{listening[0]=false;}
             });
             h.runAtTickTime(24,()->{aim.run();player.setShiftKeyDown(true);check(h,AnvilFoundation.placeNext(player,core)&&placed(level,core)==3&&player.getInventory().getItem(5).isEmpty(),"The last Runestone is consumed exactly once");});
             h.runAtTickTime(32,()->{
