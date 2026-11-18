@@ -26,7 +26,7 @@ def polygon_clip(poly,axis,bound,above):
 def horn_triangles(cell=None):
     triangles=[]
     for material,face in anvil_horn.FACES:
-        raw=[(*VERTICES[i],VERTICES[i][0]/32,(VERTICES[i][2]+32)/32) if material in ('horn','edge') else (*VERTICES[i],(VERTICES[i][2]+32)/32,(32-VERTICES[i][1])/16) for i in face]
+        raw=[(*VERTICES[i],VERTICES[i][0]/64,(VERTICES[i][2]+32)/64) if material in ('horn','edge') else (*VERTICES[i],(VERTICES[i][2]+32)/32,(32-VERTICES[i][1])/16) for i in face]
         for n in range(1,len(raw)-1):
             poly=[raw[0],raw[n],raw[n+1]]
             if cell is not None:
@@ -55,7 +55,7 @@ def obj(path,triangles,cell=None,preview=False):
 
 def horn_model(name):
     return {'parent':'minecraft:block/block','loader':'neoforge:obj','model':'examplemod:models/block/'+name+'.obj','automatic_culling':False,'shade_quads':True,'flip_v':False,'emissive_ambient':False,
-            'textures':{'horn':'examplemod:block/expanded_anvil_horn_surface','edge':'examplemod:block/expanded_anvil_horn_edge','metal':'examplemod:block/runic_anvil_metal_long'}}
+            'textures':{'horn':'examplemod:block/expanded_anvil_surface','edge':'examplemod:block/expanded_anvil_horn_edge','metal':'examplemod:block/runic_anvil_metal_long'}}
 
 def horn_collision(cell):
     cx,cy,cz=cell
@@ -77,6 +77,7 @@ def horn_collision(cell):
 
 def generate(ROOT,ASSETS,j):
     boxes,decor,textures=legacy.build('foundry',legacy.DESIGNS['foundry'],capture=True)
+    textures.update(top='examplemod:block/expanded_anvil_surface',top_glow='examplemod:block/expanded_anvil_surface_glow')
     boxes=[(a,b,t) for a,b,t in boxes if not (a[1],b[1],t) in [(23,27,'metal'),(27,28,'bronze'),(28,29,'workface')]]
     decor=[(a,b,t) for a,b,t in decor if t!='top_glow']
     def octagon(x0,z0,x1,z1,y0,y1,cut,t):
@@ -95,7 +96,7 @@ def generate(ROOT,ASSETS,j):
         material='steel' if t=='workface' else 'metal' if t.startswith('panel_') else t
         faces={f:{'texture':'#'+material,'uv':v} for f,v in uv.items()}
         if t in ('workface','top_glow'):
-            faces['up']={'texture':'#top' if t=='workface' else '#top_glow','uv':[(x+cx+8)/3,(z+cz+12)/3,(X+cx+8)/3,(Z+cz+12)/3]}
+            faces['up']={'texture':'#top' if t=='workface' else '#top_glow','uv':[(x+cx)/4,(z+cz+32)/4,(X+cx)/4,(Z+cz+32)/4]}
             if t=='top_glow':faces={'up':faces['up']}
         if t.startswith('panel_') or t.startswith('rune_'):
             targets=('west','east') if t=='panel_ew' else ('north','south') if t=='panel_ns' else ({'w':'west','e':'east','n':'north','s':'south'}[t[-1]],)

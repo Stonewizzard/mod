@@ -56,7 +56,7 @@ The native 16px sprite is packed at exact 2× nearest-neighbor with binary alpha
 
 Put deepslate or cobbled deepslate in the **four diagonal corners** and one gold ingot
 in the **center**. Leave the other eight positions empty. Four hammer strikes make one
-Runestone, an inlaid deepslate building block. It has no crafting-grid recipe. Its
+Runestone, a blank prepared deepslate base for later functional Ancient Runes. It has no crafting-grid recipe. Its
 future role in runic structures is deliberately not implemented yet.
 
 ## Recipe authoring

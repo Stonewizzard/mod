@@ -51,6 +51,8 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-java@v4
         with:
           java-version: '25'
@@ -73,6 +75,17 @@ jobs:
           chmod +x gradlew
           python3 tools/generate_pickaxe_catalog.py --check
           ./gradlew classes
+      - name: Choose focused visual checks for surface-only follow-ups
+        env:
+          QA_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python3 - <<'PYTHON'
+          import os, subprocess
+          paths=subprocess.check_output(['git','diff','--name-only',os.environ['QA_HEAD']+'^',os.environ['QA_HEAD']],text=True).splitlines()
+          allowed=('tools/expanded_anvil.py','tools/generate_runic_anvil_assets.py','tools/generate_anvil_smithing.py','tools/generate_smithing_assets.py','tools/client_qa/drive.py','tools/field-guide.json','src/main/resources/assets/examplemod/','docs/','src/main/java/com/example/examplemod/ExpandedAncientAnvilGeometry.java','src/main/java/com/example/examplemod/AncientAnvilContent.java','src/main/java/com/example/examplemod/AnvilSlot.java','src/main/java/com/example/examplemod/FieldGuideChapters.java','.github/workflows/client-visual-qa.yml')
+          if paths and all(p.startswith(allowed) for p in paths):
+              with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLIENT_QA_SCOPE=anvil-surfaces\n')
+          PYTHON
       - name: Drive the actual Minecraft window
         timeout-minutes: 12
         env:

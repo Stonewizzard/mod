@@ -10,4 +10,4 @@ def read(name):
  im=Image.new('RGBA',(16,16));im.putdata([PALETTE[c] for r in rows for c in r]);return im
 
 def item_exports():return {'iron_forge_hammer':read('iron-forge-hammer').resize((32,32),Image.Resampling.NEAREST)}
-def block_exports():yield 'runestone_inlay',read('runestone-inlay')
+def block_exports():return iter(())

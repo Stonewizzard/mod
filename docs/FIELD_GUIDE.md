@@ -348,7 +348,7 @@ Iron Forge Hammer recipe: three iron ingots across the top and two sticks down t
 
 Tier 0 is sufficient. Put one deepslate or cobbled deepslate in each of the four diagonal corner positions, and one gold ingot in the center. Leave every other position empty. Strike four times with the Iron Forge Hammer to make one Runestone.
 
-Runestone is an inlaid deepslate building block for the growing workshop. Later rune systems will give it additional uses. It has no crafting-grid recipe.
+Runestone is a blank prepared stone base. Later recipes will inscribe specific functional Ancient Runes on it. It has no crafting-grid recipe.
 
 Build a complete 4 by 4 square of metal blocks directly one layer below the anvil. All 16 blocks are required. Shift + empty-hand right-click opens the foundation guide so you can see the exact offset and orientation. Iron, gold, copper, netherite and ancient metal qualify; you may mix them. Gem blocks do not qualify.
 
