@@ -46,6 +46,7 @@
       "emissive_ambient": false,
       "textures": {
         "horn": "examplemod:block/expanded_anvil_surface",
+        "underside": "examplemod:block/expanded_anvil_surface",
         "edge": "examplemod:block/expanded_anvil_horn_edge",
         "metal": "examplemod:block/runic_anvil_metal_long"
       }

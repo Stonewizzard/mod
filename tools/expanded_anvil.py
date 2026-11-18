@@ -26,7 +26,9 @@ def polygon_clip(poly,axis,bound,above):
 def horn_triangles(cell=None):
     triangles=[]
     for material,face in anvil_horn.FACES:
-        raw=[(*VERTICES[i],VERTICES[i][0]/64,(VERTICES[i][2]+32)/64) if material in ('horn','edge') else (*VERTICES[i],(VERTICES[i][2]+32)/32,(32-VERTICES[i][1])/16) for i in face]
+        # Bottom faces need X/Z projection: side projection collapses their width into stripes.
+        if material=='metal' and all(i>=16 for i in face):material='underside'
+        raw=[(*VERTICES[i],VERTICES[i][0]/64,(VERTICES[i][2]+32)/64) if material in ('horn','edge','underside') else (*VERTICES[i],(VERTICES[i][2]+32)/32,(32-VERTICES[i][1])/16) for i in face]
         for n in range(1,len(raw)-1):
             poly=[raw[0],raw[n],raw[n+1]]
             if cell is not None:
@@ -55,7 +57,7 @@ def obj(path,triangles,cell=None,preview=False):
 
 def horn_model(name):
     return {'parent':'minecraft:block/block','loader':'neoforge:obj','model':'examplemod:models/block/'+name+'.obj','automatic_culling':False,'shade_quads':True,'flip_v':False,'emissive_ambient':False,
-            'textures':{'horn':'examplemod:block/expanded_anvil_surface','edge':'examplemod:block/expanded_anvil_horn_edge','metal':'examplemod:block/runic_anvil_metal_long'}}
+            'textures':{'horn':'examplemod:block/expanded_anvil_surface','underside':'examplemod:block/expanded_anvil_surface','edge':'examplemod:block/expanded_anvil_horn_edge','metal':'examplemod:block/runic_anvil_metal_long'}}
 
 def horn_collision(cell):
     cx,cy,cz=cell
@@ -78,8 +80,17 @@ def horn_collision(cell):
 def generate(ROOT,ASSETS,j):
     boxes,decor,textures=legacy.build('foundry',legacy.DESIGNS['foundry'],capture=True)
     textures.update(top='examplemod:block/expanded_anvil_surface',top_glow='examplemod:block/expanded_anvil_surface_glow')
+    # Separate the four socket feet from coplanar plinth faces by 1/16 of a texel.
+    # Keep the recessed basin just inside its rim, rather than sharing the rim's faces.
+    for a,b,t in boxes:
+        if t=='metal' and a[1]==2 and b[1]==7 and b[0]-a[0]==8 and b[2]-a[2]==8:
+            for axis in (0,2):a[axis]-=.0625;b[axis]+=.0625
+            b[1]+=.0625
+        if t=='soot' and a[1]==7 and b[1]==8:
+            for axis in (0,2):a[axis]+=.0625;b[axis]-=.0625
     boxes=[(a,b,t) for a,b,t in boxes if not (a[1],b[1],t) in [(23,27,'metal'),(27,28,'bronze'),(28,29,'workface')]]
     decor=[(a,b,t) for a,b,t in decor if t!='top_glow']
+    decor.append(([-1,31.015,29],[17,31.025,31],'top_glow'))
     def octagon(x0,z0,x1,z1,y0,y1,cut,t):
         for z in range(z0,z1):
             inset=max(0,cut-min(z-z0,z1-z-1)-1);a=[x0+inset,y0,z];b=[x1-inset,y1,z+1];boxes.append((a,b,t))
@@ -95,8 +106,8 @@ def generate(ROOT,ASSETS,j):
         uv={'north':[16-X,16-Y,16-x,16-y],'south':[x,16-Y,X,16-y],'west':[z,16-Y,Z,16-y],'east':[16-Z,16-Y,16-z,16-y],'up':[x,z,X,Z],'down':[x,16-Z,X,16-z]}
         material='steel' if t=='workface' else 'metal' if t.startswith('panel_') else t
         faces={f:{'texture':'#'+material,'uv':v} for f,v in uv.items()}
-        if t in ('workface','top_glow'):
-            faces['up']={'texture':'#top' if t=='workface' else '#top_glow','uv':[(x+cx)/4,(z+cz+32)/4,(X+cx)/4,(Z+cz+32)/4]}
+        if t in ('workface','top_glow') or (t=='steel' and abs(Y+cy-31)<.001):
+            faces['up']={'texture':'#top_glow' if t=='top_glow' else '#top','uv':[(x+cx)/4,(z+cz+32)/4,(X+cx)/4,(Z+cz+32)/4]}
             if t=='top_glow':faces={'up':faces['up']}
         if t.startswith('panel_') or t.startswith('rune_'):
             targets=('west','east') if t=='panel_ew' else ('north','south') if t=='panel_ns' else ({'w':'west','e':'east','n':'north','s':'south'}[t[-1]],)
@@ -110,7 +121,7 @@ def generate(ROOT,ASSETS,j):
         return result
     models=[];collisions=[];horn_cells=[];empty=[]
     directory=ASSETS/'models/block'
-    (directory/'expanded_anvil_horn.mtl').write_text(''.join(f'newmtl {name}\nKa 0 0 0\nKd 1 1 1\nmap_Kd #{name}\n\n' for name in ('horn','edge','metal')))
+    (directory/'expanded_anvil_horn.mtl').write_text(''.join(f'newmtl {name}\nKa 0 0 0\nKd 1 1 1\nmap_Kd #{name}\n\n' for name in ('horn','edge','metal','underside')))
     obj(directory/'expanded_anvil_horn.obj',horn_triangles());obj(directory/'expanded_anvil_horn_item.obj',horn_triangles(),preview=True)
     for i,cell in enumerate(CELLS):
         mesh=[c for box in boxes if (c:=clip(box,cell))];collisions.append(mesh+horn_collision(cell))

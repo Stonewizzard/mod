@@ -124,7 +124,7 @@ public final class ClientVisualQa {
                                 player.connection.teleport(assetsAnvil.getX()+.5,assetsAnvil.getY(),assetsAnvil.getZ()-3,0,25);
                             });
                         }
-                        case "assets_scene","assets_anvil_view","assets_anvil_detail","assets_anvil_profile","assets_anvil_rear","assets_offhand","assets_right_hand","assets_drop_view"->{
+                        case "assets_anvil_heel","assets_anvil_under","assets_scene","assets_anvil_view","assets_anvil_detail","assets_anvil_profile","assets_anvil_rear","assets_offhand","assets_right_hand","assets_drop_view"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();var facing=command.has("facing")?net.minecraft.core.Direction.valueOf(command.get("facing").getAsString()):net.minecraft.core.Direction.NORTH;
                             server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();
                                 if(action.equals("assets_scene")){
@@ -140,6 +140,13 @@ public final class ClientVisualQa {
                                 if(action.equals("assets_scene")||action.equals("assets_anvil_view")){
                                     l.setBlock(assetsAnvil,net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);l.setBlock(assetsAnvil,com.example.examplemod.AncientAnvilContent.ANVIL.get().defaultBlockState().setValue(com.example.examplemod.AncientAnvilBlock.FACING,facing),3);com.example.examplemod.AncientAnvilBlockEntity.refresh(l,assetsAnvil,l.getBlockState(assetsAnvil));
                                     var view=assetsAnvil.relative(facing,5).relative(facing.getCounterClockWise(),3);float yaw=(float)Math.toDegrees(Math.atan2(view.getX()-assetsAnvil.getX(),assetsAnvil.getZ()-view.getZ()));player.connection.teleport(view.getX()+.5,assetsAnvil.getY(),view.getZ()+.5,yaw,0);
+                                }
+                                if(action.equals("assets_anvil_heel")){
+                                    l.setBlock(assetsAnvil.offset(1,0,4),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),3);player.connection.teleport(assetsAnvil.getX()+1.1,assetsAnvil.getY()+1,assetsAnvil.getZ()+4.5,180,14);
+                                }
+                                if(action.equals("assets_anvil_under")){
+                                    var view=assetsAnvil.north(3);for(var at:java.util.List.of(view,view.east())){l.setBlock(at.below(),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);l.setBlock(at.below(2),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),3);}
+                                    player.connection.teleport(assetsAnvil.getX()+1,assetsAnvil.getY()-1,assetsAnvil.getZ()-2.5,0,-38);
                                 }
                                 if(action.equals("assets_anvil_detail")){
                                     var front=l.getBlockState(assetsAnvil).getValue(com.example.examplemod.AncientAnvilBlock.FACING);

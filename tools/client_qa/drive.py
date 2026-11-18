@@ -125,6 +125,15 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='anvil-underside':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('assets_scene');expect(assetsLarge=True,assetsCells=32)
+        process('xdotool','key','9');command('assets_anvil_under');process('xdotool','key','F1');capture('ancient-anvil-underside');process('xdotool','key','F1')
+        command('assets_anvil_detail');process('xdotool','key','F1');capture('ancient-anvil-clean');process('xdotool','key','F1')
+        command('assets_anvil_heel');process('xdotool','key','F1');capture('ancient-anvil-heel-marker');process('xdotool','key','F1')
+        for angle in ('profile','rear'):
+            command('assets_anvil_'+angle);process('xdotool','key','F1');capture('ancient-anvil-corners-'+angle);time.sleep(.5);capture('ancient-anvil-corners-'+angle+'-later');process('xdotool','key','F1')
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-underside','captures':len(list(CAPTURES.glob('*.png')))},indent=2))
+        return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-surfaces':
         process('xdotool','key','Escape');expect(screen='InGame')
         command('forge_fixture') # supplies scene origin, no forge processing test
