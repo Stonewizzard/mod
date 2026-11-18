@@ -107,6 +107,10 @@ public final class ClientVisualQa {
                                 double x=anvilPosition.getX()-1.5,y=anvilPosition.getY()+1,z=anvilPosition.getZ()+.8;
                                 var target=slot.world(anvilPosition,net.minecraft.core.Direction.NORTH);double dx=target.x-x,dy=target.y-(y+player.getEyeHeight()),dz=target.z-z;
                                 float yaw=(float)Math.toDegrees(Math.atan2(-dx,dz)),pitch=(float)-Math.toDegrees(Math.atan2(dy,Math.sqrt(dx*dx+dz*dz)));
+                                if(action.equals("smithing_overview")){
+                                    player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);player.getAbilities().flying=true;player.onUpdateAbilities();
+                                    x=anvilPosition.getX()+.5;y=anvilPosition.getY()+3.5;z=anvilPosition.getZ()+.5;yaw=180;pitch=90;
+                                }
                                 player.connection.teleport(x,y,z,yaw,pitch);
                             });
                         }

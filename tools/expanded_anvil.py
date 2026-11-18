@@ -90,7 +90,6 @@ def generate(ROOT,ASSETS,j):
             for axis in (0,2):a[axis]+=.0625;b[axis]-=.0625
     boxes=[(a,b,t) for a,b,t in boxes if not (a[1],b[1],t) in [(23,27,'metal'),(27,28,'bronze'),(28,29,'workface')]]
     decor=[(a,b,t) for a,b,t in decor if t!='top_glow']
-    decor.append(([-1,31.015,29],[17,31.025,31],'top_glow'))
     def octagon(x0,z0,x1,z1,y0,y1,cut,t):
         for z in range(z0,z1):
             inset=max(0,cut-min(z-z0,z1-z-1)-1);a=[x0+inset,y0,z];b=[x1-inset,y1,z+1];boxes.append((a,b,t))

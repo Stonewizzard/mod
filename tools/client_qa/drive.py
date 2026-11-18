@@ -125,6 +125,18 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='anvil-rear-slot':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_fixture')
+        process('xdotool','key','2');time.sleep(.7);process('xdotool','click','3');expect(anvilPlaced=True,anvilLarge=True)
+        command('smithing_fixture');command('smithing_aim',slot='south_outer');expect(smithAim='south_outer',smithInputs=0)
+        process('xdotool','key','9');capture('ancient-anvil-rear-slot-highlight')
+        process('xdotool','key','4');time.sleep(.25);process('xdotool','click','3');expect(smithInputs=1)
+        process('xdotool','key','9');command('smithing_overview');process('xdotool','key','F1');capture('ancient-anvil-rear-slot-item');process('xdotool','key','F1')
+        command('smithing_aim',slot='south_outer');expect(smithAim='south_outer');process('xdotool','click','3');expect(smithInputs=0)
+        command('smithing_overview');process('xdotool','key','F1');capture('ancient-anvil-rear-slot-inset');process('xdotool','key','F1')
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-rear-slot','captures':len(list(CAPTURES.glob('*.png')))},indent=2))
+        print('ANVIL_REAR_SLOT_NATIVE_PASS: visible inset marker, matching native hit target, placed workpiece and retrieval',flush=True)
+        return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-underside':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('assets_scene');expect(assetsLarge=True,assetsCells=32)
         process('xdotool','key','9');command('assets_anvil_under');process('xdotool','key','F1');capture('ancient-anvil-underside');process('xdotool','key','F1')
