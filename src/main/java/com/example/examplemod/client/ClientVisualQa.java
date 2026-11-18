@@ -86,6 +86,7 @@ public final class ClientVisualQa {
                                 if(action.equals("anvil_outer_pillar_break"))l.setBlock(anvilPosition.offset(16,3,0),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
                                 else {
                                     int target=action.equals("anvil_tier4")?4:3;
+                                    if(target==3)for(int x=-18;x<=18;x++)for(int z=-18;z<=18;z++)if(Math.max(Math.abs(x),Math.abs(z))>7)for(int y=-3;y<=6;y++)l.setBlock(anvilPosition.offset(x,y,z),(y==-3?net.minecraft.world.level.block.Blocks.STONE:net.minecraft.world.level.block.Blocks.AIR).defaultBlockState(),3);
                                     for(var stage:com.example.examplemod.AnvilStages.all())if(stage.tier()<=target)for(var req:stage.blocks())l.setBlock(req.at(anvilPosition,net.minecraft.core.Direction.NORTH),(req.tag().equals(com.example.examplemod.AnvilStages.CAPS)?net.minecraft.world.level.block.Blocks.IRON_BLOCK:com.example.examplemod.AncientAnvilContent.RUNESTONE.get()).defaultBlockState(),3);
                                     player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY()+(target==4?32:20),anvilPosition.getZ()-(target==4?12:8),0,70);
                                 }
