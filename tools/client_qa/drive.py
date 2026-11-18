@@ -129,6 +129,13 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='anvil-stages':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_tier2_fixture');expect(anvilTier=2)
+        command('anvil_tier3');expect(anvilTier=3);process('xdotool','key','F1');capture('ancient-anvil-tier3-pillars');process('xdotool','key','F1')
+        command('anvil_tier4');expect(anvilTier=4);process('xdotool','key','F1');capture('ancient-anvil-tier4-ring-pillars');process('xdotool','key','F1')
+        command('anvil_outer_pillar_break');expect(anvilTier=3)
+        print('ANVIL_STAGES_NATIVE_PASS: Tier 3 corner pillars, Tier 4 lower ring and four side pillars, missing outer pillar downgrades',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-stages'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-tier2':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_tier2_fixture')
         expect(anvilPlaced=True,anvilLarge=True,anvilTier=2,anvilFreeEdge=True)

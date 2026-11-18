@@ -366,6 +366,16 @@ At the front, a Runestone bridge replaces the center of the triangle, leaving tw
 
 All four pools and the Runestone frame must be complete for Tier 2. Recipes may require specific fluids on particular sides. Fluids are detected, not consumed. The placement guide and hold-to-build currently build only the Tier 1 foundation.
 
+Keep the complete Tier 2 layout. Add a single Runestone at diagonal offsets 4 and 5 in each corner. At offsets 6 and 7 on both axes, build a 2 by 2 pillar: four Runestone layers starting at the foundation level, topped by a 2 by 2 layer of eligible metal or gem storage blocks. Repeat on all four corners.
+
+Tier 3 adds 72 Runestone and 16 cap blocks. Iron, gold, copper, diamond, emerald and netherite blocks qualify; supported modded metal storage tags qualify too. Cap materials can be mixed.
+
+Keep all previous tiers. Add a 17 by 17 Runestone perimeter centered on the anvil, one layer below the Tier 2 foundation. The ring is hollow: do not fill its interior.
+
+At a distance of 16 blocks from the anvil center in each cardinal direction, build a 3 by 3 Runestone base at the ring level. Above its center, stack four Runestone blocks, then one eligible cap block. All four side pillars are required. Tier 4 adds 116 Runestone and 4 caps.
+
+The concrete in the reference build was a marker, not a requirement. Removing a required block lowers the anvil to its highest complete tier. The workshop blocks remain normal blocks and are not consumed or removed with the anvil. Functional rune effects will come later. The current placement guide and hold-to-build still cover Tier 1 only.
+
 Craft ancient anvil: grid rows BBB / .I. / III. A dot means an empty cell. B = ancient metal block; I = ancient ingot.
 
 <a id="pickaxe-core"></a>
