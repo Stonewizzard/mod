@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "examplemod:item/iron_forge_hammer"
+  }
+}

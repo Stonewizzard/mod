@@ -20,6 +20,10 @@ on:
       - 'tools/generate_ancient_anvil.py'
       - 'tools/runic_anvil_geometry.py'
       - 'tools/anvil_horn.py'
+      - 'tools/expanded_anvil.py'
+      - 'tools/generate_anvil_smithing.py'
+      - 'tools/generate_smithing_assets.py'
+      - 'src/main/resources/data/examplemod/anvil_recipes/**'
       - 'tools/generate_runic_anvil_assets.py'
       - 'tools/asset_sources/runic-anvil/**'
       - 'src/main/resources/assets/examplemod/textures/block/runic_anvil*'
@@ -86,6 +90,7 @@ jobs:
         with:
           name: anvil-design-previews
           path: |
+            build/client-qa/captures/anvil-smithing-*.png
             build/client-qa/captures/anvil-sample-*.png
             build/client-qa/captures/ancient-anvil-*.png
             build/client-qa/captures/large-anvil-*.png

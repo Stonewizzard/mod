@@ -1,0 +1,362 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "metal": "examplemod:block/runic_anvil_metal",
+    "steel": "examplemod:block/runic_anvil_edge",
+    "bronze": "examplemod:block/runic_anvil_frame",
+    "soot": "examplemod:block/forge_soot",
+    "top": "examplemod:block/runic_anvil_top",
+    "top_glow": "examplemod:block/runic_anvil_top_glow",
+    "panel": "examplemod:block/runic_anvil_panel",
+    "panel_glow": "examplemod:block/runic_anvil_panel_glow",
+    "ember": "examplemod:block/runic_anvil_ember",
+    "horn": "examplemod:block/runic_anvil_horn",
+    "fall": "examplemod:block/runic_anvil_fall",
+    "particle": "examplemod:block/runic_anvil_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        10,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#soot",
+          "uv": [
+            0,
+            14,
+            6,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#soot",
+          "uv": [
+            10,
+            14,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#soot",
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#soot",
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#soot",
+          "uv": [
+            10,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#soot",
+          "uv": [
+            10,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        2,
+        0
+      ],
+      "to": [
+        16,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            11,
+            5,
+            14
+          ]
+        },
+        "south": {
+          "texture": "#metal",
+          "uv": [
+            11,
+            11,
+            16,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            11,
+            16,
+            14
+          ]
+        },
+        "east": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            11,
+            16,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#metal",
+          "uv": [
+            11,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#metal",
+          "uv": [
+            11,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        5,
+        0
+      ],
+      "to": [
+        16,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bronze",
+          "uv": [
+            0,
+            10,
+            4,
+            11
+          ]
+        },
+        "south": {
+          "texture": "#bronze",
+          "uv": [
+            12,
+            10,
+            16,
+            11
+          ]
+        },
+        "west": {
+          "texture": "#bronze",
+          "uv": [
+            0,
+            10,
+            16,
+            11
+          ]
+        },
+        "east": {
+          "texture": "#bronze",
+          "uv": [
+            0,
+            10,
+            16,
+            11
+          ]
+        },
+        "up": {
+          "texture": "#bronze",
+          "uv": [
+            12,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#bronze",
+          "uv": [
+            12,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        6,
+        0
+      ],
+      "to": [
+        16,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            9,
+            3,
+            10
+          ]
+        },
+        "south": {
+          "texture": "#metal",
+          "uv": [
+            13,
+            9,
+            16,
+            10
+          ]
+        },
+        "west": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            9,
+            16,
+            10
+          ]
+        },
+        "east": {
+          "texture": "#metal",
+          "uv": [
+            0,
+            9,
+            16,
+            10
+          ]
+        },
+        "up": {
+          "texture": "#metal",
+          "uv": [
+            13,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#metal",
+          "uv": [
+            13,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        7.025,
+        0
+      ],
+      "to": [
+        16,
+        7.05,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ember",
+          "uv": [
+            0,
+            8.95,
+            1,
+            8.975
+          ]
+        },
+        "south": {
+          "texture": "#ember",
+          "uv": [
+            15,
+            8.95,
+            16,
+            8.975
+          ]
+        },
+        "west": {
+          "texture": "#ember",
+          "uv": [
+            0,
+            8.95,
+            16,
+            8.975
+          ]
+        },
+        "east": {
+          "texture": "#ember",
+          "uv": [
+            0,
+            8.95,
+            16,
+            8.975
+          ]
+        },
+        "up": {
+          "texture": "#ember",
+          "uv": [
+            15,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#ember",
+          "uv": [
+            15,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "shade": false,
+      "light_emission": 15
+    }
+  ]
+}

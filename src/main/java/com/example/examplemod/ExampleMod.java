@@ -145,6 +145,8 @@ public class ExampleMod {
                 output.accept(AncientForgeContent.CORE_ITEM.get());
                 output.accept(AncientForgeContent.BRICKS_ITEM.get());
                 output.accept(AncientAnvilContent.ANVIL_ITEM.get());
+                output.accept(AncientAnvilContent.IRON_FORGE_HAMMER.get());
+                output.accept(AncientAnvilContent.RUNESTONE_ITEM.get());
                 output.accept(AncientAnvilContent.SCRAP_ITEM.get());
                 output.accept(AncientAnvilContent.INGOT.get());
                 output.accept(AncientAnvilContent.METAL_ITEM.get());
@@ -180,6 +182,8 @@ public class ExampleMod {
         PickaxeEvents.register();
         modEventBus.addListener(ExcavationPayload::register);
         modEventBus.addListener(ComponentStationPayload::register);
+        modEventBus.addListener(AnvilStrikePayload::register);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(AnvilRecipes::register);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -193,6 +197,7 @@ public class ExampleMod {
             modEventBus.addListener(ReconstructionTests::register);
             modEventBus.addListener(AncientForgeTests::register);
             modEventBus.addListener(AncientAnvilTests::register);
+            modEventBus.addListener(AnvilSmithingTests::register);
             modEventBus.addListener(LargeAnvilTests::register);
             modEventBus.addListener(AncientScrapTests::register);
             modEventBus.addListener(FireboxProcessTests::register);
@@ -274,6 +279,7 @@ public class ExampleMod {
             event.accept(ReconstructionContent.TABLE_ITEM);
             event.accept(AncientForgeContent.CORE_ITEM);
             event.accept(AncientAnvilContent.ANVIL_ITEM);
+            event.accept(AncientAnvilContent.RUNESTONE_ITEM);
             event.accept(AscenderContent.ITEM);
             ComponentStationContent.STATIONS.forEach(station->event.accept(station.item()));
             FieldGuideContent.finalists().forEach(event::accept);

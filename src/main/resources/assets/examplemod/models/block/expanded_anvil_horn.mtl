@@ -1,0 +1,15 @@
+newmtl horn
+Ka 0 0 0
+Kd 1 1 1
+map_Kd #horn
+
+newmtl edge
+Ka 0 0 0
+Kd 1 1 1
+map_Kd #edge
+
+newmtl metal
+Ka 0 0 0
+Kd 1 1 1
+map_Kd #metal
+

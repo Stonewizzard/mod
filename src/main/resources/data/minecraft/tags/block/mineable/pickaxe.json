@@ -14,6 +14,7 @@
     "examplemod:formed_ruined_forge",
     "examplemod:ancient_anvil",
     "examplemod:ancient_metal_block",
-    "examplemod:ancient_anvil_part"
+    "examplemod:ancient_anvil_part",
+    "examplemod:runestone"
   ]
 }

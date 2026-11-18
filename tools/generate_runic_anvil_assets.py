@@ -30,6 +30,11 @@ def exports():
                 tile.putdata([colours[rows[y][(x+frame)%size[0]]] for y in range(size[1]) for x in range(size[0])])
                 image.paste(tile,(0,frame*size[1]))
         yield name,image
+        if source in ('horn','edge'):
+            expanded=Image.new('RGB',(32,32))
+            for x in (0,16):
+                for y in (0,16):expanded.paste(image,(x,y))
+            yield 'expanded_anvil_horn_'+('surface' if source=='horn' else 'edge'),expanded
         if source in ('horn','edge','metal'):
             horizontal=source=='metal'
             long=Image.new('RGB',(32,16) if horizontal else (16,32))

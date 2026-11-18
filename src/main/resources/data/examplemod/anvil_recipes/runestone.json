@@ -1,0 +1,26 @@
+{
+  "anvil_tier": 0,
+  "hammer_tier": 1,
+  "work": 4,
+  "ingredients": {
+    "north_west": {
+      "tag": "examplemod:runestone_deepslate"
+    },
+    "north_east": {
+      "tag": "examplemod:runestone_deepslate"
+    },
+    "south_west": {
+      "tag": "examplemod:runestone_deepslate"
+    },
+    "south_east": {
+      "tag": "examplemod:runestone_deepslate"
+    },
+    "center": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "result": {
+    "id": "examplemod:runestone",
+    "count": 1
+  }
+}

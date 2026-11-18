@@ -21,7 +21,7 @@ TEXTURES={'metal':'examplemod:block/runic_anvil_metal','steel':'examplemod:block
 DESIGNS={'base':{'offset':0,'narrow':0},'foundry':{'offset':4,'narrow':1},
          'spillway':{'offset':2,'narrow':0},'columns':{'offset':4,'narrow':2}}
 
-def build(design,cfg):
+def build(design,cfg,capture=False):
  n=cfg['narrow'];dz=cfg['offset'];prefix='ancient_anvil'+anvil_horn.suffix(design)
  textures=dict(TEXTURES)
  if design=='base':textures.pop('fall')
@@ -145,6 +145,7 @@ def build(design,cfg):
   if t in ('top_glow','ember','fall') or t.startswith('rune_'):e.update({'shade':False,'light_emission':15})
   return e
  
+ if capture:return boxes,decor,textures
  collisions=[];models=[]
  for i,cell in enumerate(cells):
   mesh=[c for b in boxes if (c:=clip(b,cell))]

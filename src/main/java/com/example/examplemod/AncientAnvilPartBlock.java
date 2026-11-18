@@ -15,15 +15,17 @@ import net.minecraft.world.phys.shapes.*;
 
 /** Non-item parts belong to one core; breaking any section recovers exactly one anvil. */
 public final class AncientAnvilPartBlock extends Block {
-    public static final IntegerProperty CELL=IntegerProperty.create("cell",1,17);
+    public static final IntegerProperty CELL=IntegerProperty.create("cell",1,31);
     public static final BooleanProperty MONUMENTAL=BooleanProperty.create("monumental");
     public static final EnumProperty<Direction> FACING=BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<AncientAnvilDesign> DESIGN=AncientAnvilBlock.DESIGN;
-    public AncientAnvilPartBlock(BlockBehaviour.Properties p){super(p);registerDefaultState(stateDefinition.any().setValue(CELL,1).setValue(FACING,Direction.NORTH).setValue(MONUMENTAL,false).setValue(DESIGN,AncientAnvilDesign.BASE));}
-    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(CELL,FACING,MONUMENTAL,DESIGN);}
+    public static final BooleanProperty EXPANDED=AncientAnvilBlock.EXPANDED;
+    public AncientAnvilPartBlock(BlockBehaviour.Properties p){super(p);registerDefaultState(stateDefinition.any().setValue(CELL,1).setValue(FACING,Direction.NORTH).setValue(MONUMENTAL,false).setValue(EXPANDED,false).setValue(DESIGN,AncientAnvilDesign.BASE));}
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(CELL,FACING,MONUMENTAL,EXPANDED,DESIGN);}
     public static BlockPos core(BlockPos at,BlockState s){var c=AncientAnvilStructure.CELLS.get(s.getValue(CELL));return at.relative(s.getValue(FACING),c.z()).relative(s.getValue(FACING).getCounterClockWise(),c.x()).below(c.y());}
-    @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext c){return s.getValue(MONUMENTAL)||s.getValue(CELL)>=6?AncientAnvilGeometry.cell(s.getValue(DESIGN),s.getValue(CELL),s.getValue(FACING)):LegacyAncientAnvilGeometry.cell(s.getValue(CELL),s.getValue(FACING));}
-    @Override protected InteractionResult useWithoutItem(BlockState s,Level l,BlockPos p,Player player,BlockHitResult hit){var core=core(p,s);var state=l.getBlockState(core);return state.is(AncientAnvilContent.ANVIL.get())?AncientAnvilContent.ANVIL.get().useWithoutItem(state,l,core,player,hit):InteractionResult.PASS;}
+    @Override protected VoxelShape getShape(BlockState s,BlockGetter l,BlockPos p,CollisionContext c){return s.getValue(EXPANDED)||s.getValue(CELL)>=18?ExpandedAncientAnvilGeometry.cell(s.getValue(CELL),s.getValue(FACING)):s.getValue(MONUMENTAL)||s.getValue(CELL)>=6?AncientAnvilGeometry.cell(s.getValue(DESIGN),s.getValue(CELL),s.getValue(FACING)):LegacyAncientAnvilGeometry.cell(s.getValue(CELL),s.getValue(FACING));}
+    @Override protected InteractionResult useItemOn(ItemStack stack,BlockState s,Level l,BlockPos p,Player player,net.minecraft.world.InteractionHand hand,BlockHitResult hit){return AnvilWork.interact(l,p,player,hand,hit);}
+    @Override protected InteractionResult useWithoutItem(BlockState s,Level l,BlockPos p,Player player,BlockHitResult hit){return AnvilWork.interact(l,p,player,net.minecraft.world.InteractionHand.MAIN_HAND,hit);}
     @Override protected void affectNeighborsAfterRemoval(BlockState s,ServerLevel l,BlockPos p,boolean moving){super.affectNeighborsAfterRemoval(s,l,p,moving);if(!l.getBlockState(p).is(this))AncientAnvilStructure.brokenPart(l,core(p,s),s.getValue(FACING));}
     // Player harvesting requests loot AFTER removal; the core has already been cleared then.
     @Override protected List<ItemStack> getDrops(BlockState s,LootParams.Builder b){return List.of(new ItemStack(AncientAnvilContent.item(s.getValue(DESIGN))));}

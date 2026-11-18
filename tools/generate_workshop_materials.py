@@ -47,6 +47,8 @@ def exports():
     yield 'anvil_workface', result
     from generate_runic_anvil_assets import exports as runic_exports
     yield from runic_exports()
+    from generate_smithing_assets import block_exports
+    yield from block_exports()
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

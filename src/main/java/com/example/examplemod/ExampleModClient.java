@@ -35,6 +35,7 @@ public class ExampleModClient {
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.AncientAnvilPreview::click);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.AncientAnvilPreview::tick);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.AncientAnvilOutline::extract);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.AnvilHammerClient::click);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::tooltip);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.example.examplemod.client.ModifierTooltipPaging::scroll);
         // Allows NeoForge to create a config screen for this mod's configs.

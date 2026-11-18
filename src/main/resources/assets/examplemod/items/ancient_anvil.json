@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "examplemod:block/ancient_anvil_foundry_item"
+    "model": "examplemod:block/expanded_anvil_item"
   }
 }
