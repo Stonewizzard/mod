@@ -37,10 +37,10 @@ public final class AnvilBasinTests {
                 var requirements=AnvilRecipes.readFluids(json);
                 var recipe=new AnvilRecipes.Recipe(id("fluid_test"),2,1,4,Map.of(AnvilSlot.CENTER,new AnvilRecipes.Input(Identifier.withDefaultNamespace("gold_ingot"),null)),Items.DIAMOND,1,requirements);
                 be.placeInput(AnvilSlot.CENTER,new ItemStack(Items.GOLD_INGOT));check(h,recipe.matches(be),"Recipes accept fluid IDs and fluid tags together");
-                var split=AnvilBasins.pool(core,front,AnvilBasins.Side.FRONT);var wrong=split.getLast();l.setBlock(wrong,Blocks.LAVA.defaultBlockState(),3);
+                var split=AnvilBasins.pool(core,front,AnvilBasins.Side.FRONT);for(var at:split)l.setBlock(at,Blocks.AIR.defaultBlockState(),3);for(int i=0;i<split.size();i++)l.setBlock(split.get(i),(i==0||i==1||i==4?Blocks.WATER:Blocks.LAVA).defaultBlockState(),3);
                 AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==1&&!recipe.matches(be),"Both separated front pools must match, recipe stops immediately");
-                l.setBlock(wrong,Blocks.WATER.defaultBlockState(),3);
-                var flow=AnvilBasins.pool(core,front,AnvilBasins.Side.RIGHT).getFirst();l.setBlock(flow,Fluids.FLOWING_LAVA.defaultFluidState().createLegacyBlock(),3);
+                for(var at:split)l.setBlock(at,Blocks.AIR.defaultBlockState(),3);for(var at:split)l.setBlock(at,Blocks.WATER.defaultBlockState(),3);
+                var flow=AnvilBasins.pool(core,front,AnvilBasins.Side.RIGHT).getFirst();l.setBlock(flow,Blocks.LAVA.defaultBlockState().setValue(LiquidBlock.LEVEL,4),3);
                 check(h,AnvilBasins.inspect(l,core,front).complete(),"Source and flowing forms of the same fluid agree");
                 var border=AnvilBasins.frame(core,front).iterator().next();l.setBlock(border,Blocks.STONE.defaultBlockState(),3);AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==1,"Broken frame downgrades to Tier 1");l.setBlock(border,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);
                 var foundation=core.below();l.setBlock(foundation,Blocks.STONE.defaultBlockState(),3);AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==0,"Basins cannot bypass Tier 1 foundation");l.setBlock(foundation,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);
