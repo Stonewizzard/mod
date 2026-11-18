@@ -129,6 +129,13 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='anvil-tier2':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_tier2_fixture')
+        expect(anvilPlaced=True,anvilLarge=True,anvilTier=2,anvilFreeEdge=True)
+        process('xdotool','key','F1');capture('ancient-anvil-tier2-four-fluid-basins');process('xdotool','key','F1')
+        command('anvil_tier2_drain');expect(anvilTier=1,anvilFreeEdge=True)
+        print('ANVIL_TIER2_NATIVE_PASS: mixed water/lava basins form Tier 2, freed edge accepts blocks, incomplete basin downgrades',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-tier2'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-runestone-guide':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_fixture')
         process('xdotool','key','2');time.sleep(.7);process('xdotool','click','3');expect(anvilPlaced=True,anvilLarge=True,anvilTier=0)

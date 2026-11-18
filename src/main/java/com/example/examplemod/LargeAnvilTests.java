@@ -15,21 +15,21 @@ public final class LargeAnvilTests {
     private static final class Test extends GameTestInstance {
         Test(TestData<Holder<TestEnvironmentDefinition<?>>> d){super(d);}
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
-        @Override protected MutableComponent typeDescription(){return Component.literal("Large Ancient Anvil: thirty-two owned cells, all facings, no overwritten blocks, one recovery item");}
+        @Override protected MutableComponent typeDescription(){return Component.literal("Large Ancient Anvil: occupied mesh cells, all facings, no overwritten blocks, one recovery item");}
         @Override public void run(GameTestHelper h){
             check(h,AncientAnvilContent.ANVIL.get().asItem()==AncientAnvilContent.ANVIL_ITEM.get(),"Design samples never replace the normal block item");
             check(h,AncientAnvilDesign.of(AncientAnvilContent.ANVIL_ITEM.get())==AncientAnvilDesign.FOUNDRY&&AncientAnvilContent.ANVIL.get().defaultBlockState().getValue(AncientAnvilBlock.DESIGN)==AncientAnvilDesign.FOUNDRY,"Normal anvil placement defaults to the selected Foundry design");
             check(h,AncientAnvilContent.item(AncientAnvilDesign.FOUNDRY)==AncientAnvilContent.ANVIL_ITEM.get(),"Selected anvils recover as the normal craftable item");
             var level=h.getLevel();var core=h.absolutePos(new BlockPos(3,2,3));var player=h.makeMockServerPlayerInLevel();player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);player.snapTo(core.getX()+6,core.getY(),core.getZ()+6);player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND_PICKAXE));
-            for(var design:java.util.List.of(AncientAnvilDesign.FOUNDRY))for(var front:Direction.Plane.HORIZONTAL)for(int mined=0;mined<AncientAnvilStructure.CELLS.size();mined++){
+            for(var design:java.util.List.of(AncientAnvilDesign.FOUNDRY))for(var front:Direction.Plane.HORIZONTAL)for(int mined=0;mined<AncientAnvilStructure.OCCUPIED.size();mined++){
                 for(var p:AncientAnvilStructure.foundation(core,front))level.setBlock(p,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);
                 level.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState().setValue(AncientAnvilBlock.FACING,front).setValue(AncientAnvilBlock.DESIGN,design),3);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));
                 check(h,level.getBlockState(core).getValue(AncientAnvilBlock.LARGE)&&level.getBlockState(core).getValue(AncientAnvilBlock.TIER)==1,"The same tier-one foundation supports the enlarged anvil");
                 check(h,level.getBlockState(core).getValue(AncientAnvilBlock.DESIGN)==design,"Placement keeps the chosen visual design");
-                for(var c:AncientAnvilStructure.CELLS){var at=c.at(core,front);check(h,level.getBlockState(at).getValue(c.index()==0?AncientAnvilBlock.DESIGN:AncientAnvilPartBlock.DESIGN)==design,"Every part carries its owner design");if(c.index()!=0)check(h,AncientAnvilStructure.belongs(level,at,core,front,c.index()),"Every rendered cell is really owned in every facing");var shape=ExpandedAncientAnvilGeometry.cell(c.index(),front);if(shape.isEmpty())continue;var bounds=shape.bounds();check(h,bounds.minX>=0&&bounds.maxX<=1&&bounds.minY>=0&&bounds.maxY<=1&&bounds.minZ>=0&&bounds.maxZ<=1,"Collision cannot extend into unowned cells");}
-                int before=drops(level,core,design);var at=AncientAnvilStructure.CELLS.get(mined).at(core,front);if(mined%2==0)level.destroyBlock(at,true);else player.gameMode.destroyBlock(at);
+                for(var c:AncientAnvilStructure.OCCUPIED){var at=c.at(core,front);check(h,level.getBlockState(at).getValue(c.index()==0?AncientAnvilBlock.DESIGN:AncientAnvilPartBlock.DESIGN)==design,"Every part carries its owner design");if(c.index()!=0)check(h,AncientAnvilStructure.belongs(level,at,core,front,c.index()),"Every rendered cell is really owned in every facing");var shape=ExpandedAncientAnvilGeometry.cell(c.index(),front);if(shape.isEmpty())continue;var bounds=shape.bounds();check(h,bounds.minX>=0&&bounds.maxX<=1&&bounds.minY>=0&&bounds.maxY<=1&&bounds.minZ>=0&&bounds.maxZ<=1,"Collision cannot extend into unowned cells");}
+                int before=drops(level,core,design);var at=AncientAnvilStructure.OCCUPIED.get(mined).at(core,front);if(mined%2==0)level.destroyBlock(at,true);else player.gameMode.destroyBlock(at);
                 check(h,drops(level,core,design)==before+1,"Harvesting any anvil section must drop exactly one anvil");
-                for(var c:AncientAnvilStructure.CELLS)check(h,level.getBlockState(c.at(core,front)).isAir(),"Harvesting any section clears all thirty-two owned cells");
+                for(var c:AncientAnvilStructure.CELLS)check(h,level.getBlockState(c.at(core,front)).isAir(),"Harvesting any section clears all occupied mesh cells");
                 for(var p:AncientAnvilStructure.foundation(core,front))check(h,level.getBlockState(p).is(AncientAnvilContent.FOUNDATION),"Anvil recovery preserves every foundation Runestone block");
             }
             player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);level.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));int creativeBefore=drops(level,core);player.gameMode.destroyBlock(core.north().above());check(h,drops(level,core)==creativeBefore&&level.getBlockState(core).isAir(),"Creative removal clears the multiblock without spawning free anvil items");
@@ -65,7 +65,7 @@ public final class LargeAnvilTests {
             var creature=h.spawn(ExampleMod.CRUNCHER.get(),new BlockPos(3,3,2));creature.setNoAi(true);
             level.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));
             check(h,!level.getBlockState(core).getValue(AncientAnvilBlock.LARGE),"Automatic expansion waits for living entities to move away");creature.discard();AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));check(h,level.getBlockState(core).getValue(AncientAnvilBlock.LARGE),"Safe expansion resumes after the obstruction leaves");
-            System.out.println("LARGE_ANVIL_CHECK: PASS: thirty-two actual owned cells, four facings, all128 harvesting paths recover once, foundation preservation, old-world fallback, six/eighteen-to-thirty-two-cell migration, container/entity protection and safe expansion");h.succeed();
+            System.out.println("LARGE_ANVIL_CHECK: PASS: actual mesh-owned cells, four facings, all occupied-cell harvesting paths recover once, foundation preservation, old-world fallback, six/eighteen-to-thirty-two-cell migration, container/entity protection and safe expansion");h.succeed();
         }
     }
     private static int drops(net.minecraft.server.level.ServerLevel l,BlockPos p){return drops(l,p,AncientAnvilDesign.FOUNDRY);}

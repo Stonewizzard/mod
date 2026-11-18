@@ -360,6 +360,12 @@ Hold Shift + right-click while looking at the anvil to place Runestone from your
 
 The guide remains on until you toggle it off or leave the world. Correct foundation blocks are never consumed by the anvil; each construction step moves one Runestone from your inventory into the world.
 
+Keep the 5 by 5 Runestone foundation. In the same layer, extend triangular fluid pools from its four sides: rows of five, three, and one fluid blocks. Surround them with the stepped Runestone border and a tip block at each extreme.
+
+At the front, a Runestone bridge replaces the center of the triangle, leaving two pools of three fluid blocks. Those two pools count as one side and must use the same fluid. Each other side may use its own fluid. Water, lava and fluid blocks from other mods are supported; flowing and source versions count as the same fluid.
+
+All four pools and the Runestone frame must be complete for Tier 2. Recipes may require specific fluids on particular sides. Fluids are detected, not consumed. The placement guide and hold-to-build currently build only the Tier 1 foundation.
+
 Craft ancient anvil: grid rows BBB / .I. / III. A dot means an empty cell. B = ancient metal block; I = ancient ingot.
 
 <a id="pickaxe-core"></a>

@@ -199,6 +199,7 @@ public class ExampleMod {
             modEventBus.addListener(AncientForgeTests::register);
             modEventBus.addListener(AncientAnvilTests::register);
             modEventBus.addListener(AnvilFoundationTests::register);
+            modEventBus.addListener(AnvilBasinTests::register);
             modEventBus.addListener(AnvilSmithingTests::register);
             modEventBus.addListener(LargeAnvilTests::register);
             modEventBus.addListener(AncientScrapTests::register);

@@ -43,6 +43,7 @@ public final class AnvilWork {
     public static boolean strike(AncientAnvilBlockEntity be,Player player,InteractionHand hand){
         if(!(be.getLevel() instanceof ServerLevel level)||player.isSpectator()||!(player.getItemInHand(hand).getItem() instanceof ForgeHammerItem hammer)||!be.getBlockState().getValue(AncientAnvilBlock.EXPANDED))return false;
         if(!be.output().isEmpty()){message(player,"Take the finished item from the center");return false;}
+        AncientAnvilBlockEntity.refresh(level,be.getBlockPos(),be.getBlockState());
         var recipe=AnvilRecipes.match(be);
         if(recipe==null){message(player,"These items do not match an anvil recipe");return false;}
         if(be.getBlockState().getValue(AncientAnvilBlock.TIER)<recipe.anvilTier()){message(player,"This recipe needs a higher anvil tier");return false;}

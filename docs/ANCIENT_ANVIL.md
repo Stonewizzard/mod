@@ -118,3 +118,49 @@ durability, center result retrieval, and dropped inventory recovery. Native-clie
 drives the real Minecraft window to place the item, use the foundation guide, place
 and retrieve all thirteen positions, strike with both mouse buttons and collect a
 Runestone. Actual window captures accompany CI artifacts.
+
+## Tier 2: directional fluid basins
+
+Keep the Tier 1 5×5 Runestone foundation. Everything below is in that same layer,
+one block below the anvil's placement block. Directions are relative to the anvil:
+front points toward its horn; right/left are viewed from behind the anvil.
+
+For precise placement, each side extends out from the center: distance 3 has five
+fluid cells (across -2..2), distance 4 has three (-1..1), distance 5 has one (0).
+The front differs: replace its center cells at distances 3, 4 and 5 with Runestone.
+This leaves two pools of three fluid blocks each. Both must be the same fluid.
+At distance 6, place one Runestone tip on every side, including the front.
+The stepped border lies at (distance, across) (3,±3), (4,±2), (5,±1).
+All borders and the bridge use Runestone (the foundation block tag).
+
+Each complete side independently detects its fluid, including registered mod fluids.
+Source and flowing variants agree. Empty cells, waterlogged blocks and fluid-containing
+block entities are not basin cells. The four sides need not match each other.
+Fluid is not consumed. Removing part of a pool or its border downgrades to Tier 1;
+breaking the inner foundation downgrades to Tier 0.
+
+Tier 2 recipes are datapack files in `data/<namespace>/anvil_recipes/`.
+The optional `fluids` object maps `front`, `right`, `back`, `left` to exactly one
+`fluid` ID or `tag` per specified side. Unspecified sides accept any consistent fluid.
+A recipe with fluid conditions implicitly requires at least Tier 2.
+
+```json
+{
+  "anvil_tier": 2,
+  "hammer_tier": 1,
+  "work": 4,
+  "ingredients": {"center": {"item": "minecraft:gold_ingot"}},
+  "fluids": {
+    "front": {"fluid": "minecraft:water"},
+    "right": {"tag": "minecraft:lava"}
+  },
+  "result": {"id": "minecraft:gold_nugget", "count": 9}
+}
+```
+
+This example is documentation, not an enabled recipe. No new progression recipes
+are imposed yet. Tier 0/1 recipes continue to work. The placement guide and automatic
+construction currently cover the original Tier 1 foundation only.
+
+Invisible legacy part blocks with no mesh are released when an anvil refreshes;
+their serialized indices remain stable. Visible parts and the horn retain ownership.
