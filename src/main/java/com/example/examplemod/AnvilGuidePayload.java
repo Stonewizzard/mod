@@ -39,5 +39,5 @@ public record AnvilGuidePayload(String json) implements CustomPacketPayload {
             out.add(new AnvilStages.Stage(s.get("tier").getAsInt(),List.copyOf(blocks)));
         }return List.copyOf(out);
     }
-    public static void sync(OnDatapackSyncEvent e){var packet=new ClientboundCustomPayloadPacket(snapshot());e.getRelevantPlayers().forEach(p->p.connection.send(packet));}
+    public static void sync(OnDatapackSyncEvent e){var packet=new ClientboundCustomPayloadPacket(snapshot());e.getRelevantPlayers().filter(p->p.connection.hasChannel(TYPE)).forEach(p->p.connection.send(packet));}
 }
