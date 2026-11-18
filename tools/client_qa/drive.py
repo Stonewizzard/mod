@@ -221,10 +221,10 @@ def run():
     # Place the actual crafted block item with native right-click, then inspect both foundation tiers.
     command('anvil_fixture');process('xdotool','key','2');time.sleep(.7);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0,anvilLarge=True)
     process('xdotool','key','9');command('anvil_view');capture('ancient-anvil-tier0')
-    command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','keydown','Shift_L','click','3','keyup','Shift_L');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel0')
+    command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','keydown','Shift_L');time.sleep(.3);process('xdotool','click','3');time.sleep(.2);process('xdotool','keyup','Shift_L');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel0')
     click_widget('Show foundation guide');expect(screen='InGame',anvilGuide=True);command('anvil_expose');command('anvil_view');capture('ancient-anvil-guide')
     command('anvil_foundation');expect(anvilTier=1,anvilMissing=0,anvilGuide=False);capture('ancient-anvil-tier1')
-    command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','keydown','Shift_L','click','3','keyup','Shift_L');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel1')
+    command('anvil_view',close=True);expect(aimedAtAnvil=True);process('xdotool','keydown','Shift_L');time.sleep(.3);process('xdotool','click','3');time.sleep(.2);process('xdotool','keyup','Shift_L');expect(screen='AncientAnvilScreen');capture('ancient-anvil-panel1')
     process('xdotool','key','Escape');command('anvil_damage');expect(anvilTier=0,anvilMissing=1)
     command('anvil_foundation');expect(anvilTier=1,anvilMissing=0)
     print('ANCIENT_ANVIL_NATIVE_PASS: actual block item placement, tier zero/one, mixed metal foundation, real panel/guide buttons, downgrade/repair; in-world timed alloying, exact costs and legacy-inventory withdrawal',flush=True)
@@ -236,6 +236,7 @@ def run():
         command('smithing_aim',slot=slot);expect(smithAim=slot);process('xdotool','click','3');expect(smithInputs=count)
     process('xdotool','key','2');command('smithing_aim',slot='center');expect(smithAim='center');process('xdotool','click','3');expect(smithInputs=5)
     capture('anvil-smithing-ingredients')
+    process('xdotool','key','9');time.sleep(.2);process('xdotool','keydown','Shift_L');time.sleep(.3);process('xdotool','click','3');time.sleep(.2);process('xdotool','keyup','Shift_L');expect(screen='AncientAnvilScreen',smithInputs=5);process('xdotool','key','Escape');expect(screen='InGame',smithInputs=5)
     process('xdotool','key','3');time.sleep(.5);capture('anvil-smithing-hammer-held')
     for work in (1,2):
         process('xdotool','click','1');expect(smithWork=work,smithOutput=False,smithHammerDamage=work);time.sleep(.55)

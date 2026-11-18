@@ -41,6 +41,7 @@ public final class AnvilSmithingTests {
             check(h,!AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&hammer.getDamageValue()==0,"Invalid recipes never damage the hammer");
             for(var slot:List.of(AnvilSlot.NORTH_WEST,AnvilSlot.NORTH_EAST,AnvilSlot.SOUTH_WEST,AnvilSlot.SOUTH_EAST))be.placeInput(slot,new ItemStack(slot==AnvilSlot.NORTH_WEST?Items.DEEPSLATE:Items.COBBLED_DEEPSLATE));
             be.placeInput(AnvilSlot.CENTER,new ItemStack(Items.GOLD_INGOT));
+            player.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY);player.setShiftKeyDown(true);AnvilWork.interact(l,core,player,InteractionHand.MAIN_HAND,new BlockHitResult(AnvilSlot.CENTER.world(core,Direction.NORTH),Direction.UP,core.above(),false));check(h,be.inputCount()==5,"Opening the foundation guide never removes workpieces");player.setShiftKeyDown(false);player.setItemInHand(InteractionHand.MAIN_HAND,hammer);
             check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==0&&AnvilRecipes.match(be)!=null,"The datapack recipe loads, accepts both deepslates and works at tier zero");
             be.placeInput(AnvilSlot.NORTH_INNER,new ItemStack(Items.STICK));check(h,!AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.inputCount()==6,"Extra ingredients block a recipe without losing anything");be.takeInput(AnvilSlot.NORTH_INNER);
             check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==1&&be.output().isEmpty(),"The first hammer hit starts work without consuming the center ingredient");
