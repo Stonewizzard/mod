@@ -29,7 +29,7 @@ public final class AnvilGuide {
         int next=state.getValue(AncientAnvilBlock.TIER)+1;var front=state.getValue(AncientAnvilBlock.FACING);var targets=new ArrayList<Target>();
         if(next==1)for(var p:AncientAnvilStructure.foundation(core,front))targets.add(new Target(p,AncientAnvilContent.FOUNDATION,Kind.BLOCK,null));
         else if(next==2){
-            AnvilBasins.frame(core,front).stream().sorted(Comparator.comparingInt(BlockPos::getX).thenComparingInt(BlockPos::getZ)).forEach(p->targets.add(new Target(p,AncientAnvilContent.FOUNDATION,Kind.BLOCK,null)));
+            AnvilBasins.frame(core,front).stream().sorted(Comparator.<BlockPos>comparingInt(p->p.getX()).thenComparingInt(p->p.getZ())).forEach(p->targets.add(new Target(p,AncientAnvilContent.FOUNDATION,Kind.BLOCK,null)));
             for(var side:AnvilBasins.Side.values()){
                 Fluid fluid=null;
                 for(var p:AnvilBasins.pool(core,front,side))if(level.hasChunkAt(p)&&!level.getFluidState(p).isEmpty()){fluid=AnvilBasins.canonical(level.getFluidState(p).getType());break;}
