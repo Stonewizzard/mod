@@ -12,9 +12,9 @@ public enum AnvilSlot {
     NORTH_INNER("north_inner",16,4,29),EAST_INNER("east_inner",23,11,29),
     SOUTH_INNER("south_inner",16,18,29),WEST_INNER("west_inner",9,11,29),
     NORTH_OUTER("north_outer",16,-3,29),EAST_OUTER("east_outer",29,11,29),
-    SOUTH_OUTER("south_outer",16,30,31),WEST_OUTER("west_outer",3,11,29);
+    SOUTH_OUTER("south_outer",16,24,29),WEST_OUTER("west_outer",3,11,29);
     public final String id;public final double x,z,y;
-    AnvilSlot(String id,double x,double z,double y){this.id=id;this.x=x;this.z=z;this.y=y;}
+    AnvilSlot(String id,double x,double z,double y){this.id=id;this.x=x-8;this.z=z;this.y=y;}
     public Vec3 local(){return new Vec3(x/16,y/16,z/16);}
     public Vec3 world(BlockPos core,Direction facing){return toWorld(core,facing,local());}
     public static AnvilSlot byId(String id){return Arrays.stream(values()).filter(s->s.id.equals(id)).findFirst().orElseThrow(()->new IllegalArgumentException("Unknown anvil position: "+id));}

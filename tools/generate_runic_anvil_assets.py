@@ -20,6 +20,8 @@ def exports():
         for dx,dz,c in [(0,-1,'B'),(1,0,'C'),(0,1,'B'),(-1,0,'C'),(0,0,'D')]:marks[x+dx,z+dz]=c
     for x,z in [(16,4),(23,11),(16,18),(9,11),(16,-3),(29,11),(3,11)]:
         marks[x,z]='D';marks[x,z+1]='C';marks[x+1,z]='B'
+    # Rear ingredient marker sits inside the working plate, clear of the narrow heel.
+    marks[16,24]='D';marks[17,24]='B';marks[16,25]='C'
     line(12,11,20,11,'C');line(16,7,16,15,'C')
     for x,z in [(16,11),(15,10),(17,12),(17,10),(15,12)]:marks[x,z]='D'
     skin=Image.new('RGB',(64,64));mask=Image.new('RGBA',(64,64*5))

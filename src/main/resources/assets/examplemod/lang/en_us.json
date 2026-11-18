@@ -134,7 +134,7 @@
   "anvil.examplemod.hide": "Hide foundation guide",
   "anvil.examplemod.tier0": "Tier 0 - Ready for basic smithing",
   "anvil.examplemod.tier1": "Tier 1 - Metal foundation complete",
-  "anvil.examplemod.foundation": "4 x 4 metal foundation: %s / 16",
+  "anvil.examplemod.foundation": "5 x 5 metal foundation: %s / 25",
   "anvil.examplemod.metals": "Iron, gold, copper, netherite or ancient metal",
   "anvil.examplemod.mixed": "Mixed metals count. Place them one layer below.",
   "item.examplemod.ancient_scrap": "Ancient Scrap",
@@ -144,5 +144,5 @@
   "item.examplemod.ancient_anvil_columns": "Ancient Anvil C: Runic Columns",
   "item.examplemod.iron_forge_hammer": "Iron Forge Hammer",
   "block.examplemod.runestone": "Runestone",
-  "anvil.examplemod.hint": "Place 16 metal blocks one layer below."
+  "anvil.examplemod.hint": "Place 25 metal blocks one layer below."
 }

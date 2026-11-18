@@ -11,7 +11,7 @@ CELLS=list(legacy.cells)+[(x,y,-2) for y in (0,1) for x in (-1,0,1)]+[(2,y,z) fo
 TOP=[(-4,29,-4),(20,29,-4),(18,29,-13),(13,29,-26),(9.5,29,-31),(6.5,29,-31),(3,29,-26),(-2,29,-13)]
 BEVEL=[(-5,28.25,-4),(21,28.25,-4),(19,28.25,-13),(14,28.25,-26),(10,28.25,-31.5),(6,28.25,-31.5),(2,28.25,-26),(-3,28.25,-13)]
 BOTTOM=[(-3,22.6,-4),(19,22.6,-4),(17,23.5,-13),(12.5,26,-26),(9.5,27,-31.5),(6.5,27,-31.5),(3.5,26,-26),(-1,23.5,-13)]
-VERTICES=[(x+8,y,z) for x,y,z in TOP+BEVEL+BOTTOM]
+VERTICES=[(x,y,z) for x,y,z in TOP+BEVEL+BOTTOM]
 
 def polygon_clip(poly,axis,bound,above):
     result=[]
@@ -26,7 +26,9 @@ def polygon_clip(poly,axis,bound,above):
 def horn_triangles(cell=None):
     triangles=[]
     for material,face in anvil_horn.FACES:
-        raw=[(*VERTICES[i],VERTICES[i][0]/64,(VERTICES[i][2]+32)/64) if material in ('horn','edge') else (*VERTICES[i],(VERTICES[i][2]+32)/32,(32-VERTICES[i][1])/16) for i in face]
+        # Bottom faces need X/Z projection: side projection collapses their width into stripes.
+        if material=='metal' and all(i>=16 for i in face):material='underside'
+        raw=[(*VERTICES[i],(VERTICES[i][0]+8)/64,(VERTICES[i][2]+32)/64) if material in ('horn','edge','underside') else (*VERTICES[i],(VERTICES[i][2]+32)/32,(32-VERTICES[i][1])/16) for i in face]
         for n in range(1,len(raw)-1):
             poly=[raw[0],raw[n],raw[n+1]]
             if cell is not None:
@@ -46,7 +48,7 @@ def obj(path,triangles,cell=None,preview=False):
     index=0
     for material,triangle in triangles:
         for x,y,z,u,v in triangle:
-            if preview:p=(8+(x-16)/4,2+y/4,8+z/4)
+            if preview:p=(8+(x-8)/4,2+y/4,8+z/4)
             elif cell is None:p=(x,y,z)
             else:p=(x-cell[0]*16,y-cell[1]*16,z-cell[2]*16)
             lines.append('v '+' '.join(f'{n/16:.9f}' for n in p));lines.append(f'vt {u:.9f} {v:.9f}')
@@ -55,7 +57,7 @@ def obj(path,triangles,cell=None,preview=False):
 
 def horn_model(name):
     return {'parent':'minecraft:block/block','loader':'neoforge:obj','model':'examplemod:models/block/'+name+'.obj','automatic_culling':False,'shade_quads':True,'flip_v':False,'emissive_ambient':False,
-            'textures':{'horn':'examplemod:block/expanded_anvil_surface','edge':'examplemod:block/expanded_anvil_horn_edge','metal':'examplemod:block/runic_anvil_metal_long'}}
+            'textures':{'horn':'examplemod:block/expanded_anvil_surface','underside':'examplemod:block/expanded_anvil_surface','edge':'examplemod:block/expanded_anvil_horn_edge','metal':'examplemod:block/runic_anvil_metal_long'}}
 
 def horn_collision(cell):
     cx,cy,cz=cell
@@ -71,13 +73,21 @@ def horn_collision(cell):
         raise ValueError(z)
     result=[]
     for a,b in zip(cuts,cuts[1:]):
-        width,under=section(b);L=max(16-width,cx*16);R=min(16+width,cx*16+16)
+        width,under=section(b);L=max(8-width,cx*16);R=min(8+width,cx*16+16)
         if L<R:result.append(([L-cx*16,under-16,a-cz*16],[R-cx*16,13,b-cz*16],'metal'))
     return result
 
 def generate(ROOT,ASSETS,j):
     boxes,decor,textures=legacy.build('foundry',legacy.DESIGNS['foundry'],capture=True)
     textures.update(top='examplemod:block/expanded_anvil_surface',top_glow='examplemod:block/expanded_anvil_surface_glow')
+    # Separate the four socket feet from coplanar plinth faces by 1/16 of a texel.
+    # Keep the recessed basin just inside its rim, rather than sharing the rim's faces.
+    for a,b,t in boxes:
+        if t=='metal' and a[1]==2 and b[1]==7 and b[0]-a[0]==8 and b[2]-a[2]==8:
+            for axis in (0,2):a[axis]-=.0625;b[axis]+=.0625
+            b[1]+=.0625
+        if t=='soot' and a[1]==7 and b[1]==8:
+            for axis in (0,2):a[axis]+=.0625;b[axis]-=.0625
     boxes=[(a,b,t) for a,b,t in boxes if not (a[1],b[1],t) in [(23,27,'metal'),(27,28,'bronze'),(28,29,'workface')]]
     decor=[(a,b,t) for a,b,t in decor if t!='top_glow']
     def octagon(x0,z0,x1,z1,y0,y1,cut,t):
@@ -85,8 +95,8 @@ def generate(ROOT,ASSETS,j):
             inset=max(0,cut-min(z-z0,z1-z-1)-1);a=[x0+inset,y0,z];b=[x1-inset,y1,z+1];boxes.append((a,b,t))
             if t=='workface':decor.append(([a[0],29.015,z],[b[0],29.025,z+1],'top_glow'))
     octagon(-8,-6,24,28,23,27,4,'metal');octagon(-9,-7,25,29,27,28,4,'bronze');octagon(-7,-5,23,27,28,29,3,'workface')
-    boxes=[([a[0]+8,a[1],a[2]],[b[0]+8,b[1],b[2]],t) for a,b,t in boxes]
-    decor=[([a[0]+8,a[1],a[2]],[b[0]+8,b[1],b[2]],t) for a,b,t in decor]
+    boxes=[([a[0],a[1],a[2]],[b[0],b[1],b[2]],t) for a,b,t in boxes]
+    decor=[([a[0],a[1],a[2]],[b[0],b[1],b[2]],t) for a,b,t in decor]
     def clip(box,cell):
         a,b,t=box;off=[v*16 for v in cell];lo=[max(a[i],off[i]) for i in range(3)];hi=[min(b[i],off[i]+16) for i in range(3)]
         return None if any(lo[i]>=hi[i] for i in range(3)) else ([lo[i]-off[i] for i in range(3)],[hi[i]-off[i] for i in range(3)],t)
@@ -95,14 +105,14 @@ def generate(ROOT,ASSETS,j):
         uv={'north':[16-X,16-Y,16-x,16-y],'south':[x,16-Y,X,16-y],'west':[z,16-Y,Z,16-y],'east':[16-Z,16-Y,16-z,16-y],'up':[x,z,X,Z],'down':[x,16-Z,X,16-z]}
         material='steel' if t=='workface' else 'metal' if t.startswith('panel_') else t
         faces={f:{'texture':'#'+material,'uv':v} for f,v in uv.items()}
-        if t in ('workface','top_glow'):
-            faces['up']={'texture':'#top' if t=='workface' else '#top_glow','uv':[(x+cx)/4,(z+cz+32)/4,(X+cx)/4,(Z+cz+32)/4]}
+        if t in ('workface','top_glow') or (t=='steel' and abs(Y+cy-31)<.001):
+            faces['up']={'texture':'#top_glow' if t=='top_glow' else '#top','uv':[(x+cx+8)/4,(z+cz+32)/4,(X+cx+8)/4,(Z+cz+32)/4]}
             if t=='top_glow':faces={'up':faces['up']}
         if t.startswith('panel_') or t.startswith('rune_'):
             targets=('west','east') if t=='panel_ew' else ('north','south') if t=='panel_ns' else ({'w':'west','e':'east','n':'north','s':'south'}[t[-1]],)
             if t.startswith('rune_'):faces={}
             for f in targets:
-                u,U=(z+cz,Z+cz) if f in ('west','east') else (x+cx-8,X+cx-8)
+                u,U=(z+cz,Z+cz) if f in ('west','east') else (x+cx,X+cx)
                 if f in ('east','north'):u,U=16-U,16-u
                 faces[f]={'texture':'#panel_glow' if t.startswith('rune_') else '#panel','uv':[u,24-(Y+cy),U,24-(y+cy)]}
         result={'from':a,'to':b,'faces':faces}
@@ -110,7 +120,7 @@ def generate(ROOT,ASSETS,j):
         return result
     models=[];collisions=[];horn_cells=[];empty=[]
     directory=ASSETS/'models/block'
-    (directory/'expanded_anvil_horn.mtl').write_text(''.join(f'newmtl {name}\nKa 0 0 0\nKd 1 1 1\nmap_Kd #{name}\n\n' for name in ('horn','edge','metal')))
+    (directory/'expanded_anvil_horn.mtl').write_text(''.join(f'newmtl {name}\nKa 0 0 0\nKd 1 1 1\nmap_Kd #{name}\n\n' for name in ('horn','edge','metal','underside')))
     obj(directory/'expanded_anvil_horn.obj',horn_triangles());obj(directory/'expanded_anvil_horn_item.obj',horn_triangles(),preview=True)
     for i,cell in enumerate(CELLS):
         mesh=[c for box in boxes if (c:=clip(box,cell))];collisions.append(mesh+horn_collision(cell))
@@ -128,10 +138,10 @@ def generate(ROOT,ASSETS,j):
         for source in elements:
             e=copy.deepcopy(source)
             for field in ('from','to'):
-                x,y,z=e[field];e[field]=[8+(x+cx*16-16)/4,2+(y+cy*16)/4,8+(z+cz*16)/4]
+                x,y,z=e[field];e[field]=[8+(x+cx*16-8)/4,2+(y+cy*16)/4,8+(z+cz*16)/4]
             preview.append(e)
     j(directory/'expanded_anvil_item.json',{'parent':'minecraft:block/block','render_type':'minecraft:cutout','textures':textures,'loader':'neoforge:composite','children':{'body':{'parent':'minecraft:block/block','textures':textures,'elements':preview},'horn':horn_model('expanded_anvil_horn_item')},'display':{'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[.625,.625,.625]}}})
-    j(ASSETS/'anvil_expanded_layout.json',{'version':3,'footprint':[4,4,2],'foundation':{'x':[-1,2],'z':[-2,1]},'cells':[{'index':i,'x':x,'y':y,'z':z} for i,(x,y,z) in enumerate(CELLS)],'emptyCells':empty,'hornCells':horn_cells})
+    j(ASSETS/'anvil_expanded_layout.json',{'version':3,'footprint':[4,4,2],'foundation':{'x':[-2,2],'z':[-2,2]},'cells':[{'index':i,'x':x,'y':y,'z':z} for i,(x,y,z) in enumerate(CELLS)],'emptyCells':empty,'hornCells':horn_cells})
     java=['package com.example.examplemod;','import net.minecraft.core.Direction;','import net.minecraft.world.phys.shapes.VoxelShape;','/** Generated from the expanded Foundry mesh and collision source. */','public final class ExpandedAncientAnvilGeometry {',
           'private static final java.util.List<java.util.Map<Direction,VoxelShape>> CELLS=java.util.List.of('+','.join('cell'+str(i)+'()' for i in range(len(CELLS)))+');',
           'private static final java.util.Map<Direction,VoxelShape> OUTLINE='+legacy.shape([b for b in boxes if not b[2].startswith('panel_')],True)+';',

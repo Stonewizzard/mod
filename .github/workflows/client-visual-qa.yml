@@ -83,7 +83,13 @@ jobs:
           import os, subprocess
           paths=subprocess.check_output(['git','diff','--name-only',os.environ['QA_HEAD']+'^',os.environ['QA_HEAD']],text=True).splitlines()
           allowed=('tools/expanded_anvil.py','tools/generate_runic_anvil_assets.py','tools/generate_anvil_smithing.py','tools/generate_smithing_assets.py','tools/client_qa/drive.py','tools/field-guide.json','src/main/resources/assets/examplemod/','docs/','src/main/java/com/example/examplemod/ExpandedAncientAnvilGeometry.java','src/main/java/com/example/examplemod/AncientAnvilContent.java','src/main/java/com/example/examplemod/AnvilSlot.java','src/main/java/com/example/examplemod/FieldGuideChapters.java','.github/workflows/client-visual-qa.yml')
-          if paths and all(p.startswith(allowed) for p in paths):
+          underside=('tools/generate_anvil_smithing.py','tools/field-guide.json','docs/','src/main/java/com/example/examplemod/AnvilSlot.java','src/main/java/com/example/examplemod/AncientAnvilStructure.java','src/main/java/com/example/examplemod/AncientAnvilTests.java','src/main/java/com/example/examplemod/client/AncientAnvilScreen.java','src/main/java/com/example/examplemod/ExpandedAncientAnvilGeometry.java','src/main/java/com/example/examplemod/FieldGuideChapters.java','src/main/resources/assets/examplemod/lang/','src/main/resources/assets/examplemod/anvil_expanded_layout.json','tools/generate_runic_anvil_assets.py','tools/expanded_anvil.py','tools/client_qa/drive.py','src/main/java/com/example/examplemod/client/ClientVisualQa.java','.github/workflows/client-visual-qa.yml','src/main/resources/assets/examplemod/models/block/expanded_anvil')
+          rear=('tools/expanded_anvil.py','tools/generate_runic_anvil_assets.py','tools/client_qa/drive.py','.github/workflows/client-visual-qa.yml','src/main/java/com/example/examplemod/AnvilSlot.java','src/main/java/com/example/examplemod/client/ClientVisualQa.java','src/main/resources/assets/examplemod/models/block/expanded_anvil','src/main/resources/assets/examplemod/textures/block/expanded_anvil_surface')
+          if 'src/main/java/com/example/examplemod/AnvilSlot.java' in paths and 'tools/generate_runic_anvil_assets.py' in paths and all(p.startswith(rear) for p in paths):
+              with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLIENT_QA_SCOPE=anvil-rear-slot\n')
+          elif paths and all(p.startswith(underside) for p in paths):
+              with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLIENT_QA_SCOPE=anvil-underside\n')
+          elif paths and all(p.startswith(allowed) for p in paths):
               with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLIENT_QA_SCOPE=anvil-surfaces\n')
           PYTHON
       - name: Drive the actual Minecraft window
