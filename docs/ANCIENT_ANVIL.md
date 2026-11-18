@@ -19,15 +19,24 @@ and all its workpieces once; its foundation remains intact. Design A is the norm
 | Alloy ancient metal | 1 Ancient Scrap or Ancient Debris + 1 Gold Ingot + 2 Iron Ingots → 4 Ancient Ingots |
 | Ancient metal block | 9 ingots ↔ 1 Block of Ancient Metal |
 | Craft anvil | Vanilla anvil shape: `BBB / .I. / III`, B = ancient metal block, I = ancient ingot; 31 ingots total |
-| Tier 0 | Place the Ancient Anvil; no metal foundation needed for basic smithing |
-| Tier 1 | All 25 cells of a centered 5×5 metal foundation directly below the owned footprint |
+| Tier 0 | Place the Ancient Anvil; no foundation needed for basic smithing |
+| Tier 1 | All 25 cells of a centered 5×5 Runestone foundation directly below the owned footprint |
 
-Iron, gold, copper, netherite and ancient metal count, and can be mixed. Gem blocks do
-not. Foundation metals remain normal blocks and are never consumed. Removing one
-qualifying block downgrades the tier within half a second. Shift + empty-hand
-right-click opens the tier panel; **Show foundation guide** shows the exact rotated
-footprint in cyan (air) or amber (wrong occupied blocks). A blocked legacy anvil also
-shows the space it needs for expansion. Only the local player sees this guide.
+All 25 foundation positions require Runestone. Metal blocks no longer qualify. The
+foundation stays intact when the anvil is recovered. Removing one required block
+downgrades the anvil within half a second.
+
+Tap **Shift + right-click** on any anvil section, with any held item, to toggle the
+local guide directly. No inventory or status screen opens. The ghost cells are one
+block tall: cyan for empty positions and amber for solid obstructions. Hold the same
+buttons for half a second to begin placing inventory Runestone, one block every six
+ticks. Releasing use, stopping sneak or looking away stops construction. Solid blocks
+and containers are preserved; clear them manually. Native placement permissions,
+collision and mod cancellation apply. Survival consumes one Runestone per placement;
+Creative needs Runestone in inventory and follows normal Creative item costs.
+
+The guide remains on until toggled off or the world/target unloads. A blocked legacy
+anvil also shows the cells needed for safe expansion. Only the local player sees it.
 
 ## Physical smithing
 
@@ -45,6 +54,7 @@ the spot under the crosshair. Positions rotate with the model.
 - The completed result appears at center; right-click there to collect it. That click
   never consumes a held item, even while holding another ingredient or the hammer.
 - Placed items, output and partial progress save with the anvil. There is no inventory UI.
+- Shift + right-click is reserved for the guide and foundation construction, including with a tool held.
 
 ### Iron Forge Hammer
 
@@ -101,7 +111,7 @@ stays at the Reconstruction Table. See [Ancient Scrap](ANCIENT_SCRAP.md).
 
 Asset audits check the native item grid, binary alpha, holes, margins, per-cell body
 and horn bounds, UV bounds, closed complete horn hull and frozen legacy indices.
-Server GameTests cover the 5×5 metal foundation in four facings, all 128 anvil recovery
+Server GameTests cover the 5×5 Runestone foundation in four facings, all 128 anvil recovery
 paths, container/entity protection, legacy expansion, thirteen-position interaction in
 four rotations, exact ingredient matching, saved progress/output, hammer cooldown and
 durability, center result retrieval, and dropped inventory recovery. Native-client QA

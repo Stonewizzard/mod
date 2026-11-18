@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public final class AncientAnvilBlockEntity extends BlockEntity {
     private NonNullList<ItemStack> items=NonNullList.withSize(AnvilSlot.values().length+1,ItemStack.EMPTY);
-    int work;String workRecipe="";long lastStrike=-100;
+    int work;String workRecipe="";long lastStrike=-100,lastFoundationPlacement=-100;
     public AncientAnvilBlockEntity(BlockPos p,BlockState s){super(AncientAnvilContent.ENTITY.get(),p,s);}
     public ItemStack input(AnvilSlot slot){return items.get(slot.ordinal());}
     public ItemStack output(){return items.get(AnvilSlot.values().length);}

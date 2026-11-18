@@ -17,11 +17,7 @@ def recipe(name,pattern,key,result,count=1):j(DATA/f'recipe/{name}.json',{'type'
 recipe('ancient_anvil',['BBB',' I ','III'],{'B':'examplemod:ancient_metal_block','I':'examplemod:ancient_ingot'},'ancient_anvil')
 recipe('ancient_metal_block',['III','III','III'],{'I':'examplemod:ancient_ingot'},'ancient_metal_block')
 j(DATA/'recipe/ancient_ingots_from_block.json',{'type':'minecraft:crafting_shapeless','category':'misc','ingredients':['examplemod:ancient_metal_block'],'result':{'id':'examplemod:ancient_ingot','count':9}})
-metals=['minecraft:copper_block','minecraft:iron_block','minecraft:gold_block','minecraft:netherite_block','examplemod:ancient_metal_block',{'id':'c:storage_blocks/copper','required':False},{'id':'c:storage_blocks/iron','required':False},{'id':'c:storage_blocks/gold','required':False},{'id':'c:storage_blocks/netherite','required':False}]
-# Common storage tags are nested tags, so pack-added copper oxidation/waxing and metals can opt in safely.
-for i,v in enumerate(metals):
- if isinstance(v,dict):v['id']='#'+v['id']
-j(DATA/'tags/block/ancient_anvil_foundation.json',{'replace':False,'values':metals})
+j(DATA/'tags/block/ancient_anvil_foundation.json',{'replace':False,'values':['examplemod:runestone']})
 j(DATA/'tags/item/ancient_alloy_scrap.json',{'replace':False,'values':['examplemod:ancient_scrap','minecraft:ancient_debris']})
 p=RES/'data/minecraft/tags/block/mineable/pickaxe.json';d=json.loads(p.read_text());d['values']=list(dict.fromkeys(d['values']+['examplemod:ancient_anvil','examplemod:ancient_metal_block']));j(p,d)
 # Nugget-like reversible conversion. Exactly nine small ancient pieces equal one vanilla scrap.

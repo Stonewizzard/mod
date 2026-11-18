@@ -340,7 +340,7 @@ Place the anvil on its own to establish Tier 0. It is a stationary workshop stru
 
 Existing anvils expand automatically when they have clear space. A cramped anvil stays compact rather than replacing a chest or trapping a creature. Clear the space and let it expand; the same item and foundation remain valid.
 
-There are thirteen workpiece positions: the center, four diagonal corners, four inner arms, and four outer rim or heel positions. Aim at a position to highlight it. Right-click with an item to put one there. An empty hand takes it back; another item swaps it. Shift + empty-hand right-click opens the foundation guide.
+There are thirteen workpiece positions: the center, four diagonal corners, four inner arms, and four outer positions on the working plate. Aim at a position to highlight it. Right-click with an item to put one there. An empty hand takes it back; another item swaps it. Shift + right-click toggles the foundation guide directly, with any held item.
 
 Place the recipe ingredients, then hit the anvil with an Iron Forge Hammer. Either left-click strikes or right-click use works. Accepted strikes make a sound and show work progress; unmatched ingredients cost no durability. Changing an ingredient resets work. The finished item appears in the center. Right-click the center to collect it before starting another recipe.
 
@@ -350,13 +350,15 @@ Tier 0 is sufficient. Put one deepslate or cobbled deepslate in each of the four
 
 Runestone is a blank prepared stone base. Later recipes will inscribe specific functional Ancient Runes on it. It has no crafting-grid recipe.
 
-Build a complete 5 by 5 square of metal blocks directly one layer below the anvil, centered on the block where it was placed. All 25 blocks are required. Shift + empty-hand right-click opens the foundation guide so you can see the exact offset and orientation. Iron, gold, copper, netherite and ancient metal qualify; you may mix them. Gem blocks do not qualify.
+Build a centered 5 by 5 square of Runestone blocks directly one layer below the block where the anvil was placed. All 25 blocks are required. Metal blocks do not count.
 
-The anvil automatically becomes Tier 1 when the foundation is complete. Removing or replacing a required metal downgrades it to Tier 0. The metals remain normal blocks and are never consumed. Breaking or relocating the anvil leaves its foundation in place.
+The anvil becomes Tier 1 when all 25 Runestone blocks are present. Removing one downgrades it to Tier 0. Recovering the anvil leaves the foundation intact.
 
-Shift + empty-hand right-click opens the tier and foundation count. Show foundation guide marks missing blocks: cyan for air and amber for wrong occupied blocks. A blocked old anvil also shows the space it needs to expand safely. Only you see the guide. It clears when the enlarged anvil and Tier 1 foundation are complete or you leave the world.
+Tap Shift + right-click on any part of the anvil to toggle the guide. It opens no inventory or menu. Each ghost is exactly one block tall: cyan marks an empty position and amber marks a wrong solid block. Only you see the guide.
 
-Tier 0 and Tier 1 establish the first stages of the planned growing ancient workshop. Later tiers, rituals and artifact-modification powers will be added separately.
+Hold Shift + right-click while looking at the anvil to place Runestone from your inventory one block at a time. Construction starts after a short hold. Release the button, stop sneaking or look away to stop. Empty or replaceable positions can be filled; remove solid obstructions yourself. Normal placement permissions, collisions and item costs apply.
+
+The guide remains on until you toggle it off or leave the world. Correct foundation blocks are never consumed by the anvil; each construction step moves one Runestone from your inventory into the world.
 
 Craft ancient anvil: grid rows BBB / .I. / III. A dot means an empty cell. B = ancient metal block; I = ancient ingot.
 

@@ -20,20 +20,22 @@ public final class AncientAnvilTests {
     private static final class Test extends GameTestInstance {
         Test(TestData<Holder<TestEnvironmentDefinition<?>>> d){super(d);}
         @Override public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
-        @Override protected MutableComponent typeDescription(){return Component.literal("Ancient Anvil tiers, metal foundation, forge-only alloying and crafting");}
+        @Override protected MutableComponent typeDescription(){return Component.literal("Ancient Anvil tiers, Runestone foundation, forge-only alloying and crafting");}
         @Override public void run(GameTestHelper h){
             var l=h.getLevel();var core=h.absolutePos(new BlockPos(3,2,3));
             for(var facing:Direction.Plane.HORIZONTAL){
                 for(var p:AncientAnvilStructure.foundation(core,facing))l.setBlock(p,Blocks.STONE.defaultBlockState(),3);
                 l.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState().setValue(AncientAnvilBlock.FACING,facing),3);
                 AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==0&&AncientAnvilBlockEntity.missing(l,core).size()==25,"A standalone anvil is tier zero");
-                for(var p:AncientAnvilStructure.foundation(core,facing))l.setBlock(p,((p.getX()+p.getZ())%2==0?Blocks.IRON_BLOCK:Blocks.GOLD_BLOCK).defaultBlockState(),3);
-                AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==1,"A complete mixed-metal 5x5 foundation upgrades every facing");
-                var missing=AncientAnvilStructure.foundation(core,facing).getLast();l.setBlock(missing,Blocks.STONE.defaultBlockState(),3);AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==0&&AncientAnvilBlockEntity.missing(l,core).size()==1,"Removing one metal block must downgrade the anvil");
-                l.setBlock(missing,AncientAnvilContent.METAL.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==1&&l.getBlockState(missing).is(AncientAnvilContent.METAL.get()),"Ancient metal qualifies without being consumed or converted");
-                l.destroyBlock(core,false);check(h,l.getBlockState(missing).is(AncientAnvilContent.METAL.get()),"Removing the anvil must leave the foundation intact");
+                for(var p:AncientAnvilStructure.foundation(core,facing))l.setBlock(p,Blocks.IRON_BLOCK.defaultBlockState(),3);
+                AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==0&&AncientAnvilBlockEntity.missing(l,core).size()==25,"Metal foundations no longer upgrade the anvil");
+                for(var p:AncientAnvilStructure.foundation(core,facing))l.setBlock(p,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);
+                AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==1,"A complete Runestone 5x5 foundation upgrades every facing");
+                var missing=AncientAnvilStructure.foundation(core,facing).getLast();l.setBlock(missing,Blocks.STONE.defaultBlockState(),3);AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==0&&AncientAnvilBlockEntity.missing(l,core).size()==1,"Removing one Runestone block must downgrade the anvil");
+                l.setBlock(missing,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==1&&l.getBlockState(missing).is(AncientAnvilContent.RUNESTONE.get()),"Runestone qualifies without being consumed or converted");
+                l.destroyBlock(core,false);check(h,l.getBlockState(missing).is(AncientAnvilContent.RUNESTONE.get()),"Removing the anvil must leave the foundation intact");
             }
-            check(h,net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace("copper_block")).defaultBlockState().is(AncientAnvilContent.FOUNDATION),"Copper metal blocks must qualify without a mod dependency");
+            check(h,!Blocks.IRON_BLOCK.defaultBlockState().is(AncientAnvilContent.FOUNDATION)&&!Blocks.GOLD_BLOCK.defaultBlockState().is(AncientAnvilContent.FOUNDATION)&&!Blocks.COPPER_BLOCK.defaultBlockState().is(AncientAnvilContent.FOUNDATION),"Metal blocks are excluded from the default Runestone foundation tag");
             for(var part:RuinedForgeStructure.PARTS)l.setBlock(part.at(core,Direction.NORTH),AncientForgeContent.BRICKS.get().defaultBlockState(),3);
             l.setBlock(core,AncientForgeContent.CORE.get().defaultBlockState(),3);check(h,ForgeAssembly.form(l,core),"Alloying uses a real formed Ruined Forge");
             var forge=(ReconstructionTableBlockEntity)l.getBlockEntity(core);
@@ -53,7 +55,7 @@ public final class AncientAnvilTests {
             var ingot=AncientAnvilContent.INGOT.get();var metal=AncientAnvilContent.METAL_ITEM.get();
             craft(h,3,3,List.of(metal,metal,metal,Items.AIR,ingot,Items.AIR,ingot,ingot,ingot),AncientAnvilContent.ANVIL_ITEM.get(),1);
             craft(h,3,3,Collections.nCopies(9,ingot),metal,1);craft(h,1,1,List.of(metal),ingot,9);
-            System.out.println("ANCIENT_ANVIL_CHECK: PASS: four facings, tier 0/1, mixed 5x5 metals, downgrade, unchanged foundation, both alloy sources, exact costs/output, overflow/duplicate/frame guards, stacked persistence, timed in-world alloying and native crafting");h.succeed();
+            System.out.println("ANCIENT_ANVIL_CHECK: PASS: four facings, tier 0/1, 5x5 Runestone and metal rejection, downgrade, unchanged foundation, both alloy sources, exact costs/output, overflow/duplicate/frame guards, stacked persistence, timed in-world alloying and native crafting");h.succeed();
         }
     }
     private static void craft(GameTestHelper h,int w,int z,List<Item> in,Item out,int count){var input=net.minecraft.world.item.crafting.CraftingInput.of(w,z,in.stream().map(ItemStack::new).toList());var recipe=h.getLevel().getServer().getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,h.getLevel());check(h,recipe.isPresent()&&recipe.get().value().assemble(input).is(out)&&recipe.get().value().assemble(input).getCount()==count,"Crafting must resolve to the expected ancient metal item/count");}
