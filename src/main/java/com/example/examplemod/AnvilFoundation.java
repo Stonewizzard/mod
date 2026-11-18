@@ -10,7 +10,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.*;
 
-/** One inventory-backed placement per request, confined to the looked-at anvil's foundation. */
+/** One inventory-backed placement per request, confined to the looked-at anvil’s next tier. */
 public final class AnvilFoundation {
     public static final int INTERVAL=6;
     public static boolean placeNext(ServerPlayer player,BlockPos core){
@@ -21,29 +21,38 @@ public final class AnvilFoundation {
         if(!(level.getBlockEntity(core) instanceof AncientAnvilBlockEntity be))return false;
         if(level.getGameTime()-be.lastFoundationPlacement<INTERVAL)return false;
         be.lastFoundationPlacement=level.getGameTime();
-        var missing=AncientAnvilBlockEntity.missing(level,core);if(missing.isEmpty())return false;
-        ItemStack material=ItemStack.EMPTY;
-        for(int i=0;i<player.getInventory().getContainerSize();i++){
-            var stack=player.getInventory().getItem(i);
-            if(!stack.isEmpty()&&stack.getItem() instanceof BlockItem item&&item.getBlock().defaultBlockState().is(AncientAnvilContent.FOUNDATION)){material=stack;break;}
-        }
-        if(material.isEmpty()){AnvilWork.message(player,"No Runestone in your inventory");return false;}
-        for(var at:missing){
+        AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));
+        var plan=AnvilGuide.next(level,core);var missing=plan.missing(level);
+        if(missing.isEmpty())return false;
+        boolean needsBlocks=false,hasMaterials=false;
+        for(var goal:missing){
+            if(goal.kind()==AnvilGuide.Kind.FLUID)continue; // Fluids are always filled manually.
+            needsBlocks=true;
+            ItemStack material=ItemStack.EMPTY;
+            for(int i=0;i<player.getInventory().getContainerSize();i++){
+                var stack=player.getInventory().getItem(i);
+                if(!stack.isEmpty()&&stack.getItem() instanceof BlockItem item&&item.getBlock().defaultBlockState().is(goal.tag())){material=stack;break;}
+            }
+            if(material.isEmpty())continue;
+            hasMaterials=true;var at=goal.at();
             if(!level.hasChunkAt(at)||!level.getWorldBorder().isWithinBounds(at)||!level.mayInteract(player,at)||level.getBlockEntity(at)!=null||!level.getBlockState(at).canBeReplaced())continue;
             var target=new BlockHitResult(Vec3.atCenterOf(at),Direction.UP,at,false);
             // Native item use preserves placement cancellation/rollback, collisions, sound and exact item cost.
             material.useOn(new UseOnContext(level,player,InteractionHand.MAIN_HAND,material,target));
             player.getInventory().setChanged();player.containerMenu.broadcastChanges();
-            boolean placed=level.getBlockState(at).is(AncientAnvilContent.FOUNDATION);
+            boolean placed=goal.matches(level);
             if(placed){
                 // Native BlockItem placement notifies everyone except its initiating player,
                 // whose client normally predicts the sound. Inventory construction has no prediction.
                 var sound=level.getBlockState(at).getSoundType(level,at,player);
                 player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound.getPlaceSound()),SoundSource.BLOCKS,at.getX()+.5,at.getY()+.5,at.getZ()+.5,(sound.getVolume()+1)/2,sound.getPitch()*.8F,level.getRandom().nextLong()));
-                AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));int left=AncientAnvilBlockEntity.missing(level,core).size();AnvilWork.message(player,left==0?"Runestone foundation complete":"Runestone foundation: "+(25-left)+" / 25");}
+                AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));
+                int left=plan.missing(level).size();
+                AnvilWork.message(player,left==0?"Tier "+plan.tier()+" structure complete":"Tier "+plan.tier()+": "+(plan.targets().size()-left)+" / "+plan.targets().size());
+            }
             return placed; // Never place more than one block, including when a mod cancels a placement.
         }
-        AnvilWork.message(player,"Clear the highlighted solid blocks to finish the foundation");return false;
+        AnvilWork.message(player,!needsBlocks?"Fill the highlighted fluid pools manually":!hasMaterials?"Add Runestone or eligible cap blocks to your inventory":"Clear the highlighted solid blocks, or add the missing blocks");return false;
     }
     private AnvilFoundation(){}
 }

@@ -23,7 +23,7 @@ public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAn
     private final ForgeGhostModel cube=new ForgeGhostModel(0);
     private final ItemModelResolver resolver;
     private static final Identifier MATERIAL=Identifier.withDefaultNamespace("textures/block/polished_deepslate.png");
-    public record Cell(int x,int y,int z,boolean occupied){}
+    public record Cell(int x,int y,int z,boolean occupied,AnvilGuide.Kind kind){}
     public record Workpiece(ItemStackRenderState item,Vec3 at,boolean block,boolean output){}
     public static final class State extends BlockEntityRenderState {public List<Cell> cells=List.of();public List<Workpiece> pieces=List.of();public float turn;}
     public AncientAnvilRenderer(BlockEntityRendererProvider.Context c){resolver=c.itemModelResolver();}
@@ -32,7 +32,9 @@ public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAn
         var core=be.getBlockPos();var facing=be.getBlockState().getValue(AncientAnvilBlock.FACING);int minX=core.getX(),minZ=core.getZ(),maxX=minX+1,maxZ=minZ+1;
         for(var cell:AncientAnvilStructure.CELLS){var at=cell.at(core,facing);minX=Math.min(minX,at.getX());minZ=Math.min(minZ,at.getZ());maxX=Math.max(maxX,at.getX()+1);maxZ=Math.max(maxZ,at.getZ()+1);}
         for(var at:AncientAnvilStructure.foundation(core,facing)){minX=Math.min(minX,at.getX());minZ=Math.min(minZ,at.getZ());maxX=Math.max(maxX,at.getX()+1);maxZ=Math.max(maxZ,at.getZ()+1);}
-        return new AABB(minX,core.getY()-1,minZ,maxX,core.getY()+3,maxZ);
+        int minY=core.getY()-1,maxY=core.getY()+3;
+        if(be.getLevel()!=null)for(var target:AnvilGuide.next(be.getLevel(),core).targets()){var at=target.at();minX=Math.min(minX,at.getX());minZ=Math.min(minZ,at.getZ());maxX=Math.max(maxX,at.getX()+1);maxZ=Math.max(maxZ,at.getZ()+1);minY=Math.min(minY,at.getY());maxY=Math.max(maxY,at.getY()+1);}
+        return new AABB(minX,minY,minZ,maxX,maxY,maxZ);
     }
     @Override public void extractRenderState(AncientAnvilBlockEntity be,State s,float partial,Vec3 camera,ModelFeatureRenderer.CrumblingOverlay breaking){
         BlockEntityRenderer.super.extractRenderState(be,s,partial,camera,breaking);s.cells=List.of();s.pieces=List.of();var level=be.getLevel();if(level==null)return;
@@ -40,8 +42,8 @@ public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAn
         s.turn=switch(facing){case EAST->-90;case SOUTH->-180;case WEST->-270;default->0;};
         if(AncientAnvilPreview.active(level,core)){
             var cells=new ArrayList<Cell>();
-            for(var p:AncientAnvilBlockEntity.missing(level,core))cells.add(new Cell(p.getX()-core.getX(),-1,p.getZ()-core.getZ(),!level.getBlockState(p).isAir()));
-            if(!expanded)for(var cell:AncientAnvilStructure.CELLS)if(cell.index()!=0){var at=cell.at(core,facing);if(!AncientAnvilStructure.belongs(level,at,core,facing,cell.index()))cells.add(new Cell(at.getX()-core.getX(),at.getY()-core.getY(),at.getZ()-core.getZ(),!level.getBlockState(at).isAir()));}
+            for(var target:AnvilGuide.next(level,core).missing(level)){var p=target.at();cells.add(new Cell(p.getX()-core.getX(),p.getY()-core.getY(),p.getZ()-core.getZ(),!level.getBlockState(p).isAir(),target.kind()));}
+            if(!expanded)for(var cell:AncientAnvilStructure.OCCUPIED)if(cell.index()!=0){var at=cell.at(core,facing);if(!AncientAnvilStructure.belongs(level,at,core,facing,cell.index()))cells.add(new Cell(at.getX()-core.getX(),at.getY()-core.getY(),at.getZ()-core.getZ(),!level.getBlockState(at).isAir(),AnvilGuide.Kind.BLOCK));}
             s.cells=List.copyOf(cells);
         }
         if(expanded){
@@ -55,7 +57,11 @@ public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAn
         }
     }
     @Override public void submit(State s,PoseStack p,SubmitNodeCollector c,CameraRenderState camera){
-        for(var cell:s.cells){p.pushPose();p.translate(cell.x(),cell.y(),cell.z());c.order(1).submitModel(cube,new LivingEntityRenderState(),p,RenderTypes.entityTranslucent(MATERIAL),15728880,OverlayTexture.NO_OVERLAY,cell.occupied()?0xD0FFD438:0x663CCFDF,null,0);c.submitShapeOutline(p,net.minecraft.world.phys.shapes.Shapes.box(0,0,0,1,1,1),RenderTypes.lines(),cell.occupied()?0xFFFFD438:0xFF3CCFDF,2f,false);p.popPose();}
+        for(var cell:s.cells){
+            var material=switch(cell.kind()){case CAP->Identifier.withDefaultNamespace("textures/block/gold_block.png");case FLUID->Identifier.withDefaultNamespace("textures/block/blue_stained_glass.png");default->MATERIAL;};
+            int color=cell.occupied()?0xFFFFD438:switch(cell.kind()){case CAP->0xFFFFC65C;case FLUID->0xFF649EFF;default->0xFF3CCFDF;};
+            p.pushPose();p.translate(cell.x(),cell.y(),cell.z());c.order(1).submitModel(cube,new LivingEntityRenderState(),p,RenderTypes.entityTranslucent(material),15728880,OverlayTexture.NO_OVERLAY,(color&0xFFFFFF)|(cell.occupied()?0xA0000000:0x66000000),null,0);c.submitShapeOutline(p,net.minecraft.world.phys.shapes.Shapes.box(0,0,0,1,1,1),RenderTypes.lines(),color,2f,false);p.popPose();
+        }
         for(var piece:s.pieces){
             float scale=piece.block()?(piece.output()?.60F:.34F):(piece.output()?.40F:.25F);
             p.pushPose();p.translate(.5,0,.5);p.rotateDegrees(Axis.YP,s.turn);
