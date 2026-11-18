@@ -1,6 +1,9 @@
 package com.example.examplemod;
 
 import net.minecraft.core.*;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.*;
@@ -32,7 +35,12 @@ public final class AnvilFoundation {
             material.useOn(new UseOnContext(level,player,InteractionHand.MAIN_HAND,material,target));
             player.getInventory().setChanged();player.containerMenu.broadcastChanges();
             boolean placed=level.getBlockState(at).is(AncientAnvilContent.FOUNDATION);
-            if(placed){AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));int left=AncientAnvilBlockEntity.missing(level,core).size();AnvilWork.message(player,left==0?"Runestone foundation complete":"Runestone foundation: "+(25-left)+" / 25");}
+            if(placed){
+                // Native BlockItem placement notifies everyone except its initiating player,
+                // whose client normally predicts the sound. Inventory construction has no prediction.
+                var sound=level.getBlockState(at).getSoundType(level,at,player);
+                player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound.getPlaceSound()),SoundSource.BLOCKS,at.getX()+.5,at.getY()+.5,at.getZ()+.5,(sound.getVolume()+1)/2,sound.getPitch()*.8F,level.getRandom().nextLong()));
+                AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));int left=AncientAnvilBlockEntity.missing(level,core).size();AnvilWork.message(player,left==0?"Runestone foundation complete":"Runestone foundation: "+(25-left)+" / 25");}
             return placed; // Never place more than one block, including when a mod cancels a placement.
         }
         AnvilWork.message(player,"Clear the highlighted solid blocks to finish the foundation");return false;
