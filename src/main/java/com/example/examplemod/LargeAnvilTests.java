@@ -52,12 +52,12 @@ public final class LargeAnvilTests {
             check(h,level.getBlockState(core).getValue(AncientAnvilBlock.LARGE)&&!level.getBlockState(core).getValue(AncientAnvilBlock.MONUMENTAL)&&chest.getItem(0).getCount()==7,"Blocked legacy migration keeps its six-cell model and neighboring inventory");
             level.destroyBlock(side,false);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));
             check(h,level.getBlockState(core).getValue(AncientAnvilBlock.MONUMENTAL),"A legacy anvil upgrades when the additional cells become safe");
-            for(var c:AncientAnvilStructure.CELLS)if(c.index()!=0)check(h,level.getBlockState(c.at(core,net.minecraft.core.Direction.NORTH)).getValue(AncientAnvilPartBlock.MONUMENTAL),"Every claimed model uses the new footprint");
+            for(var c:AncientAnvilStructure.OCCUPIED)if(c.index()!=0)check(h,level.getBlockState(c.at(core,net.minecraft.core.Direction.NORTH)).getValue(AncientAnvilPartBlock.MONUMENTAL),"Every claimed model uses the new footprint");
             level.destroyBlock(core,false);
             // The eighteen-cell layout stays intact when only the NEW front row is blocked.
             level.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState().setValue(AncientAnvilBlock.LARGE,true).setValue(AncientAnvilBlock.MONUMENTAL,true),3);
             for(int i=1;i<18;i++){var c=AncientAnvilStructure.CELLS.get(i);level.setBlock(c.at(core,Direction.NORTH),AncientAnvilContent.PART.get().defaultBlockState().setValue(AncientAnvilPartBlock.CELL,i).setValue(AncientAnvilPartBlock.MONUMENTAL,true),3);}
-            var newFront=AncientAnvilStructure.CELLS.get(19).at(core,Direction.NORTH);level.setBlock(newFront,Blocks.CHEST.defaultBlockState(),3);
+            var newFront=AncientAnvilStructure.CELLS.get(22).at(core,Direction.NORTH);level.setBlock(newFront,Blocks.CHEST.defaultBlockState(),3);
             var savedChest=(net.minecraft.world.level.block.entity.ChestBlockEntity)level.getBlockEntity(newFront);savedChest.setItem(0,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.EMERALD,9));
             AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));check(h,!level.getBlockState(core).getValue(AncientAnvilBlock.EXPANDED)&&savedChest.getItem(0).getCount()==9,"Saved eighteen-cell model waits safely for new horn space");
             level.destroyBlock(newFront,false);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));check(h,level.getBlockState(core).getValue(AncientAnvilBlock.EXPANDED),"Saved eighteen-cell model expands after clearing the obstruction");level.destroyBlock(core,false);
