@@ -15,8 +15,11 @@ public final class AnvilRecipes extends SimplePreparableReloadListener<List<Anvi
     public record Input(Identifier item,TagKey<Item> tag){
         boolean accepts(ItemStack stack){return stack.getCount()==1&&(tag!=null?stack.is(tag):BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(item));}
     }
-    public record Recipe(Identifier id,int anvilTier,int hammerTier,int work,Map<AnvilSlot,Input> inputs,ItemStack result){
+    public record Recipe(Identifier id,int anvilTier,int hammerTier,int work,Map<AnvilSlot,Input> inputs,Item resultItem,int resultCount){
+        // 26.3 binds item components after resource preparation. Create stacks only in a live world.
+        public ItemStack result(){return new ItemStack(resultItem,resultCount);}
         public boolean matches(AncientAnvilBlockEntity be){
+            if(resultCount>resultItem.getDefaultInstance().getMaxStackSize())return false;
             for(var slot:AnvilSlot.values()){var input=inputs.get(slot);var stack=be.input(slot);if(input==null?!stack.isEmpty():!input.accepts(stack))return false;}
             return true;
         }
@@ -40,10 +43,10 @@ public final class AnvilRecipes extends SimplePreparableReloadListener<List<Anvi
             if(inputs.isEmpty())throw new IllegalArgumentException("Anvil recipes must consume ingredients");
             var output=json.getAsJsonObject("result");var item=BuiltInRegistries.ITEM.getValue(Identifier.parse(output.get("id").getAsString()));
             int count=output.has("count")?output.get("count").getAsInt():1;
-            if(item==null||item==Items.AIR||count<1||count>item.getDefaultInstance().getMaxStackSize())throw new IllegalArgumentException("Invalid anvil result");
+            if(item==null||item==Items.AIR||count<1||count>64)throw new IllegalArgumentException("Invalid anvil result");
             int tier=number(json,"anvil_tier",0),hammer=number(json,"hammer_tier",1),work=number(json,"work",4);
             if(tier<0||hammer<1||work<1||work>10000)throw new IllegalArgumentException("Invalid work/tier requirements");
-            result.add(new Recipe(id,tier,hammer,work,Map.copyOf(inputs),new ItemStack(item,count)));
+            result.add(new Recipe(id,tier,hammer,work,Map.copyOf(inputs),item,count));
         }catch(Exception failure){ExampleMod.LOGGER.error("Cannot load anvil recipe {}",entry.getKey(),failure);}
         return List.copyOf(result);
     }
