@@ -25,7 +25,7 @@ public final class AnvilFoundationTests {
         @Override protected MutableComponent typeDescription(){return Component.literal("Anvil foundation: inventory cost, one-at-a-time placement, cooldown, obstruction and mod cancellation");}
         @Override public void run(GameTestHelper h){
             var level=h.getLevel();var core=h.absolutePos(new BlockPos(3,2,3));var player=h.makeMockServerPlayerInLevel();player.setGameMode(GameType.SURVIVAL);
-            Runnable aim=()->player.snapTo(core.getX()+.5,core.getY(),core.getZ()-3.2,0,10);aim.run();
+            Runnable aim=()->{player.snapTo(core.getX()+.5,core.getY(),core.getZ()-3.2,0,0);float pitch=(float)Math.toDegrees(Math.atan2(player.getEyeY()-(core.getY()+.8),2.85));player.snapTo(core.getX()+.5,core.getY(),core.getZ()-3.2,0,pitch);};aim.run();
             level.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));
             for(var at:AncientAnvilStructure.foundation(core,Direction.NORTH))level.setBlock(at,Blocks.AIR.defaultBlockState(),3);
             var protectedAt=AncientAnvilStructure.foundation(core,Direction.NORTH).getFirst();level.setBlock(protectedAt,Blocks.CHEST.defaultBlockState(),3);var chest=(ChestBlockEntity)level.getBlockEntity(protectedAt);chest.setItem(0,new ItemStack(Items.DIAMOND,7));
@@ -50,6 +50,9 @@ public final class AnvilFoundationTests {
                 check(h,level.getBlockEntity(protectedAt)==chest&&chest.getItem(0).getCount()==7,"Construction preserves containers and their contents");
                 for(var at:AncientAnvilStructure.foundation(core,Direction.NORTH))if(level.getBlockState(at).isAir())level.setBlock(at,Blocks.STONE.defaultBlockState(),3);
                 player.getInventory().setItem(5,new ItemStack(AncientAnvilContent.RUNESTONE_ITEM.get()));
+            });
+            h.runAtTickTime(40,()->{
+                aim.run();player.setShiftKeyDown(true);
                 check(h,!AnvilFoundation.placeNext(player,core)&&placed(level,core)==3&&player.getInventory().getItem(5).getCount()==1,"Solid obstructions are never replaced or charged for");
                 System.out.println("ANVIL_FOUNDATION_BUILD_CHECK: PASS: held-tool preservation, no menu-side effects, actual inventory costs, single placements, cooldown, reach/look/sneak/adventure guards, cancelled placement rollback and container/solid/empty-inventory protection");h.succeed();
             });

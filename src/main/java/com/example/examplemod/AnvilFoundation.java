@@ -13,7 +13,7 @@ public final class AnvilFoundation {
     public static boolean placeNext(ServerPlayer player,BlockPos core){
         var level=player.level();
         if(!player.isAlive()||player.isSpectator()||!player.isShiftKeyDown()||!player.getAbilities().mayBuild||!level.hasChunkAt(core)||!level.mayInteract(player,core))return false;
-        var sight=player.pick(player.blockInteractionRange(),0,false);
+        var sight=player.pick(player.blockInteractionRange(),1,false);
         if(!(sight instanceof BlockHitResult hit)||!core.equals(AnvilWork.core(level,hit.getBlockPos())))return false;
         if(!(level.getBlockEntity(core) instanceof AncientAnvilBlockEntity be))return false;
         if(level.getGameTime()-be.lastFoundationPlacement<INTERVAL)return false;
