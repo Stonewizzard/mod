@@ -129,6 +129,7 @@ def run():
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('assets_scene');expect(assetsLarge=True,assetsCells=32)
         process('xdotool','key','9');command('assets_anvil_under');process('xdotool','key','F1');capture('ancient-anvil-underside');process('xdotool','key','F1')
         command('assets_anvil_detail');process('xdotool','key','F1');capture('ancient-anvil-clean');process('xdotool','key','F1')
+        command('assets_anvil_centered');process('xdotool','key','F1');capture('ancient-anvil-centered-5x5');process('xdotool','key','F1')
         command('assets_anvil_heel');process('xdotool','key','F1');capture('ancient-anvil-heel-marker');process('xdotool','key','F1')
         for angle in ('profile','rear'):
             command('assets_anvil_'+angle);process('xdotool','key','F1');capture('ancient-anvil-corners-'+angle);time.sleep(.5);capture('ancient-anvil-corners-'+angle+'-later');process('xdotool','key','F1')

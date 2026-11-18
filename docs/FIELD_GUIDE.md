@@ -350,7 +350,7 @@ Tier 0 is sufficient. Put one deepslate or cobbled deepslate in each of the four
 
 Runestone is a blank prepared stone base. Later recipes will inscribe specific functional Ancient Runes on it. It has no crafting-grid recipe.
 
-Build a complete 4 by 4 square of metal blocks directly one layer below the anvil. All 16 blocks are required. Shift + empty-hand right-click opens the foundation guide so you can see the exact offset and orientation. Iron, gold, copper, netherite and ancient metal qualify; you may mix them. Gem blocks do not qualify.
+Build a complete 5 by 5 square of metal blocks directly one layer below the anvil, centered on the block where it was placed. All 25 blocks are required. Shift + empty-hand right-click opens the foundation guide so you can see the exact offset and orientation. Iron, gold, copper, netherite and ancient metal qualify; you may mix them. Gem blocks do not qualify.
 
 The anvil automatically becomes Tier 1 when the foundation is complete. Removing or replacing a required metal downgrades it to Tier 0. The metals remain normal blocks and are never consumed. Breaking or relocating the anvil leaves its foundation in place.
 

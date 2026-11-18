@@ -15,5 +15,41 @@
     "fall": "examplemod:block/runic_anvil_fall",
     "particle": "examplemod:block/runic_anvil_metal"
   },
-  "elements": []
+  "loader": "neoforge:composite",
+  "children": {
+    "body": {
+      "parent": "minecraft:block/block",
+      "render_type": "minecraft:cutout",
+      "textures": {
+        "metal": "examplemod:block/runic_anvil_metal",
+        "steel": "examplemod:block/runic_anvil_edge",
+        "bronze": "examplemod:block/runic_anvil_frame",
+        "soot": "examplemod:block/forge_soot",
+        "top": "examplemod:block/expanded_anvil_surface",
+        "top_glow": "examplemod:block/expanded_anvil_surface_glow",
+        "panel": "examplemod:block/runic_anvil_panel",
+        "panel_glow": "examplemod:block/runic_anvil_panel_glow",
+        "ember": "examplemod:block/runic_anvil_ember",
+        "horn": "examplemod:block/runic_anvil_horn",
+        "fall": "examplemod:block/runic_anvil_fall",
+        "particle": "examplemod:block/runic_anvil_metal"
+      },
+      "elements": []
+    },
+    "horn": {
+      "parent": "minecraft:block/block",
+      "loader": "neoforge:obj",
+      "model": "examplemod:models/block/expanded_anvil_horn_cell_21.obj",
+      "automatic_culling": false,
+      "shade_quads": true,
+      "flip_v": false,
+      "emissive_ambient": false,
+      "textures": {
+        "horn": "examplemod:block/expanded_anvil_surface",
+        "underside": "examplemod:block/expanded_anvil_surface",
+        "edge": "examplemod:block/expanded_anvil_horn_edge",
+        "metal": "examplemod:block/runic_anvil_metal_long"
+      }
+    }
+  }
 }

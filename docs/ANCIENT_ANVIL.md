@@ -20,7 +20,7 @@ and all its workpieces once; its foundation remains intact. Design A is the norm
 | Ancient metal block | 9 ingots ↔ 1 Block of Ancient Metal |
 | Craft anvil | Vanilla anvil shape: `BBB / .I. / III`, B = ancient metal block, I = ancient ingot; 31 ingots total |
 | Tier 0 | Place the Ancient Anvil; no metal foundation needed for basic smithing |
-| Tier 1 | All 16 cells of a 4×4 metal foundation directly below the owned footprint |
+| Tier 1 | All 25 cells of a centered 5×5 metal foundation directly below the owned footprint |
 
 Iron, gold, copper, netherite and ancient metal count, and can be mixed. Gem blocks do
 not. Foundation metals remain normal blocks and are never consumed. Removing one
@@ -101,7 +101,7 @@ stays at the Reconstruction Table. See [Ancient Scrap](ANCIENT_SCRAP.md).
 
 Asset audits check the native item grid, binary alpha, holes, margins, per-cell body
 and horn bounds, UV bounds, closed complete horn hull and frozen legacy indices.
-Server GameTests cover the 4×4 metal foundation in four facings, all 128 anvil recovery
+Server GameTests cover the 5×5 metal foundation in four facings, all 128 anvil recovery
 paths, container/entity protection, legacy expansion, thirteen-position interaction in
 four rotations, exact ingredient matching, saved progress/output, hammer cooldown and
 durability, center result retrieval, and dropped inventory recovery. Native-client QA

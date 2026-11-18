@@ -17,7 +17,7 @@ public final class AncientAnvilStructure {
         for(int y=0;y<2;y++)for(int z=-2;z<=1;z++)result.add(new Cell(result.size(),2,y,z));
         return List.copyOf(result);
     }
-    public static List<BlockPos> foundation(BlockPos core,Direction facing){var result=new ArrayList<BlockPos>();for(int x=-1;x<=2;x++)for(int z=-2;z<=1;z++)result.add(core.relative(facing.getClockWise(),x).relative(facing.getOpposite(),z).below());return List.copyOf(result);}
+    public static List<BlockPos> foundation(BlockPos core,Direction facing){var result=new ArrayList<BlockPos>();for(int x=-2;x<=2;x++)for(int z=-2;z<=2;z++)result.add(core.relative(facing.getClockWise(),x).relative(facing.getOpposite(),z).below());return List.copyOf(result);}
     private record Key(ServerLevel level,BlockPos core){}
     private static final ThreadLocal<Set<Key>> CHANGING=ThreadLocal.withInitial(HashSet::new);
     public static boolean belongs(Level level,BlockPos at,BlockPos core,Direction facing,int cell){var s=level.getBlockState(at);return s.is(AncientAnvilContent.PART.get())&&s.getValue(AncientAnvilPartBlock.FACING)==facing&&s.getValue(AncientAnvilPartBlock.CELL)==cell&&AncientAnvilPartBlock.core(at,s).equals(core);}
