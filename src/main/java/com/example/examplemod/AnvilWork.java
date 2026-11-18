@@ -38,7 +38,7 @@ public final class AnvilWork {
         var previous=be.takeInput(slot);be.placeInput(slot,placed);if(!previous.isEmpty())give(player,previous);
         player.containerMenu.broadcastChanges();return InteractionResult.SUCCESS;
     }
-    private static void give(Player player,ItemStack stack){if(!stack.isEmpty()&&!player.getInventory().add(stack))player.drop(stack,false);player.containerMenu.broadcastChanges();}
+    private static void give(Player player,ItemStack stack){if(!stack.isEmpty()&&!player.getInventory().add(stack))net.minecraft.world.Containers.dropItemStack(player.level(),player.getX(),player.getY()+.5,player.getZ(),stack);player.containerMenu.broadcastChanges();}
     public static boolean strike(AncientAnvilBlockEntity be,Player player,InteractionHand hand){
         if(!(be.getLevel() instanceof ServerLevel level)||player.isSpectator()||!(player.getItemInHand(hand).getItem() instanceof ForgeHammerItem hammer)||!be.getBlockState().getValue(AncientAnvilBlock.EXPANDED))return false;
         if(!be.output().isEmpty()){message(player,"Take the finished item from the center");return false;}
@@ -51,7 +51,7 @@ public final class AnvilWork {
         if(!be.workRecipe.equals(recipe.id().toString())){be.workRecipe=recipe.id().toString();be.work=0;}
         be.work=Math.min(recipe.work(),be.work+hammer.workPerStrike());
         var center=AnvilSlot.CENTER.world(be.getBlockPos(),be.getBlockState().getValue(AncientAnvilBlock.FACING));
-        level.playSound(null,be.getBlockPos(),SoundEvents.ANVIL_USE,SoundSource.BLOCKS,.55F,.95F+level.random.nextFloat()*.15F);
+        level.playSound(null,be.getBlockPos(),SoundEvents.ANVIL_USE,SoundSource.BLOCKS,.55F,.95F+level.getRandom().nextFloat()*.15F);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,Blocks.DEEPSLATE.defaultBlockState()),center.x,center.y+.1,center.z,8,.15,.05,.15,.02);
         if(!player.getAbilities().instabuild)player.getItemInHand(hand).hurtAndBreak(1,level,player instanceof ServerPlayer server?server:null,unused->{});
         if(be.work>=recipe.work()){
@@ -60,6 +60,6 @@ public final class AnvilWork {
         }else{be.sync();message(player,"Forging: "+be.work+" / "+recipe.work());}
         player.containerMenu.broadcastChanges();return true;
     }
-    public static void message(Player player,String text){player.displayClientMessage(Component.literal(text),true);}
+    public static void message(Player player,String text){if(player instanceof ServerPlayer server)server.connection.send(new net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket(Component.literal(text)));}
     private AnvilWork(){}
 }

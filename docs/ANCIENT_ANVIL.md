@@ -1,48 +1,110 @@
 # Ancient Anvil
 
-A three-block-long, one-block-wide anvil with a broad work face, a long stepped horn,
-a solid waist and a heavy foot. Its work surface is 1.5 blocks high. Six real owned
-cells span two block layers; its geometry and collision are generated together.
-It uses vanilla metal materials, restrained copper trim and one gold maker's seal.
-The dense rune wallpaper, tiny layered plates and pulse strips are removed.
+The selected Foundry anvil is a broad runic centerpiece with four animated lava falls,
+an extended working surface and a long tapered horn. A four-by-four footprint spans
+two owned block layers. Body meshes, the cell-clipped horn, collision and selection
+edges share `tools/expanded_anvil.py`; approved artwork remains in its native pixel grid.
 
-Placement requires clear space one block ahead, one behind, and above the three
-positions. Existing cramped anvils keep a compact fallback until that space is clear.
-Neither containers nor creatures are overwritten. Breaking any section recovers one
-anvil, clears the other owned sections, and preserves the foundation.
+The original six/eighteen cell indices and frozen meshes remain valid in saved worlds.
+A saved anvil expands only when all extra cells are clear of blocks, containers and
+living creatures. It never replaces neighboring inventories or the foundation. A new
+placement requires the whole footprint clear. Breaking any section recovers one anvil
+and all its workpieces once; its foundation remains intact. Design A is the normal item.
 
 ## Progression
 
 | Step | Requirement / result |
 |---|---|
-| Repair the forge | Complete the existing Ruined Ancient Forge frame |
-| Alloy ancient metal | 1 Ancient Scrap **or** Ancient Debris + 1 Gold Ingot + 2 Iron Ingots → **4 Ancient Ingots** |
+| Repair the forge | Complete the Ruined Ancient Forge frame |
+| Alloy ancient metal | 1 Ancient Scrap or Ancient Debris + 1 Gold Ingot + 2 Iron Ingots → 4 Ancient Ingots |
 | Ancient metal block | 9 ingots ↔ 1 Block of Ancient Metal |
 | Craft anvil | Vanilla anvil shape: `BBB / .I. / III`, B = ancient metal block, I = ancient ingot; 31 ingots total |
-| Tier 0 | Place the Ancient Anvil on its own |
-| Tier 1 | All nine cells of a 3×3 metal-block square directly below it; anvil centered above the center block |
+| Tier 0 | Place the Ancient Anvil; no metal foundation needed for basic smithing |
+| Tier 1 | All 16 cells of a 4×4 metal foundation directly below the owned footprint |
 
-Eight alloy batches produce 32 ingots, enough for one anvil with one ingot left. Ancient Scrap is obtained by feeding an artifact to an adult Cruncher, melting an artifact in the repaired forge, or from a Sniffer debris excavation. Each action yields one scrap. Nine Ancient Scrap craft into one Netherite Scrap, and one Netherite Scrap crafts back into nine. Netherite Scrap is no longer a direct alloy ingredient. Ancient Debris remains an alternative direct alloy source.
+Iron, gold, copper, netherite and ancient metal count, and can be mixed. Gem blocks do
+not. Foundation metals remain normal blocks and are never consumed. Removing one
+qualifying block downgrades the tier within half a second. Shift + empty-hand
+right-click opens the tier panel; **Show foundation guide** shows the exact rotated
+footprint in cyan (air) or amber (wrong occupied blocks). A blocked legacy anvil also
+shows the space it needs for expansion. Only the local player sees this guide.
 
-Iron, gold, copper, netherite and ancient metal count. Mixed metals work. Common copper storage-block tags also allow the variants supplied by the current game/modpack. Gem blocks do not qualify. The foundation remains normal blocks; upgrading/downgrading consumes nothing. Missing a cell downgrades to Tier 0 within half a second. The stationary anvil does not fall, take vanilla falling-anvil damage, or overwrite its foundation.
+## Physical smithing
 
-Right-click empty-handed to view the tier, foundation count and native **Show foundation guide** button. The local ghost marks air in cyan and wrong occupied blocks in amber. Complete the foundation to clear it. This first implementation establishes Tier 0/1; artifact editing, larger tiers and ritual abilities remain future work.
+Thirteen independent positions hold one workpiece each: center, four diagonal corners,
+four inner cardinal arms and four outer rim/heel positions. A gold outline identifies
+the spot under the crosshair. Positions rotate with the model.
 
-## Forge alloying
+- Right-click a position with an item to place one workpiece.
+- An empty hand retrieves it; a different held item swaps with it safely.
+- Hit any anvil section with a forge hammer to work the matching recipe. Left-click
+  strikes and right-click use are both supported. Hold left-click to strike repeatedly.
+- Every accepted hit costs one hammer durability. Invalid recipes and clicks inside
+  the eight-tick strike cooldown consume no durability or ingredients.
+- Ingredients stay visible until the final hit. Moving an ingredient resets progress.
+- The completed result appears at center; right-click there to collect it. That click
+  never consumes a held item, even while holding another ingredient or the hammer.
+- Placed items, output and partial progress save with the anvil. There is no inventory UI.
 
-The completed forge is operated in-world. Right-click inside its fireplace once per ingredient item, ignite with flint and steel, wait twenty seconds, then collect the result empty-handed. Black chimney smoke marks processing; pure white smoke marks ready output. One artifact alone melts into one Ancient Scrap through the same process. The front table and processing interface have been removed; equipment assembly stays at the separate Reconstruction Table.
+### Iron Forge Hammer
 
-All six persisted slots are preserved and recoverable by empty-hand clicks. A batch reserves its ingredients until the final tick. Wrong/occupied output, leftover metals in artifact melting, missing ingredients, a broken frame, or spare components prevent ignition. Frame damage pauses a burning batch; repair resumes it. Core drops return ingredients if unfinished and output if finished. Save/reload preserves phase and progress.
+Craft `III / .S. / .S.` with iron ingots and sticks. The hammer has 250 durability,
+forge tier 1 and one work per strike. Its class supports future tiers and work rates.
+The native 16px sprite is packed at exact 2× nearest-neighbor with binary alpha.
 
-Recipe definitions live in `AncientAlloy`; `ForgeProcess` handles interaction, reservation, timer, smoke and collection. Foundation/source eligibility is tag-driven:
+### Runestone (Tier 0+)
 
-- `data/examplemod/tags/block/ancient_anvil_foundation.json`
-- `data/examplemod/tags/item/ancient_alloy_scrap.json`
+Put deepslate or cobbled deepslate in the **four diagonal corners** and one gold ingot
+in the **center**. Leave the other eight positions empty. Four hammer strikes make one
+Runestone, an inlaid deepslate building block. It has no crafting-grid recipe. Its
+future role in runic structures is deliberately not implemented yet.
 
-The three normal recipes are `ancient_anvil`, `ancient_metal_block`, and `ancient_ingots_from_block`. Registry IDs are `examplemod:ancient_anvil`, `examplemod:ancient_ingot`, and `examplemod:ancient_metal_block`. All appear together after the forge in the mod creative tab. The Workshop Manual documents both stages and actual recipes.
+## Recipe authoring
 
-## Validation
+Server datapacks provide `data/<namespace>/anvil_recipes/<name>.json`. The filename is
+the stable recipe ID. Resource-pack client code is not involved in recipe decisions.
 
-Native server tests cover all four facings, standalone tier, complete mixed-metal foundation, missing-cell downgrade, unchanged foundation blocks, both alloy inputs, exact output/costs, incomplete/overflow/foreign-output/duplicate/frame guards, spare-part preservation, stacked persistence, shift-click and actual crafting recipes. Client checks cover custom textures, explicit bounded UVs, collision authoring and ingot transparency. The native-client workflow uses actual item placement, mouse/keyboard alloying, tier/status/guide buttons and screenshots.
+```json
+{
+  "anvil_tier": 0,
+  "hammer_tier": 1,
+  "work": 4,
+  "ingredients": {
+    "north_west": {"tag": "examplemod:runestone_deepslate"},
+    "north_east": {"tag": "examplemod:runestone_deepslate"},
+    "south_west": {"tag": "examplemod:runestone_deepslate"},
+    "south_east": {"tag": "examplemod:runestone_deepslate"},
+    "center": {"item": "minecraft:gold_ingot"}
+  },
+  "result": {"id": "examplemod:runestone", "count": 1}
+}
+```
 
-See [Ancient Scrap](ANCIENT_SCRAP.md) for feeding, melting and conversion details.
+Other position IDs: `north_inner`, `east_inner`, `south_inner`, `west_inner`,
+`north_outer`, `east_outer`, `south_outer`, `west_outer`. Unspecified positions must
+be empty. Each ingredient specifies exactly one item ID or item tag. A datapack can
+override a recipe, replace tags, or disable it with `"enabled": false`. `/reload` picks
+up changes. Changed recipe IDs reset saved work on the next strike. Modpacks should
+also reset work or use a new ID when changing work costs. Server-side hammer packets
+validate the held tool, reach, line of sight and the authoritative cooldown.
+
+The content registry is `AncientAnvilContent`; storage/sync is
+`AncientAnvilBlockEntity`; controller logic is `AnvilWork`; reloadable recipes are
+`AnvilRecipes`; all coordinates are in `AnvilSlot`. New hammer tiers reuse
+`ForgeHammerItem`. Client rendering resolves real item models in the render extraction
+phase. The anvil is not a hopper inventory.
+
+The forge still performs only in-world alloying and artifact melting. Tool assembly
+stays at the Reconstruction Table. See [Ancient Scrap](ANCIENT_SCRAP.md).
+
+## Verification
+
+Asset audits check the native item grid, binary alpha, holes, margins, per-cell body
+and horn bounds, UV bounds, closed complete horn hull and frozen legacy indices.
+Server GameTests cover the 4×4 metal foundation in four facings, all 128 anvil recovery
+paths, container/entity protection, legacy expansion, thirteen-position interaction in
+four rotations, exact ingredient matching, saved progress/output, hammer cooldown and
+durability, center result retrieval, and dropped inventory recovery. Native-client QA
+drives the real Minecraft window to place the item, use the foundation guide, place
+and retrieve all thirteen positions, strike with both mouse buttons and collect a
+Runestone. Actual window captures accompany CI artifacts.
