@@ -16,6 +16,16 @@ on:
       - 'src/main/resources/assets/examplemod/**/ancient_field_guide*'
       - 'tools/field-guide.json'
       - 'tools/finish_item_assets.py'
+      - 'tools/generate_workshop_materials.py'
+      - 'tools/generate_ancient_anvil.py'
+      - 'tools/runic_anvil_geometry.py'
+      - 'tools/anvil_horn.py'
+      - 'tools/generate_runic_anvil_assets.py'
+      - 'tools/asset_sources/runic-anvil/**'
+      - 'src/main/resources/assets/examplemod/textures/block/runic_anvil*'
+      - 'tools/generate_formed_forge.py'
+      - 'src/main/resources/assets/examplemod/textures/block/forge_*'
+      - 'src/main/resources/assets/examplemod/textures/block/anvil_*'
       - 'tools/item-asset-manifest.json'
       - 'src/main/resources/assets/examplemod/textures/item/**'
       - 'src/main/java/com/example/examplemod/*Forge*.java'
@@ -32,7 +42,8 @@ permissions:
   contents: read
 jobs:
   minecraft-window:
-    runs-on: ubuntu-latest
+    # Keep the native graphics/capture stack stable across ubuntu-latest releases.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -68,4 +79,20 @@ jobs:
         with:
           name: real-minecraft-visual-qa
           path: build/client-qa/
+          retention-days: 14
+      - name: Upload compact anvil design comparison evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: anvil-design-previews
+          path: |
+            build/client-qa/captures/anvil-sample-*.png
+            build/client-qa/captures/ancient-anvil-*.png
+            build/client-qa/captures/large-anvil-*.png
+            build/client-qa/captures/runic-anvil-*.png
+            build/client-qa/captures/assets-anvil-held.png
+            build/client-qa/captures/failure.png
+            build/client-qa/result.json
+            build/client-qa/state.json
+            build/client-qa/client.log
           retention-days: 14

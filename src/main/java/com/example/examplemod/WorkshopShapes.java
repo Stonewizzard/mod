@@ -52,12 +52,19 @@ public final class WorkshopShapes {
     public static VoxelShape archaeology(boolean right,Direction facing){return (right?RIGHT:LEFT).get(facing);}
     public static VoxelShape reconstruction(Direction facing){return RECONSTRUCTION.get(facing);}
     static Map<Direction,VoxelShape> rotations(double[][] boxes){
+        return rotations(boxes,true);
+    }
+    /** Visual assembly shapes may be taller than one owned cell. */
+    static Map<Direction,VoxelShape> wholeRotations(double[][] boxes){
+        return rotations(boxes,false);
+    }
+    private static Map<Direction,VoxelShape> rotations(double[][] boxes,boolean omitSurfaceInlays){
         var shapes=new EnumMap<Direction,VoxelShape>(Direction.class);
         for(var facing:Direction.Plane.HORIZONTAL){
             int turns=switch(facing){case EAST->1;case SOUTH->2;case WEST->3;default->0;};var shape=Shapes.empty();
             for(var box:boxes){
                 // Thin surface inlays are decorative; collision must end at the normal block top.
-                if(box[1]>=16)continue;
+                if(omitSurfaceInlays&&box[1]>=16)continue;
                 double x=box[0],z=box[2],X=box[3],Z=box[5];
                 for(int turn=0;turn<turns;turn++){double nx=16-Z,nX=16-z;z=x;Z=X;x=nx;X=nX;}
                 shape=Shapes.or(shape,Block.box(x,box[1],z,X,box[4],Z));

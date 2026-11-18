@@ -1,0 +1,28 @@
+{
+  "designs": [
+    {
+      "id": "base",
+      "prefix": "ancient_anvil",
+      "headOffset": 0,
+      "narrow": 0
+    },
+    {
+      "id": "foundry",
+      "prefix": "ancient_anvil_foundry",
+      "headOffset": 4,
+      "narrow": 1
+    },
+    {
+      "id": "spillway",
+      "prefix": "ancient_anvil_spillway",
+      "headOffset": 2,
+      "narrow": 0
+    },
+    {
+      "id": "columns",
+      "prefix": "ancient_anvil_columns",
+      "headOffset": 4,
+      "narrow": 2
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Frozen six-cell meshes from PR #52 before the runic centerpiece redesign. Existing blockstates default to monumental=false and keep these shapes until their surrounding cells are safe to claim. Original cell indices 0–5 remain stable. Do not remove this compatibility path while old worlds may contain these states.
