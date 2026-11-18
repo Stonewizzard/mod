@@ -22,7 +22,7 @@ public final class LargeAnvilTests {
             check(h,AncientAnvilContent.item(AncientAnvilDesign.FOUNDRY)==AncientAnvilContent.ANVIL_ITEM.get(),"Selected anvils recover as the normal craftable item");
             var level=h.getLevel();var core=h.absolutePos(new BlockPos(3,2,3));var player=h.makeMockServerPlayerInLevel();player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);player.snapTo(core.getX()+6,core.getY(),core.getZ()+6);player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND_PICKAXE));
             for(var design:java.util.List.of(AncientAnvilDesign.FOUNDRY))for(var front:Direction.Plane.HORIZONTAL)for(int mined=0;mined<AncientAnvilStructure.CELLS.size();mined++){
-                for(var p:AncientAnvilStructure.foundation(core,front))level.setBlock(p,((p.getX()+p.getZ())%2==0?Blocks.IRON_BLOCK:Blocks.GOLD_BLOCK).defaultBlockState(),3);
+                for(var p:AncientAnvilStructure.foundation(core,front))level.setBlock(p,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);
                 level.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState().setValue(AncientAnvilBlock.FACING,front).setValue(AncientAnvilBlock.DESIGN,design),3);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));
                 check(h,level.getBlockState(core).getValue(AncientAnvilBlock.LARGE)&&level.getBlockState(core).getValue(AncientAnvilBlock.TIER)==1,"The same tier-one foundation supports the enlarged anvil");
                 check(h,level.getBlockState(core).getValue(AncientAnvilBlock.DESIGN)==design,"Placement keeps the chosen visual design");
@@ -30,7 +30,7 @@ public final class LargeAnvilTests {
                 int before=drops(level,core,design);var at=AncientAnvilStructure.CELLS.get(mined).at(core,front);if(mined%2==0)level.destroyBlock(at,true);else player.gameMode.destroyBlock(at);
                 check(h,drops(level,core,design)==before+1,"Harvesting any anvil section must drop exactly one anvil");
                 for(var c:AncientAnvilStructure.CELLS)check(h,level.getBlockState(c.at(core,front)).isAir(),"Harvesting any section clears all thirty-two owned cells");
-                for(var p:AncientAnvilStructure.foundation(core,front))check(h,level.getBlockState(p).is(AncientAnvilContent.FOUNDATION),"Anvil recovery preserves every foundation metal block");
+                for(var p:AncientAnvilStructure.foundation(core,front))check(h,level.getBlockState(p).is(AncientAnvilContent.FOUNDATION),"Anvil recovery preserves every foundation Runestone block");
             }
             player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);level.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));int creativeBefore=drops(level,core);player.gameMode.destroyBlock(core.north().above());check(h,drops(level,core)==creativeBefore&&level.getBlockState(core).isAir(),"Creative removal clears the multiblock without spawning free anvil items");
             var blocked=core.north();level.setBlock(blocked,Blocks.CHEST.defaultBlockState(),3);level.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));

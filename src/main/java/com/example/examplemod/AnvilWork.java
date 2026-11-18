@@ -27,7 +27,7 @@ public final class AnvilWork {
         if(!(level.getBlockEntity(core) instanceof AncientAnvilBlockEntity be)||player.isSpectator())return InteractionResult.SUCCESS;
         var state=level.getBlockState(core);var slot=AnvilSlot.nearest(core,state.getValue(AncientAnvilBlock.FACING),hit.getLocation());
         var held=player.getItemInHand(hand);
-        if(player.isShiftKeyDown()&&held.isEmpty())return InteractionResult.SUCCESS; // Reserved for the client foundation guide.
+        if(player.isShiftKeyDown())return InteractionResult.SUCCESS; // Reserved for the client foundation guide.
         if(!state.getValue(AncientAnvilBlock.EXPANDED)){message(player,"Clear the 4 x 4 working space to assemble the anvil");return InteractionResult.SUCCESS;}
         if(slot==AnvilSlot.CENTER&&!be.output().isEmpty()){give(player,be.takeOutput());return InteractionResult.SUCCESS;}
         if(held.getItem() instanceof ForgeHammerItem){strike(be,player,hand);return InteractionResult.SUCCESS;}
