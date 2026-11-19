@@ -159,8 +159,8 @@ A recipe with fluid conditions implicitly requires at least Tier 2.
 ```
 
 This example is documentation, not an enabled recipe. No new progression recipes
-are imposed yet. Tier 0/1 recipes continue to work. The placement guide and automatic
-construction currently cover the original Tier 1 foundation only.
+are imposed yet. Tier 0/1 recipes continue to work. The guide and automatic construction advance through all tiers. Fluid spaces are
+highlighted, but filled manually; no filled buckets are used.
 
 Invisible legacy part blocks with no mesh are released when an anvil refreshes;
 their serialized indices remain stable. Visible parts and the horn retain ownership.
@@ -201,6 +201,23 @@ need adjustment after in-game review.
   a cap may be mixed. Packs can replace this tag.
 - These structures are detected in place. Matching blocks, containers and functional
   rune block entities are never claimed or consumed.
-- The guide and inventory-backed construction still build only Tier 1.
+- The guide and inventory-backed construction now advance through all four tiers.
 - Recipes can now require `anvil_tier` 3 or 4. No new recipes or rune effects are
   imposed by this structural implementation.
+
+
+## All-tier guide and inventory construction
+
+Shift + right-click toggles the next-tier guide; holding places one matching inventory
+block every six ticks after the initial short delay. Cyan = Runestone/rune positions,
+gold = caps, blue = manually filled fluid spaces, yellow = wrong occupied positions.
+The next tier appears automatically after the current one forms. Tier 4 completion
+leaves no further guide cells. Repairs show only missing requirements.
+
+The server chooses targets, block tags and inventory costs, retaining native placement
+cancellation, permissions, collisions and sounds. Fluids and filled buckets are never
+used automatically. Tier 2 construction waits for manual fluid completion before
+unlocking Tier 3. Solid obstructions and containers must be cleared manually.
+
+Pack-defined stage coordinates and tags sync to remote clients on login and datapack
+reload, so dedicated-server guides use the same layout as authoritative construction.

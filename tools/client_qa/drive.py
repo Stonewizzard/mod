@@ -107,7 +107,14 @@ def find_window(state):
     raise AssertionError('Cannot resolve native Minecraft window; inspect windows.txt')
 
 def toggle_anvil_guide():
-    process('xdotool','keydown','Shift_L');time.sleep(.3);process('xdotool','click','3');time.sleep(.2);process('xdotool','keyup','Shift_L')
+    before=observe().get('anvilGuide',False)
+    process('xdotool','keydown','Shift_L')
+    try:
+        wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'sneaking while aiming at the anvil')
+        process('xdotool','mousedown','3')
+        wait_for(lambda s:s.get('anvilGuide')!=before,'native guide toggle')
+    finally:
+        process('xdotool','mouseup','3','keyup','Shift_L')
     expect(screen='InGame')
 
 def run():
@@ -129,6 +136,27 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='anvil-all-guides':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_tier2_fixture');command('anvil_auto_fixture');expect(anvilTier=1,guideTier=2,guideMissing=60,smithRunes=215,guideCaps=20,guideBuckets=2)
+        command('anvil_auto_close');process('xdotool','key','1');time.sleep(.3);toggle_anvil_guide();expect(anvilGuide=True)
+        command('anvil_auto_overview');capture('ancient-anvil-tier2-guide')
+        command('anvil_auto_close');process('xdotool','keydown','Shift_L');wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'ready to hold-build');process('xdotool','mousedown','3')
+        wait_for(lambda s:s.get('smithRunes')==188,'automatic Tier 2 Runestone frame',timeout=35)
+        time.sleep(.8);process('xdotool','mouseup','3','keyup','Shift_L');expect(anvilTier=1,guideMissing=33,guideBuckets=2,smithRunes=188)
+        command('anvil_manual_fluids');expect(anvilTier=2,guideTier=3,guideMissing=88)
+        command('anvil_auto_overview');capture('ancient-anvil-tier3-guide')
+        command('anvil_auto_close');process('xdotool','keydown','Shift_L');wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'ready to hold-build');process('xdotool','mousedown','3');time.sleep(1.5);process('xdotool','mouseup','3','keyup','Shift_L')
+        wait_for(lambda s:0<s.get('guideMissing',0)<88,'higher-tier sequential partial construction');time.sleep(.4);partial=observe()['guideMissing'];time.sleep(.7);expect(guideMissing=partial)
+        process('xdotool','keydown','Shift_L');wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'ready to hold-build');process('xdotool','mousedown','3')
+        wait_for(lambda s:s.get('anvilTier')==3,'native hold builds all Tier 3 blocks and caps',timeout=65)
+        process('xdotool','mouseup','3','keyup','Shift_L');expect(guideTier=4,anvilGuide=True,guideBuckets=2)
+        command('anvil_auto_overview');capture('ancient-anvil-tier4-guide')
+        command('anvil_auto_close');process('xdotool','keydown','Shift_L');wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'ready to hold-build');process('xdotool','mousedown','3')
+        wait_for(lambda s:s.get('anvilTier')==4,'native hold builds lower ring and four outer pillars',timeout=90)
+        process('xdotool','mouseup','3','keyup','Shift_L');expect(smithRunes=0,guideCaps=0,guideBuckets=2,guideMissing=0,smithHammerDamage=0)
+        toggle_anvil_guide();expect(anvilGuide=False);command('anvil_auto_overview');capture('ancient-anvil-auto-tier4-complete')
+        print('ANVIL_ALL_GUIDES_NATIVE_PASS: Tier 2 frame and manual fluids, synced Tier 3/4 ghosts, sequential inventory construction, release stops, exact costs and untouched filled buckets',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-all-guides'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-stages':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_tier2_fixture');expect(anvilTier=2)
         command('anvil_tier3');expect(anvilTier=3);process('xdotool','key','F1');capture('ancient-anvil-tier3-pillars');process('xdotool','key','F1')

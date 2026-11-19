@@ -26,7 +26,7 @@ public final class AncientAnvilPreview {
         long now=level.getGameTime();
         if(now-pressedAt>=10&&now-lastSent>=AnvilFoundation.INTERVAL){
             core=heldCore; // A deliberate hold shows construction progress even if its initial tap hid the guide.
-            if(AncientAnvilBlockEntity.missing(level,heldCore).isEmpty())return;
+            if(AnvilGuide.next(level,heldCore).missing(level).isEmpty())return;
             lastSent=now;if(mc.getConnection()!=null)mc.getConnection().send(new ServerboundCustomPayloadPacket(new AnvilFoundationPayload(heldCore)));
         }
     }
