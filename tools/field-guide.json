@@ -1383,7 +1383,7 @@
       "ruined_ancient_forge",
       "ancient_alloy"
     ],
-    "keywords": "ancient crystal crystalline diamond block twelve 12 forge fuse glow teal amber",
+    "keywords": "ancient crystal crystalline diamond block twelve 12 forge fuse glow teal amber energized brighter blue light variants",
     "sections": [
       {
         "title": "Ancient material",
@@ -1402,6 +1402,13 @@
         "title": "Build with it",
         "paragraphs": [
           "The block has matching fused-crystal facets, a soft light level of seven, and crystalline sounds. Mine it with an iron pickaxe or better to recover the whole block. It does not grant additional anvil effects yet."
+        ]
+      },
+      {
+        "title": "Energized Ancient Crystal",
+        "paragraphs": [
+          "The darker Block of Ancient Crystal is the forge result. The lighter-blue Energized Ancient Crystal Block is a separate block with the same amethyst-like facets and gold highlights, plus a stronger light level of twelve.",
+          "The energized block is available in Creative for now. An energizing recipe and any additional functions will be designed later. Both blocks need an iron pickaxe or better and drop their own variant."
         ]
       }
     ]

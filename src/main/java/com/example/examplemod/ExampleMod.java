@@ -152,6 +152,7 @@ public class ExampleMod {
                 output.accept(AncientAnvilContent.INGOT.get());
                 output.accept(AncientAnvilContent.CRYSTAL.get());
                 output.accept(AncientAnvilContent.CRYSTAL_BLOCK_ITEM.get());
+                output.accept(AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM.get());
                 output.accept(AncientAnvilContent.METAL_ITEM.get());
                 output.accept(AscenderContent.ITEM.get());
                 ComponentStationContent.STATIONS.forEach(station->output.accept(station.item().get()));
@@ -276,6 +277,7 @@ public class ExampleMod {
             event.accept(AncientForgeContent.BRICKS_ITEM);
             event.accept(AncientAnvilContent.METAL_ITEM);
             event.accept(AncientAnvilContent.CRYSTAL_BLOCK_ITEM);
+            event.accept(AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM);
             event.accept(SNIFFER_SKULL_ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(AncientAnvilContent.SCRAP_ITEM);

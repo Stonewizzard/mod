@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "examplemod:ancient_crystal_block",
-    "examplemod:canopy_keystone"
+    "examplemod:canopy_keystone",
+    "examplemod:energized_ancient_crystal_block"
   ]
 }

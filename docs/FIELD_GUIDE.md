@@ -567,3 +567,7 @@ Use the completed Ruined Ancient Forge. Right-click the fireplace twelve times w
 The forge takes exactly twelve crystals and one diamond block. There is no crafting-grid compression or reverse conversion recipe.
 
 The block has matching fused-crystal facets, a soft light level of seven, and crystalline sounds. Mine it with an iron pickaxe or better to recover the whole block. It does not grant additional anvil effects yet.
+
+The darker Block of Ancient Crystal is the forge result. The lighter-blue Energized Ancient Crystal Block is a separate block with the same amethyst-like facets and gold highlights, plus a stronger light level of twelve.
+
+The energized block is available in Creative for now. An energizing recipe and any additional functions will be designed later. Both blocks need an iron pickaxe or better and drop their own variant.

@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "examplemod:block/energized_ancient_crystal_block"
+  }
+}

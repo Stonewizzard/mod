@@ -147,5 +147,6 @@
   "anvil.examplemod.hint": "Place 25 Runestone blocks one layer below.",
   "block.examplemod.canopy_keystone": "Canopy Keystone",
   "item.examplemod.ancient_crystal": "Ancient Crystal",
-  "block.examplemod.ancient_crystal_block": "Block of Ancient Crystal"
+  "block.examplemod.ancient_crystal_block": "Block of Ancient Crystal",
+  "block.examplemod.energized_ancient_crystal_block": "Energized Ancient Crystal Block"
 }
