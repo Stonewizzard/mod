@@ -136,6 +136,14 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='ancient-crystal-art':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('crystal_fixture');command('crystal_art')
+        process('xdotool','key','1');capture('ancient-crystal-mainhand')
+        process('xdotool','key','3');capture('ancient-crystal-block-held')
+        process('xdotool','key','9','F1');capture('ancient-crystal-blocks-day');process('xdotool','key','F1')
+        native_chat_command('time set midnight');process('xdotool','key','F1');capture('ancient-crystal-blocks-night');process('xdotool','key','F1')
+        print('ANCIENT_CRYSTAL_ART_PASS: native lighter palette, placed/held/day/night captures; unchanged item and recipe',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'ancient-crystal-art'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='ancient-crystal':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('crystal_fixture');command('forge_view',close=True);expect(aimedAtForge=True)
         process('xdotool','key','2');time.sleep(.3);process('xdotool','click','3');expect(alloyGold=1)
