@@ -19,7 +19,7 @@ public final class AncientAnvilBlock extends BaseEntityBlock {
     public static final BooleanProperty LARGE=BooleanProperty.create("large");
     public static final BooleanProperty MONUMENTAL=BooleanProperty.create("monumental");
     public static final BooleanProperty EXPANDED=BooleanProperty.create("expanded");
-    public static final IntegerProperty TIER=IntegerProperty.create("tier",0,5);
+    public static final IntegerProperty TIER=IntegerProperty.create("tier",0,6);
     public static final EnumProperty<AncientAnvilDesign> DESIGN=EnumProperty.create("design",AncientAnvilDesign.class);
     public AncientAnvilBlock(BlockBehaviour.Properties properties){super(properties);registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH).setValue(TIER,0).setValue(LARGE,false).setValue(MONUMENTAL,false).setValue(EXPANDED,false).setValue(DESIGN,AncientAnvilDesign.FOUNDRY));}
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(FACING,TIER,LARGE,MONUMENTAL,EXPANDED,DESIGN);}

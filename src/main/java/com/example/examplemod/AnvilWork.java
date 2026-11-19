@@ -52,6 +52,14 @@ public final class AnvilWork {
         be.lastStrike=level.getGameTime();
         if(!be.workRecipe.equals(recipe.id().toString())){be.workRecipe=recipe.id().toString();be.work=0;}
         be.work=Math.min(recipe.work(),be.work+hammer.workPerStrike());
+        if(be.getBlockState().getValue(AncientAnvilBlock.TIER)==6){
+            var lens=AnvilTierSix.inspect(level,be.getBlockPos(),be.getBlockState().getValue(AncientAnvilBlock.FACING),AnvilStages.all());
+            if(lens.complete()){
+                be.energyColor=lens.color();be.energyStarted=level.getGameTime();be.energyUntil=level.getGameTime()+(be.work>=recipe.work()?36:24);
+                var lensCenter=be.getBlockPos().above(16);level.sendParticles(new DustParticleOptions(lens.color(),1.35F),lensCenter.getX()+.5,lensCenter.getY()+.25,lensCenter.getZ()+.5,12,.7,.12,.7,.03);
+                level.playSound(null,be.getBlockPos(),SoundEvents.BEACON_POWER_SELECT,SoundSource.BLOCKS,.65F,1.25F);
+            }
+        }
         var center=AnvilSlot.CENTER.world(be.getBlockPos(),be.getBlockState().getValue(AncientAnvilBlock.FACING));
         level.playSound(null,be.getBlockPos(),SoundEvents.ANVIL_USE,SoundSource.BLOCKS,.55F,.95F+level.getRandom().nextFloat()*.15F);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,Blocks.DEEPSLATE.defaultBlockState()),center.x,center.y+.1,center.z,8,.15,.05,.15,.02);

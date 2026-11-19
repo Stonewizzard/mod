@@ -3071,6 +3071,518 @@
     "design=columns,expanded=true,facing=west,tier=5,large=true,monumental=true": {
       "model": "examplemod:block/expanded_anvil_cell_0",
       "y": 270
+    },
+    "design=base,expanded=false,facing=north,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 0
+    },
+    "design=base,expanded=false,facing=east,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 90
+    },
+    "design=base,expanded=false,facing=south,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 180
+    },
+    "design=base,expanded=false,facing=west,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    },
+    "design=base,expanded=false,facing=north,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 0
+    },
+    "design=base,expanded=false,facing=east,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 90
+    },
+    "design=base,expanded=false,facing=south,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 180
+    },
+    "design=base,expanded=false,facing=west,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    },
+    "design=base,expanded=false,facing=north,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 0
+    },
+    "design=base,expanded=false,facing=east,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 90
+    },
+    "design=base,expanded=false,facing=south,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 180
+    },
+    "design=base,expanded=false,facing=west,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 270
+    },
+    "design=base,expanded=false,facing=north,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 0
+    },
+    "design=base,expanded=false,facing=east,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 90
+    },
+    "design=base,expanded=false,facing=south,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 180
+    },
+    "design=base,expanded=false,facing=west,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_cell_0",
+      "y": 270
+    },
+    "design=base,expanded=true,facing=north,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=base,expanded=true,facing=east,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=base,expanded=true,facing=south,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=base,expanded=true,facing=west,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=base,expanded=true,facing=north,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=base,expanded=true,facing=east,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=base,expanded=true,facing=south,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=base,expanded=true,facing=west,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=base,expanded=true,facing=north,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=base,expanded=true,facing=east,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=base,expanded=true,facing=south,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=base,expanded=true,facing=west,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=base,expanded=true,facing=north,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=base,expanded=true,facing=east,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=base,expanded=true,facing=south,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=base,expanded=true,facing=west,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=foundry,expanded=false,facing=north,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 0
+    },
+    "design=foundry,expanded=false,facing=east,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 90
+    },
+    "design=foundry,expanded=false,facing=south,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 180
+    },
+    "design=foundry,expanded=false,facing=west,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    },
+    "design=foundry,expanded=false,facing=north,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 0
+    },
+    "design=foundry,expanded=false,facing=east,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 90
+    },
+    "design=foundry,expanded=false,facing=south,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 180
+    },
+    "design=foundry,expanded=false,facing=west,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    },
+    "design=foundry,expanded=false,facing=north,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 0
+    },
+    "design=foundry,expanded=false,facing=east,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 90
+    },
+    "design=foundry,expanded=false,facing=south,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 180
+    },
+    "design=foundry,expanded=false,facing=west,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 270
+    },
+    "design=foundry,expanded=false,facing=north,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_foundry_cell_0",
+      "y": 0
+    },
+    "design=foundry,expanded=false,facing=east,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_foundry_cell_0",
+      "y": 90
+    },
+    "design=foundry,expanded=false,facing=south,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_foundry_cell_0",
+      "y": 180
+    },
+    "design=foundry,expanded=false,facing=west,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_foundry_cell_0",
+      "y": 270
+    },
+    "design=foundry,expanded=true,facing=north,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=foundry,expanded=true,facing=east,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=foundry,expanded=true,facing=south,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=foundry,expanded=true,facing=west,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=foundry,expanded=true,facing=north,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=foundry,expanded=true,facing=east,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=foundry,expanded=true,facing=south,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=foundry,expanded=true,facing=west,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=foundry,expanded=true,facing=north,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=foundry,expanded=true,facing=east,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=foundry,expanded=true,facing=south,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=foundry,expanded=true,facing=west,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=foundry,expanded=true,facing=north,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=foundry,expanded=true,facing=east,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=foundry,expanded=true,facing=south,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=foundry,expanded=true,facing=west,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=spillway,expanded=false,facing=north,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 0
+    },
+    "design=spillway,expanded=false,facing=east,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 90
+    },
+    "design=spillway,expanded=false,facing=south,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 180
+    },
+    "design=spillway,expanded=false,facing=west,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    },
+    "design=spillway,expanded=false,facing=north,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 0
+    },
+    "design=spillway,expanded=false,facing=east,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 90
+    },
+    "design=spillway,expanded=false,facing=south,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 180
+    },
+    "design=spillway,expanded=false,facing=west,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    },
+    "design=spillway,expanded=false,facing=north,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 0
+    },
+    "design=spillway,expanded=false,facing=east,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 90
+    },
+    "design=spillway,expanded=false,facing=south,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 180
+    },
+    "design=spillway,expanded=false,facing=west,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 270
+    },
+    "design=spillway,expanded=false,facing=north,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_spillway_cell_0",
+      "y": 0
+    },
+    "design=spillway,expanded=false,facing=east,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_spillway_cell_0",
+      "y": 90
+    },
+    "design=spillway,expanded=false,facing=south,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_spillway_cell_0",
+      "y": 180
+    },
+    "design=spillway,expanded=false,facing=west,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_spillway_cell_0",
+      "y": 270
+    },
+    "design=spillway,expanded=true,facing=north,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=spillway,expanded=true,facing=east,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=spillway,expanded=true,facing=south,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=spillway,expanded=true,facing=west,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=spillway,expanded=true,facing=north,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=spillway,expanded=true,facing=east,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=spillway,expanded=true,facing=south,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=spillway,expanded=true,facing=west,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=spillway,expanded=true,facing=north,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=spillway,expanded=true,facing=east,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=spillway,expanded=true,facing=south,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=spillway,expanded=true,facing=west,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=spillway,expanded=true,facing=north,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=spillway,expanded=true,facing=east,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=spillway,expanded=true,facing=south,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=spillway,expanded=true,facing=west,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=columns,expanded=false,facing=north,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 0
+    },
+    "design=columns,expanded=false,facing=east,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 90
+    },
+    "design=columns,expanded=false,facing=south,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 180
+    },
+    "design=columns,expanded=false,facing=west,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    },
+    "design=columns,expanded=false,facing=north,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 0
+    },
+    "design=columns,expanded=false,facing=east,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 90
+    },
+    "design=columns,expanded=false,facing=south,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 180
+    },
+    "design=columns,expanded=false,facing=west,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/ancient_anvil",
+      "y": 270
+    },
+    "design=columns,expanded=false,facing=north,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 0
+    },
+    "design=columns,expanded=false,facing=east,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 90
+    },
+    "design=columns,expanded=false,facing=south,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 180
+    },
+    "design=columns,expanded=false,facing=west,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/legacy_ancient_anvil_cell_0",
+      "y": 270
+    },
+    "design=columns,expanded=false,facing=north,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_columns_cell_0",
+      "y": 0
+    },
+    "design=columns,expanded=false,facing=east,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_columns_cell_0",
+      "y": 90
+    },
+    "design=columns,expanded=false,facing=south,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_columns_cell_0",
+      "y": 180
+    },
+    "design=columns,expanded=false,facing=west,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/ancient_anvil_columns_cell_0",
+      "y": 270
+    },
+    "design=columns,expanded=true,facing=north,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=columns,expanded=true,facing=east,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=columns,expanded=true,facing=south,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=columns,expanded=true,facing=west,tier=6,large=false,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=columns,expanded=true,facing=north,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=columns,expanded=true,facing=east,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=columns,expanded=true,facing=south,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=columns,expanded=true,facing=west,tier=6,large=false,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=columns,expanded=true,facing=north,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=columns,expanded=true,facing=east,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=columns,expanded=true,facing=south,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=columns,expanded=true,facing=west,tier=6,large=true,monumental=false": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
+    },
+    "design=columns,expanded=true,facing=north,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 0
+    },
+    "design=columns,expanded=true,facing=east,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 90
+    },
+    "design=columns,expanded=true,facing=south,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 180
+    },
+    "design=columns,expanded=true,facing=west,tier=6,large=true,monumental=true": {
+      "model": "examplemod:block/expanded_anvil_cell_0",
+      "y": 270
     }
   }
 }

@@ -43,6 +43,7 @@ The visual direction draws on familiar mod guidebook category browsing, with ori
 - [The Corruptor](#corruption) — Stations
 - [Grand Runic Canopy](#runic-canopy) — Stations
 - [Ancient Crystal](#ancient-crystal) — Stations
+- [Tier 6: Ancient Convergence](#anvil-convergence) — Stations
 
 - All 120 modifiers: generated in the in-game Modifiers category from the same definitions and tuning values used by gameplay. See also [the complete modifier table](PICKAXE_MODIFIERS.md).
 
@@ -388,6 +389,8 @@ Complete the Tier 4 ground workshop, then build the floating canopy above the an
 
 The whole canopy is one flat layer 16 blocks above the anvil placement block, with one-block-wide paths and keystones set into the frame. The aerial structure requires 156 Runestone and 16 Canopy Keystones. The guide and hold-to-build include every elevated position. See Grand Runic Canopy for the keystone recipe.
 
+Upgrade the sixteen corner-tower caps to Energized Ancient Crystal Blocks. Replace the four outer pillar caps with obsidian, then place a normal End Crystal on each. Fill the central canopy diamond with twenty-five full glass blocks of one color. The Ancient Convergence article explains the guide, beam network and colored forging pulse.
+
 Craft ancient anvil: grid rows BBB / .I. / III. A dot means an empty cell. B = ancient metal block; I = ancient ingot.
 
 <a id="pickaxe-core"></a>
@@ -544,7 +547,7 @@ Plan your restoration, revelation, influence and lock before corrupting. The pro
 
 ## Grand Runic Canopy
 
-The Grand Runic Canopy is Tier 5 of the Ancient Anvil. It is a floating 25-block-wide octagonal frame, with an inner diamond and four diagonal spokes. The center remains open above the anvil. The whole ground workshop through Tier 4 must remain complete.
+The Grand Runic Canopy is Tier 5 of the Ancient Anvil. It is a floating 25-block-wide octagonal frame, with an inner diamond and four diagonal spokes. The center remains open above the anvil at Tier 5; Tier 6 fills it with matching glass. The whole ground workshop through Tier 4 must remain complete.
 
 Place one Runestone in each of the four corner positions, one ancient ingot in each of the four inner cardinal positions, and glowstone dust in the center. Leave the four outer positions empty. Strike eight times with an Iron Forge Hammer or better. Collect four Canopy Keystones from the center.
 
@@ -554,7 +557,7 @@ Shift + right-click toggles the synced blueprint. Hold to place matching invento
 
 Breaking the canopy lowers the anvil to Tier 4 while the ground workshop remains intact. The guide highlights the missing repair. Removing the anvil leaves the canopy blocks in the world.
 
-Canopy Keystones emit light, but do not grant additional rune effects yet. Tier 6 material upgrades and functional rune abilities will be developed later.
+Canopy Keystones emit light, but do not grant additional rune effects yet. Tier 6 upgrades the corner tower caps to energized crystal, adds outer End Crystals, and fills the central opening with a single-color glass lens.
 
 <a id="ancient-crystal"></a>
 
@@ -573,3 +576,25 @@ The darker Block of Ancient Crystal is the forge result. The lighter-blue Energi
 The energized block is available in Creative for now. An energizing recipe and any additional functions will be designed later. Both blocks need an iron pickaxe or better and drop their own variant.
 
 Energized Ancient Crystal is a separate ingredient item, alongside the lighter Energized Ancient Crystal Block. It has no recipe yet and is available in Creative. It is not consumed by the normal crystal-block forge recipe.
+
+<a id="anvil-convergence"></a>
+
+## Tier 6: Ancient Convergence
+
+Keep the whole Tier 5 workshop. Replace the sixteen metal blocks capping the four 2 by 2 towers with Energized Ancient Crystal Blocks. Replace the four outer single pillar caps with obsidian and place one normal End Crystal on each.
+
+Fill the open central diamond in the canopy with twenty-five full glass blocks. Clear, tinted, and all sixteen stained-glass colors work, but the whole lens must be the same color. Panes do not work.
+
+Build the four stepped collars around the outer crystal pillars. Each collar needs eight Runestone blocks, four interchangeable metal blocks at its corners, and four polished deepslate bottom slabs around the obsidian cap. Iron, gold, diamond and the other existing cap materials work; the central cap beneath the End Crystal stays obsidian.
+
+Shift + right-click toggles the next-tier guide; hold to place inventory blocks one at a time. Remove old caps and wrong-color glass yourself first. Solid blocks and containers are preserved, and End Crystals must be placed manually.
+
+Place one sample glass block to choose the lens color, or hold the desired glass when building an empty lens. The remaining auto-placed glass follows the existing color.
+
+Each of the sixteen energized cap blocks connects to one of the sixteen canopy keystones, with no reused targets. The four End Crystals each connect to their two neighboring energized towers, forming four V shapes.
+
+Normal End Crystals keep their vanilla behavior. Losing one, mixing glass colors or damaging another requirement disables Tier 6 until repaired.
+
+Hammer a valid craft on the completed Tier 6 Ancient Anvil. A large energy column blasts down through the glass lens to the anvil, colored by the glass you chose. Existing anvil crafts work for this too.
+
+The column is visual only: no damage, explosions or broken blocks. Invalid crafts and hits rejected by the normal hammer cooldown do not trigger it. No new crafting payoffs are added with this structure.

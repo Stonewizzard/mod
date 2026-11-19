@@ -26,13 +26,14 @@ public final class AnvilFoundation {
         if(missing.isEmpty())return false;
         boolean needsBlocks=false,hasMaterials=false;
         for(var goal:missing){
-            if(goal.kind()==AnvilGuide.Kind.FLUID)continue; // Fluids are always filled manually.
+            if(goal.kind()==AnvilGuide.Kind.FLUID||goal.kind()==AnvilGuide.Kind.CRYSTAL)continue; // Fluids are always filled manually.
             needsBlocks=true;
             ItemStack material=ItemStack.EMPTY;
             for(int i=0;i<player.getInventory().getContainerSize();i++){
                 var stack=player.getInventory().getItem(i);
-                if(!stack.isEmpty()&&stack.getItem() instanceof BlockItem item&&item.getBlock().defaultBlockState().is(goal.tag())){material=stack;break;}
+                if(!stack.isEmpty()&&stack.getItem() instanceof BlockItem item&&goal.acceptsBlock(item.getBlock())){material=stack;break;}
             }
+            if(goal.kind()==AnvilGuide.Kind.GLASS){var held=player.getMainHandItem();if(held.getItem() instanceof BlockItem item&&goal.acceptsBlock(item.getBlock()))material=held;}
             if(material.isEmpty())continue;
             hasMaterials=true;var at=goal.at();
             if(!level.hasChunkAt(at)||!level.getWorldBorder().isWithinBounds(at)||!level.mayInteract(player,at)||level.getBlockEntity(at)!=null||!level.getBlockState(at).canBeReplaced())continue;
@@ -52,7 +53,7 @@ public final class AnvilFoundation {
             }
             return placed; // Never place more than one block, including when a mod cancels a placement.
         }
-        AnvilWork.message(player,!needsBlocks?"Fill the highlighted fluid pools manually":!hasMaterials?"Add the required Runestone, caps or keystones to your inventory":"Clear the highlighted solid blocks, or add the missing blocks");return false;
+        AnvilWork.message(player,!needsBlocks?(plan.tier()==6?"Place End Crystals on the highlighted obsidian caps manually":"Fill the highlighted fluid pools manually"):!hasMaterials?"Add the required Runestone, caps or keystones to your inventory":"Remove the old highlighted caps or mismatched glass before building; containers are preserved");return false;
     }
     private AnvilFoundation(){}
 }

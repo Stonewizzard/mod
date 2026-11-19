@@ -20,7 +20,7 @@ public final class AnvilStageTests {
         @Override protected MutableComponent typeDescription(){return Component.literal("Anvil tiers 3/4, symmetric pillars, materials, downgrade and preservation");}
         @Override public void run(GameTestHelper h){
             var l=h.getLevel();var core=h.absolutePos(new BlockPos(20,6,20));
-            check(h,AnvilStages.all().size()==3,"All three datapack workshop stages load");
+            check(h,AnvilStages.all().size()==4,"All four datapack workshop stages load");
             var t3=AnvilStages.all().get(0);var t4=AnvilStages.all().get(1);
             check(h,t3.tier()==3&&t3.blocks().size()==88&&t4.tier()==4&&t4.blocks().size()==244,"Reference counts: 72+16 and 240+4");
             var offsets=t4.blocks().stream().map(AnvilStages.Requirement::offset).collect(java.util.stream.Collectors.toSet());
