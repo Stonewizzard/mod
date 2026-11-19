@@ -12,7 +12,7 @@ write(d+'anvil_recipes/runestone.json',{'anvil_tier':0,'hammer_tier':1,'work':4,
 write(d+'tags/item/runestone_deepslate.json',{'replace':False,'values':['minecraft:deepslate','minecraft:cobbled_deepslate']})
 write(a+'blockstates/runestone.json',{'variants':{'':{'model':'examplemod:block/runestone'}}})
 # Blank prepared stone, ready for later rune inscription.
-write(a+'models/block/runestone.json',{'parent':'minecraft:block/cube_all','textures':{'all':'minecraft:block/polished_deepslate'}})
+write(a+'models/block/runestone.json',{'parent':'minecraft:block/cube_all','textures':{'all':'examplemod:block/runestone'}})
 write(d+'loot_table/blocks/runestone.json',{'type':'minecraft:block','pools':[{'rolls':1,'entries':[{'type':'minecraft:item','name':'examplemod:runestone'}],'conditions':[{'condition':'minecraft:survives_explosion'}]}]})
 for tag in ['mineable/pickaxe','needs_stone_tool']:
  p=ROOT/'data/minecraft/tags/block'/f'{tag}.json';data=json.loads(p.read_text()) if p.exists() else {'replace':False,'values':[]}
