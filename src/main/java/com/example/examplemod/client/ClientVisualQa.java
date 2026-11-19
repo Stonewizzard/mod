@@ -95,7 +95,7 @@ public final class ClientVisualQa {
                                     player.getInventory().setItem(8,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.WATER_BUCKET));player.getInventory().setItem(9,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.LAVA_BUCKET));player.inventoryMenu.broadcastChanges();
                                 }else if(action.equals("canopy_break_node")){
                                     var req=com.example.examplemod.AnvilStages.all().get(2).blocks().stream().filter(r->r.tag().equals(com.example.examplemod.AnvilStages.KEYSTONES)).findFirst().orElseThrow();l.setBlock(req.at(anvilPosition,front),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);com.example.examplemod.AncientAnvilBlockEntity.refresh(l,anvilPosition,l.getBlockState(anvilPosition));
-                                }else if(action.equals("canopy_night"))l.setDayTime(18000);
+                                }else if(action.equals("canopy_night"))server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),"time set midnight");
                                 else{
                                     player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
                                     if(action.equals("canopy_overview"))player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY()+45,anvilPosition.getZ()-12,0,72);
