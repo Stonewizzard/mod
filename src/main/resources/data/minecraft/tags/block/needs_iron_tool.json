@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "examplemod:ancient_crystal_block",
     "examplemod:canopy_keystone"
   ]
 }

@@ -1,21 +1,22 @@
 {
   "replace": false,
   "values": [
-    "examplemod:ascender",
-    "examplemod:unveiler",
+    "examplemod:ancient_anvil",
+    "examplemod:ancient_anvil_part",
+    "examplemod:ancient_crystal_block",
+    "examplemod:ancient_metal_block",
     "examplemod:anuller",
-    "examplemod:corruptor",
-    "examplemod:modifier_locker",
-    "examplemod:scaling_randomizer",
+    "examplemod:ascender",
+    "examplemod:canopy_keystone",
     "examplemod:component_restorer",
+    "examplemod:corruptor",
+    "examplemod:formed_ruined_forge",
     "examplemod:influencer",
+    "examplemod:modifier_locker",
     "examplemod:ruined_ancient_forge",
     "examplemod:ruined_forge_bricks",
-    "examplemod:formed_ruined_forge",
-    "examplemod:ancient_anvil",
-    "examplemod:ancient_metal_block",
-    "examplemod:ancient_anvil_part",
     "examplemod:runestone",
-    "examplemod:canopy_keystone"
+    "examplemod:scaling_randomizer",
+    "examplemod:unveiler"
   ]
 }

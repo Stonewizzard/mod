@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "examplemod:block/ancient_crystal_side",
+    "end": "examplemod:block/ancient_crystal_top"
+  }
+}

@@ -145,5 +145,7 @@
   "item.examplemod.iron_forge_hammer": "Iron Forge Hammer",
   "block.examplemod.runestone": "Runestone",
   "anvil.examplemod.hint": "Place 25 Runestone blocks one layer below.",
-  "block.examplemod.canopy_keystone": "Canopy Keystone"
+  "block.examplemod.canopy_keystone": "Canopy Keystone",
+  "item.examplemod.ancient_crystal": "Ancient Crystal",
+  "block.examplemod.ancient_crystal_block": "Block of Ancient Crystal"
 }

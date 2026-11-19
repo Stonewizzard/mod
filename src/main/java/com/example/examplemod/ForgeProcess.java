@@ -60,15 +60,14 @@ public final class ForgeProcess {
             if(process.start(server)){
                 if(!player.getAbilities().instabuild)held.hurtAndBreak(1,server,player,unused->{});
                 server.playSound(null,core,SoundEvents.FLINTANDSTEEL_USE,SoundSource.BLOCKS,1,.85F);
-            }else message(player,"Add 1 Ancient Scrap or debris, 1 gold and 2 iron; or one artifact alone");
+            }else message(player,"Load 12 Ancient Crystals + 1 diamond block; 1 Ancient Scrap/debris + 1 gold + 2 iron; or one artifact alone");
             return InteractionResult.SUCCESS;
         }
         if(!forge.getItem(5).isEmpty()){message(player,"Collect the finished batch first");return InteractionResult.SUCCESS;}
         int target=-1;for(int i=0;i<3;i++)if(AncientAlloy.accepts(i,held)){target=i;break;}
         if(target<0)return InteractionResult.PASS;
-        boolean artifact=AncientAlloy.artifact(held);
-        if(artifact&&(!forge.getItem(1).isEmpty()||!forge.getItem(2).isEmpty())||target>0&&AncientAlloy.melting(forge)){message(player,"Artifacts melt on their own; take the other ingredients out first");return InteractionResult.SUCCESS;}
-        var existing=forge.getItem(target);int cap=target==0?1:AncientAlloy.count(target);
+        if(!AncientAlloy.accepts(forge,target,held)){message(player,"Those ingredients belong to a different batch; empty the fireplace first");return InteractionResult.SUCCESS;}
+        var existing=forge.getItem(target);int cap=AncientAlloy.capacity(target,held);
         if(!existing.isEmpty()&&(!ItemStack.isSameItemSameComponents(existing,held)||existing.getCount()>=cap)){message(player,"That ingredient is already loaded");return InteractionResult.SUCCESS;}
         if(existing.isEmpty())forge.setItem(target,held.copyWithCount(1));else existing.grow(1);
         if(!player.getAbilities().instabuild)held.shrink(1);forge.setChanged();
@@ -81,8 +80,8 @@ public final class ForgeProcess {
         if(heating()){
             if(--remaining<=0){
                 if(forge.getItem(5).isEmpty()&&AncientAlloy.ready(forge)){
-                    boolean melt=AncientAlloy.melting(forge);var result=new ItemStack(AncientAlloy.result(forge),AncientAlloy.outputCount(forge));
-                    if(melt)forge.removeItem(0,1);else for(int i=0;i<3;i++)forge.removeItem(i,AncientAlloy.count(i));
+                    var result=new ItemStack(AncientAlloy.result(forge),AncientAlloy.outputCount(forge));
+                    AncientAlloy.consume(forge);
                     forge.setItem(5,result);phase=2;
                     level.playSound(null,forge.getBlockPos(),SoundEvents.FIRE_EXTINGUISH,SoundSource.BLOCKS,.45F,1.3F);
                 }else phase=0;

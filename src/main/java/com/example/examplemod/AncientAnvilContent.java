@@ -12,6 +12,9 @@ import net.neoforged.neoforge.registries.*;
 
 public final class AncientAnvilContent {
     public static final DeferredItem<Item> SCRAP_ITEM=ExampleMod.ITEMS.registerSimpleItem("ancient_scrap");
+    public static final DeferredItem<Item> CRYSTAL=ExampleMod.ITEMS.registerSimpleItem("ancient_crystal",p->p.rarity(Rarity.RARE));
+    public static final DeferredBlock<Block> CRYSTAL_BLOCK=ExampleMod.BLOCKS.registerBlock("ancient_crystal_block",Block::new,p->p.strength(5,6).requiresCorrectToolForDrops().sound(SoundType.AMETHYST).lightLevel(s->7));
+    public static final DeferredItem<BlockItem> CRYSTAL_BLOCK_ITEM=ExampleMod.ITEMS.registerSimpleBlockItem("ancient_crystal_block",CRYSTAL_BLOCK,p->p.rarity(Rarity.RARE));
     public static final DeferredItem<Item> INGOT=ExampleMod.ITEMS.registerSimpleItem("ancient_ingot",p->p.rarity(Rarity.UNCOMMON));
     public static final DeferredBlock<Block> METAL=ExampleMod.BLOCKS.registerBlock("ancient_metal_block",Block::new,p->p.strength(5,6).sound(SoundType.METAL));
     public static final DeferredItem<BlockItem> METAL_ITEM=ExampleMod.ITEMS.registerSimpleBlockItem("ancient_metal_block",METAL);

@@ -42,6 +42,7 @@ The visual direction draws on familiar mod guidebook category browsing, with ori
 - [The Restorer](#restoration) — Stations
 - [The Corruptor](#corruption) — Stations
 - [Grand Runic Canopy](#runic-canopy) — Stations
+- [Ancient Crystal](#ancient-crystal) — Stations
 
 - All 120 modifiers: generated in the in-game Modifiers category from the same definitions and tuning values used by gameplay. See also [the complete modifier table](PICKAXE_MODIFIERS.md).
 
@@ -554,3 +555,15 @@ Shift + right-click toggles the synced blueprint. Hold to place matching invento
 Breaking the canopy lowers the anvil to Tier 4 while the ground workshop remains intact. The guide highlights the missing repair. Removing the anvil leaves the canopy blocks in the world.
 
 Canopy Keystones emit light, but do not grant additional rune effects yet. Tier 6 material upgrades and functional rune abilities will be developed later.
+
+<a id="ancient-crystal"></a>
+
+## Ancient Crystal
+
+Ancient Crystals are faceted teal crystals with amber inclusions. Individual crystals are available in Creative for now; archaeology acquisition will be added later.
+
+Use the completed Ruined Ancient Forge. Right-click the fireplace twelve times with Ancient Crystals and once with a diamond block. Either ingredient can go in first. Light the forge with flint and steel. After twenty seconds, white chimney smoke signals that the batch is finished. Collect one Block of Ancient Crystal with an empty hand.
+
+The forge takes exactly twelve crystals and one diamond block. There is no crafting-grid compression or reverse conversion recipe.
+
+The block has matching fused-crystal facets, a soft light level of seven, and crystalline sounds. Mine it with an iron pickaxe or better to recover the whole block. It does not grant additional anvil effects yet.

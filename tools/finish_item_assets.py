@@ -64,7 +64,9 @@ def build():
    target=26
   result[p.stem]=envelope(art,target)
  from generate_smithing_assets import item_exports
- result.update(metals());result.update(item_exports());return result
+ result.update(metals());result.update(item_exports());
+ from generate_crystal_assets import item_exports as crystal_items
+ result.update(crystal_items());return result
 
 def main():
  parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args();result=build();bad=[]

@@ -32,7 +32,7 @@ public final class ReconstructionTableBlockEntity extends BaseContainerBlockEnti
     @Override public boolean stillValid(net.minecraft.world.entity.player.Player player){
         return super.stillValid(player)&&(!getBlockState().is(AncientForgeContent.CORE.get())||level!=null&&RuinedForgeStructure.inspect(level,worldPosition,getBlockState().getValue(RuinedAncientForgeBlock.FACING)).complete());
     }
-    @Override public boolean canPlaceItem(int slot,ItemStack stack){return getBlockState().is(AncientForgeContent.CORE.get())?!legacyForge()&&!process.heating()&&!process.finished()&&AncientAlloy.accepts(slot,stack):ReconstructionTableMenu.accepts(pattern,slot,stack);}
+    @Override public boolean canPlaceItem(int slot,ItemStack stack){return getBlockState().is(AncientForgeContent.CORE.get())?!legacyForge()&&!process.heating()&&!process.finished()&&AncientAlloy.accepts(this,slot,stack):ReconstructionTableMenu.accepts(pattern,slot,stack);}
     @Override public boolean canTakeItem(net.minecraft.world.Container destination,int slot,ItemStack stack){return !getBlockState().is(AncientForgeContent.CORE.get())||!process.heating();}
     @Override public void setChanged(){
         super.setChanged();

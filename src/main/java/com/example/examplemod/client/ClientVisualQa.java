@@ -79,6 +79,34 @@ public final class ClientVisualQa {
                             var mob=com.example.examplemod.ExampleMod.CRUNCHER.get().create(l,net.minecraft.world.entity.EntitySpawnReason.COMMAND);mob.snapTo(p.getX()+.5,p.getY(),p.getZ()+.5,180,0);mob.setNoAi(true);l.addFreshEntity(mob);feedCruncherId=mob.getId();
                             player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);player.getAbilities().invulnerable=true;player.getInventory().setItem(12,player.getInventory().getItem(0));player.getInventory().setItem(0,com.example.examplemod.ArchaeologyContent.specimen(778899,0));player.inventoryMenu.broadcastChanges();player.connection.teleport(p.getX()+.5,p.getY(),p.getZ()-3,0,8);
                         });}
+                        case "crystal_fixture","crystal_art","crystal_offhand","crystal_drop_view"->{
+                            var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();
+                            server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();
+                                if(action.equals("crystal_fixture")){
+                                    var forge=(com.example.examplemod.ReconstructionTableBlockEntity)l.getBlockEntity(forgePosition);forge.clearContent();com.example.examplemod.ForgeAssembly.form(l,forgePosition);
+                                    player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);player.getAbilities().invulnerable=true;player.getInventory().clearContent();
+                                    player.getInventory().setItem(0,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.CRYSTAL.get(),13));
+                                    player.getInventory().setItem(1,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIAMOND_BLOCK));
+                                    player.getInventory().setItem(2,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));
+                                    player.getInventory().setItem(3,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.FLINT_AND_STEEL));
+                                }else{
+                                    var p=forgePosition.offset(10,0,0);
+                                    if(action.equals("crystal_art")){
+                                        for(int x=-3;x<=5;x++)for(int z=-6;z<=2;z++)for(int y=-1;y<=3;y++)l.setBlock(p.offset(x,y,z),(y==-1?net.minecraft.world.level.block.Blocks.STONE:net.minecraft.world.level.block.Blocks.AIR).defaultBlockState(),3);
+                                        for(int x=0;x<3;x++)for(int y=0;y<2;y++)l.setBlock(p.offset(x,y,0),com.example.examplemod.AncientAnvilContent.CRYSTAL_BLOCK.get().defaultBlockState(),3);
+                                        for(int y=0;y<2;y++){l.setBlock(p.offset(-2,y,0),net.minecraft.world.level.block.Blocks.STONE_BRICKS.defaultBlockState(),3);l.setBlock(p.offset(4,y,0),net.minecraft.world.level.block.Blocks.AMETHYST_BLOCK.defaultBlockState(),3);}
+                                        player.getInventory().setItem(0,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.CRYSTAL.get(),2));
+                                        player.getInventory().setItem(1,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));
+                                        player.getInventory().setItem(2,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.CRYSTAL_BLOCK_ITEM.get()));
+                                        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));
+                                    }else if(action.equals("crystal_offhand")){
+                                        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.CRYSTAL.get()));
+                                    }
+                                    player.connection.teleport(p.getX()+1.5,p.getY(),p.getZ()-5,0,action.equals("crystal_drop_view")?32:5);
+                                }
+                                player.inventoryMenu.broadcastChanges();
+                            });
+                        }
                         case "alloy_inventory"->{var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);player.getInventory().clearContent();player.getInventory().setItem(0,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.SCRAP_ITEM.get()));player.getInventory().setItem(1,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.GOLD_INGOT));player.getInventory().setItem(2,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT,2));player.getInventory().setItem(3,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.FLINT_AND_STEEL));player.inventoryMenu.broadcastChanges();});}
                         case "canopy_fixture","canopy_overview","canopy_oblique","canopy_night","canopy_break_node"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();
@@ -321,6 +349,8 @@ public final class ClientVisualQa {
             }
             if(forgePosition!=null&&minecraft.level!=null&&minecraft.level.getBlockEntity(forgePosition) instanceof com.example.examplemod.ReconstructionTableBlockEntity forge){
                 state.addProperty("legacyTool",forge.getItem(5).is(com.example.examplemod.ArchaeologyContent.PICKAXE.get()));state.addProperty("storedCount",java.util.stream.IntStream.range(0,6).map(i->forge.getItem(i).isEmpty()?0:1).sum());
+                state.addProperty("crystalResult",forge.getItem(5).is(com.example.examplemod.AncientAnvilContent.CRYSTAL_BLOCK_ITEM.get())?forge.getItem(5).getCount():0);
+                state.addProperty("crystalInventory",minecraft.player.getInventory().countItem(com.example.examplemod.AncientAnvilContent.CRYSTAL.get()));state.addProperty("crystalBlockInventory",minecraft.player.getInventory().countItem(com.example.examplemod.AncientAnvilContent.CRYSTAL_BLOCK_ITEM.get()));
                 state.addProperty("alloyReady",forge.process.ready());state.addProperty("alloyCount",forge.getItem(5).is(com.example.examplemod.AncientAnvilContent.INGOT.get())?forge.getItem(5).getCount():0);
                 state.addProperty("alloyScrap",forge.getItem(0).getCount());state.addProperty("alloyGold",forge.getItem(1).getCount());state.addProperty("alloyIron",forge.getItem(2).getCount());state.addProperty("melting",com.example.examplemod.AncientAlloy.melting(forge));state.addProperty("meltCount",forge.getItem(5).is(com.example.examplemod.AncientAnvilContent.SCRAP_ITEM.get())?forge.getItem(5).getCount():0);
                 state.addProperty("forgeHeating",forge.process.heating());state.addProperty("forgeFinished",forge.process.finished());state.addProperty("forgeRemaining",forge.process.remaining());
