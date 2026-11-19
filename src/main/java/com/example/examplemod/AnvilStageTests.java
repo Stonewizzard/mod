@@ -1,6 +1,8 @@
 package com.example.examplemod;
 
 import com.mojang.serialization.MapCodec;
+import java.util.HashSet;
+import java.util.ArrayDeque;
 import net.minecraft.core.*;
 import net.minecraft.gametest.framework.*;
 import net.minecraft.network.chat.*;
@@ -20,7 +22,7 @@ public final class AnvilStageTests {
             var l=h.getLevel();var core=h.absolutePos(new BlockPos(20,6,20));
             check(h,AnvilStages.all().size()==2,"Both datapack workshop stages load");
             var t3=AnvilStages.all().get(0);var t4=AnvilStages.all().get(1);
-            check(h,t3.tier()==3&&t3.blocks().size()==88&&t4.tier()==4&&t4.blocks().size()==128,"Reference counts: 72+16 and 124+4");
+            check(h,t3.tier()==3&&t3.blocks().size()==88&&t4.tier()==4&&t4.blocks().size()==244,"Reference counts: 72+16 and 240+4");
             var offsets=t4.blocks().stream().map(AnvilStages.Requirement::offset).collect(java.util.stream.Collectors.toSet());
             for(int x=-8;x<=8;x++)for(int z=-8;z<=8;z++)if(Math.max(Math.abs(x),Math.abs(z))==8){
                 check(h,offsets.contains(new BlockPos(x,-3,z))&&!offsets.contains(new BlockPos(x,-2,z)),"Main ring is one block below its previous height");
@@ -31,6 +33,12 @@ public final class AnvilStageTests {
                 for(int y=-3;y<=3;y++)check(h,offsets.contains(new BlockPos(x,y,z)),"Pillar shaft connects the lowered base to the unchanged cap");
                 for(int dx:new int[]{-1,1})check(h,!offsets.contains(new BlockPos(x+dx,-2,z)),"The previous high pillar-base ring is no longer required");
             }
+            var outline=offsets.stream().filter(p->p.getY()==-4).collect(java.util.stream.Collectors.toSet());
+            var reached=new HashSet<BlockPos>();var queue=new ArrayDeque<BlockPos>();queue.add(new BlockPos(16,-4,0));reached.add(queue.peek());
+            while(!queue.isEmpty()){var next=queue.removeFirst();for(var side:Direction.Plane.HORIZONTAL){var neighbor=next.relative(side);if(outline.contains(neighbor)&&reached.add(neighbor))queue.addLast(neighbor);}}
+            check(h,reached.equals(outline),"Circular outline connects all four bases by block faces");
+            check(h,!outline.contains(new BlockPos(0,-4,0))&&!outline.contains(new BlockPos(8,-4,0)),"Outer circle remains hollow");
+            check(h,outline.contains(new BlockPos(11,-4,12))&&outline.contains(new BlockPos(-12,-4,11)),"The outer requirement follows circular arcs between pillars");
             for(var facing:Direction.Plane.HORIZONTAL){
                 for(var stage:AnvilStages.all())for(var req:stage.blocks())l.setBlock(req.at(core,facing),Blocks.AIR.defaultBlockState(),3);
                 for(var p:AncientAnvilStructure.foundation(core,facing))l.setBlock(p,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);
@@ -48,6 +56,8 @@ public final class AnvilStageTests {
                     l.setBlock(cap.at(core,facing),block.defaultBlockState(),3);refresh(l,core);tier(h,l,core,4,"Interchangeable caps preserve the tier");
                 }
                 l.setBlock(cap.at(core,facing),Blocks.STONE.defaultBlockState(),3);refresh(l,core);tier(h,l,core,2,"Invalid Tier 3 cap blocks all higher tiers");l.setBlock(cap.at(core,facing),Blocks.DIAMOND_BLOCK.defaultBlockState(),3);
+                var arc=core.relative(facing.getClockWise(),11).relative(facing.getOpposite(),12).below(4);
+                l.setBlock(arc,Blocks.AIR.defaultBlockState(),3);refresh(l,core);tier(h,l,core,3,"Breaking a circular arc downgrades Tier 4");check(h,AnvilGuide.next(l,core).missing(l).size()==1,"Guide highlights the missing arc for repair");l.setBlock(arc,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);refresh(l,core);tier(h,l,core,4,"Repairing the circular arc restores Tier 4");
                 // Each side's outer pillar is mandatory.
                 for(var req:t4.blocks().stream().filter(r->r.tag().equals(AnvilStages.CAPS)).toList()){
                     var p=req.at(core,facing);l.setBlock(p,Blocks.AIR.defaultBlockState(),3);refresh(l,core);tier(h,l,core,3,"Each of four outer pillars is required");l.setBlock(p,Blocks.IRON_BLOCK.defaultBlockState(),3);

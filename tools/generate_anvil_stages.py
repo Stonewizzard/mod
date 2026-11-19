@@ -11,6 +11,14 @@ SIDE_PILLAR_DISTANCE=16
 RING_Y=-3
 SIDE_BASE_Y=-4
 CAP_Y=3
+OUTER_CIRCLE_RADIUS=SIDE_PILLAR_DISTANCE
+def circle_outline(radius):
+    # Include cells crossed by the ideal circle. Integer half-cell bounds produce
+    # a symmetric, face-connected staircase with no diagonal gaps or 2x2 patches.
+    return {(x,z) for x in range(-radius,radius+1) for z in range(-radius,radius+1)
+            if max(2*abs(x)-1,0)**2+max(2*abs(z)-1,0)**2 < (2*radius)**2
+            < (2*abs(x)+1)**2+(2*abs(z)+1)**2}
+
 def write(tier,stone,caps):
     assert len(stone)==len(set(stone)) and len(caps)==len(set(caps))
     assert not set(stone)&set(caps)
@@ -35,4 +43,6 @@ for dx,dz in ((1,0),(-1,0),(0,1),(0,-1)):
     stone += [(x+i,SIDE_BASE_Y,z+k) for i in (-1,0,1) for k in (-1,0,1)]
     stone += [(x,y,z) for y in range(SIDE_BASE_Y+1,CAP_Y)]
     caps.append((x,CAP_Y,z))
+# The outline shares twelve cells with the four existing 3x3 bases.
+stone=sorted(set(stone)|{(x,SIDE_BASE_Y,z) for x,z in circle_outline(OUTER_CIRCLE_RADIUS)})
 write(4,stone,caps)

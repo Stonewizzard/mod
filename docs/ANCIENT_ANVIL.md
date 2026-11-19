@@ -180,7 +180,11 @@ Additional cost: 72 Runestone + 16 cap blocks.
 **Tier 4:** a hollow 17×17 square perimeter, max(|x|,|z|)=8 at y=-3.
 A 3×3 Runestone base is centered 16 blocks from the core on each cardinal axis
 at y=-4. Each base has a one-block-wide center column at y=-3..2, capped at y=3.
-Additional cost: 124 Runestone + 4 cap blocks. All four pillars are required.
+Connect the four side-pillar bases with a hollow circular Runestone outline of
+radius 16 at y=-4. Its face-connected stepped perimeter contains 128 cells; twelve
+are shared with the 3×3 bases, so it adds 116 unique Runestone requirements.
+Additional Tier 4 cost: 240 Runestone + 4 cap blocks. All four pillars and the
+complete circular outline are required. The inner square ring remains in place.
 
 The main ring is two blocks below the Tier 2 foundation (one block lower than the
 previous guide). The 3×3 side-pillar bases are three blocks below that foundation
