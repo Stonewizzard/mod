@@ -701,7 +701,7 @@
         "title": "Feed a Cruncher",
         "paragraphs": [
           "Right-click an adult, idle Cruncher while holding an artifact. It consumes one artifact, gives one Ancient Scrap and chews for two seconds. It cannot accept another while chewing or crunching a geode. This interaction does not breed it.",
-          "The reward is delivered immediately. With a full inventory it drops at your feet. The existing wither-rose interaction remains the Cruncher\u2019s food interaction."
+          "The reward is delivered immediately. With a full inventory it drops at your feet. The existing wither-rose interaction remains the Cruncher’s food interaction."
         ]
       },
       {
@@ -1436,13 +1436,14 @@
       "runic_canopy",
       "ancient_crystal"
     ],
-    "keywords": "tier 6 convergence energized cap obsidian end crystal towers sixteen keystone beam energy glass lens color colour stained hammer forge",
+    "keywords": "tier 6 convergence energized cap obsidian end crystal towers sixteen keystone beam energy glass lens color colour stained hammer forge collar metal iron gold diamond slabs",
     "sections": [
       {
         "title": "Upgrade the existing workshop",
         "paragraphs": [
           "Keep the whole Tier 5 workshop. Replace the sixteen metal blocks capping the four 2 by 2 towers with Energized Ancient Crystal Blocks. Replace the four outer single pillar caps with obsidian and place one normal End Crystal on each.",
-          "Fill the open central diamond in the canopy with twenty-five full glass blocks. Clear, tinted, and all sixteen stained-glass colors work, but the whole lens must be the same color. Panes do not work."
+          "Fill the open central diamond in the canopy with twenty-five full glass blocks. Clear, tinted, and all sixteen stained-glass colors work, but the whole lens must be the same color. Panes do not work.",
+          "Build the four stepped collars around the outer crystal pillars. Each collar needs eight Runestone blocks, four interchangeable metal blocks at its corners, and four polished deepslate bottom slabs around the obsidian cap. Iron, gold, diamond and the other existing cap materials work; the central cap beneath the End Crystal stays obsidian."
         ]
       },
       {

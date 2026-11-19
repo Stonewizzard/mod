@@ -18,7 +18,7 @@ public final class AnvilStages extends SimplePreparableReloadListener<List<Anvil
     public static final TagKey<Block> KEYSTONES=TagKey.create(Registries.BLOCK,Identifier.fromNamespaceAndPath(ExampleMod.MODID,"ancient_anvil_keystones"));
     public record Requirement(BlockPos offset,TagKey<Block> tag){
         public BlockPos at(BlockPos core,Direction front){return core.relative(front.getClockWise(),offset.getX()).above(offset.getY()).relative(front.getOpposite(),offset.getZ());}
-        public boolean matches(Level level,BlockPos core,Direction front){var at=at(core,front);return level.hasChunkAt(at)&&level.getWorldBorder().isWithinBounds(at)&&level.getBlockState(at).is(tag);}
+        public boolean matches(Level level,BlockPos core,Direction front){var at=at(core,front);return level.hasChunkAt(at)&&level.getWorldBorder().isWithinBounds(at)&&level.getBlockState(at).is(tag)&&AnvilTierSix.matchesShape(level.getBlockState(at),tag);}
     }
     public record Stage(int tier,List<Requirement> blocks){
         public boolean complete(Level level,BlockPos core,Direction front){return blocks.stream().allMatch(r->r.matches(level,core,front)||AnvilTierSix.upgradedCap(level,core,front,tier,r));}

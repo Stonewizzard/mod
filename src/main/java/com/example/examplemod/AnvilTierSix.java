@@ -13,7 +13,9 @@ import net.minecraft.world.phys.*;
 /** Tier 6 only reads the workshop. It never spawns, binds, protects or damages crystals. */
 public final class AnvilTierSix {
     private static TagKey<Block> tag(String s){return TagKey.create(Registries.BLOCK,Identifier.fromNamespaceAndPath(ExampleMod.MODID,s));}
-    public static final TagKey<Block> ENERGIZED=tag("anvil_energized_caps"),OBSIDIAN=tag("anvil_obsidian_caps"),GLASS=tag("anvil_lens_glass");
+    public static final TagKey<Block> ENERGIZED=tag("anvil_energized_caps"),OBSIDIAN=tag("anvil_obsidian_caps"),GLASS=tag("anvil_lens_glass"),COLLAR_SLABS=tag("anvil_collar_slabs");
+    public static Block collarSlab(){return net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace("polished_deepslate_slab"));}
+    public static boolean matchesShape(net.minecraft.world.level.block.state.BlockState state,TagKey<Block> tag){return !tag.equals(COLLAR_SLABS)||state.hasProperty(SlabBlock.TYPE)&&state.getValue(SlabBlock.TYPE)==net.minecraft.world.level.block.state.properties.SlabType.BOTTOM;}
     public record Link(BlockPos from,BlockPos to){}
     public record Status(boolean complete,int color,Block glass,int crystals){}
     public static List<AnvilStages.Requirement> requirements(List<AnvilStages.Stage> stages,TagKey<Block> tag){return stages.stream().filter(s->s.tier()==6).flatMap(s->s.blocks().stream()).filter(r->r.tag().equals(tag)).toList();}

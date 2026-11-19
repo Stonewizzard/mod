@@ -9,14 +9,14 @@ import net.minecraft.world.level.material.Fluid;
 
 /** The next tier, shared by rendering and authoritative inventory construction. */
 public final class AnvilGuide {
-    public enum Kind { BLOCK, CAP, KEYSTONE, FLUID, ENERGIZED, OBSIDIAN, GLASS, CRYSTAL }
+    public enum Kind { BLOCK, CAP, KEYSTONE, FLUID, ENERGIZED, OBSIDIAN, GLASS, CRYSTAL, SLAB }
     public record Target(BlockPos at,TagKey<Block> tag,Kind kind,Fluid fluid,Block glass,TagKey<Block> alternative){
         public Target(BlockPos at,TagKey<Block> tag,Kind kind,Fluid fluid){this(at,tag,kind,fluid,null,null);}
         public boolean acceptsBlock(Block block){return kind==Kind.GLASS?block.defaultBlockState().is(tag)&&(glass==null?AnvilTierSix.glassKey(block)!=null:AnvilTierSix.sameGlass(glass,block)):block.defaultBlockState().is(tag)||alternative!=null&&block.defaultBlockState().is(alternative);}
         public boolean matches(Level level){
             if(!level.hasChunkAt(at))return false;
             if(kind==Kind.CRYSTAL)return AnvilTierSix.crystal(level,at.below())!=null;
-            if(kind!=Kind.FLUID)return acceptsBlock(level.getBlockState(at).getBlock());
+            if(kind!=Kind.FLUID)return acceptsBlock(level.getBlockState(at).getBlock())&&AnvilTierSix.matchesShape(level.getBlockState(at),tag);
             var state=level.getFluidState(at);
             return !state.isEmpty()&&level.getBlockEntity(at)==null&&level.getBlockState(at).equals(state.createLegacyBlock())&&(fluid==null||AnvilBasins.canonical(state.getType()).isSame(fluid));
         }
@@ -39,7 +39,7 @@ public final class AnvilGuide {
         }else if(next<=6){
             var glass=AnvilTierSix.referenceGlass(level,core,front,stages);
             for(var stage:stages)if(stage.tier()==next)for(var req:stage.blocks()){
-                Kind kind=req.tag().equals(AnvilStages.KEYSTONES)?Kind.KEYSTONE:req.tag().equals(AnvilStages.CAPS)?Kind.CAP:req.tag().equals(AnvilTierSix.ENERGIZED)?Kind.ENERGIZED:req.tag().equals(AnvilTierSix.OBSIDIAN)?Kind.OBSIDIAN:req.tag().equals(AnvilTierSix.GLASS)?Kind.GLASS:Kind.BLOCK;
+                Kind kind=req.tag().equals(AnvilStages.KEYSTONES)?Kind.KEYSTONE:req.tag().equals(AnvilStages.CAPS)?Kind.CAP:req.tag().equals(AnvilTierSix.ENERGIZED)?Kind.ENERGIZED:req.tag().equals(AnvilTierSix.OBSIDIAN)?Kind.OBSIDIAN:req.tag().equals(AnvilTierSix.GLASS)?Kind.GLASS:req.tag().equals(AnvilTierSix.COLLAR_SLABS)?Kind.SLAB:Kind.BLOCK;
                 var alternative=kind==Kind.CAP?(next==3?AnvilTierSix.ENERGIZED:next==4?AnvilTierSix.OBSIDIAN:null):null;
                 targets.add(new Target(req.at(core,front),req.tag(),kind,null,kind==Kind.GLASS?glass:null,alternative));
                 if(next==6&&kind==Kind.OBSIDIAN)targets.add(new Target(req.at(core,front).above(),null,Kind.CRYSTAL,null));

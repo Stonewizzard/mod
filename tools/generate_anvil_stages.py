@@ -86,11 +86,27 @@ print(f'Tier 5: {len(stone)} Runestone, {len(keystones)} Canopy Keystones')
 energized=[(sx*x,3,sz*z) for sx in (-1,1) for sz in (-1,1) for x in (6,7) for z in (6,7)]
 obsidian=[(dx*SIDE_PILLAR_DISTANCE,CAP_Y,dz*SIDE_PILLAR_DISTANCE) for dx,dz in ((1,0),(-1,0),(0,1),(0,-1))]
 glass=[(x,CANOPY_Y,z) for x in range(-3,4) for z in range(-3,4) if abs(x)+abs(z)<4]
+# Design B: four matching stepped collars. Only the center cap stays obsidian.
+collar_runes=[];collar_metals=[];collar_slabs=[]
+for x,y,z in obsidian:
+    for dx in (-1,0,1):
+        for dz in (-1,0,1):
+            if dx or dz:
+                (collar_metals if abs(dx)+abs(dz)==2 else collar_runes).append((x+dx,y-1,z+dz))
+    for dx,dz in ((1,0),(-1,0),(0,1),(0,-1)):
+        collar_runes.append((x+dx,y-2,z+dz))
+        collar_slabs.append((x+dx,y,z+dz))
+assert len(collar_runes)==32 and len(collar_metals)==16 and len(collar_slabs)==16
+all_cells=energized+obsidian+glass+collar_runes+collar_metals+collar_slabs
+assert len(all_cells)==len(set(all_cells))==109
 (OUT/'tier_6.json').write_text(json.dumps({'tier':6,'groups':[
     {'tag':'examplemod:anvil_energized_caps','positions':sorted(energized)},
     {'tag':'examplemod:anvil_obsidian_caps','positions':sorted(obsidian)},
-    {'tag':'examplemod:anvil_lens_glass','positions':sorted(glass)}]},indent=2)+'\n')
-print(f'Tier 6: {len(energized)} energized caps, {len(obsidian)} obsidian caps, {len(glass)} glass; four player-placed End Crystals')
+    {'tag':'examplemod:anvil_lens_glass','positions':sorted(glass)},
+    {'tag':'examplemod:ancient_anvil_runes','positions':sorted(collar_runes)},
+    {'tag':'examplemod:ancient_anvil_caps','positions':sorted(collar_metals)},
+    {'tag':'examplemod:anvil_collar_slabs','positions':sorted(collar_slabs)}]},indent=2)+'\n')
+print(f'Tier 6: {len(energized)} energized caps, {len(obsidian)} obsidian caps, {len(glass)} glass; collars: 32 Runestone, 16 metal blocks, 16 bottom slabs; four player-placed End Crystals')
 
 # Plain opaque white material; the client supplies animated beam colors and transparency.
 from PIL import Image

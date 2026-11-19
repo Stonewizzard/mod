@@ -585,6 +585,8 @@ Keep the whole Tier 5 workshop. Replace the sixteen metal blocks capping the fou
 
 Fill the open central diamond in the canopy with twenty-five full glass blocks. Clear, tinted, and all sixteen stained-glass colors work, but the whole lens must be the same color. Panes do not work.
 
+Build the four stepped collars around the outer crystal pillars. Each collar needs eight Runestone blocks, four interchangeable metal blocks at its corners, and four polished deepslate bottom slabs around the obsidian cap. Iron, gold, diamond and the other existing cap materials work; the central cap beneath the End Crystal stays obsidian.
+
 Shift + right-click toggles the next-tier guide; hold to place inventory blocks one at a time. Remove old caps and wrong-color glass yourself first. Solid blocks and containers are preserved, and End Crystals must be placed manually.
 
 Place one sample glass block to choose the lens color, or hold the desired glass when building an empty lens. The remaining auto-placed glass follows the existing color.

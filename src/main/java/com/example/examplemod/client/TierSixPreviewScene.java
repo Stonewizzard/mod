@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-/** Disposable visual-QA decorations only. None are registered as tier requirements. */
+/** Disposable visual-QA decorations only. Prongs/entrances remain optional; the chosen metal collar is now part of Tier 6. */
 final class TierSixPreviewScene {
     private static final Map<BlockPos,BlockState> original=new LinkedHashMap<>();
     private static volatile int placed;
@@ -26,7 +26,7 @@ final class TierSixPreviewScene {
         }else if(kind.equals("collars")){
             for(var req:AnvilTierSix.requirements(AnvilStages.all(),AnvilTierSix.OBSIDIAN)){
                 var cap=req.at(core,Direction.NORTH);
-                for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)if(x!=0||z!=0)place(l,cap.offset(x,-1,z),Math.abs(x)+Math.abs(z)==2?obs:rune);
+                for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)if(x!=0||z!=0)place(l,cap.offset(x,-1,z),Math.abs(x)+Math.abs(z)==2?Blocks.IRON_BLOCK.defaultBlockState():rune);
                 for(var side:Direction.Plane.HORIZONTAL){place(l,cap.relative(side).below(2),rune);place(l,cap.relative(side),slab);}
             }
         }else if(kind.equals("entrances")){
