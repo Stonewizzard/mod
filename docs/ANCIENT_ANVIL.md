@@ -235,12 +235,12 @@ reload, so dedicated-server guides use the same layout as authoritative construc
 Tier 5 adds the floating canopy; it still requires every prior tier. Tier 6 is not
 implemented. The existing ground layout and block heights are unchanged.
 
-- Main octagonal rim: 25-block span, two blocks wide, at y=16 relative to the anvil core.
-- Lower outer lip: y=15, giving the rim depth.
-- Open inner diamond and four connected diagonal spokes: y=16.
-- Raised Canopy Keystones: y=17, eight on the outer rim, four on the diamond and
-  four on the spokes. The central opening is left clear.
-- Exact structural cost: 348 Runestone and 16 Canopy Keystones.
+- Main octagonal rim: 25-block span, with one-block-wide paths at y=16 relative to the anvil core. Diagonals follow a connected one-cell staircase.
+- Open inner diamond and four narrow diagonal spokes: the same y=16 layer.
+- Inset Canopy Keystones: eight on the rim, four on the diamond and four on the spokes. These replace frame cells; there are no raised nodes, pads or lower lip.
+- The entire 25-cell central diamond opening stays clear above the anvil for future Tier 6 work.
+- Exact structural cost: **156 Runestone and 16 Canopy Keystones** (55% fewer structural Runestone than the original 348).
+- Existing wider canopy blocks are not deleted automatically. Use the updated guide to adjust an existing build; extra old blocks do not prevent recognition.
 
 The keystone uses an explicit native 16px pixel source in
 `tools/asset_sources/canopy/keystone.pixels`, the approved runic-anvil palette, a

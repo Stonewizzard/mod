@@ -842,8 +842,8 @@
       {
         "title": "Tier 5: Grand Runic Canopy",
         "paragraphs": [
-          "Complete the Tier 4 ground workshop, then build the floating canopy above the anvil. Its 25-block-wide octagonal rim surrounds an open inner diamond, with four diagonal spokes and raised amber Canopy Keystones.",
-          "The main frame is 16 blocks above the anvil placement block, with its lower lip at 15 and keystones at 17. The aerial structure requires 348 Runestone and 16 Canopy Keystones. The guide and hold-to-build include every elevated position. See Grand Runic Canopy for the keystone recipe."
+          "Complete the Tier 4 ground workshop, then build the floating canopy above the anvil. Its 25-block-wide octagonal rim surrounds an open inner diamond, with four diagonal spokes and inset amber Canopy Keystones.",
+          "The whole canopy is one flat layer 16 blocks above the anvil placement block, with one-block-wide paths and keystones set into the frame. The aerial structure requires 156 Runestone and 16 Canopy Keystones. The guide and hold-to-build include every elevated position. See Grand Runic Canopy for the keystone recipe."
         ]
       }
     ],
@@ -1360,7 +1360,7 @@
       {
         "title": "Build above the anvil",
         "paragraphs": [
-          "The canopy uses 348 Runestone and 16 Canopy Keystones. Its main plane is 16 blocks above the anvil placement block, its outer lower lip is at 15, and raised keystones are at 17. Eight nodes mark the outer rim, four the inner diamond, and four the diagonal spokes.",
+          "The canopy uses 156 Runestone and 16 Canopy Keystones. Every frame block and keystone sits in the same flat layer 16 blocks above the anvil placement block. Narrow paths replace the old wide beams and node pads; the center stays open for a future tier. Eight nodes mark the outer rim, four the inner diamond, and four the diagonal spokes.",
           "Shift + right-click toggles the synced blueprint. Hold to place matching inventory blocks one at a time while aiming at the anvil. Raised keystone positions are amber. Solid obstructions and containers are preserved, and fluids remain manual."
         ]
       },

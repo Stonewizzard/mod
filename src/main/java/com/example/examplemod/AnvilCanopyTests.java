@@ -21,15 +21,17 @@ public final class AnvilCanopyTests {
         @Override protected MutableComponent typeDescription(){return Component.literal("Grand Runic Canopy: connected geometry, recipe, all facings, native aerial construction and protection");}
         @Override public void run(GameTestHelper h){
             var l=h.getLevel();var core=h.absolutePos(new BlockPos(20,8,20));var stage=AnvilStages.all().get(2);
-            check(h,stage.tier()==5&&stage.blocks().size()==364,"Tier 5 has 348 Runestone and 16 keystones");
+            check(h,stage.tier()==5&&stage.blocks().size()==172,"Tier 5 has 156 Runestone and 16 keystones");
             var offsets=new HashSet<BlockPos>();for(var req:stage.blocks())offsets.add(req.offset());
             check(h,offsets.stream().mapToInt(BlockPos::getX).min().orElseThrow()==-12&&offsets.stream().mapToInt(BlockPos::getX).max().orElseThrow()==12,"Canopy spans 25 blocks");
-            check(h,offsets.stream().allMatch(p->p.getY()>=15&&p.getY()<=17)&&!offsets.contains(new BlockPos(0,16,0)),"Canopy floats high above the anvil, leaving its center open");
+            check(h,offsets.stream().allMatch(p->p.getY()==16)&&!offsets.contains(new BlockPos(0,16,0)),"Canopy floats high above the anvil, leaving its center open in a single flat layer");
+            for(int x=-3;x<=3;x++)for(int z=-3;z<=3;z++)if(Math.abs(x)+Math.abs(z)<4)check(h,!offsets.contains(new BlockPos(x,16,z)),"The complete central diamond opening stays clear for Tier 6");
+            for(int x=-4;x<=4;x++)check(h,offsets.contains(new BlockPos(x,16,-12))&&!offsets.contains(new BlockPos(x,16,-11)),"The straight octagonal paths stay one block wide");
             var reached=new HashSet<BlockPos>();var queue=new ArrayDeque<BlockPos>();queue.add(offsets.iterator().next());reached.add(queue.peek());
             while(!queue.isEmpty()){var at=queue.removeFirst();for(var d:Direction.values()){var next=at.relative(d);if(offsets.contains(next)&&reached.add(next))queue.addLast(next);}}
-            check(h,reached.equals(offsets),"Rim, diamond, spokes and raised nodes connect through actual faces");
+            check(h,reached.equals(offsets),"Rim, diamond, spokes and inset nodes connect through actual faces");
             for(var at:offsets)check(h,offsets.contains(new BlockPos(-at.getZ(),at.getY(),at.getX())),"Aerial canopy is four-way symmetric");
-            check(h,AnvilGuidePayload.snapshot().decode().equals(AnvilStages.all()),"Remote guide sync includes elevated keystones and all Tier 5 positions");
+            check(h,AnvilGuidePayload.snapshot().decode().equals(AnvilStages.all()),"Remote guide sync includes inset keystones and all Tier 5 positions");
             for(var front:Direction.Plane.HORIZONTAL){
                 prepare(l,core,front);AnvilStageTests.fill(l,core,front,stage);refresh(l,core);tier(h,l,core,5,"Canopy forms Tier 5 in every facing");
                 var base=core.below();l.setBlock(base,Blocks.STONE.defaultBlockState(),3);refresh(l,core);tier(h,l,core,0,"A canopy cannot bypass the original foundation");l.setBlock(base,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);
@@ -46,13 +48,13 @@ public final class AnvilCanopyTests {
             for(int i=0;i<8;i++){be.lastStrike=l.getGameTime()-8;check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND),"Iron hammer crafts a keystone batch");}
             check(h,be.output().is(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get())&&be.output().getCount()==4&&be.inputCount()==0,"Four Runestone, four ancient ingots and glowstone produce four keystones");be.takeOutput();
             be.placeInput(AnvilSlot.CENTER,new ItemStack(Items.GOLD_INGOT));int damage=hammer.getDamageValue();player.setShiftKeyDown(true);
-            for(int i=1;i<=6;i++)player.getInventory().setItem(i,new ItemStack(AncientAnvilContent.RUNESTONE_ITEM.get(),i==6?28:64));
+            for(int i=1;i<=3;i++)player.getInventory().setItem(i,new ItemStack(AncientAnvilContent.RUNESTONE_ITEM.get(),i==3?28:64));
             player.getInventory().setItem(7,new ItemStack(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get(),16));
             player.getInventory().setItem(8,new ItemStack(Items.WATER_BUCKET));player.getInventory().setItem(9,new ItemStack(Items.LAVA_BUCKET));
-            check(h,AnvilGuide.next(l,core).tier()==5&&AnvilGuide.next(l,core).missing(l).size()==364,"Canopy guide targets only the new aerial tier");
-            for(int i=0;i<364;i++){be.lastFoundationPlacement=l.getGameTime()-AnvilFoundation.INTERVAL;check(h,AnvilFoundation.placeNext(player,core),"Native inventory placement builds canopy block "+i);}
+            check(h,AnvilGuide.next(l,core).tier()==5&&AnvilGuide.next(l,core).missing(l).size()==172,"Canopy guide targets only the new aerial tier");
+            for(int i=0;i<172;i++){be.lastFoundationPlacement=l.getGameTime()-AnvilFoundation.INTERVAL;check(h,AnvilFoundation.placeNext(player,core),"Native inventory placement builds canopy block "+i);}
             tier(h,l,core,5,"Inventory building reaches Tier 5");check(h,AnvilGuide.next(l,core).targets().isEmpty(),"Tier 5 is the current maximum, with no Tier 6 preview");
-            check(h,player.getInventory().countItem(AncientAnvilContent.RUNESTONE_ITEM.get())==0&&player.getInventory().countItem(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get())==0,"Native aerial construction charges exactly 348 Runestone and 16 keystones");
+            check(h,player.getInventory().countItem(AncientAnvilContent.RUNESTONE_ITEM.get())==0&&player.getInventory().countItem(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get())==0,"Native aerial construction charges exactly 156 Runestone and 16 keystones");
             check(h,be.inputCount()==1&&hammer.getDamageValue()==damage&&player.getInventory().getItem(8).is(Items.WATER_BUCKET)&&player.getInventory().getItem(9).is(Items.LAVA_BUCKET),"Aerial construction preserves workpieces, tools and filled buckets");
             var node=stage.blocks().stream().filter(r->r.tag().equals(AnvilStages.KEYSTONES)).findFirst().orElseThrow();var at=node.at(core,Direction.NORTH);
             l.setBlock(at,Blocks.CHEST.defaultBlockState(),3);var chest=(net.minecraft.world.level.block.entity.ChestBlockEntity)l.getBlockEntity(at);chest.setItem(0,new ItemStack(Items.DIAMOND,7));refresh(l,core);tier(h,l,core,4,"Missing keystone downgrades to Tier 4");
