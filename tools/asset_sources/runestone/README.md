@@ -1,7 +1,11 @@
-# Runestone — Ancient Slate preview
+# Runestone stone-surface revisions — preview only
 
-User-selected option D, pending in-game approval. Native 16×16 RGBA source, seven opaque colors, no symbol or emissive layer. The same quiet face is intended to support later rune overlays on all six sides.
+The original `ancient_slate_16.png` was rejected after in-game review because its patches disappeared into a concrete-like surface. It is retained for reference.
 
-Imported from the isolated Ancient Slate comparison artwork using area sampling to a native 16-pixel grid, seven-color quantization without dithering, and opaque RGBA export. The original generated artwork remains in the session workspace. `ancient_slate_16.png` is the canonical Minecraft source; export it unchanged to `assets/examplemod/textures/block/runestone.png`.
+Two new source tiles are uninscribed 16×16 opaque stone, using eight colors:
+- `hewn_slate_16.png`: cooler cut stone with stronger bevels and large faceted patches.
+- `weathered_slate_16.png`: rougher chipped stone with more irregular edges and grain clusters.
 
-This draft changes the Runestone base material only. Vanilla polished deepslate slabs keep their original texture and remain the collar requirement.
+These are proposals, not approved final artwork. Both keep the middle free of symbols for later rune overlays. Imported from separate generated stone concepts using native-grid area sampling and palette quantization without dithering.
+
+`generate_runestone_assets.py --variant hewn` exports the first proposal. The native visual QA job runs twice, swapping only the texture in its disposable checkout before resource processing; both screenshots use the actual Runestone model, not extra registered blocks or image reconstructions. The final chosen proposal has not been decided. Polished deepslate slabs remain vanilla.

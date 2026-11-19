@@ -2,6 +2,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 mkdir -p build/client-qa run/visual-qa
+# QA-only material swap: each native client run imports one proposed tile before resource processing.
+if [ "${CLIENT_QA_SCOPE:-}" = "runestone-art" ]; then
+    python3 tools/generate_runestone_assets.py --variant "${RUNESTONE_PREVIEW_VARIANT:-hewn}"
+fi
 glxinfo -B >build/client-qa/graphics.txt 2>&1 || true
 for qa_lvp_icd in /usr/share/vulkan/icd.d/lvp_*.json; do
     if [ -f "$qa_lvp_icd" ]; then export VK_DRIVER_FILES="$qa_lvp_icd"; break; fi
