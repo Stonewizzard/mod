@@ -4,7 +4,9 @@ cd "$(dirname "$0")/../.."
 mkdir -p build/client-qa run/visual-qa
 # QA-only material swap: each native client run imports one proposed tile before resource processing.
 if [ "${CLIENT_QA_SCOPE:-}" = "runestone-art" ]; then
-    python3 tools/generate_runestone_assets.py --variant "${RUNESTONE_PREVIEW_VARIANT:-hewn}"
+    qa_texture_variant="${RUNESTONE_PREVIEW_VARIANT:-hewn}"
+    case "$qa_texture_variant" in hewn|weathered) ;; *) exit 2 ;; esac
+    cp "tools/asset_sources/runestone/${qa_texture_variant}_slate_16.png" src/main/resources/assets/examplemod/textures/block/runestone.png
 fi
 glxinfo -B >build/client-qa/graphics.txt 2>&1 || true
 for qa_lvp_icd in /usr/share/vulkan/icd.d/lvp_*.json; do
