@@ -147,7 +147,12 @@ def run():
         toggle_anvil_guide();expect(anvilGuide=False)
         for index in range(4):
             command('tier6_crystal_view',index=index);process('xdotool','key','4');expect(aimedAtCrystalCap=True);time.sleep(.4);process('xdotool','click','3');expect(tier6Crystals=index+1,tier6CrystalItems=3-index)
-        expect(anvilTier=6,energyBeams=24);command('tier6_view');process('xdotool','key','F1');capture('ancient-anvil-tier6-network-blue');process('xdotool','key','F1')
+        expect(anvilTier=6,energyBeams=24)
+        command('tier6_break_canopy');expect(anvilTier=4,guideTier=6,guideMissing=1,energyBeams=0,tier6CollarRunes=1)
+        command('anvil_auto_close');process('xdotool','key','1');process('xdotool','keydown','Shift_L');time.sleep(.2);process('xdotool','mousedown','3')
+        wait_for(lambda s:s.get('anvilTier')==6 and s.get('guideMissing')==0,'Tier6 repair after the real Tier4 downgrade',timeout=15);process('xdotool','mouseup','3','keyup','Shift_L');expect(guideTier=6,tier6CollarRunes=0,energyBeams=24)
+        print('ANVIL_TIER6_NATIVE_REPAIR_PASS: canopy break lowers working tier to 4 while guide stays 6; native hold repairs with one Runestone and restores 24 beams',flush=True)
+        command('tier6_view');process('xdotool','key','F1');capture('ancient-anvil-tier6-network-blue');process('xdotool','key','F1')
         native_chat_command('time set midnight');process('xdotool','key','F1');capture('ancient-anvil-tier6-network-night');process('xdotool','key','F1');native_chat_command('time set day')
         for preview in ('collars',):
             command('tier6_preview_'+preview);expect(anvilTier=6,tier6Preview=preview,energyBeams=24)

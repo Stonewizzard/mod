@@ -28,7 +28,7 @@ public final class AnvilGuide {
     public static Plan next(Level level,BlockPos core){
         var state=level.getBlockState(core);if(!state.is(AncientAnvilContent.ANVIL.get()))return new Plan(0,List.of());
         int next=state.getValue(AncientAnvilBlock.TIER)+1;var front=state.getValue(AncientAnvilBlock.FACING);var targets=new ArrayList<Target>();var stages=stages(level);
-        if(next<=6&&AnvilTierSix.canUpgrade(level,core,front,stages))next=6;
+        if(stages.stream().anyMatch(s->s.tier()==6)&&((level.getBlockEntity(core) instanceof AncientAnvilBlockEntity be&&be.tierSixBuild())||next<=6&&AnvilTierSix.canUpgrade(level,core,front,stages)))next=6;
         if(next==1)for(var p:AncientAnvilStructure.foundation(core,front))targets.add(new Target(p,AncientAnvilContent.FOUNDATION,Kind.BLOCK,null));
         else if(next==2){
             AnvilBasins.frame(core,front).stream().sorted(Comparator.<BlockPos>comparingInt(p->p.getX()).thenComparingInt(p->p.getZ())).forEach(p->targets.add(new Target(p,AncientAnvilContent.FOUNDATION,Kind.BLOCK,null)));
@@ -46,7 +46,24 @@ public final class AnvilGuide {
             }
             targets.sort(Comparator.comparingInt(t->t.at().getY()));
         }
+        if(next==6){
+            // Tier 6 replacements take precedence over old metal-cap requirements at the same position.
+            var covered=new HashSet<BlockPos>();for(var target:targets)covered.add(target.at());
+            for(var p:AncientAnvilStructure.foundation(core,front))repair(level,targets,covered,new Target(p,AncientAnvilContent.FOUNDATION,Kind.BLOCK,null));
+            for(var p:AnvilBasins.frame(core,front))repair(level,targets,covered,new Target(p,AncientAnvilContent.FOUNDATION,Kind.BLOCK,null));
+            for(var side:AnvilBasins.Side.values()){
+                Fluid fluid=null;for(var p:AnvilBasins.pool(core,front,side))if(level.hasChunkAt(p)&&!level.getFluidState(p).isEmpty()){fluid=AnvilBasins.canonical(level.getFluidState(p).getType());break;}
+                for(var p:AnvilBasins.pool(core,front,side))repair(level,targets,covered,new Target(p,null,Kind.FLUID,fluid));
+            }
+            for(var stage:stages)if(stage.tier()<6)for(var req:stage.blocks()){
+                var kind=req.tag().equals(AnvilStages.KEYSTONES)?Kind.KEYSTONE:req.tag().equals(AnvilStages.CAPS)?Kind.CAP:Kind.BLOCK;
+                var alternative=kind==Kind.CAP?(stage.tier()==3?AnvilTierSix.ENERGIZED:AnvilTierSix.OBSIDIAN):null;
+                repair(level,targets,covered,new Target(req.at(core,front),req.tag(),kind,null,null,alternative));
+            }
+            targets.sort(Comparator.comparingInt(t->t.at().getY()));
+        }
         return new Plan(next,List.copyOf(targets));
     }
+    private static void repair(Level level,List<Target> targets,Set<BlockPos> covered,Target target){if(covered.add(target.at())&&!target.matches(level))targets.add(target);}
     private AnvilGuide(){}
 }
