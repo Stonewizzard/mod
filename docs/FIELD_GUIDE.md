@@ -42,6 +42,7 @@ The visual direction draws on familiar mod guidebook category browsing, with ori
 - [The Restorer](#restoration) — Stations
 - [The Corruptor](#corruption) — Stations
 - [Grand Runic Canopy](#runic-canopy) — Stations
+- [Ancient Crystal](#ancient-crystal) — Stations
 
 - All 120 modifiers: generated in the in-game Modifiers category from the same definitions and tuning values used by gameplay. See also [the complete modifier table](PICKAXE_MODIFIERS.md).
 
@@ -554,3 +555,21 @@ Shift + right-click toggles the synced blueprint. Hold to place matching invento
 Breaking the canopy lowers the anvil to Tier 4 while the ground workshop remains intact. The guide highlights the missing repair. Removing the anvil leaves the canopy blocks in the world.
 
 Canopy Keystones emit light, but do not grant additional rune effects yet. Tier 6 material upgrades and functional rune abilities will be developed later.
+
+<a id="ancient-crystal"></a>
+
+## Ancient Crystal
+
+Ancient Crystals have dark teal facets and subdued amber inclusions. Energized Ancient Crystals keep the same shape with brighter blue-teal facets and gold highlights. Both individual crystal items are available in Creative for now; acquisition and energizing recipes will be designed later.
+
+Use the completed Ruined Ancient Forge. Right-click the fireplace twelve times with Ancient Crystals and once with a diamond block. Either ingredient can go in first. Light the forge with flint and steel. After twenty seconds, white chimney smoke signals that the batch is finished. Collect one Block of Ancient Crystal with an empty hand.
+
+The forge takes exactly twelve crystals and one diamond block. There is no crafting-grid compression or reverse conversion recipe.
+
+The block has matching fused-crystal facets, a soft light level of seven, and crystalline sounds. Mine it with an iron pickaxe or better to recover the whole block. It does not grant additional anvil effects yet.
+
+The darker Block of Ancient Crystal is the forge result. The lighter-blue Energized Ancient Crystal Block is a separate block with the same amethyst-like facets and gold highlights, plus a stronger light level of twelve.
+
+The energized block is available in Creative for now. An energizing recipe and any additional functions will be designed later. Both blocks need an iron pickaxe or better and drop their own variant.
+
+Energized Ancient Crystal is a separate ingredient item, alongside the lighter Energized Ancient Crystal Block. It has no recipe yet and is available in Creative. It is not consumed by the normal crystal-block forge recipe.

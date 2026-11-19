@@ -150,6 +150,10 @@ public class ExampleMod {
                 output.accept(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get());
                 output.accept(AncientAnvilContent.SCRAP_ITEM.get());
                 output.accept(AncientAnvilContent.INGOT.get());
+                output.accept(AncientAnvilContent.CRYSTAL.get());
+                output.accept(AncientAnvilContent.ENERGIZED_CRYSTAL.get());
+                output.accept(AncientAnvilContent.CRYSTAL_BLOCK_ITEM.get());
+                output.accept(AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM.get());
                 output.accept(AncientAnvilContent.METAL_ITEM.get());
                 output.accept(AscenderContent.ITEM.get());
                 ComponentStationContent.STATIONS.forEach(station->output.accept(station.item().get()));
@@ -212,6 +216,7 @@ public class ExampleMod {
             modEventBus.addListener(LargeAnvilTests::register);
             modEventBus.addListener(AncientScrapTests::register);
             modEventBus.addListener(FireboxProcessTests::register);
+            modEventBus.addListener(AncientCrystalTests::register);
             modEventBus.addListener(PickaxeModifierTests::register);
             modEventBus.addListener(ModifierTierTests::register);
             modEventBus.addListener(InfluenceTests::register);
@@ -272,10 +277,14 @@ public class ExampleMod {
         else if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(AncientForgeContent.BRICKS_ITEM);
             event.accept(AncientAnvilContent.METAL_ITEM);
+            event.accept(AncientAnvilContent.CRYSTAL_BLOCK_ITEM);
+            event.accept(AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM);
             event.accept(SNIFFER_SKULL_ITEM);
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(AncientAnvilContent.SCRAP_ITEM);
             event.accept(AncientAnvilContent.INGOT);
+            event.accept(AncientAnvilContent.CRYSTAL);
+            event.accept(AncientAnvilContent.ENERGIZED_CRYSTAL);
             ArchaeologyContent.artifacts().forEach(event::accept);
             ArchaeologyContent.materials().forEach(event::accept);
             ReconstructionContent.pieces().forEach(event::accept);
