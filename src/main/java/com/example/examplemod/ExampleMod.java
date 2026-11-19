@@ -184,7 +184,10 @@ public class ExampleMod {
         modEventBus.addListener(ComponentStationPayload::register);
         modEventBus.addListener(AnvilStrikePayload::register);
         modEventBus.addListener(AnvilFoundationPayload::register);
+        modEventBus.addListener(AnvilGuidePayload::register);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(AnvilRecipes::register);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(AnvilStages::register);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(AnvilGuidePayload::sync);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -199,6 +202,9 @@ public class ExampleMod {
             modEventBus.addListener(AncientForgeTests::register);
             modEventBus.addListener(AncientAnvilTests::register);
             modEventBus.addListener(AnvilFoundationTests::register);
+            modEventBus.addListener(AnvilBasinTests::register);
+            modEventBus.addListener(AnvilStageTests::register);
+            modEventBus.addListener(AnvilGuideTests::register);
             modEventBus.addListener(AnvilSmithingTests::register);
             modEventBus.addListener(LargeAnvilTests::register);
             modEventBus.addListener(AncientScrapTests::register);

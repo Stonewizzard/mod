@@ -118,3 +118,106 @@ durability, center result retrieval, and dropped inventory recovery. Native-clie
 drives the real Minecraft window to place the item, use the foundation guide, place
 and retrieve all thirteen positions, strike with both mouse buttons and collect a
 Runestone. Actual window captures accompany CI artifacts.
+
+## Tier 2: directional fluid basins
+
+Keep the Tier 1 5×5 Runestone foundation. Everything below is in that same layer,
+one block below the anvil's placement block. Directions are relative to the anvil:
+front points toward its horn; right/left are viewed from behind the anvil.
+
+For precise placement, each side extends out from the center: distance 3 has five
+fluid cells (across -2..2), distance 4 has three (-1..1), distance 5 has one (0).
+The front differs: replace its center cells at distances 3, 4 and 5 with Runestone.
+This leaves two pools of three fluid blocks each. Both must be the same fluid.
+At distance 6, place one Runestone tip on every side, including the front.
+The stepped border lies at (distance, across) (3,±3), (4,±2), (5,±1).
+All borders and the bridge use Runestone (the foundation block tag).
+
+Each complete side independently detects its fluid, including registered mod fluids.
+Source and flowing variants agree. Empty cells, waterlogged blocks and fluid-containing
+block entities are not basin cells. The four sides need not match each other.
+Fluid is not consumed. Removing part of a pool or its border downgrades to Tier 1;
+breaking the inner foundation downgrades to Tier 0.
+
+Tier 2 recipes are datapack files in `data/<namespace>/anvil_recipes/`.
+The optional `fluids` object maps `front`, `right`, `back`, `left` to exactly one
+`fluid` ID or `tag` per specified side. Unspecified sides accept any consistent fluid.
+A recipe with fluid conditions implicitly requires at least Tier 2.
+
+```json
+{
+  "anvil_tier": 2,
+  "hammer_tier": 1,
+  "work": 4,
+  "ingredients": {"center": {"item": "minecraft:gold_ingot"}},
+  "fluids": {
+    "front": {"fluid": "minecraft:water"},
+    "right": {"tag": "minecraft:lava"}
+  },
+  "result": {"id": "minecraft:gold_nugget", "count": 9}
+}
+```
+
+This example is documentation, not an enabled recipe. No new progression recipes
+are imposed yet. Tier 0/1 recipes continue to work. The guide and automatic construction advance through all tiers. Fluid spaces are
+highlighted, but filled manually; no filled buckets are used.
+
+Invisible legacy part blocks with no mesh are released when an anvil refreshes;
+their serialized indices remain stable. Visible parts and the horn retain ownership.
+
+## Tiers 3 and 4: the growing runic workshop
+
+All measurements are relative to the core block (0,0,0), with x right and z back.
+The existing Tier 2 foundation is y=-1. Concrete is a layout marker, never required.
+The anvil requires every previous tier; breaking additions falls back to the highest
+complete tier. Existing fluids and recipe-side constraints remain applicable.
+
+**Tier 3:** in each diagonal, single Runestone blocks at (±4,-1,±4) and
+(±5,-1,±5). Four 2×2 corner pillars occupy x=±6/±7, z=±6/±7:
+four Runestone layers y=-1..2, capped by eligible blocks at y=3.
+Additional cost: 72 Runestone + 16 cap blocks.
+
+**Tier 4:** a hollow 17×17 square perimeter, max(|x|,|z|)=8 at y=-2.
+A 3×3 Runestone base is centered 16 blocks from the core on each cardinal axis
+at y=-2. Each base has a one-block-wide center column at y=-1..2, capped at y=3.
+Additional cost: 116 Runestone + 4 cap blocks. All four pillars are required.
+
+The lower layer is interpreted as one block below the existing flat workshop layer.
+The reference photo's three spaced markers between ring and side pillar are guides,
+not required blocks. Geometry is deliberately editable if the reference measurements
+need adjustment after in-game review.
+
+### Editing requirements and future runes
+
+- Measurements: `tools/generate_anvil_stages.py` generates
+  `data/examplemod/anvil_stages/tier_3.json` and `tier_4.json`.
+- Each stage contains groups of a block `tag` and integer `positions` [x,y,z].
+  Datapacks can override those files; `/reload` refreshes requirements.
+- `examplemod:ancient_anvil_runes` currently contains Runestone. Add future
+  functional rune blocks to this tag to allow substitution without editing coordinates.
+  No rune effects are implemented yet.
+- `examplemod:ancient_anvil_caps` accepts iron, gold, copper, diamond, emerald,
+  netherite and optional common metal storage tags. Different caps and blocks within
+  a cap may be mixed. Packs can replace this tag.
+- These structures are detected in place. Matching blocks, containers and functional
+  rune block entities are never claimed or consumed.
+- The guide and inventory-backed construction now advance through all four tiers.
+- Recipes can now require `anvil_tier` 3 or 4. No new recipes or rune effects are
+  imposed by this structural implementation.
+
+
+## All-tier guide and inventory construction
+
+Shift + right-click toggles the next-tier guide; holding places one matching inventory
+block every six ticks after the initial short delay. Cyan = Runestone/rune positions,
+gold = caps, blue = manually filled fluid spaces, yellow = wrong occupied positions.
+The next tier appears automatically after the current one forms. Tier 4 completion
+leaves no further guide cells. Repairs show only missing requirements.
+
+The server chooses targets, block tags and inventory costs, retaining native placement
+cancellation, permissions, collisions and sounds. Fluids and filled buckets are never
+used automatically. Tier 2 construction waits for manual fluid completion before
+unlocking Tier 3. Solid obstructions and containers must be cleared manually.
+
+Pack-defined stage coordinates and tags sync to remote clients on login and datapack
+reload, so dedicated-server guides use the same layout as authoritative construction.
