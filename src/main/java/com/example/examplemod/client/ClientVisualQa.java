@@ -130,7 +130,7 @@ public final class ClientVisualQa {
                         }
                         case "runestone_wall","runestone_held","runestone_overview","runestone_canopy"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();
-                            server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);player.getAbilities().flying=true;player.onUpdateAbilities();l.setDayTime(6000);
+                            server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);player.getAbilities().flying=true;player.onUpdateAbilities();
                                 if(action.equals("runestone_wall")||action.equals("runestone_held")){
                                     var base=anvilPosition.offset(26,0,0);var samples=java.util.List.of(com.example.examplemod.AncientAnvilContent.RUNESTONE.get(),net.minecraft.world.level.block.Blocks.POLISHED_DEEPSLATE,net.minecraft.world.level.block.Blocks.STONE_BRICKS);
                                     for(int x=-2;x<=13;x++)for(int z=-12;z<=3;z++)for(int y=-2;y<=5;y++)l.setBlock(base.offset(x,y,z),(y==-2?net.minecraft.world.level.block.Blocks.STONE:net.minecraft.world.level.block.Blocks.AIR).defaultBlockState(),3);
