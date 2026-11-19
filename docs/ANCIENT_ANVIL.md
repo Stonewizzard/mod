@@ -65,7 +65,7 @@ The native 16px sprite is packed at exact 2× nearest-neighbor with binary alpha
 ### Runestone (Tier 0+)
 
 Put deepslate or cobbled deepslate in the **four diagonal corners** and one gold ingot
-in the **center**. Leave the other eight positions empty. Four hammer strikes make one
+in the **center**. Leave the other eight positions empty. Sixteen Iron Forge Hammer strikes make four
 Runestone, a blank prepared deepslate base for later functional Ancient Runes. It has no crafting-grid recipe. Its
 future role in runic structures is deliberately not implemented yet.
 
@@ -78,7 +78,8 @@ the stable recipe ID. Resource-pack client code is not involved in recipe decisi
 {
   "anvil_tier": 0,
   "hammer_tier": 1,
-  "work": 4,
+  "work": 16,
+  "xp_per_hit": 1,
   "ingredients": {
     "north_west": {"tag": "examplemod:runestone_deepslate"},
     "north_east": {"tag": "examplemod:runestone_deepslate"},
@@ -86,7 +87,7 @@ the stable recipe ID. Resource-pack client code is not involved in recipe decisi
     "south_east": {"tag": "examplemod:runestone_deepslate"},
     "center": {"item": "minecraft:gold_ingot"}
   },
-  "result": {"id": "examplemod:runestone", "count": 1}
+  "result": {"id": "examplemod:runestone", "count": 4}
 }
 ```
 
@@ -263,3 +264,11 @@ repair targets. Blocks remain in place if the anvil is removed.
 ## Tier 6: Ancient Convergence
 
 See [the Tier 6 reference](ANCIENT_ANVIL_TIER6.md) for energized tower caps, normal End Crystals, the uniform glass lens, guide behavior and harmless colored forging beams.
+
+## Experience-powered smithing
+
+Accepted hammer strikes spend player XP points, not levels. The default cost is one point per strike for every anvil recipe. `xp_per_hit` is a per-recipe integer override from 0 through 100000; omission uses 1 and 0 allows a free recipe. An Iron Forge Hammer needs 16 accepted strikes and 16 XP points for four Runestone. The four deepslate inputs and center gold ingot are unchanged.
+
+Payment is checked on the server after recipe, tier, hammer and cooldown checks, before progress, durability or crafting effects. Insufficient XP leaves ingredients, progress and cooldown untouched. Gain XP to resume. Creative mode bypasses XP and durability costs. Guide construction and placing/retrieving ingredients are not hammer work. Current level/progress determines spendable XP; the lifetime `totalExperience` counter is not a wallet.
+
+See [EXPERIENCE_ECONOMY.md](EXPERIENCE_ECONOMY.md) for the initial resource direction and tuning reference.

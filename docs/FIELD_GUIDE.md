@@ -349,9 +349,11 @@ Place the recipe ingredients, then hit the anvil with an Iron Forge Hammer. Eith
 
 Iron Forge Hammer recipe: three iron ingots across the top and two sticks down the middle. It lasts 250 accepted strikes. More hammer tiers and anvil recipes can be added later.
 
-Tier 0 is sufficient. Put one deepslate or cobbled deepslate in each of the four diagonal corner positions, and one gold ingot in the center. Leave every other position empty. Strike four times with the Iron Forge Hammer to make one Runestone.
+Tier 0 is sufficient. Put one deepslate or cobbled deepslate in each of the four diagonal corner positions, and one gold ingot in the center. Leave every other position empty. Strike sixteen times with the Iron Forge Hammer to make four Runestone. By default, the batch costs sixteen experience points.
 
 Runestone is a blank prepared stone base. Later recipes will inscribe specific functional Ancient Runes on it. It has no crafting-grid recipe.
+
+Each accepted hammer strike normally spends one experience point, not one level. If you run out of XP, your ingredients and partial work stay on the anvil. Gain more XP and continue. Invalid recipes and hits during the hammer cooldown do not spend XP. Creative smithing is free.
 
 Build a centered 5 by 5 square of Runestone blocks directly one layer below the block where the anvil was placed. All 25 blocks are required. Metal blocks do not count.
 
