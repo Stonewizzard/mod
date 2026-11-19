@@ -20,11 +20,11 @@ public final class AnvilGuideTests {
         @Override public void run(GameTestHelper h){
             var l=h.getLevel();var core=h.absolutePos(new BlockPos(20,6,20));var front=Direction.NORTH;
             check(h,AnvilGuidePayload.snapshot().decode().equals(AnvilStages.all()),"Remote-client layout sync preserves every position and tag");
-            for(int x=-18;x<=18;x++)for(int z=-18;z<=18;z++)for(int y=-2;y<=4;y++)l.setBlock(core.offset(x,y,z),Blocks.AIR.defaultBlockState(),3);
+            for(int x=-18;x<=18;x++)for(int z=-18;z<=18;z++)for(int y=-4;y<=4;y++)l.setBlock(core.offset(x,y,z),Blocks.AIR.defaultBlockState(),3);
             l.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));
             var player=h.makeMockServerPlayerInLevel();player.setGameMode(GameType.SURVIVAL);player.snapTo(core.getX()+.5,core.getY()+2.5,core.getZ()+.5,0,90);player.setShiftKeyDown(true);
             var hammer=new ItemStack(AncientAnvilContent.IRON_FORGE_HAMMER.get());player.setItemInHand(InteractionHand.MAIN_HAND,hammer);
-            for(int i=1;i<=4;i++)player.getInventory().setItem(i,new ItemStack(AncientAnvilContent.RUNESTONE_ITEM.get(),i==4?48:64));
+            for(int i=1;i<=4;i++)player.getInventory().setItem(i,new ItemStack(AncientAnvilContent.RUNESTONE_ITEM.get(),i==4?56:64));
             player.getInventory().setItem(5,new ItemStack(Items.DIAMOND_BLOCK,20));player.getInventory().setItem(6,new ItemStack(Items.WATER_BUCKET));player.getInventory().setItem(7,new ItemStack(Items.LAVA_BUCKET));
             var be=(AncientAnvilBlockEntity)l.getBlockEntity(core);be.placeInput(AnvilSlot.CENTER,new ItemStack(Items.GOLD_INGOT));
             check(h,AnvilGuide.next(l,core).tier()==1&&AnvilGuide.next(l,core).missing(l).size()==25,"Tier 0 shows foundation");
@@ -35,9 +35,9 @@ public final class AnvilGuideTests {
             check(h,player.getInventory().getItem(6).is(Items.WATER_BUCKET)&&player.getInventory().getItem(7).is(Items.LAVA_BUCKET),"Filled buckets are never consumed or used");
             for(var side:AnvilBasins.Side.values())for(var p:AnvilBasins.pool(core,front,side))l.setBlock(p,Blocks.WATER.defaultBlockState(),3);
             AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,AnvilGuide.next(l,core).tier()==3&&AnvilGuide.next(l,core).missing(l).size()==88,"Manual fluids unlock Tier 3 guide");
-            build(h,player,core,88);check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==3&&AnvilGuide.next(l,core).missing(l).size()==120,"Tier 3 places Runestone and eligible diamond caps, then shows Tier 4");
-            build(h,player,core,120);check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==4&&AnvilGuide.next(l,core).targets().isEmpty(),"Tier 4 completes without extra guide positions");
-            check(h,player.getInventory().countItem(AncientAnvilContent.RUNESTONE_ITEM.get())==0&&player.getInventory().getItem(5).isEmpty(),"Exact inventory cost: 240 Runestone and 20 caps");
+            build(h,player,core,88);check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==3&&AnvilGuide.next(l,core).missing(l).size()==128,"Tier 3 places Runestone and eligible diamond caps, then shows Tier 4");
+            build(h,player,core,128);check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==4&&AnvilGuide.next(l,core).targets().isEmpty(),"Tier 4 completes without extra guide positions");
+            check(h,player.getInventory().countItem(AncientAnvilContent.RUNESTONE_ITEM.get())==0&&player.getInventory().getItem(5).isEmpty(),"Exact inventory cost: 248 Runestone and 20 caps");
             check(h,player.getMainHandItem()==hammer&&hammer.getDamageValue()==0&&be.inputCount()==1,"Construction preserves held tools and workpieces");
             var cap=AnvilStages.all().get(1).blocks().stream().filter(r->r.tag().equals(AnvilStages.CAPS)).findFirst().orElseThrow();l.setBlock(cap.at(core,front),Blocks.AIR.defaultBlockState(),3);AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));check(h,AnvilGuide.next(l,core).tier()==4&&AnvilGuide.next(l,core).missing(l).size()==1,"Breaking a higher-tier block shows only the missing repair");
             System.out.println("ANVIL_GUIDE_ALL_TIERS_CHECK: PASS: sequential plans, native placement, exact Runestone/cap costs, manual-only fluids and unchanged buckets, sync roundtrip, held tool/workpiece preservation and repairs");h.succeed();

@@ -177,12 +177,15 @@ complete tier. Existing fluids and recipe-side constraints remain applicable.
 four Runestone layers y=-1..2, capped by eligible blocks at y=3.
 Additional cost: 72 Runestone + 16 cap blocks.
 
-**Tier 4:** a hollow 17×17 square perimeter, max(|x|,|z|)=8 at y=-2.
+**Tier 4:** a hollow 17×17 square perimeter, max(|x|,|z|)=8 at y=-3.
 A 3×3 Runestone base is centered 16 blocks from the core on each cardinal axis
-at y=-2. Each base has a one-block-wide center column at y=-1..2, capped at y=3.
-Additional cost: 116 Runestone + 4 cap blocks. All four pillars are required.
+at y=-4. Each base has a one-block-wide center column at y=-3..2, capped at y=3.
+Additional cost: 124 Runestone + 4 cap blocks. All four pillars are required.
 
-The lower layer is interpreted as one block below the existing flat workshop layer.
+The main ring is two blocks below the Tier 2 foundation (one block lower than the
+previous guide). The 3×3 side-pillar bases are three blocks below that foundation
+(two blocks lower than the previous guide). Pillar cap heights stay unchanged;
+two extra shaft blocks per pillar connect each lowered base.
 The reference photo's three spaced markers between ring and side pillar are guides,
 not required blocks. Geometry is deliberately editable if the reference measurements
 need adjustment after in-game review.
