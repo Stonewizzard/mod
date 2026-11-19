@@ -95,7 +95,7 @@ public final class ClientVisualQa {
                                     player.getInventory().setItem(6,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.WATER_BUCKET));player.getInventory().setItem(7,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.LAVA_BUCKET));player.inventoryMenu.broadcastChanges();
                                 }else if(action.equals("anvil_manual_fluids")){
                                     for(var side:com.example.examplemod.AnvilBasins.Side.values())for(var at:com.example.examplemod.AnvilBasins.pool(anvilPosition,front,side))l.setBlock(at,net.minecraft.world.level.block.Blocks.WATER.defaultBlockState(),3);
-                                }else if(action.equals("anvil_auto_close")){player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);player.getAbilities().invulnerable=true;player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY(),anvilPosition.getZ()-2.5,0,17);}
+                                }else if(action.equals("anvil_auto_close")){player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);player.getAbilities().invulnerable=true;player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY()+2.5,anvilPosition.getZ()+.5,0,90);}
                                 else{player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);int height=l.getBlockState(anvilPosition).getValue(com.example.examplemod.AncientAnvilBlock.TIER)>=3?32:22;player.connection.teleport(anvilPosition.getX()+.5,anvilPosition.getY()+height,anvilPosition.getZ()-10,0,70);}
                                 com.example.examplemod.AncientAnvilBlockEntity.refresh(l,anvilPosition,l.getBlockState(anvilPosition));
                             });
