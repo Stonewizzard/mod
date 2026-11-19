@@ -41,6 +41,7 @@ The visual direction draws on familiar mod guidebook category browsing, with ori
 - [The Scaling Randomizer](#scaling-randomizer) — Stations
 - [The Restorer](#restoration) — Stations
 - [The Corruptor](#corruption) — Stations
+- [Grand Runic Canopy](#runic-canopy) — Stations
 
 - All 120 modifiers: generated in the in-game Modifiers category from the same definitions and tuning values used by gameplay. See also [the complete modifier table](PICKAXE_MODIFIERS.md).
 
@@ -374,13 +375,17 @@ Keep all previous tiers. Add a 17 by 17 Runestone perimeter centered on the anvi
 
 At a distance of 16 blocks from the anvil center in each cardinal direction, build a 3 by 3 Runestone base one layer below the outer ring. Above its center, stack six Runestone blocks, then one eligible cap block. The caps stay at the same height as the Tier 3 caps. All four side pillars are required. Connect the four bases with a hollow circular Runestone outline at the base height, 16 blocks from the center. The circle is required and is included in the guide and automatic construction. Tier 4 adds 240 Runestone and 4 caps in total.
 
-The concrete in the reference build was a marker, not a requirement. Removing a required block lowers the anvil to its highest complete tier. The workshop blocks remain normal blocks and are not consumed or removed with the anvil. Functional rune effects will come later. The guide and hold-to-build advance through all four tiers; fluids are always filled manually.
+The concrete in the reference build was a marker, not a requirement. Removing a required block lowers the anvil to its highest complete tier. The workshop blocks remain normal blocks and are not consumed or removed with the anvil. Functional rune effects will come later. The guide and hold-to-build advance through all five tiers; fluids are always filled manually.
 
 Tap Shift + right-click on the anvil to toggle the guide for its next tier. Cyan marks Runestone or rune positions, gold marks eligible cap blocks, and blue marks fluid spaces. Yellow marks occupied positions that need attention. Completed positions disappear, and the next guide appears when the tier is complete.
 
 Hold Shift + right-click to place matching blocks from your inventory one at a time. Release, stop sneaking or look away to stop. Runestone, future tagged rune blocks and eligible cap blocks are selected automatically. Wrong solid blocks and containers are preserved.
 
-Fill the fluid pools manually. Automatic construction never uses filled buckets or fluid containers. Tier 2 must have valid fluids before Tier 3 can begin. When all four tiers are complete, the guide has no further positions.
+Fill the fluid pools manually. Automatic construction never uses filled buckets or fluid containers. Tier 2 must have valid fluids before Tier 3 can begin. When Tier 5 is complete, the guide has no further positions.
+
+Complete the Tier 4 ground workshop, then build the floating canopy above the anvil. Its 25-block-wide octagonal rim surrounds an open inner diamond, with four diagonal spokes and raised amber Canopy Keystones.
+
+The main frame is 16 blocks above the anvil placement block, with its lower lip at 15 and keystones at 17. The aerial structure requires 348 Runestone and 16 Canopy Keystones. The guide and hold-to-build include every elevated position. See Grand Runic Canopy for the keystone recipe.
 
 Craft ancient anvil: grid rows BBB / .I. / III. A dot means an empty cell. B = ancient metal block; I = ancient ingot.
 
@@ -533,3 +538,19 @@ Possible outcomes include strengthening or weakening an unlocked modifier, raisi
 Only eligible outcomes are rolled. Locked modifiers cannot be selected. Quality limits, modifier limits, role pools and permanent influence rules still apply.
 
 Plan your restoration, revelation, influence and lock before corrupting. The prototype has no crafting recipe. Further sculk-related progression is planned.
+
+<a id="runic-canopy"></a>
+
+## Grand Runic Canopy
+
+The Grand Runic Canopy is Tier 5 of the Ancient Anvil. It is a floating 25-block-wide octagonal frame, with an inner diamond and four diagonal spokes. The center remains open above the anvil. The whole ground workshop through Tier 4 must remain complete.
+
+Place one Runestone in each of the four corner positions, one ancient ingot in each of the four inner cardinal positions, and glowstone dust in the center. Leave the four outer positions empty. Strike eight times with an Iron Forge Hammer or better. Collect four Canopy Keystones from the center.
+
+The canopy uses 348 Runestone and 16 Canopy Keystones. Its main plane is 16 blocks above the anvil placement block, its outer lower lip is at 15, and raised keystones are at 17. Eight nodes mark the outer rim, four the inner diamond, and four the diagonal spokes.
+
+Shift + right-click toggles the synced blueprint. Hold to place matching inventory blocks one at a time while aiming at the anvil. Raised keystone positions are amber. Solid obstructions and containers are preserved, and fluids remain manual.
+
+Breaking the canopy lowers the anvil to Tier 4 while the ground workshop remains intact. The guide highlights the missing repair. Removing the anvil leaves the canopy blocks in the world.
+
+Canopy Keystones emit light, but do not grant additional rune effects yet. Tier 6 material upgrades and functional rune abilities will be developed later.

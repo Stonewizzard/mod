@@ -147,6 +147,7 @@ public class ExampleMod {
                 output.accept(AncientAnvilContent.ANVIL_ITEM.get());
                 output.accept(AncientAnvilContent.IRON_FORGE_HAMMER.get());
                 output.accept(AncientAnvilContent.RUNESTONE_ITEM.get());
+                output.accept(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get());
                 output.accept(AncientAnvilContent.SCRAP_ITEM.get());
                 output.accept(AncientAnvilContent.INGOT.get());
                 output.accept(AncientAnvilContent.METAL_ITEM.get());
@@ -205,6 +206,7 @@ public class ExampleMod {
             modEventBus.addListener(AnvilBasinTests::register);
             modEventBus.addListener(AnvilStageTests::register);
             modEventBus.addListener(AnvilGuideTests::register);
+            modEventBus.addListener(AnvilCanopyTests::register);
             modEventBus.addListener(AnvilSidePlacementTests::register);
             modEventBus.addListener(AnvilSmithingTests::register);
             modEventBus.addListener(LargeAnvilTests::register);
@@ -289,6 +291,7 @@ public class ExampleMod {
             event.accept(AncientForgeContent.CORE_ITEM);
             event.accept(AncientAnvilContent.ANVIL_ITEM);
             event.accept(AncientAnvilContent.RUNESTONE_ITEM);
+            event.accept(AncientAnvilContent.CANOPY_KEYSTONE_ITEM);
             event.accept(AscenderContent.ITEM);
             ComponentStationContent.STATIONS.forEach(station->event.accept(station.item()));
             FieldGuideContent.finalists().forEach(event::accept);

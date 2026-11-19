@@ -19,6 +19,8 @@ public final class AncientAnvilContent {
     public static final DeferredBlock<AncientAnvilPartBlock> PART=ExampleMod.BLOCKS.registerBlock("ancient_anvil_part",AncientAnvilPartBlock::new,p->p.strength(5,1200).sound(SoundType.ANVIL).pushReaction(net.minecraft.world.level.block.Blocks.OBSIDIAN.defaultBlockState().getPistonPushReaction()).noOcclusion());
     public static final DeferredItem<BlockItem> ANVIL_ITEM=ExampleMod.ITEMS.registerSimpleBlockItem("ancient_anvil",ANVIL);
     public static final DeferredBlock<Block> RUNESTONE=ExampleMod.BLOCKS.registerBlock("runestone",Block::new,p->p.strength(3.5F,6).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE));
+    public static final DeferredBlock<Block> CANOPY_KEYSTONE=ExampleMod.BLOCKS.registerBlock("canopy_keystone",Block::new,p->p.strength(4,12).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE).lightLevel(s->12));
+    public static final DeferredItem<BlockItem> CANOPY_KEYSTONE_ITEM=ExampleMod.ITEMS.registerSimpleBlockItem("canopy_keystone",CANOPY_KEYSTONE);
     public static final DeferredItem<BlockItem> RUNESTONE_ITEM=ExampleMod.ITEMS.registerSimpleBlockItem("runestone",RUNESTONE);
     public static final DeferredItem<ForgeHammerItem> IRON_FORGE_HAMMER=ExampleMod.ITEMS.registerItem("iron_forge_hammer",p->new ForgeHammerItem(p,1,1),p->p.stacksTo(1).durability(250).repairable(Items.IRON_INGOT));
     public static final java.util.Map<AncientAnvilDesign,DeferredItem<AncientAnvilDesignItem>> SAMPLES=new java.util.EnumMap<>(AncientAnvilDesign.class);

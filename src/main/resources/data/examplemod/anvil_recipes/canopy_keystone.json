@@ -1,0 +1,38 @@
+{
+  "anvil_tier": 4,
+  "hammer_tier": 1,
+  "work": 8,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "north_inner": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "east_inner": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "south_inner": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "west_inner": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "center": {
+      "item": "minecraft:glowstone_dust"
+    }
+  },
+  "result": {
+    "id": "examplemod:canopy_keystone",
+    "count": 4
+  }
+}

@@ -20,7 +20,7 @@ public final class AnvilStageTests {
         @Override protected MutableComponent typeDescription(){return Component.literal("Anvil tiers 3/4, symmetric pillars, materials, downgrade and preservation");}
         @Override public void run(GameTestHelper h){
             var l=h.getLevel();var core=h.absolutePos(new BlockPos(20,6,20));
-            check(h,AnvilStages.all().size()==2,"Both datapack workshop stages load");
+            check(h,AnvilStages.all().size()==3,"All three datapack workshop stages load");
             var t3=AnvilStages.all().get(0);var t4=AnvilStages.all().get(1);
             check(h,t3.tier()==3&&t3.blocks().size()==88&&t4.tier()==4&&t4.blocks().size()==244,"Reference counts: 72+16 and 240+4");
             var offsets=t4.blocks().stream().map(AnvilStages.Requirement::offset).collect(java.util.stream.Collectors.toSet());
@@ -74,7 +74,7 @@ public final class AnvilStageTests {
             System.out.println("ANVIL_STAGES_CHECK: PASS: all facings, additive tiers, all four outer pillars, interchangeable caps, fluid/base prerequisites, live downgrade/repair, container and structure preservation");h.succeed();
         }
     }
-    public static void fill(net.minecraft.server.level.ServerLevel l,BlockPos core,Direction facing,AnvilStages.Stage stage){for(var req:stage.blocks())l.setBlock(req.at(core,facing),(req.tag().equals(AnvilStages.CAPS)?Blocks.IRON_BLOCK:AncientAnvilContent.RUNESTONE.get()).defaultBlockState(),3);}
+    public static void fill(net.minecraft.server.level.ServerLevel l,BlockPos core,Direction facing,AnvilStages.Stage stage){for(var req:stage.blocks())l.setBlock(req.at(core,facing),(req.tag().equals(AnvilStages.KEYSTONES)?AncientAnvilContent.CANOPY_KEYSTONE.get():req.tag().equals(AnvilStages.CAPS)?Blocks.IRON_BLOCK:AncientAnvilContent.RUNESTONE.get()).defaultBlockState(),3);}
     private static void refresh(net.minecraft.server.level.ServerLevel l,BlockPos p){AncientAnvilBlockEntity.refresh(l,p,l.getBlockState(p));}
     private static void tier(GameTestHelper h,Level l,BlockPos p,int expected,String message){check(h,l.getBlockState(p).getValue(AncientAnvilBlock.TIER)==expected,message);}
     private static void check(GameTestHelper h,boolean ok,String message){if(!ok)throw h.assertionException(message);}

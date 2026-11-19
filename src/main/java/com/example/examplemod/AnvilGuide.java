@@ -9,7 +9,7 @@ import net.minecraft.world.level.material.Fluid;
 
 /** The next additive tier, shared by rendering and authoritative inventory construction. */
 public final class AnvilGuide {
-    public enum Kind { BLOCK, CAP, FLUID }
+    public enum Kind { BLOCK, CAP, KEYSTONE, FLUID }
     public record Target(BlockPos at,TagKey<Block> tag,Kind kind,Fluid fluid){
         public boolean matches(Level level){
             if(!level.hasChunkAt(at))return false;
@@ -35,9 +35,9 @@ public final class AnvilGuide {
                 for(var p:AnvilBasins.pool(core,front,side))if(level.hasChunkAt(p)&&!level.getFluidState(p).isEmpty()){fluid=AnvilBasins.canonical(level.getFluidState(p).getType());break;}
                 for(var p:AnvilBasins.pool(core,front,side))targets.add(new Target(p,null,Kind.FLUID,fluid));
             }
-        }else if(next<=4){
+        }else if(next<=5){
             var stages=level.isClientSide()?clientStages:AnvilStages.all();
-            for(var stage:stages)if(stage.tier()==next)for(var req:stage.blocks())targets.add(new Target(req.at(core,front),req.tag(),req.tag().equals(AnvilStages.CAPS)?Kind.CAP:Kind.BLOCK,null));
+            for(var stage:stages)if(stage.tier()==next)for(var req:stage.blocks())targets.add(new Target(req.at(core,front),req.tag(),req.tag().equals(AnvilStages.KEYSTONES)?Kind.KEYSTONE:req.tag().equals(AnvilStages.CAPS)?Kind.CAP:Kind.BLOCK,null));
             targets.sort(Comparator.comparingInt(t->t.at().getY())); // Build pillars from their bases upward.
         }
         return new Plan(next,List.copyOf(targets));

@@ -26,7 +26,7 @@
   "item.examplemod.magnifying_glass": "Magnifying Glass",
   "gui.examplemod.artifact": "Artifact",
   "gui.examplemod.field_kit": "Field Kit",
-  "gui.examplemod.table_slot.0": "Artifact — Sniffer or Cruncher finds",
+  "gui.examplemod.table_slot.0": "Artifact \u2014 Sniffer or Cruncher finds",
   "gui.examplemod.table_slot.1": "Archaeology Drill",
   "gui.examplemod.table_slot.2": "Brush",
   "gui.examplemod.table_slot.3": "Archaeology Hammer",
@@ -112,9 +112,9 @@
   "item.examplemod.ancient_field_guide": "Workshop Manual",
   "block.examplemod.ruined_ancient_forge": "Ruined Ancient Forge",
   "block.examplemod.ruined_forge_bricks": "Ruined Forge Bricks",
-  "forge.examplemod.ready": "Ruined Ancient Forge — tier I ready",
+  "forge.examplemod.ready": "Ruined Ancient Forge \u2014 tier I ready",
   "forge.examplemod.incomplete": "Forge %s/%s: repair %s. Click empty-handed for the layout.",
-  "forge.examplemod.section.foundation": "3 × 3 foundation",
+  "forge.examplemod.section.foundation": "3 \u00d7 3 foundation",
   "forge.examplemod.section.pillars": "side pillars",
   "forge.examplemod.section.back": "rear wall",
   "forge.examplemod.section.chimney": "chimney",
@@ -144,5 +144,6 @@
   "item.examplemod.ancient_anvil_columns": "Ancient Anvil C: Runic Columns",
   "item.examplemod.iron_forge_hammer": "Iron Forge Hammer",
   "block.examplemod.runestone": "Runestone",
-  "anvil.examplemod.hint": "Place 25 Runestone blocks one layer below."
+  "anvil.examplemod.hint": "Place 25 Runestone blocks one layer below.",
+  "block.examplemod.canopy_keystone": "Canopy Keystone"
 }

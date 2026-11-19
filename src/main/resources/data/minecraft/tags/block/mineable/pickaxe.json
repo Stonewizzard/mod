@@ -15,6 +15,7 @@
     "examplemod:ancient_anvil",
     "examplemod:ancient_metal_block",
     "examplemod:ancient_anvil_part",
-    "examplemod:runestone"
+    "examplemod:runestone",
+    "examplemod:canopy_keystone"
   ]
 }

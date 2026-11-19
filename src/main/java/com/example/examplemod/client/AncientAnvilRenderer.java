@@ -58,8 +58,8 @@ public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAn
     }
     @Override public void submit(State s,PoseStack p,SubmitNodeCollector c,CameraRenderState camera){
         for(var cell:s.cells){
-            var material=switch(cell.kind()){case CAP->Identifier.withDefaultNamespace("textures/block/gold_block.png");case FLUID->Identifier.withDefaultNamespace("textures/block/blue_stained_glass.png");default->MATERIAL;};
-            int color=cell.occupied()?0xFFFFD438:switch(cell.kind()){case CAP->0xFFFFC65C;case FLUID->0xFF649EFF;default->0xFF3CCFDF;};
+            var material=switch(cell.kind()){case KEYSTONE->Identifier.fromNamespaceAndPath(ExampleMod.MODID,"textures/block/canopy_keystone.png");case CAP->Identifier.withDefaultNamespace("textures/block/gold_block.png");case FLUID->Identifier.withDefaultNamespace("textures/block/blue_stained_glass.png");default->MATERIAL;};
+            int color=cell.occupied()?0xFFFFD438:switch(cell.kind()){case KEYSTONE->0xFFFF9B18;case CAP->0xFFFFC65C;case FLUID->0xFF649EFF;default->0xFF3CCFDF;};
             p.pushPose();p.translate(cell.x(),cell.y(),cell.z());c.order(1).submitModel(cube,new LivingEntityRenderState(),p,RenderTypes.entityTranslucent(material),15728880,OverlayTexture.NO_OVERLAY,(color&0xFFFFFF)|(cell.occupied()?0xA0000000:0x66000000),null,0);c.submitShapeOutline(p,net.minecraft.world.phys.shapes.Shapes.box(0,0,0,1,1,1),RenderTypes.lines(),color,2f,false);p.popPose();
         }
         for(var piece:s.pieces){
