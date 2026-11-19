@@ -136,6 +136,22 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='anvil-canopy':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('canopy_fixture')
+        expect(anvilTier=4,guideTier=5,guideMissing=364,smithRunes=348,guideKeystones=16,guideBuckets=2)
+        command('anvil_auto_close');process('xdotool','key','1');time.sleep(.3);toggle_anvil_guide();expect(anvilGuide=True)
+        command('canopy_overview');capture('ancient-anvil-tier5-guide')
+        command('anvil_auto_close');process('xdotool','keydown','Shift_L');wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'ready to build canopy');process('xdotool','mousedown','3');time.sleep(1.5);process('xdotool','mouseup','3','keyup','Shift_L')
+        wait_for(lambda s:0<s.get('guideMissing',0)<364,'sequential aerial construction');time.sleep(.4);partial=observe()['guideMissing'];time.sleep(.7);expect(guideMissing=partial)
+        process('xdotool','keydown','Shift_L');wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'ready to finish canopy');process('xdotool','mousedown','3')
+        wait_for(lambda s:s.get('anvilTier')==5,'native inventory construction completes the aerial canopy',timeout=220)
+        process('xdotool','mouseup','3','keyup','Shift_L');expect(smithRunes=0,guideKeystones=0,guideBuckets=2,guideMissing=0,smithHammerDamage=0)
+        toggle_anvil_guide();expect(anvilGuide=False);command('canopy_overview');capture('ancient-anvil-tier5-canopy-top')
+        command('canopy_oblique');capture('ancient-anvil-tier5-canopy-side')
+        command('canopy_night');time.sleep(.8);capture('ancient-anvil-tier5-canopy-night')
+        command('canopy_break_node');expect(anvilTier=4,guideTier=5,guideMissing=1)
+        print('ANVIL_CANOPY_NATIVE_PASS: synced aerial guide, native survival inventory construction, exact 348 Runestone/16 keystones, release stops, filled buckets untouched, daylight/night captures and broken-keystone downgrade',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-canopy'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-all-guides':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_tier2_fixture');command('anvil_auto_fixture');expect(anvilTier=1,guideTier=2,guideMissing=60,smithRunes=339,guideCaps=20,guideBuckets=2)
         command('anvil_auto_close');process('xdotool','key','1');time.sleep(.3);toggle_anvil_guide();expect(anvilGuide=True)
@@ -153,7 +169,7 @@ def run():
         command('anvil_auto_overview');capture('ancient-anvil-tier4-guide')
         command('anvil_auto_close');process('xdotool','keydown','Shift_L');wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'ready to hold-build');process('xdotool','mousedown','3')
         wait_for(lambda s:s.get('anvilTier')==4,'native hold builds the rings and four outer pillars',timeout=150)
-        process('xdotool','mouseup','3','keyup','Shift_L');expect(smithRunes=0,guideCaps=0,guideBuckets=2,guideMissing=0,smithHammerDamage=0)
+        process('xdotool','mouseup','3','keyup','Shift_L');expect(smithRunes=0,guideCaps=0,guideBuckets=2,guideTier=5,guideMissing=364,smithHammerDamage=0)
         toggle_anvil_guide();expect(anvilGuide=False);command('anvil_auto_overview');capture('ancient-anvil-auto-tier4-complete');command('anvil_lowered_height_view');capture('ancient-anvil-lowered-ring-and-bases')
         print('ANVIL_ALL_GUIDES_NATIVE_PASS: Tier 2 frame and manual fluids, synced Tier 3/4 ghosts, sequential inventory construction, release stops, exact costs and untouched filled buckets',flush=True)
         (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-all-guides'},indent=2));return

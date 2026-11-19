@@ -66,7 +66,7 @@ public final class AnvilRecipes extends SimplePreparableReloadListener<List<Anvi
             int count=output.has("count")?output.get("count").getAsInt():1;
             if(item==null||item==Items.AIR||count<1||count>64)throw new IllegalArgumentException("Invalid anvil result");
             int tier=number(json,"anvil_tier",0),hammer=number(json,"hammer_tier",1),work=number(json,"work",4);
-            if(tier<0||tier>4||hammer<1||work<1||work>10000)throw new IllegalArgumentException("Invalid work/tier requirements");
+            if(tier<0||tier>5||hammer<1||work<1||work>10000)throw new IllegalArgumentException("Invalid work/tier requirements");
             var fluids=readFluids(json);
             result.add(new Recipe(id,fluids.isEmpty()?tier:Math.max(2,tier),hammer,work,Map.copyOf(inputs),item,count,fluids));
         }catch(Exception failure){ExampleMod.LOGGER.error("Cannot load anvil recipe {}",entry.getKey(),failure);}

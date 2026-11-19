@@ -52,7 +52,7 @@ public final class AnvilFoundation {
             }
             return placed; // Never place more than one block, including when a mod cancels a placement.
         }
-        AnvilWork.message(player,!needsBlocks?"Fill the highlighted fluid pools manually":!hasMaterials?"Add Runestone or eligible cap blocks to your inventory":"Clear the highlighted solid blocks, or add the missing blocks");return false;
+        AnvilWork.message(player,!needsBlocks?"Fill the highlighted fluid pools manually":!hasMaterials?"Add the required Runestone, caps or keystones to your inventory":"Clear the highlighted solid blocks, or add the missing blocks");return false;
     }
     private AnvilFoundation(){}
 }
