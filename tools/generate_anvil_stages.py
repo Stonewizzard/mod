@@ -47,27 +47,35 @@ for dx,dz in ((1,0),(-1,0),(0,1),(0,-1)):
 stone=sorted(set(stone)|{(x,SIDE_BASE_Y,z) for x,z in circle_outline(OUTER_CIRCLE_RADIUS)})
 write(4,stone,caps)
 
-# D: Grand Runic Canopy. The open roof floats above the anvil; it has no support posts.
+# D: Grand Runic Canopy. A single flat layer, with narrow paths and no node pads.
+# Diagonals use a one-cell staircase so the floating frame stays face-connected.
 CANOPY_Y=16
 CANOPY_RADIUS=12
 CANOPY_DIAGONAL=17
-outer={(x,z) for x in range(-12,13) for z in range(-12,13)
-       if max(abs(x),abs(z))<=12 and abs(x)+abs(z)<=17}
-inside={(x,z) for x in range(-10,11) for z in range(-10,11) if abs(x)+abs(z)<=14}
-rim=outer-inside
-diamond={(x,z) for x in range(-4,5) for z in range(-4,5) if 3<=abs(x)+abs(z)<=4}
-spokes={(x,z) for x in range(-9,10) for z in range(-9,10)
-        if min(abs(x),abs(z))>=2 and abs(abs(x)-abs(z))<=1 and abs(x)+abs(z)<=17}
-outer_nodes={(sx*a,sz*b) for sx in (-1,1) for sz in (-1,1) for a,b in ((5,11),(11,5))}
-inner_nodes={(0,-4),(4,0),(0,4),(-4,0)}
+outer={(x,z) for x in range(-CANOPY_RADIUS,CANOPY_RADIUS+1)
+       for z in range(-CANOPY_RADIUS,CANOPY_RADIUS+1)
+       if abs(x)+abs(z)<=CANOPY_DIAGONAL}
+rim={(x,z) for x,z in outer if max(abs(x),abs(z))==CANOPY_RADIUS
+     or abs(x)+abs(z)>=CANOPY_DIAGONAL-1}
+diamond={(x,z) for x in range(-5,6) for z in range(-5,6)
+         if 4<=abs(x)+abs(z)<=5}
+spokes=set()
+for distance in range(3,9):
+    for x,z in ((distance,distance),(distance,distance+1)):
+        for quarter_turn in range(4):
+            spokes.add((x,z))
+            x,z=-z,x
+outer_nodes={(sx*a,sz*b) for sx in (-1,1) for sz in (-1,1)
+             for a,b in ((5,12),(12,5))}
+inner_nodes={(0,-5),(5,0),(0,5),(-5,0)}
 spoke_nodes={(sx*5,sz*5) for sx in (-1,1) for sz in (-1,1)}
 nodes=outer_nodes|inner_nodes|spoke_nodes
-pads={(x+dx,z+dz) for x,z in outer_nodes|inner_nodes for dx in (-1,0,1) for dz in (-1,0,1)}
-face=rim|diamond|spokes|pads
-lip={(x,z) for x,z in rim if any((x+dx,z+dz) not in outer for dx,dz in ((1,0),(-1,0),(0,1),(0,-1)))}
-stone=sorted({(x,CANOPY_Y,z) for x,z in face}|{(x,CANOPY_Y-1,z) for x,z in lip})
-keystones=sorted((x,CANOPY_Y+1,z) for x,z in nodes)
-assert not set(stone)&set(keystones)
+face=rim|diamond|spokes
+assert nodes<=face
+# Keystones replace frame cells rather than sitting on extra pads/layers.
+stone=sorted((x,CANOPY_Y,z) for x,z in face-nodes)
+keystones=sorted((x,CANOPY_Y,z) for x,z in nodes)
+assert len(stone)==156 and len(keystones)==16
 (OUT/'tier_5.json').write_text(json.dumps({'tier':5,'groups':[
     {'tag':'examplemod:ancient_anvil_runes','positions':stone},
     {'tag':'examplemod:ancient_anvil_keystones','positions':keystones}
