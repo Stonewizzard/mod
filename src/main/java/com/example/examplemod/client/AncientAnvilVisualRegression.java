@@ -66,7 +66,7 @@ public final class AncientAnvilVisualRegression {
         }
         if(luminous<20)throw new IllegalStateException("Missing inset rune emission");
         }
-        if(json(r,"blockstates/ancient_anvil_part.json").getAsJsonObject("variants").size()!=1984||json(r,"blockstates/ancient_anvil.json").getAsJsonObject("variants").size()!=768)throw new IllegalStateException("Missing legacy/current anvil variants");
+        if(json(r,"blockstates/ancient_anvil_part.json").getAsJsonObject("variants").size()!=1984||json(r,"blockstates/ancient_anvil.json").getAsJsonObject("variants").size()!=896)throw new IllegalStateException("Missing legacy/current anvil variants");
         for(int cell=0;cell<6;cell++)if(json(r,"models/block/legacy_ancient_anvil_cell_"+cell+".json").getAsJsonArray("elements").isEmpty())throw new IllegalStateException("Missing saved-world compatibility model");
         for(var design:AncientAnvilDesign.values())for(var facing:net.minecraft.core.Direction.Plane.HORIZONTAL){
             int[] diagonal={0};var outline=AncientAnvilOutline.shape(design,facing);

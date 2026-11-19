@@ -21,13 +21,13 @@ public final class AnvilStages extends SimplePreparableReloadListener<List<Anvil
         public boolean matches(Level level,BlockPos core,Direction front){var at=at(core,front);return level.hasChunkAt(at)&&level.getWorldBorder().isWithinBounds(at)&&level.getBlockState(at).is(tag);}
     }
     public record Stage(int tier,List<Requirement> blocks){
-        public boolean complete(Level level,BlockPos core,Direction front){return blocks.stream().allMatch(r->r.matches(level,core,front));}
+        public boolean complete(Level level,BlockPos core,Direction front){return blocks.stream().allMatch(r->r.matches(level,core,front)||AnvilTierSix.upgradedCap(level,core,front,tier,r));}
     }
     private static volatile List<Stage> stages=List.of();
     public static List<Stage> all(){return stages;}
     public static int tier(Level level,BlockPos core,Direction front,int baseTier){
         int tier=baseTier;
-        for(var stage:stages){if(stage.tier()!=tier+1||!stage.complete(level,core,front))break;tier=stage.tier();}
+        for(var stage:stages){if(stage.tier()!=tier+1||(!stage.complete(level,core,front)||stage.tier()==6&&!AnvilTierSix.inspect(level,core,front,stages).complete()))break;tier=stage.tier();}
         return tier;
     }
     public static void register(AddServerReloadListenersEvent event){event.addListener(Identifier.fromNamespaceAndPath(ExampleMod.MODID,"anvil_stages"),new AnvilStages());}
@@ -37,7 +37,7 @@ public final class AnvilStages extends SimplePreparableReloadListener<List<Anvil
         files.putAll(manager.listResources("anvil_stages",id->id.getPath().endsWith(".json")));
         for(var entry:files.entrySet())try(var reader=entry.getValue().openAsReader()){
             var json=JsonParser.parseReader(reader).getAsJsonObject();if(json.has("enabled")&&!json.get("enabled").getAsBoolean())continue;
-            int tier=json.get("tier").getAsInt();if(tier<3||tier>5)throw new IllegalArgumentException("Only workshop stages 3 through 5 are supported");
+            int tier=json.get("tier").getAsInt();if(tier<3||tier>6)throw new IllegalArgumentException("Only workshop stages 3 through 6 are supported");
             var blocks=new ArrayList<Requirement>();var used=new HashSet<BlockPos>();
             for(var group:json.getAsJsonArray("groups")){
                 var g=group.getAsJsonObject();var tag=TagKey.create(Registries.BLOCK,Identifier.parse(g.get("tag").getAsString()));

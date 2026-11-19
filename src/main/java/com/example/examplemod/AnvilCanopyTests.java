@@ -53,7 +53,7 @@ public final class AnvilCanopyTests {
             player.getInventory().setItem(8,new ItemStack(Items.WATER_BUCKET));player.getInventory().setItem(9,new ItemStack(Items.LAVA_BUCKET));
             check(h,AnvilGuide.next(l,core).tier()==5&&AnvilGuide.next(l,core).missing(l).size()==172,"Canopy guide targets only the new aerial tier");
             for(int i=0;i<172;i++){be.lastFoundationPlacement=l.getGameTime()-AnvilFoundation.INTERVAL;check(h,AnvilFoundation.placeNext(player,core),"Native inventory placement builds canopy block "+i);}
-            tier(h,l,core,5,"Inventory building reaches Tier 5");check(h,AnvilGuide.next(l,core).targets().isEmpty(),"Tier 5 is the current maximum, with no Tier 6 preview");
+            tier(h,l,core,5,"Inventory building reaches Tier 5");check(h,AnvilGuide.next(l,core).tier()==6&&AnvilGuide.next(l,core).targets().size()==49,"Tier 5 previews the 45 Tier 6 blocks and four manual crystals");
             check(h,player.getInventory().countItem(AncientAnvilContent.RUNESTONE_ITEM.get())==0&&player.getInventory().countItem(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get())==0,"Native aerial construction charges exactly 156 Runestone and 16 keystones");
             check(h,be.inputCount()==1&&hammer.getDamageValue()==damage&&player.getInventory().getItem(8).is(Items.WATER_BUCKET)&&player.getInventory().getItem(9).is(Items.LAVA_BUCKET),"Aerial construction preserves workpieces, tools and filled buckets");
             var node=stage.blocks().stream().filter(r->r.tag().equals(AnvilStages.KEYSTONES)).findFirst().orElseThrow();var at=node.at(core,Direction.NORTH);

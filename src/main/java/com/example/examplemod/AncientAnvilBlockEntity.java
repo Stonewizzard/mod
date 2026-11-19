@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public final class AncientAnvilBlockEntity extends BlockEntity {
     private NonNullList<ItemStack> items=NonNullList.withSize(AnvilSlot.values().length+1,ItemStack.EMPTY);
+    public long energyUntil,energyStarted;public int energyColor=0xffffff;
     int work;String workRecipe="";long lastStrike=-100,lastFoundationPlacement=-100;
     public AncientAnvilBlockEntity(BlockPos p,BlockState s){super(AncientAnvilContent.ENTITY.get(),p,s);}
     public ItemStack input(AnvilSlot slot){return items.get(slot.ordinal());}
@@ -30,8 +31,8 @@ public final class AncientAnvilBlockEntity extends BlockEntity {
         items.set(AnvilSlot.values().length,recipe.result().copy());work=0;workRecipe="";sync();
     }
     public void sync(){setChanged();if(level instanceof ServerLevel)level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),2);}
-    @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);items=NonNullList.withSize(AnvilSlot.values().length+1,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);work=Math.max(0,input.read("ForgeWork",com.mojang.serialization.Codec.INT).orElse(0));workRecipe=input.read("ForgeRecipe",com.mojang.serialization.Codec.STRING).orElse("");lastStrike=-100;}
-    @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);ContainerHelper.saveAllItems(output,items);output.putInt("ForgeWork",work);output.putString("ForgeRecipe",workRecipe);}
+    @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);items=NonNullList.withSize(AnvilSlot.values().length+1,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);work=Math.max(0,input.read("ForgeWork",com.mojang.serialization.Codec.INT).orElse(0));workRecipe=input.read("ForgeRecipe",com.mojang.serialization.Codec.STRING).orElse("");lastStrike=-100;energyStarted=input.read("AnvilEnergyStarted",com.mojang.serialization.Codec.LONG).orElse(0L);energyUntil=input.read("AnvilEnergyUntil",com.mojang.serialization.Codec.LONG).orElse(0L);energyColor=input.read("AnvilEnergyColor",com.mojang.serialization.Codec.INT).orElse(0xffffff);}
+    @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);ContainerHelper.saveAllItems(output,items);output.putInt("ForgeWork",work);output.putString("ForgeRecipe",workRecipe);output.putLong("AnvilEnergyUntil",energyUntil);output.putLong("AnvilEnergyStarted",energyStarted);output.putInt("AnvilEnergyColor",energyColor);}
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries){return saveCustomOnly(registries);}
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket(){return ClientboundBlockEntityDataPacket.create(this);}
     @Override public void preRemoveSideEffects(BlockPos pos,BlockState state){

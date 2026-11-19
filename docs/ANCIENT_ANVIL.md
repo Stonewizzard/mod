@@ -232,8 +232,7 @@ reload, so dedicated-server guides use the same layout as authoritative construc
 
 ## Tier 5: Grand Runic Canopy (concept D)
 
-Tier 5 adds the floating canopy; it still requires every prior tier. Tier 6 is not
-implemented. The existing ground layout and block heights are unchanged.
+Tier 5 adds the floating canopy; it still requires every prior tier. Tier 6 is described in [ANCIENT_ANVIL_TIER6.md](ANCIENT_ANVIL_TIER6.md). The existing ground layout and block heights are unchanged.
 
 - Main octagonal rim: 25-block span, with one-block-wide paths at y=16 relative to the anvil core. Diagonals follow a connected one-cell staircase.
 - Open inner diamond and four narrow diagonal spokes: the same y=16 layer.
@@ -259,3 +258,8 @@ mark keystones amber. Inventory construction uses ordinary native block placemen
 the elevated targets; it never consumes fluids or overwrites containers/solids.
 Missing aerial blocks downgrade to the highest complete lower tier and become
 repair targets. Blocks remain in place if the anvil is removed.
+
+
+## Tier 6: Ancient Convergence
+
+See [the Tier 6 reference](ANCIENT_ANVIL_TIER6.md) for energized tower caps, normal End Crystals, the uniform glass lens, guide behavior and harmless colored forging beams.

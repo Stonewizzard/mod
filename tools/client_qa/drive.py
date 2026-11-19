@@ -136,6 +136,30 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='anvil-tier6':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('tier6_fixture');expect(anvilTier=5,guideTier=6,guideMissing=49,tier6CrystalItems=4)
+        command('anvil_auto_close');process('xdotool','key','1');time.sleep(.3);toggle_anvil_guide();expect(anvilGuide=True)
+        command('tier6_view');capture('ancient-anvil-tier6-upgrade-guide')
+        command('tier6_clear_caps');expect(guideTier=6,guideMissing=49);command('anvil_auto_close')
+        process('xdotool','keydown','Shift_L');wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'Tier6 inventory build ready');process('xdotool','mousedown','3')
+        wait_for(lambda s:s.get('guideMissing')==4,'Tier6 block inventory construction complete',timeout=90);process('xdotool','mouseup','3','keyup','Shift_L')
+        expect(anvilTier=5,tier6CapItems=0,tier6ObsidianItems=0,tier6GlassItems=0,tier6CrystalItems=4,tier6Crystals=0)
+        toggle_anvil_guide();expect(anvilGuide=False)
+        for index in range(4):
+            command('tier6_crystal_view',index=index);process('xdotool','key','4');expect(aimedAtCrystalCap=True);time.sleep(.4);process('xdotool','click','3');expect(tier6Crystals=index+1,tier6CrystalItems=3-index)
+        expect(anvilTier=6,energyBeams=24);command('tier6_view');process('xdotool','key','F1');capture('ancient-anvil-tier6-network-blue');process('xdotool','key','F1')
+        native_chat_command('time set midnight');process('xdotool','key','F1');capture('ancient-anvil-tier6-network-night');process('xdotool','key','F1');native_chat_command('time set day')
+        for color in ('blue','red'):
+            if color=='red':command('tier6_lens_red');expect(anvilTier=6,tier6Color=0xb02e26)
+            command('tier6_recipe');command('anvil_auto_close');process('xdotool','key','1');time.sleep(.4)
+            for n in range(1,5):
+                process('xdotool','click','3');expect(smithWork=n if n<4 else 0);time.sleep(.42 if n<4 else .05)
+            expect(smithOutput=True,energyActive=True,energyColor=0x3ab3da if color=='blue' else 0xb02e26)
+            command('tier6_blast_view');process('xdotool','key','F1');capture('ancient-anvil-tier6-blast-'+color);process('xdotool','key','F1')
+        command('tier6_lens_mixed');expect(anvilTier=5,guideTier=6,guideMissing=1,energyBeams=0);capture('ancient-anvil-tier6-mixed-lens')
+        command('tier6_lens_red');expect(anvilTier=6);command('tier6_break_crystal');expect(anvilTier=5,tier6Crystals=3,energyBeams=0)
+        print('ANVIL_TIER6_NATIVE_PASS: exact 16/4/25 block inventory construction, four manually placed vanilla End Crystals, 24 network beams, native hammer craft/color pulses, mixed-glass and missing-crystal downgrade, blue/red/night captures',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-tier6'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='ancient-crystal':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('crystal_fixture');command('forge_view',close=True);expect(aimedAtForge=True)
         process('xdotool','key','2');time.sleep(.3);process('xdotool','click','3');expect(alloyGold=1)
@@ -169,7 +193,7 @@ def run():
         wait_for(lambda s:0<s.get('guideMissing',0)<172,'sequential aerial construction');time.sleep(.4);partial=observe()['guideMissing'];time.sleep(.7);expect(guideMissing=partial)
         process('xdotool','keydown','Shift_L');wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'ready to finish canopy');process('xdotool','mousedown','3')
         wait_for(lambda s:s.get('anvilTier')==5,'native inventory construction completes the aerial canopy',timeout=220)
-        process('xdotool','mouseup','3','keyup','Shift_L');expect(smithRunes=0,guideKeystones=0,guideBuckets=2,guideMissing=0,smithHammerDamage=0)
+        process('xdotool','mouseup','3','keyup','Shift_L');expect(smithRunes=0,guideKeystones=0,guideBuckets=2,guideMissing=49,smithHammerDamage=0)
         toggle_anvil_guide();expect(anvilGuide=False);command('canopy_overview');capture('ancient-anvil-tier5-canopy-top')
         command('canopy_oblique');capture('ancient-anvil-tier5-canopy-side')
         command('canopy_night');time.sleep(.8);capture('ancient-anvil-tier5-canopy-night')

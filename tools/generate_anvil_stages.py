@@ -1,4 +1,4 @@
-"""Editable measurements of the player's Tier 3/4 workshop. No artwork is generated."""
+"""Editable workshop stages and the plain tintable beam material."""
 from pathlib import Path
 import json
 ROOT=Path(__file__).resolve().parents[1]
@@ -81,3 +81,19 @@ assert len(stone)==156 and len(keystones)==16
     {'tag':'examplemod:ancient_anvil_keystones','positions':keystones}
 ]},indent=2)+'\n')
 print(f'Tier 5: {len(stone)} Runestone, {len(keystones)} Canopy Keystones')
+
+# Tier 6 replaces existing caps, and fills the open diamond at the canopy plane.
+energized=[(sx*x,3,sz*z) for sx in (-1,1) for sz in (-1,1) for x in (6,7) for z in (6,7)]
+obsidian=[(dx*SIDE_PILLAR_DISTANCE,CAP_Y,dz*SIDE_PILLAR_DISTANCE) for dx,dz in ((1,0),(-1,0),(0,1),(0,-1))]
+glass=[(x,CANOPY_Y,z) for x in range(-3,4) for z in range(-3,4) if abs(x)+abs(z)<4]
+(OUT/'tier_6.json').write_text(json.dumps({'tier':6,'groups':[
+    {'tag':'examplemod:anvil_energized_caps','positions':sorted(energized)},
+    {'tag':'examplemod:anvil_obsidian_caps','positions':sorted(obsidian)},
+    {'tag':'examplemod:anvil_lens_glass','positions':sorted(glass)}]},indent=2)+'\n')
+print(f'Tier 6: {len(energized)} energized caps, {len(obsidian)} obsidian caps, {len(glass)} glass; four player-placed End Crystals')
+
+# Plain opaque white material; the client supplies animated beam colors and transparency.
+from PIL import Image
+material=ROOT/'src/main/resources/assets/examplemod/textures/effect/anvil_energy.png'
+material.parent.mkdir(parents=True,exist_ok=True)
+Image.new('RGBA',(4,4),(255,255,255,255)).save(material)

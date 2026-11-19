@@ -25,7 +25,7 @@ public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAn
     private static final Identifier MATERIAL=Identifier.withDefaultNamespace("textures/block/polished_deepslate.png");
     public record Cell(int x,int y,int z,boolean occupied,AnvilGuide.Kind kind){}
     public record Workpiece(ItemStackRenderState item,Vec3 at,boolean block,boolean output){}
-    public static final class State extends BlockEntityRenderState {public List<Cell> cells=List.of();public List<Workpiece> pieces=List.of();public float turn;}
+    public static final class State extends BlockEntityRenderState {public List<Cell> cells=List.of();public List<Workpiece> pieces=List.of();public float turn,time;public List<AnvilEnergyRenderer.Beam> beams=List.of();}
     public AncientAnvilRenderer(BlockEntityRendererProvider.Context c){resolver=c.itemModelResolver();}
     @Override public State createRenderState(){return new State();}
     @Override public AABB getRenderBoundingBox(AncientAnvilBlockEntity be){
@@ -34,10 +34,12 @@ public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAn
         for(var at:AncientAnvilStructure.foundation(core,facing)){minX=Math.min(minX,at.getX());minZ=Math.min(minZ,at.getZ());maxX=Math.max(maxX,at.getX()+1);maxZ=Math.max(maxZ,at.getZ()+1);}
         int minY=core.getY()-1,maxY=core.getY()+3;
         if(be.getLevel()!=null)for(var target:AnvilGuide.next(be.getLevel(),core).targets()){var at=target.at();minX=Math.min(minX,at.getX());minZ=Math.min(minZ,at.getZ());maxX=Math.max(maxX,at.getX()+1);maxZ=Math.max(maxZ,at.getZ()+1);minY=Math.min(minY,at.getY());maxY=Math.max(maxY,at.getY()+1);}
+        if(be.getBlockState().getValue(AncientAnvilBlock.TIER)>=5){minX=Math.min(minX,core.getX()-18);minZ=Math.min(minZ,core.getZ()-18);maxX=Math.max(maxX,core.getX()+19);maxZ=Math.max(maxZ,core.getZ()+19);minY=Math.min(minY,core.getY()-5);maxY=Math.max(maxY,core.getY()+50);}
         return new AABB(minX,minY,minZ,maxX,maxY,maxZ);
     }
     @Override public void extractRenderState(AncientAnvilBlockEntity be,State s,float partial,Vec3 camera,ModelFeatureRenderer.CrumblingOverlay breaking){
-        BlockEntityRenderer.super.extractRenderState(be,s,partial,camera,breaking);s.cells=List.of();s.pieces=List.of();var level=be.getLevel();if(level==null)return;
+        BlockEntityRenderer.super.extractRenderState(be,s,partial,camera,breaking);s.cells=List.of();s.pieces=List.of();s.beams=List.of();var level=be.getLevel();if(level==null)return;
+        s.time=level.getGameTime()+partial;s.beams=AnvilEnergyRenderer.extract(be,partial);
         var core=be.getBlockPos();var state=be.getBlockState();var facing=state.getValue(AncientAnvilBlock.FACING);boolean expanded=state.getValue(AncientAnvilBlock.EXPANDED);
         s.turn=switch(facing){case EAST->-90;case SOUTH->-180;case WEST->-270;default->0;};
         if(AncientAnvilPreview.active(level,core)){
@@ -56,10 +58,12 @@ public final class AncientAnvilRenderer implements BlockEntityRenderer<AncientAn
             s.pieces=List.copyOf(pieces);
         }
     }
+    @Override public int getViewDistance(){return 128;}
     @Override public void submit(State s,PoseStack p,SubmitNodeCollector c,CameraRenderState camera){
+        AnvilEnergyRenderer.submit(s.beams,s.time,p,c);
         for(var cell:s.cells){
-            var material=switch(cell.kind()){case KEYSTONE->Identifier.fromNamespaceAndPath(ExampleMod.MODID,"textures/block/canopy_keystone.png");case CAP->Identifier.withDefaultNamespace("textures/block/gold_block.png");case FLUID->Identifier.withDefaultNamespace("textures/block/blue_stained_glass.png");default->MATERIAL;};
-            int color=cell.occupied()?0xFFFFD438:switch(cell.kind()){case KEYSTONE->0xFFFF9B18;case CAP->0xFFFFC65C;case FLUID->0xFF649EFF;default->0xFF3CCFDF;};
+            var material=switch(cell.kind()){case KEYSTONE->Identifier.fromNamespaceAndPath(ExampleMod.MODID,"textures/block/canopy_keystone.png");case CAP->Identifier.withDefaultNamespace("textures/block/gold_block.png");case ENERGIZED->Identifier.fromNamespaceAndPath(ExampleMod.MODID,"textures/block/energized_ancient_crystal_side.png");case OBSIDIAN->Identifier.withDefaultNamespace("textures/block/obsidian.png");case GLASS,CRYSTAL->Identifier.withDefaultNamespace("textures/block/glass.png");case FLUID->Identifier.withDefaultNamespace("textures/block/blue_stained_glass.png");default->MATERIAL;};
+            int color=cell.occupied()?0xFFFFD438:switch(cell.kind()){case KEYSTONE->0xFFFF9B18;case CAP->0xFFFFC65C;case ENERGIZED->0xFF82E4F0;case OBSIDIAN->0xFF9E79DC;case GLASS->0xFFB8F3FB;case CRYSTAL->0xFFF385FF;case FLUID->0xFF649EFF;default->0xFF3CCFDF;};
             p.pushPose();p.translate(cell.x(),cell.y(),cell.z());c.order(1).submitModel(cube,new LivingEntityRenderState(),p,RenderTypes.entityTranslucent(material),15728880,OverlayTexture.NO_OVERLAY,(color&0xFFFFFF)|(cell.occupied()?0xA0000000:0x66000000),null,0);c.submitShapeOutline(p,net.minecraft.world.phys.shapes.Shapes.box(0,0,0,1,1,1),RenderTypes.lines(),color,2f,false);p.popPose();
         }
         for(var piece:s.pieces){
