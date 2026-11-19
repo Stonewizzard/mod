@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 SOURCE=ROOT/'tools/asset_sources/crystal'
 A=ROOT/'src/main/resources/assets/examplemod';D=ROOT/'src/main/resources/data'
 def read(name):
-    palette=json.loads((SOURCE/'palette.json').read_text());rows=(SOURCE/(name+'.pixels')).read_text().splitlines()
+    palette=json.loads((SOURCE/('palette.json' if name=='ancient-crystal' else 'block-palette.json')).read_text());rows=(SOURCE/(name+'.pixels')).read_text().splitlines()
     assert len(rows)==16 and all(len(row)==16 for row in rows),name
     im=Image.new('RGBA',(16,16));im.putdata([tuple(bytes.fromhex(palette[c])) for row in rows for c in row]);return im
 
