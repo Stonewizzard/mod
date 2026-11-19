@@ -128,6 +128,18 @@ public final class ClientVisualQa {
                                 com.example.examplemod.AncientAnvilBlockEntity.refresh(l,anvilPosition,l.getBlockState(anvilPosition));
                             });
                         }
+                        case "runestone_wall","runestone_held","runestone_overview","runestone_canopy"->{
+                            var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();
+                            server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);player.getAbilities().flying=true;player.onUpdateAbilities();l.setDayTime(6000);
+                                if(action.equals("runestone_wall")||action.equals("runestone_held")){
+                                    var base=anvilPosition.offset(26,0,0);var samples=java.util.List.of(com.example.examplemod.AncientAnvilContent.RUNESTONE.get(),net.minecraft.world.level.block.Blocks.POLISHED_DEEPSLATE,net.minecraft.world.level.block.Blocks.STONE_BRICKS);
+                                    for(int x=-2;x<=13;x++)for(int z=-12;z<=3;z++)for(int y=-2;y<=5;y++)l.setBlock(base.offset(x,y,z),(y==-2?net.minecraft.world.level.block.Blocks.STONE:net.minecraft.world.level.block.Blocks.AIR).defaultBlockState(),3);
+                                    for(int i=0;i<samples.size();i++)for(int x=0;x<3;x++)for(int y=-1;y<=1;y++)l.setBlock(base.offset(i*4+x,y,0),samples.get(i).defaultBlockState(),3);
+                                    player.getInventory().clearContent();player.getInventory().setItem(0,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.RUNESTONE_ITEM.get()));player.getInventory().setItem(1,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.POLISHED_DEEPSLATE));player.getInventory().setItem(2,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));player.inventoryMenu.broadcastChanges();player.connection.teleport(base.getX()+5.5,base.getY()+.5,base.getZ()-9,0,8);
+                                }else if(action.equals("runestone_canopy"))player.connection.teleport(anvilPosition.getX()-12,anvilPosition.getY()+13,anvilPosition.getZ()-20,-32,-5);
+                                else player.connection.teleport(anvilPosition.getX()-23,anvilPosition.getY()+12,anvilPosition.getZ()-26,-42,8);
+                            });
+                        }
                         case "tier6_fixture","tier6_clear_caps","tier6_view","tier6_crystal_view","tier6_recipe","tier6_blast_view","tier6_lens_red","tier6_lens_mixed","tier6_break_crystal","tier6_break_canopy","tier6_ready_fixture","tier6_break_outer_cap","tier6_break_foundation"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();int index=command.has("index")?command.get("index").getAsInt():0;
                             server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();var front=net.minecraft.core.Direction.NORTH;

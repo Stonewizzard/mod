@@ -139,6 +139,14 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='runestone-art':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('tier6_fixture');command('tier6_ready_fixture');expect(anvilTier=6,energyBeams=24)
+        command('runestone_wall');process('xdotool','key','F1');capture('ancient-anvil-runestone-comparison');process('xdotool','key','F1')
+        process('xdotool','key','1');capture('ancient-anvil-runestone-held')
+        command('runestone_overview');expect(anvilTier=6,energyBeams=24);process('xdotool','key','F1');capture('ancient-anvil-runestone-workshop');process('xdotool','key','F1')
+        command('runestone_canopy');process('xdotool','key','F1');capture('ancient-anvil-runestone-canopy');process('xdotool','key','F1')
+        print('RUNESTONE_ART_NATIVE_PASS: real tiled comparison beside polished deepslate and stone bricks, held block and hotbar beside iron, completed Tier6 pillars/rings/canopy',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'runestone-art','preview_only':True},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-tier6-repair':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('tier6_fixture');command('tier6_ready_fixture');expect(anvilTier=6,guideTier=6,guideMissing=0,energyBeams=24)
         for action,working in (('tier6_break_canopy',4),('tier6_break_outer_cap',3),('tier6_break_foundation',0)):
