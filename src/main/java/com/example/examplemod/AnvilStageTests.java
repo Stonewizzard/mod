@@ -20,7 +20,17 @@ public final class AnvilStageTests {
             var l=h.getLevel();var core=h.absolutePos(new BlockPos(20,6,20));
             check(h,AnvilStages.all().size()==2,"Both datapack workshop stages load");
             var t3=AnvilStages.all().get(0);var t4=AnvilStages.all().get(1);
-            check(h,t3.tier()==3&&t3.blocks().size()==88&&t4.tier()==4&&t4.blocks().size()==120,"Reference counts: 72+16 and 116+4");
+            check(h,t3.tier()==3&&t3.blocks().size()==88&&t4.tier()==4&&t4.blocks().size()==128,"Reference counts: 72+16 and 124+4");
+            var offsets=t4.blocks().stream().map(AnvilStages.Requirement::offset).collect(java.util.stream.Collectors.toSet());
+            for(int x=-8;x<=8;x++)for(int z=-8;z<=8;z++)if(Math.max(Math.abs(x),Math.abs(z))==8){
+                check(h,offsets.contains(new BlockPos(x,-3,z))&&!offsets.contains(new BlockPos(x,-2,z)),"Main ring is one block below its previous height");
+            }
+            for(var dir:Direction.Plane.HORIZONTAL){
+                int x=dir.getStepX()*16,z=dir.getStepZ()*16;
+                for(int dx=-1;dx<=1;dx++)for(int dz=-1;dz<=1;dz++)check(h,offsets.contains(new BlockPos(x+dx,-4,z+dz)),"Each pillar base is two blocks below its previous height");
+                for(int y=-3;y<=3;y++)check(h,offsets.contains(new BlockPos(x,y,z)),"Pillar shaft connects the lowered base to the unchanged cap");
+                for(int dx:new int[]{-1,1})check(h,!offsets.contains(new BlockPos(x+dx,-2,z)),"The previous high pillar-base ring is no longer required");
+            }
             for(var facing:Direction.Plane.HORIZONTAL){
                 for(var stage:AnvilStages.all())for(var req:stage.blocks())l.setBlock(req.at(core,facing),Blocks.AIR.defaultBlockState(),3);
                 for(var p:AncientAnvilStructure.foundation(core,facing))l.setBlock(p,AncientAnvilContent.RUNESTONE.get().defaultBlockState(),3);

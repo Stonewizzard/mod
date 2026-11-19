@@ -8,6 +8,9 @@ CORNER_INNER=6
 CORNER_OUTER=7
 RING_RADIUS=8
 SIDE_PILLAR_DISTANCE=16
+RING_Y=-3
+SIDE_BASE_Y=-4
+CAP_Y=3
 def write(tier,stone,caps):
     assert len(stone)==len(set(stone)) and len(caps)==len(set(caps))
     assert not set(stone)&set(caps)
@@ -25,11 +28,11 @@ for sx in (-1,1):
                 stone += [(sx*x,y,sz*z) for y in range(-1,3)]
                 caps.append((sx*x,3,sz*z))
 write(3,stone,caps)
-stone=[(x,-2,z) for x in range(-RING_RADIUS,RING_RADIUS+1) for z in range(-RING_RADIUS,RING_RADIUS+1) if max(abs(x),abs(z))==RING_RADIUS]
+stone=[(x,RING_Y,z) for x in range(-RING_RADIUS,RING_RADIUS+1) for z in range(-RING_RADIUS,RING_RADIUS+1) if max(abs(x),abs(z))==RING_RADIUS]
 caps=[]
 for dx,dz in ((1,0),(-1,0),(0,1),(0,-1)):
     x,z=dx*SIDE_PILLAR_DISTANCE,dz*SIDE_PILLAR_DISTANCE
-    stone += [(x+i,-2,z+k) for i in (-1,0,1) for k in (-1,0,1)]
-    stone += [(x,y,z) for y in range(-1,3)]
-    caps.append((x,3,z))
+    stone += [(x+i,SIDE_BASE_Y,z+k) for i in (-1,0,1) for k in (-1,0,1)]
+    stone += [(x,y,z) for y in range(SIDE_BASE_Y+1,CAP_Y)]
+    caps.append((x,CAP_Y,z))
 write(4,stone,caps)
