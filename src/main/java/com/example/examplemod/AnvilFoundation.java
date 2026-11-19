@@ -53,7 +53,7 @@ public final class AnvilFoundation {
             }
             return placed; // Never place more than one block, including when a mod cancels a placement.
         }
-        AnvilWork.message(player,!needsBlocks?(plan.tier()==6?"Place End Crystals on the highlighted obsidian caps manually":"Fill the highlighted fluid pools manually"):!hasMaterials?"Add the required Runestone, caps or keystones to your inventory":"Remove the old highlighted caps or mismatched glass before building; containers are preserved");return false;
+        AnvilWork.message(player,!needsBlocks?(missing.stream().anyMatch(t->t.kind()==AnvilGuide.Kind.FLUID)?"Fill the highlighted fluid pools manually":"Place End Crystals on the highlighted obsidian caps manually"):!hasMaterials?"Add the required Runestone, caps or keystones to your inventory":"Remove the old highlighted caps or mismatched glass before building; containers are preserved");return false;
     }
     private AnvilFoundation(){}
 }

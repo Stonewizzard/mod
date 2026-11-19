@@ -107,6 +107,9 @@ def find_window(state):
     raise AssertionError('Cannot resolve native Minecraft window; inspect windows.txt')
 
 def toggle_anvil_guide():
+    released=observe().get('sequence',0)
+    process('xdotool','mouseup','3','keyup','Shift_L')
+    wait_for(lambda s:s.get('sequence',0)>released and not s.get('guideSneaking'),'released sneak/use before the next guide tap')
     before=observe().get('anvilGuide',False)
     process('xdotool','keydown','Shift_L')
     try:
@@ -136,6 +139,17 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='anvil-tier6-repair':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('tier6_fixture');command('tier6_ready_fixture');expect(anvilTier=6,guideTier=6,guideMissing=0,energyBeams=24)
+        for action,working in (('tier6_break_canopy',4),('tier6_break_outer_cap',3),('tier6_break_foundation',0)):
+            command(action);expect(anvilTier=working,guideTier=6,guideMissing=1,energyBeams=0)
+            command('anvil_auto_close');process('xdotool','key','1');process('xdotool','keydown','Shift_L');wait_for(lambda s:s.get('guideSneaking') and s.get('aimedAtAnvil'),'sneaking at the damaged anvil');process('xdotool','mousedown','3')
+            wait_for(lambda s:s.get('anvilTier')==6 and s.get('guideMissing')==0,'native Tier6 repair after '+action,timeout=15)
+            process('xdotool','mouseup','3','keyup','Shift_L');expect(guideTier=6,energyBeams=24,tier6CollarRunes=0,tier6ObsidianItems=0)
+            toggle_anvil_guide();expect(anvilGuide=False)
+            print('ANVIL_TIER6_NATIVE_REPAIR_PASS: '+action+' lowers working tier to '+str(working)+'; client guide stays 6; real hold repairs exactly one block and restores 24 beams',flush=True)
+        command('tier6_view');process('xdotool','key','F1');capture('ancient-anvil-tier6-repair-complete');process('xdotool','key','F1')
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-tier6-repair'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-tier6':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('tier6_fixture');expect(anvilTier=5,guideTier=6,guideMissing=113,tier6CrystalItems=4)
         command('anvil_auto_close');process('xdotool','key','1');time.sleep(.3);toggle_anvil_guide();expect(anvilGuide=True)
@@ -147,7 +161,12 @@ def run():
         toggle_anvil_guide();expect(anvilGuide=False)
         for index in range(4):
             command('tier6_crystal_view',index=index);process('xdotool','key','4');expect(aimedAtCrystalCap=True);time.sleep(.4);process('xdotool','click','3');expect(tier6Crystals=index+1,tier6CrystalItems=3-index)
-        expect(anvilTier=6,energyBeams=24);command('tier6_view');process('xdotool','key','F1');capture('ancient-anvil-tier6-network-blue');process('xdotool','key','F1')
+        expect(anvilTier=6,energyBeams=24)
+        command('tier6_break_canopy');expect(anvilTier=4,guideTier=6,guideMissing=1,energyBeams=0,tier6CollarRunes=1)
+        command('anvil_auto_close');process('xdotool','key','1');process('xdotool','keydown','Shift_L');time.sleep(.2);process('xdotool','mousedown','3')
+        wait_for(lambda s:s.get('anvilTier')==6 and s.get('guideMissing')==0,'Tier6 repair after the real Tier4 downgrade',timeout=15);process('xdotool','mouseup','3','keyup','Shift_L');expect(guideTier=6,tier6CollarRunes=0,energyBeams=24)
+        print('ANVIL_TIER6_NATIVE_REPAIR_PASS: canopy break lowers working tier to 4 while guide stays 6; native hold repairs with one Runestone and restores 24 beams',flush=True)
+        command('tier6_view');process('xdotool','key','F1');capture('ancient-anvil-tier6-network-blue');process('xdotool','key','F1')
         native_chat_command('time set midnight');process('xdotool','key','F1');capture('ancient-anvil-tier6-network-night');process('xdotool','key','F1');native_chat_command('time set day')
         for preview in ('collars',):
             command('tier6_preview_'+preview);expect(anvilTier=6,tier6Preview=preview,energyBeams=24)

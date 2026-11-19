@@ -19,7 +19,7 @@ The normal End Crystals retain vanilla placement and damage/explosion behavior. 
 
 ## Guides and construction
 
-Shift + right-click toggles the guide. Hold while aiming at the anvil to place inventory blocks one at a time, with normal placement sounds and protections. Remove the old metal caps yourself first; auto-building never destroys solid blocks or containers. The Tier 6 guide stays selected while cap replacements are incomplete, provided the rest of the lower-tier shell and canopy are intact.
+Shift + right-click toggles the guide. Hold while aiming at the anvil to place inventory blocks one at a time, with normal placement sounds and protections. Remove the old metal caps yourself first; auto-building never destroys solid blocks or containers. Once Tier 5 is reached, the Tier 6 build target is saved and synchronized independently of the working tier. Breaking a canopy or foundation block can lower the working tier, but the guide and builder keep the Tier 6 target and include missing earlier requirements as repairs. Upgraded cap requirements take precedence over the old metal caps at shared positions. Older broken saves with installed energized caps, obsidian caps or glass recover their Tier 6 target automatically.
 
 Place one glass sample first to choose a color, or hold the desired glass while starting an empty lens. Later placements match that color. Wrong-color glass must be removed manually. End Crystals remain manually placed; the builder never consumes their items or filled buckets. Energized caps and obsidian count as the appropriate upgraded lower-tier caps without widening the generic metal-cap tag.
 

@@ -58,7 +58,7 @@ public final class AnvilCanopyTests {
             check(h,be.inputCount()==1&&hammer.getDamageValue()==damage&&player.getInventory().getItem(8).is(Items.WATER_BUCKET)&&player.getInventory().getItem(9).is(Items.LAVA_BUCKET),"Aerial construction preserves workpieces, tools and filled buckets");
             var node=stage.blocks().stream().filter(r->r.tag().equals(AnvilStages.KEYSTONES)).findFirst().orElseThrow();var at=node.at(core,Direction.NORTH);
             l.setBlock(at,Blocks.CHEST.defaultBlockState(),3);var chest=(net.minecraft.world.level.block.entity.ChestBlockEntity)l.getBlockEntity(at);chest.setItem(0,new ItemStack(Items.DIAMOND,7));refresh(l,core);tier(h,l,core,4,"Missing keystone downgrades to Tier 4");
-            check(h,AnvilGuide.next(l,core).missing(l).size()==1&&AnvilGuide.next(l,core).missing(l).getFirst().kind()==AnvilGuide.Kind.KEYSTONE,"Guide identifies the exact keystone repair");
+            check(h,AnvilGuide.next(l,core).tier()==6&&AnvilGuide.next(l,core).missing(l).stream().anyMatch(t->t.at().equals(at)&&t.kind()==AnvilGuide.Kind.KEYSTONE),"Guide identifies the exact keystone repair");
             player.getInventory().setItem(7,new ItemStack(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get()));be.lastFoundationPlacement=l.getGameTime()-AnvilFoundation.INTERVAL;
             check(h,!AnvilFoundation.placeNext(player,core)&&chest.getItem(0).getCount()==7&&player.getInventory().getItem(7).getCount()==1,"Automatic repair preserves obstructing containers and materials");
             l.destroyBlock(at,false);be.lastFoundationPlacement=l.getGameTime()-AnvilFoundation.INTERVAL;check(h,AnvilFoundation.placeNext(player,core),"Repair places the missing keystone");tier(h,l,core,5,"Repair restores Tier 5");

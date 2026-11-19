@@ -30,6 +30,10 @@ public final class AnvilTierSix {
         if(stages.stream().filter(s->s.tier()>=3&&s.tier()<=5).count()!=3)return false;
         return stages.stream().filter(s->s.tier()>=3&&s.tier()<=5).flatMap(s->s.blocks().stream()).filter(r->!r.tag().equals(AnvilStages.CAPS)).allMatch(r->r.matches(l,core,front));
     }
+    /** Recover upgrade intent for older saves which already contain Tier 6-only materials. */
+    public static boolean started(Level level,BlockPos core,Direction front){
+        return AnvilStages.all().stream().filter(s->s.tier()==6).flatMap(s->s.blocks().stream()).filter(r->r.tag().equals(ENERGIZED)||r.tag().equals(OBSIDIAN)||r.tag().equals(GLASS)).anyMatch(r->r.matches(level,core,front));
+    }
     public static Block stainedGlass(String color){return net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(color+"_stained_glass"));}
     public static String glassKey(Block b){if(b==Blocks.GLASS)return "clear";if(b==Blocks.TINTED_GLASS)return "tinted";return b instanceof StainedGlassBlock g?g.getColor().name():null;}
     public static boolean sameGlass(Block a,Block b){var key=glassKey(a);return key!=null&&key.equals(glassKey(b));}
