@@ -23,6 +23,7 @@ public final class ClientVisualQa {
     private static volatile net.minecraft.core.BlockPos forgePosition;
     private static net.minecraft.core.BlockPos generatedForgePosition;private static boolean probeForgeWorldgen;
     private static volatile net.minecraft.core.BlockPos anvilPosition;
+    private static volatile net.minecraft.core.BlockPos palettePosition;
     private static volatile int feedCruncherId=-1;
     private static volatile net.minecraft.core.BlockPos assetsAnvil;
     private static long sequence,frames,lastWrite;
@@ -126,6 +127,25 @@ public final class ClientVisualQa {
                                     }
                                 }else player.connection.teleport(anvilPosition.getX()-28,anvilPosition.getY()+18,anvilPosition.getZ()-34,-40,5);
                                 com.example.examplemod.AncientAnvilBlockEntity.refresh(l,anvilPosition,l.getBlockState(anvilPosition));
+                            });
+                        }
+                        case "runestone_palette_fixture","runestone_palette_close","runestone_palette_context"->{
+                            var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();
+                            server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();var base=forgePosition.offset(7,0,-1);
+                                if(action.equals("runestone_palette_fixture")){
+                                    var ids=java.util.List.of("white_concrete","orange_concrete","magenta_concrete","light_blue_concrete");var names=java.util.List.of("A - Warm charcoal","B - Sootstone","C - Dark umber","D - Volcanic stone");
+                                    for(int x=-1;x<=16;x++)for(int z=-17;z<=3;z++)for(int y=-2;y<=7;y++)l.setBlock(base.offset(x,y,z),(y==-2?net.minecraft.world.level.block.Blocks.STONE:net.minecraft.world.level.block.Blocks.AIR).defaultBlockState(),3);
+                                    for(int i=0;i<4;i++){
+                                        var sample=net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace(ids.get(i)));if(sample==net.minecraft.world.level.block.Blocks.AIR)throw new IllegalStateException("Missing QA material carrier "+ids.get(i));int offset=(3-i)*4;
+                                        for(int x=0;x<3;x++)for(int y=-1;y<=1;y++)l.setBlock(base.offset(offset+x,y,0),sample.defaultBlockState(),3);
+                                        for(int x=0;x<3;x++)for(int z=-2;z<0;z++)l.setBlock(base.offset(offset+x,-2,z),sample.defaultBlockState(),3);
+                                        var label=net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY.create(l,net.minecraft.world.entity.EntitySpawnReason.COMMAND);label.setText(net.minecraft.network.chat.Component.literal(names.get(i)));label.snapTo(base.getX()+offset+1.5,base.getY()+2.5,base.getZ()-.05,180,0);l.addFreshEntity(label);
+                                    }
+                                    palettePosition=base;player.getInventory().clearContent();player.inventoryMenu.broadcastChanges();
+                                }
+                                player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);player.getAbilities().flying=true;player.onUpdateAbilities();
+                                if(action.equals("runestone_palette_context"))player.connection.teleport(forgePosition.getX()+10.5,base.getY()+1,base.getZ()-14,0,9);
+                                else player.connection.teleport(base.getX()+7.5,base.getY()+.5,base.getZ()-8.5,0,12);
                             });
                         }
                         case "runestone_wall","runestone_held","runestone_overview","runestone_canopy"->{
@@ -389,6 +409,8 @@ public final class ClientVisualQa {
             state.addProperty("sequence",++sequence);state.addProperty("frames",frames);state.addProperty("commandId",commandId);
             state.addProperty("screen",screen==null?"InGame":screen.getClass().getSimpleName());state.addProperty("windowWidth",window.getScreenWidth());state.addProperty("windowHeight",window.getScreenHeight());
             state.addProperty("guiWidth",window.getGuiScaledWidth());state.addProperty("guiHeight",window.getGuiScaledHeight());state.addProperty("guiScale",window.getGuiScale());state.addProperty("inWorld",minecraft.level!=null);
+            if(minecraft.level!=null&&palettePosition!=null){int count=0;var ids=java.util.List.of("white_concrete","orange_concrete","magenta_concrete","light_blue_concrete");for(int i=0;i<4;i++){var block=net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace(ids.get(i)));for(int x=0;x<3;x++){for(int y=-1;y<=1;y++)if(minecraft.level.getBlockState(palettePosition.offset((3-i)*4+x,y,0)).is(block))count++;for(int z=-2;z<0;z++)if(minecraft.level.getBlockState(palettePosition.offset((3-i)*4+x,-2,z)).is(block))count++;}}state.addProperty("paletteSamples",count);}
+
             var widgets=new JsonArray();if(screen!=null)for(var child:screen.children())widgets(child,widgets);state.add("widgets",widgets);
             if(screen instanceof FieldGuideScreen book){
                 state.addProperty("focus",book.getFocused() instanceof GuideBookButton button?button.control.id():book.getFocused() instanceof net.minecraft.client.gui.components.EditBox?"search":"");

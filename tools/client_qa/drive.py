@@ -139,6 +139,12 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='runestone-palettes':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');native_chat_command('time set noon');command('runestone_palette_fixture');expect(paletteSamples=60)
+        process('xdotool','key','F1');capture('ancient-anvil-runestone-palettes-together');process('xdotool','key','F1')
+        command('runestone_palette_context');expect(paletteSamples=60);process('xdotool','key','F1');capture('ancient-anvil-runestone-palettes-with-forge');process('xdotool','key','F1')
+        print('RUNESTONE_PALETTES_NATIVE_PASS: four simultaneous labelled 3x3 walls and floor samples, same lighting, A-D order and actual forge reference; no gameplay registrations',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'runestone-palettes','preview_only':True},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='runestone-art':
         variant=os.environ.get('RUNESTONE_PREVIEW_VARIANT','hewn')
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('tier6_fixture');command('tier6_ready_fixture');expect(anvilTier=6,energyBeams=24);native_chat_command('time set noon')
