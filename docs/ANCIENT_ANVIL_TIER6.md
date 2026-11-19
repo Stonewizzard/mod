@@ -38,3 +38,5 @@ Removing the anvil leaves all externally placed blocks and End Crystals intact. 
 3. Four entrance stairways from the lower circular ring toward the raised workshop, with matching gateposts. This would help the finished structure feel like a place players enter and work in.
 
 The geometry is in `anvil_stages/tier_6.json`; cap/glass materials use dedicated block tags. Existing Tier 3–5 geometry is unchanged. `AnvilTierSix` handles uniform glass, ordinary entity detection and beam topology; the client extracts immutable beam snapshots before rendering. Recipes may now request `anvil_tier: 6` in datapacks.
+
+The three optional designs are built separately in the disposable native Minecraft visual-QA scene, with overview and detail captures. They never become required structure blocks or alter the player's real workshop.

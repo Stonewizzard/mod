@@ -149,6 +149,11 @@ def run():
             command('tier6_crystal_view',index=index);process('xdotool','key','4');expect(aimedAtCrystalCap=True);time.sleep(.4);process('xdotool','click','3');expect(tier6Crystals=index+1,tier6CrystalItems=3-index)
         expect(anvilTier=6,energyBeams=24);command('tier6_view');process('xdotool','key','F1');capture('ancient-anvil-tier6-network-blue');process('xdotool','key','F1')
         native_chat_command('time set midnight');process('xdotool','key','F1');capture('ancient-anvil-tier6-network-night');process('xdotool','key','F1');native_chat_command('time set day')
+        for preview in ('prongs','collars','entrances'):
+            command('tier6_preview_'+preview);expect(anvilTier=6,tier6Preview=preview,energyBeams=24)
+            process('xdotool','key','F1');capture('ancient-anvil-tier6-preview-'+preview);process('xdotool','key','F1')
+            command('tier6_preview_detail');process('xdotool','key','F1');capture('ancient-anvil-tier6-preview-'+preview+'-detail');process('xdotool','key','F1')
+        command('tier6_preview_reset');expect(anvilTier=6,tier6PreviewBlocks=0)
         for color in ('blue','red'):
             if color=='red':command('tier6_lens_red');expect(anvilTier=6,tier6Color=0xb02e26)
             command('tier6_recipe');command('anvil_auto_close');process('xdotool','key','1');time.sleep(.4)

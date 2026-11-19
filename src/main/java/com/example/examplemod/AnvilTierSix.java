@@ -28,6 +28,7 @@ public final class AnvilTierSix {
         if(stages.stream().filter(s->s.tier()>=3&&s.tier()<=5).count()!=3)return false;
         return stages.stream().filter(s->s.tier()>=3&&s.tier()<=5).flatMap(s->s.blocks().stream()).filter(r->!r.tag().equals(AnvilStages.CAPS)).allMatch(r->r.matches(l,core,front));
     }
+    public static Block stainedGlass(String color){return net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(Identifier.withDefaultNamespace(color+"_stained_glass"));}
     public static String glassKey(Block b){if(b==Blocks.GLASS)return "clear";if(b==Blocks.TINTED_GLASS)return "tinted";return b instanceof StainedGlassBlock g?g.getColor().name():null;}
     public static boolean sameGlass(Block a,Block b){var key=glassKey(a);return key!=null&&key.equals(glassKey(b));}
     public static int glassColor(Block b){
@@ -68,7 +69,7 @@ public final class AnvilTierSix {
     /** Minimum-distance bijection; a keystone is never reused by two energized caps. */
     public static List<Link> links(List<AnvilStages.Stage> stages){
         var c=cached;if(c.source()==stages)return c.links();
-        var order=Comparator.comparingInt(BlockPos::getX).thenComparingInt(BlockPos::getZ).thenComparingInt(BlockPos::getY);
+        var order=Comparator.<BlockPos>comparingInt(BlockPos::getX).thenComparingInt(BlockPos::getZ).thenComparingInt(BlockPos::getY);
         var from=requirements(stages,ENERGIZED).stream().map(AnvilStages.Requirement::offset).sorted(order).toList();var to=stages.stream().filter(s->s.tier()==5).flatMap(s->s.blocks().stream()).filter(r->r.tag().equals(AnvilStages.KEYSTONES)).map(AnvilStages.Requirement::offset).sorted(order).toList();
         if(from.size()!=16||to.size()!=16)return List.of();
         // Hungarian assignment in O(n^3), with sorted inputs for stable tie-breaking.

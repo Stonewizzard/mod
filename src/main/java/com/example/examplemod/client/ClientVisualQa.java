@@ -112,6 +112,22 @@ public final class ClientVisualQa {
                             });
                         }
                         case "alloy_inventory"->{var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);player.getInventory().clearContent();player.getInventory().setItem(0,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.SCRAP_ITEM.get()));player.getInventory().setItem(1,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.GOLD_INGOT));player.getInventory().setItem(2,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT,2));player.getInventory().setItem(3,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.FLINT_AND_STEEL));player.inventoryMenu.broadcastChanges();});}
+                        case "tier6_preview_prongs","tier6_preview_collars","tier6_preview_entrances","tier6_preview_reset","tier6_preview_detail"->{
+                            var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();
+                            server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();
+                                if(action.equals("tier6_preview_reset"))TierSixPreviewScene.reset(l);
+                                else if(!action.equals("tier6_preview_detail"))TierSixPreviewScene.apply(l,anvilPosition,action.substring("tier6_preview_".length()));
+                                player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);player.getAbilities().flying=true;player.onUpdateAbilities();
+                                if(action.equals("tier6_preview_detail")){
+                                    switch(TierSixPreviewScene.current()){
+                                        case "prongs"->player.connection.teleport(anvilPosition.getX()-13,anvilPosition.getY()+10,anvilPosition.getZ()-17,-38,-16);
+                                        case "collars"->player.connection.teleport(anvilPosition.getX()+9,anvilPosition.getY()+4,anvilPosition.getZ()-7,-45,8);
+                                        default->player.connection.teleport(anvilPosition.getX()-12,anvilPosition.getY()+5,anvilPosition.getZ()-20,-32,18);
+                                    }
+                                }else player.connection.teleport(anvilPosition.getX()-28,anvilPosition.getY()+18,anvilPosition.getZ()-34,-40,5);
+                                com.example.examplemod.AncientAnvilBlockEntity.refresh(l,anvilPosition,l.getBlockState(anvilPosition));
+                            });
+                        }
                         case "tier6_fixture","tier6_clear_caps","tier6_view","tier6_crystal_view","tier6_recipe","tier6_blast_view","tier6_lens_red","tier6_lens_mixed","tier6_break_crystal"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();int index=command.has("index")?command.get("index").getAsInt():0;
                             server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();var front=net.minecraft.core.Direction.NORTH;
@@ -124,7 +140,7 @@ public final class ClientVisualQa {
                                     player.getInventory().setItem(0,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.IRON_FORGE_HAMMER.get()));
                                     player.getInventory().setItem(1,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM.get(),16));
                                     player.getInventory().setItem(2,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.OBSIDIAN,4));player.getInventory().setItem(3,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.END_CRYSTAL,4));
-                                    player.getInventory().setItem(4,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.LIGHT_BLUE_STAINED_GLASS,25));player.getInventory().setItem(5,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.RED_STAINED_GLASS,5));player.inventoryMenu.broadcastChanges();
+                                    player.getInventory().setItem(4,new net.minecraft.world.item.ItemStack(com.example.examplemod.AnvilTierSix.stainedGlass("light_blue").asItem(),25));player.getInventory().setItem(5,new net.minecraft.world.item.ItemStack(com.example.examplemod.AnvilTierSix.stainedGlass("red").asItem(),5));player.inventoryMenu.broadcastChanges();
                                 }else if(action.equals("tier6_clear_caps")){
                                     for(var req:com.example.examplemod.AnvilStages.all().getLast().blocks())if(!req.tag().equals(com.example.examplemod.AnvilTierSix.GLASS))l.setBlock(req.at(anvilPosition,front),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);
                                 }else if(action.equals("tier6_crystal_view")){
@@ -134,8 +150,8 @@ public final class ClientVisualQa {
                                     var be=(com.example.examplemod.AncientAnvilBlockEntity)l.getBlockEntity(anvilPosition);be.takeOutput();com.example.examplemod.AnvilTierSixTests.recipe(be);
                                 }else if(action.equals("tier6_lens_red")||action.equals("tier6_lens_mixed")){
                                     var reqs=com.example.examplemod.AnvilTierSix.requirements(com.example.examplemod.AnvilStages.all(),com.example.examplemod.AnvilTierSix.GLASS);
-                                    if(action.equals("tier6_lens_mixed"))l.setBlock(reqs.getFirst().at(anvilPosition,front),net.minecraft.world.level.block.Blocks.BLUE_STAINED_GLASS.defaultBlockState(),3);
-                                    else for(var req:reqs)l.setBlock(req.at(anvilPosition,front),net.minecraft.world.level.block.Blocks.RED_STAINED_GLASS.defaultBlockState(),3);
+                                    if(action.equals("tier6_lens_mixed"))l.setBlock(reqs.getFirst().at(anvilPosition,front),com.example.examplemod.AnvilTierSix.stainedGlass("blue").defaultBlockState(),3);
+                                    else for(var req:reqs)l.setBlock(req.at(anvilPosition,front),com.example.examplemod.AnvilTierSix.stainedGlass("red").defaultBlockState(),3);
                                 }else if(action.equals("tier6_break_crystal")){
                                     var req=com.example.examplemod.AnvilTierSix.requirements(com.example.examplemod.AnvilStages.all(),com.example.examplemod.AnvilTierSix.OBSIDIAN).getFirst();var crystal=com.example.examplemod.AnvilTierSix.crystal(l,req.at(anvilPosition,front));if(crystal!=null)crystal.discard();
                                 }else{
@@ -402,8 +418,8 @@ public final class ClientVisualQa {
             if(feedCruncherId>=0&&minecraft.level!=null){state.addProperty("aimedAtCruncher",minecraft.hitResult instanceof net.minecraft.world.phys.EntityHitResult hit&&hit.getEntity().getId()==feedCruncherId);state.addProperty("cruncherChewing",minecraft.level.getEntity(feedCruncherId) instanceof com.example.examplemod.Cruncher c&&c.isCrunching());}
             if(anvilPosition!=null&&minecraft.level!=null&&minecraft.level.getBlockEntity(anvilPosition) instanceof com.example.examplemod.AncientAnvilBlockEntity energy){
                 var front=energy.getBlockState().getValue(com.example.examplemod.AncientAnvilBlock.FACING);var stages=com.example.examplemod.AnvilGuide.stages(minecraft.level);var status=com.example.examplemod.AnvilTierSix.inspect(minecraft.level,anvilPosition,front,stages);
-                state.addProperty("tier6Crystals",status.crystals());state.addProperty("tier6Color",status.color());state.addProperty("energyColor",energy.energyColor);state.addProperty("energyActive",energy.energyUntil>minecraft.level.getGameTime());state.addProperty("energyBeams",AnvilEnergyRenderer.extract(energy,0).size());
-                state.addProperty("tier6CrystalItems",minecraft.player.getInventory().countItem(net.minecraft.world.item.Items.END_CRYSTAL));state.addProperty("tier6GlassItems",minecraft.player.getInventory().countItem(net.minecraft.world.item.Items.LIGHT_BLUE_STAINED_GLASS));state.addProperty("tier6ObsidianItems",minecraft.player.getInventory().countItem(net.minecraft.world.item.Items.OBSIDIAN));state.addProperty("tier6CapItems",minecraft.player.getInventory().countItem(com.example.examplemod.AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM.get()));
+                state.addProperty("tier6PreviewBlocks",TierSixPreviewScene.count());state.addProperty("tier6Preview",TierSixPreviewScene.current());state.addProperty("tier6Crystals",status.crystals());state.addProperty("tier6Color",status.color());state.addProperty("energyColor",energy.energyColor);state.addProperty("energyActive",energy.energyUntil>minecraft.level.getGameTime());state.addProperty("energyBeams",AnvilEnergyRenderer.extract(energy,0).size());
+                state.addProperty("tier6CrystalItems",minecraft.player.getInventory().countItem(net.minecraft.world.item.Items.END_CRYSTAL));state.addProperty("tier6GlassItems",minecraft.player.getInventory().countItem(com.example.examplemod.AnvilTierSix.stainedGlass("light_blue").asItem()));state.addProperty("tier6ObsidianItems",minecraft.player.getInventory().countItem(net.minecraft.world.item.Items.OBSIDIAN));state.addProperty("tier6CapItems",minecraft.player.getInventory().countItem(com.example.examplemod.AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM.get()));
                 state.addProperty("aimedAtCrystalCap",minecraft.hitResult instanceof net.minecraft.world.phys.BlockHitResult hit&&minecraft.level.getBlockState(hit.getBlockPos()).is(net.minecraft.world.level.block.Blocks.OBSIDIAN));
             }
             if(anvilPosition!=null&&minecraft.level!=null&&minecraft.level.getBlockEntity(anvilPosition) instanceof com.example.examplemod.AncientAnvilBlockEntity be){
