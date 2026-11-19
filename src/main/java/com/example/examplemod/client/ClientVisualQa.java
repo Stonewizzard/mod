@@ -139,7 +139,7 @@ public final class ClientVisualQa {
                                         var sample=net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(net.minecraft.resources.Identifier.withDefaultNamespace(ids.get(i)));if(sample==net.minecraft.world.level.block.Blocks.AIR)throw new IllegalStateException("Missing QA material carrier "+ids.get(i));int offset=(3-i)*4;
                                         for(int x=0;x<3;x++)for(int y=-1;y<=1;y++)l.setBlock(base.offset(offset+x,y,0),sample.defaultBlockState(),3);
                                         for(int x=0;x<3;x++)for(int z=-2;z<0;z++)l.setBlock(base.offset(offset+x,-2,z),sample.defaultBlockState(),3);
-                                        var label=net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY.create(l,net.minecraft.world.entity.EntitySpawnReason.COMMAND);label.setText(net.minecraft.network.chat.Component.literal(names.get(i)));label.snapTo(base.getX()+offset+1.5,base.getY()+2.5,base.getZ()-.05,180,0);l.addFreshEntity(label);
+                                        var label=net.minecraft.world.entity.EntityTypes.TEXT_DISPLAY.create(l,net.minecraft.world.entity.EntitySpawnReason.COMMAND);var labelData=new net.minecraft.nbt.CompoundTag();labelData.putString("text",names.get(i));label.load(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,l.registryAccess(),labelData));label.snapTo(base.getX()+offset+1.5,base.getY()+2.5,base.getZ()-.05,180,0);l.addFreshEntity(label);
                                     }
                                     palettePosition=base;player.getInventory().clearContent();player.inventoryMenu.broadcastChanges();
                                 }
