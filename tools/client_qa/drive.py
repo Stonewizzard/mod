@@ -141,10 +141,10 @@ def run():
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
     if os.environ.get('CLIENT_QA_SCOPE')=='runestone-palettes':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');native_chat_command('time set noon');command('runestone_palette_fixture');expect(paletteSamples=60)
-        process('xdotool','key','F1');capture('ancient-anvil-runestone-palettes-together');process('xdotool','key','F1')
-        command('runestone_palette_context');expect(paletteSamples=60);process('xdotool','key','F1');capture('ancient-anvil-runestone-palettes-with-forge');process('xdotool','key','F1')
-        print('RUNESTONE_PALETTES_NATIVE_PASS: four simultaneous labelled 3x3 walls and floor samples, same lighting, A-D order and actual forge reference; no gameplay registrations',flush=True)
-        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'runestone-palettes','preview_only':True},indent=2));return
+        for action,name in (('runestone_palette_pair','pair-close'),('runestone_palette_a_detail','warm-charcoal-detail'),('runestone_palette_b_detail','sootstone-detail'),('runestone_palette_pair_angle','pair-angled')):
+            command(action);expect(paletteSamples=30 if action.endswith('angle') else 60);process('xdotool','key','F1');capture('ancient-anvil-runestone-'+name);process('xdotool','key','F1')
+        print('RUNESTONE_PAIR_DETAIL_NATIVE_PASS: unchanged A Warm charcoal and B Sootstone, matched front closeups, close paired wall and angled isolated pair; native OS screenshots',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'runestone-palettes','selected':['a','b'],'preview_only':True},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='runestone-art':
         variant=os.environ.get('RUNESTONE_PREVIEW_VARIANT','hewn')
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('tier6_fixture');command('tier6_ready_fixture');expect(anvilTier=6,energyBeams=24);native_chat_command('time set noon')

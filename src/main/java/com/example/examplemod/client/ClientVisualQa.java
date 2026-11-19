@@ -129,7 +129,7 @@ public final class ClientVisualQa {
                                 com.example.examplemod.AncientAnvilBlockEntity.refresh(l,anvilPosition,l.getBlockState(anvilPosition));
                             });
                         }
-                        case "runestone_palette_fixture","runestone_palette_close","runestone_palette_context"->{
+                        case "runestone_palette_fixture","runestone_palette_close","runestone_palette_context","runestone_palette_pair","runestone_palette_a_detail","runestone_palette_b_detail","runestone_palette_pair_angle"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();
                             server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();var base=forgePosition.offset(7,0,-1);
                                 if(action.equals("runestone_palette_fixture")){
@@ -144,7 +144,15 @@ public final class ClientVisualQa {
                                     palettePosition=base;player.getInventory().clearContent();player.inventoryMenu.broadcastChanges();
                                 }
                                 player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);player.getAbilities().flying=true;player.onUpdateAbilities();
-                                if(action.equals("runestone_palette_context"))player.connection.teleport(forgePosition.getX()+10.5,base.getY()+1,base.getZ()-14,0,9);
+                                if(action.equals("runestone_palette_pair_angle")){
+                                    // Isolate the selected pair for the oblique view; the source textures are unchanged.
+                                    for(int i=2;i<4;i++){int offset=(3-i)*4;for(int x=0;x<3;x++){for(int y=-1;y<=1;y++)l.setBlock(base.offset(offset+x,y,0),net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),3);for(int z=-2;z<0;z++)l.setBlock(base.offset(offset+x,-2,z),net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(),3);}}
+                                    for(var label:l.getEntitiesOfClass(net.minecraft.world.entity.Display.TextDisplay.class,new net.minecraft.world.phys.AABB(base).inflate(25)))if(label.getX()<base.getX()+8)label.discard();
+                                    player.connection.teleport(base.getX()+14.5,base.getY()+.8,base.getZ()-4.2,35.5F,20);
+                                }else if(action.equals("runestone_palette_a_detail"))player.connection.teleport(base.getX()+13.5,base.getY()-.8,base.getZ()-1.8,0,10);
+                                else if(action.equals("runestone_palette_b_detail"))player.connection.teleport(base.getX()+9.5,base.getY()-.8,base.getZ()-1.8,0,10);
+                                else if(action.equals("runestone_palette_pair"))player.connection.teleport(base.getX()+11.5,base.getY()+.5,base.getZ()-3.5,0,23);
+                                else if(action.equals("runestone_palette_context"))player.connection.teleport(forgePosition.getX()+10.5,base.getY()+1,base.getZ()-14,0,9);
                                 else player.connection.teleport(base.getX()+7.5,base.getY()+.5,base.getZ()-8.5,0,12);
                             });
                         }
