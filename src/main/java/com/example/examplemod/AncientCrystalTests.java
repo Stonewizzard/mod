@@ -21,6 +21,7 @@ public final class AncientCrystalTests {
         @Override public void run(GameTestHelper h){
             var l=h.getLevel();var core=h.absolutePos(new BlockPos(3,2,3));var crystal=AncientAnvilContent.CRYSTAL.get();var block=AncientAnvilContent.CRYSTAL_BLOCK_ITEM.get();
             l.setBlock(core,AncientForgeContent.CORE.get().defaultBlockState(),3);for(var p:RuinedForgeStructure.PARTS)l.setBlock(p.at(core,Direction.NORTH),AncientForgeContent.BRICKS.get().defaultBlockState(),3);check(h,ForgeAssembly.form(l,core),"The completed ruined forge accepts the new recipe");
+            check(h,!AncientAlloy.accepts(0,new ItemStack(AncientAnvilContent.ENERGIZED_CRYSTAL.get())),"Energized crystals cannot be accidentally consumed by the normal crystal-block recipe");
             var forge=(ReconstructionTableBlockEntity)l.getBlockEntity(core);var player=h.makeMockServerPlayerInLevel();player.setGameMode(GameType.SURVIVAL);player.snapTo(core.getX()+.5,core.getY(),core.getZ()-2);
             player.setItemInHand(InteractionHand.MAIN_HAND,new ItemStack(Items.DIAMOND_BLOCK,2));click(l,core,player);click(l,core,player);check(h,forge.getItem(1).getCount()==1&&player.getMainHandItem().getCount()==1,"Diamond may load first; excess stays in the hand");
             player.setItemInHand(InteractionHand.MAIN_HAND,new ItemStack(Items.IRON_INGOT));click(l,core,player);check(h,forge.getItem(2).isEmpty()&&player.getMainHandItem().getCount()==1,"Crystal batches reject alloy iron without consuming it");

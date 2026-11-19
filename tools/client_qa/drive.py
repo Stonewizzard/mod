@@ -147,15 +147,17 @@ def run():
         command('forge_view');capture('crystal-forge-heating')
         wait_for(lambda s:s.get('forgeFinished') and s.get('crystalResult')==1,'crystal fusion completes',timeout=75)
         capture('crystal-forge-finished');command('forge_view',close=True);process('xdotool','key','9');time.sleep(.3);process('xdotool','click','3');expect(crystalResult=0,crystalBlockInventory=1,crystalInventory=1)
-        command('crystal_art');expect(energizedInventory=1);process('xdotool','key','1');capture('ancient-crystal-mainhand')
+        command('crystal_art');expect(energizedInventory=1,energizedCrystalInventory=2);process('xdotool','key','1');capture('ancient-crystal-mainhand')
         process('xdotool','key','e');time.sleep(.5);capture('ancient-crystal-inventory');process('xdotool','key','Escape');expect(screen='InGame')
         process('xdotool','key','2');capture('ancient-crystal-vanilla-scale')
         process('xdotool','key','3');capture('ancient-crystal-block-held')
         process('xdotool','key','5');expect(holdingEnergized=True);capture('energized-ancient-crystal-block-held')
+        process('xdotool','key','6');expect(holdingEnergizedCrystal=True);capture('energized-ancient-crystal-mainhand')
         process('xdotool','key','9','F1');capture('ancient-crystal-blocks-day');process('xdotool','key','F1')
         native_chat_command('time set midnight');process('xdotool','key','F1');capture('ancient-crystal-blocks-night');process('xdotool','key','F1');native_chat_command('time set day')
         command('crystal_offhand');process('xdotool','key','2');capture('ancient-crystal-offhand')
         process('xdotool','key','1');time.sleep(.3);process('xdotool','key','q');time.sleep(1);command('crystal_drop_view');capture('ancient-crystal-dropped')
+        command('crystal_energized_offhand');process('xdotool','key','2');capture('energized-ancient-crystal-offhand')
         print('ANCIENT_CRYSTAL_NATIVE_PASS: actual 12-click crystal/diamond fireplace recipe, ignition, 20-second fusion, exact collection, native inventory/mainhand/offhand/dropped/block/day/night captures',flush=True)
         (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'ancient-crystal'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-canopy':

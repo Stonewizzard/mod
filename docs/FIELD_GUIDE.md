@@ -560,7 +560,7 @@ Canopy Keystones emit light, but do not grant additional rune effects yet. Tier 
 
 ## Ancient Crystal
 
-Ancient Crystals are faceted teal crystals with amber inclusions. Individual crystals are available in Creative for now; archaeology acquisition will be added later.
+Ancient Crystals have dark teal facets and subdued amber inclusions. Energized Ancient Crystals keep the same shape with brighter blue-teal facets and gold highlights. Both individual crystal items are available in Creative for now; acquisition and energizing recipes will be designed later.
 
 Use the completed Ruined Ancient Forge. Right-click the fireplace twelve times with Ancient Crystals and once with a diamond block. Either ingredient can go in first. Light the forge with flint and steel. After twenty seconds, white chimney smoke signals that the batch is finished. Collect one Block of Ancient Crystal with an empty hand.
 
@@ -571,3 +571,5 @@ The block has matching fused-crystal facets, a soft light level of seven, and cr
 The darker Block of Ancient Crystal is the forge result. The lighter-blue Energized Ancient Crystal Block is a separate block with the same amethyst-like facets and gold highlights, plus a stronger light level of twelve.
 
 The energized block is available in Creative for now. An energizing recipe and any additional functions will be designed later. Both blocks need an iron pickaxe or better and drop their own variant.
+
+Energized Ancient Crystal is a separate ingredient item, alongside the lighter Energized Ancient Crystal Block. It has no recipe yet and is available in Creative. It is not consumed by the normal crystal-block forge recipe.

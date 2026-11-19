@@ -1383,12 +1383,12 @@
       "ruined_ancient_forge",
       "ancient_alloy"
     ],
-    "keywords": "ancient crystal crystalline diamond block twelve 12 forge fuse glow teal amber energized brighter blue light variants",
+    "keywords": "ancient crystal crystalline diamond block twelve 12 forge fuse glow teal amber energized brighter blue light variants energized crystal item inactive darker bright",
     "sections": [
       {
         "title": "Ancient material",
         "paragraphs": [
-          "Ancient Crystals are faceted teal crystals with amber inclusions. Individual crystals are available in Creative for now; archaeology acquisition will be added later."
+          "Ancient Crystals have dark teal facets and subdued amber inclusions. Energized Ancient Crystals keep the same shape with brighter blue-teal facets and gold highlights. Both individual crystal items are available in Creative for now; acquisition and energizing recipes will be designed later."
         ]
       },
       {
@@ -1409,6 +1409,12 @@
         "paragraphs": [
           "The darker Block of Ancient Crystal is the forge result. The lighter-blue Energized Ancient Crystal Block is a separate block with the same amethyst-like facets and gold highlights, plus a stronger light level of twelve.",
           "The energized block is available in Creative for now. An energizing recipe and any additional functions will be designed later. Both blocks need an iron pickaxe or better and drop their own variant."
+        ]
+      },
+      {
+        "title": "Energized crystal item",
+        "paragraphs": [
+          "Energized Ancient Crystal is a separate ingredient item, alongside the lighter Energized Ancient Crystal Block. It has no recipe yet and is available in Creative. It is not consumed by the normal crystal-block forge recipe."
         ]
       }
     ]

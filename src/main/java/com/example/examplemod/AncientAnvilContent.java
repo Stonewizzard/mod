@@ -13,6 +13,7 @@ import net.neoforged.neoforge.registries.*;
 public final class AncientAnvilContent {
     public static final DeferredItem<Item> SCRAP_ITEM=ExampleMod.ITEMS.registerSimpleItem("ancient_scrap");
     public static final DeferredItem<Item> CRYSTAL=ExampleMod.ITEMS.registerSimpleItem("ancient_crystal",p->p.rarity(Rarity.RARE));
+    public static final DeferredItem<Item> ENERGIZED_CRYSTAL=ExampleMod.ITEMS.registerSimpleItem("energized_ancient_crystal",p->p.rarity(Rarity.RARE));
     public static final DeferredBlock<Block> CRYSTAL_BLOCK=ExampleMod.BLOCKS.registerBlock("ancient_crystal_block",Block::new,p->p.strength(5,6).requiresCorrectToolForDrops().sound(SoundType.AMETHYST).lightLevel(s->7));
     public static final DeferredBlock<Block> ENERGIZED_CRYSTAL_BLOCK=ExampleMod.BLOCKS.registerBlock("energized_ancient_crystal_block",Block::new,p->p.strength(5,6).requiresCorrectToolForDrops().sound(SoundType.AMETHYST).lightLevel(s->12));
     public static final DeferredItem<BlockItem> ENERGIZED_CRYSTAL_BLOCK_ITEM=ExampleMod.ITEMS.registerSimpleBlockItem("energized_ancient_crystal_block",ENERGIZED_CRYSTAL_BLOCK,p->p.rarity(Rarity.RARE));

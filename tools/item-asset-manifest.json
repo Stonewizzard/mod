@@ -412,5 +412,17 @@
       0.5,
       0.85
     ]
+  },
+  "energized_ancient_crystal": {
+    "legacy_artwork": false,
+    "min_longest": 26,
+    "max_longest": 30,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true,
+    "aspect_range": [
+      0.5,
+      0.85
+    ]
   }
 }

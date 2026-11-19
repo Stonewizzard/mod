@@ -151,6 +151,7 @@ public class ExampleMod {
                 output.accept(AncientAnvilContent.SCRAP_ITEM.get());
                 output.accept(AncientAnvilContent.INGOT.get());
                 output.accept(AncientAnvilContent.CRYSTAL.get());
+                output.accept(AncientAnvilContent.ENERGIZED_CRYSTAL.get());
                 output.accept(AncientAnvilContent.CRYSTAL_BLOCK_ITEM.get());
                 output.accept(AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM.get());
                 output.accept(AncientAnvilContent.METAL_ITEM.get());
@@ -283,6 +284,7 @@ public class ExampleMod {
             event.accept(AncientAnvilContent.SCRAP_ITEM);
             event.accept(AncientAnvilContent.INGOT);
             event.accept(AncientAnvilContent.CRYSTAL);
+            event.accept(AncientAnvilContent.ENERGIZED_CRYSTAL);
             ArchaeologyContent.artifacts().forEach(event::accept);
             ArchaeologyContent.materials().forEach(event::accept);
             ReconstructionContent.pieces().forEach(event::accept);

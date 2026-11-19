@@ -79,7 +79,7 @@ public final class ClientVisualQa {
                             var mob=com.example.examplemod.ExampleMod.CRUNCHER.get().create(l,net.minecraft.world.entity.EntitySpawnReason.COMMAND);mob.snapTo(p.getX()+.5,p.getY(),p.getZ()+.5,180,0);mob.setNoAi(true);l.addFreshEntity(mob);feedCruncherId=mob.getId();
                             player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);player.getAbilities().invulnerable=true;player.getInventory().setItem(12,player.getInventory().getItem(0));player.getInventory().setItem(0,com.example.examplemod.ArchaeologyContent.specimen(778899,0));player.inventoryMenu.broadcastChanges();player.connection.teleport(p.getX()+.5,p.getY(),p.getZ()-3,0,8);
                         });}
-                        case "crystal_fixture","crystal_art","crystal_offhand","crystal_drop_view"->{
+                        case "crystal_fixture","crystal_art","crystal_offhand","crystal_energized_offhand","crystal_drop_view"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();var action=command.get("action").getAsString();
                             server.execute(()->{var player=server.getPlayerList().getPlayer(uuid);var l=player.level();
                                 if(action.equals("crystal_fixture")){
@@ -99,7 +99,10 @@ public final class ClientVisualQa {
                                         player.getInventory().setItem(1,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));
                                         player.getInventory().setItem(2,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.CRYSTAL_BLOCK_ITEM.get()));
                                         player.getInventory().setItem(4,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM.get()));
+                                        player.getInventory().setItem(5,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.ENERGIZED_CRYSTAL.get(),2));
                                         player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.IRON_INGOT));
+                                    }else if(action.equals("crystal_energized_offhand")){
+                                        player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.ENERGIZED_CRYSTAL.get()));
                                     }else if(action.equals("crystal_offhand")){
                                         player.setItemInHand(net.minecraft.world.InteractionHand.OFF_HAND,new net.minecraft.world.item.ItemStack(com.example.examplemod.AncientAnvilContent.CRYSTAL.get()));
                                     }
@@ -350,6 +353,7 @@ public final class ClientVisualQa {
             }
             if(forgePosition!=null&&minecraft.level!=null&&minecraft.level.getBlockEntity(forgePosition) instanceof com.example.examplemod.ReconstructionTableBlockEntity forge){
                 state.addProperty("legacyTool",forge.getItem(5).is(com.example.examplemod.ArchaeologyContent.PICKAXE.get()));state.addProperty("storedCount",java.util.stream.IntStream.range(0,6).map(i->forge.getItem(i).isEmpty()?0:1).sum());
+                state.addProperty("energizedCrystalInventory",minecraft.player.getInventory().countItem(com.example.examplemod.AncientAnvilContent.ENERGIZED_CRYSTAL.get()));state.addProperty("holdingEnergizedCrystal",minecraft.player.getMainHandItem().is(com.example.examplemod.AncientAnvilContent.ENERGIZED_CRYSTAL.get()));
                 state.addProperty("energizedInventory",minecraft.player.getInventory().countItem(com.example.examplemod.AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM.get()));state.addProperty("holdingEnergized",minecraft.player.getMainHandItem().is(com.example.examplemod.AncientAnvilContent.ENERGIZED_CRYSTAL_BLOCK_ITEM.get()));
                 state.addProperty("crystalResult",forge.getItem(5).is(com.example.examplemod.AncientAnvilContent.CRYSTAL_BLOCK_ITEM.get())?forge.getItem(5).getCount():0);
                 state.addProperty("crystalInventory",minecraft.player.getInventory().countItem(com.example.examplemod.AncientAnvilContent.CRYSTAL.get()));state.addProperty("crystalBlockInventory",minecraft.player.getInventory().countItem(com.example.examplemod.AncientAnvilContent.CRYSTAL_BLOCK_ITEM.get()));

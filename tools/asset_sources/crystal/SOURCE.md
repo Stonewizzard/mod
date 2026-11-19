@@ -1,6 +1,6 @@
 # Ancient Crystal artwork sources
 
-The item source and its original palette are retained unchanged.
+Both crystal items share the approved `ancient-crystal.pixels` silhouette. `energized-item-palette.json` retains the original bright item palette; `palette.json` is the normal crystal with RGB values darkened by 20%. Alpha, native pixel grid and shape remain identical.
 
 The block layout is a palette adaptation of Minecraft's native 16px `amethyst_block.png`, preserving the vanilla clusters and facet density. Purple shades map to blue-teal; the two brightest levels map to amber/gold highlights. All faces share the same layout, as vanilla amethyst does.
 
