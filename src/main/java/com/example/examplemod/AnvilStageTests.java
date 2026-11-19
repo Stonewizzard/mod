@@ -1,6 +1,8 @@
 package com.example.examplemod;
 
 import com.mojang.serialization.MapCodec;
+import java.util.HashSet;
+import java.util.ArrayDeque;
 import net.minecraft.core.*;
 import net.minecraft.gametest.framework.*;
 import net.minecraft.network.chat.*;
