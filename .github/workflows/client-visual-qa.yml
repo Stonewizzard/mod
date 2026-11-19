@@ -89,9 +89,7 @@ jobs:
           allowed=('tools/expanded_anvil.py','tools/generate_runic_anvil_assets.py','tools/generate_anvil_smithing.py','tools/generate_smithing_assets.py','tools/client_qa/drive.py','tools/field-guide.json','src/main/resources/assets/examplemod/','docs/','src/main/java/com/example/examplemod/ExpandedAncientAnvilGeometry.java','src/main/java/com/example/examplemod/AncientAnvilContent.java','src/main/java/com/example/examplemod/AnvilSlot.java','src/main/java/com/example/examplemod/FieldGuideChapters.java','.github/workflows/client-visual-qa.yml')
           underside=('tools/generate_anvil_smithing.py','tools/field-guide.json','docs/','src/main/java/com/example/examplemod/AnvilSlot.java','src/main/java/com/example/examplemod/AncientAnvilStructure.java','src/main/java/com/example/examplemod/AncientAnvilTests.java','src/main/java/com/example/examplemod/client/AncientAnvilScreen.java','src/main/java/com/example/examplemod/ExpandedAncientAnvilGeometry.java','src/main/java/com/example/examplemod/FieldGuideChapters.java','src/main/resources/assets/examplemod/lang/','src/main/resources/assets/examplemod/anvil_expanded_layout.json','tools/generate_runic_anvil_assets.py','tools/expanded_anvil.py','tools/client_qa/drive.py','src/main/java/com/example/examplemod/client/ClientVisualQa.java','.github/workflows/client-visual-qa.yml','src/main/resources/assets/examplemod/models/block/expanded_anvil')
           rear=('tools/expanded_anvil.py','tools/generate_runic_anvil_assets.py','tools/client_qa/drive.py','.github/workflows/client-visual-qa.yml','src/main/java/com/example/examplemod/AnvilSlot.java','src/main/java/com/example/examplemod/client/ClientVisualQa.java','src/main/resources/assets/examplemod/models/block/expanded_anvil','src/main/resources/assets/examplemod/textures/block/expanded_anvil_surface')
-          if 'tools/client_qa/palette_resources.py' in paths:
-              with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLIENT_QA_SCOPE=runestone-palettes\n')
-          elif 'tools/generate_runestone_assets.py' in paths:
+          if 'tools/generate_runestone_assets.py' in paths:
               with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLIENT_QA_SCOPE=runestone-art\n')
           elif 'src/main/java/com/example/examplemod/AncientAnvilBlockEntity.java' in paths and 'src/main/java/com/example/examplemod/AnvilTierSixTests.java' in paths:
               with open(os.environ['GITHUB_ENV'],'a') as f:f.write('CLIENT_QA_SCOPE=anvil-tier6-repair\n')
@@ -123,14 +121,7 @@ jobs:
           ALSOFT_DRIVERS: 'null'
           SDL_VIDEODRIVER: x11
           SDL_VIDEO_FORCE_EGL: '1'
-        run: |
-          if [ "${CLIENT_QA_SCOPE:-}" = "runestone-art" ]; then
-            for qa_variant in hewn weathered; do
-              RUNESTONE_PREVIEW_VARIANT="$qa_variant" xvfb-run -a -s '-screen 0 1280x720x24 +extension GLX +render -noreset' bash tools/client_qa/run.sh
-            done
-          else
-            xvfb-run -a -s '-screen 0 1280x720x24 +extension GLX +render -noreset' bash tools/client_qa/run.sh
-          fi
+        run: xvfb-run -a -s '-screen 0 1280x720x24 +extension GLX +render -noreset' bash tools/client_qa/run.sh
       - name: Export real screenshots for visual inspection
         if: always()
         run: python3 tools/client_qa/export_evidence.py

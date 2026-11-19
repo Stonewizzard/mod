@@ -2,15 +2,6 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 mkdir -p build/client-qa run/visual-qa
-if [ "${CLIENT_QA_SCOPE:-}" = "runestone-palettes" ]; then
-    python3 tools/client_qa/palette_resources.py
-fi
-# QA-only material swap: each native client run imports one proposed tile before resource processing.
-if [ "${CLIENT_QA_SCOPE:-}" = "runestone-art" ]; then
-    qa_texture_variant="${RUNESTONE_PREVIEW_VARIANT:-hewn}"
-    case "$qa_texture_variant" in hewn|weathered) ;; *) exit 2 ;; esac
-    cp "tools/asset_sources/runestone/${qa_texture_variant}_slate_16.png" src/main/resources/assets/examplemod/textures/block/runestone.png
-fi
 glxinfo -B >build/client-qa/graphics.txt 2>&1 || true
 for qa_lvp_icd in /usr/share/vulkan/icd.d/lvp_*.json; do
     if [ -f "$qa_lvp_icd" ]; then export VK_DRIVER_FILES="$qa_lvp_icd"; break; fi
@@ -30,7 +21,7 @@ renderDistance:2
 simulationDistance:5
 EOF
 # The aerial canopy needs more view distance than the close-up book routes.
-if [ "${CLIENT_QA_SCOPE:-}" = "anvil-canopy" ] || [ "${CLIENT_QA_SCOPE:-}" = "anvil-tier6" ] || [ "${CLIENT_QA_SCOPE:-}" = "anvil-tier6-repair" ] || [ "${CLIENT_QA_SCOPE:-}" = "runestone-art" ] || [ "${CLIENT_QA_SCOPE:-}" = "runestone-palettes" ]; then
+if [ "${CLIENT_QA_SCOPE:-}" = "anvil-canopy" ] || [ "${CLIENT_QA_SCOPE:-}" = "anvil-tier6" ] || [ "${CLIENT_QA_SCOPE:-}" = "anvil-tier6-repair" ] || [ "${CLIENT_QA_SCOPE:-}" = "runestone-art" ]; then
     sed -i 's/renderDistance:2/renderDistance:5/' run/visual-qa/options.txt
 fi
 ./gradlew runClientVisualQa >build/client-qa/client.log 2>&1 &
