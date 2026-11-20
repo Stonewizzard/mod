@@ -22,7 +22,7 @@ Costs and caps below are proposals, not changes to current recipes. All XP figur
 | Extraction | 1 / 0 | Pipe **export** from core storage. Standing on it deposits player XP into the core: 2 XP/second, crouch 10/second. | 1 hopper + 1 ancient ingot + 1 lapis | 8 × 8 → 1 |
 | Input | 1 / 0 | Pipe **import** into core storage. Standing on it withdraws stored XP to the player at the same rates. | 1 hopper + 1 ancient ingot + 1 redstone dust | 8 × 8 → 1 |
 | Swift Forging | 2 / 1 | Each rune removes one required swing (minimum 1), and adds **10% of base XP/hit**. First 8 count. | 1 sugar + 1 redstone dust + 1 ancient ingot | 12 × 10 → 1 |
-| Efficiency | 4 / 3 | Each rune subtracts **2 percentage points of base XP/hit**; first 15 count (30%). Swift surcharge is not discounted. Positive-price recipes stay at least 1 XP/hit. | 1 diamond + 2 ancient ingots + 1 lapis | 16 × 15 → 1 |
+| Efficiency | 4 / 3 | Each rune reduces the **final XP/hit, including Swift surcharge, by 10%**; first 5 count (50%). Discounts add within this family, then multiply the Swift-adjusted price. Positive-price recipes stay at least 1 XP/hit. | 1 diamond + 2 ancient ingots + 1 lapis | 16 × 15 → 1 |
 | Keystone Rune of the Sky | enables 5 / 4 | Renames/replaces Canopy Keystone. The existing sixteen required canopy nodes enable Tier 5; no additional effect. Preserve old worlds and recipe IDs. | Keep existing batch: 4 Runestone + 4 ancient ingots + 1 glowstone dust | Keep 8 × 1 → 4 initially; review price separately |
 | Master Craftsmanship | 6 / 5 | +1% chance per rune to double a completed recipe's base output, capped at 10%. Roll once per craft; a doubling never recursively rolls. | 1 ancient crystal + 1 diamond + 2 ancient ingots | 24 × 25 → 1 |
 
@@ -31,10 +31,10 @@ Costs and caps below are proposals, not changes to current recipes. All XP figur
 For a future recipe requiring `S` base swings and `C` XP/hit:
 
 - `S_effective = max(1, S - min(swiftCount, 8))`.
-- `C_effective = ceil(C × (1 + 0.10 × min(swiftCount, 8) - 0.02 × min(efficiencyCount, 15)))`.
+- `C_effective = ceil(C × (1 + 0.10 × min(swiftCount, 8)) × (1 - 0.10 × min(efficiencyCount, 5)))`.
 - Preserve explicitly free recipes at zero; otherwise clamp to at least 1. Round only once at the end.
 
-Example: Runestone is 16 swings × 10 XP = 160 XP. Four Swift runes give 12 × 14 = 168 XP. Four Swift + five Efficiency give 12 × 13 = 156 XP. Eight Swift give 8 × 18 = 144 XP: speed investment eventually also saves total XP, even though each swing costs more. This is deliberate in this proposal and must be approved rather than hidden. A requirement that speed always costs more total XP needs a different formula.
+Example: Runestone is 16 swings × 10 XP = 160 XP. Four Swift runes give 12 × 14 = 168 XP. Four Swift + five Efficiency give 12 × 7 = 84 XP. Efficiency without Swift gives 16 × 5 = 80 XP: efficient crafting and faster crafting remain distinct choices, and using both is powerful. Eight Swift give 8 × 18 = 144 XP: speed investment eventually also saves total XP, even though each swing costs more. The user explicitly approved allowing heavy Swift investment to save total XP. The user also emphasized that Efficiency must remain useful; the stronger final-cost discount above is the revised proposal, not an implemented rune effect.
 
 Future hammer work/swing must compose explicitly with these formulas. Do not silently treat work units as swings for hammers that provide more than one work. The current Iron Forge Hammer provides one.
 
@@ -72,10 +72,10 @@ Each candidate below is an alternative choice, not a commitment to add every blo
 | 5 / 4 | Precision | Shows the expected output and eligible bonuses before the final strike; warns if there is no room for a doubled stack. More copies add no effect; does not improve odds. | 1 spyglass + 1 diamond + 1 ancient ingot | 16 × 18 |
 | 6 / 5 | Spectrum | Saves up to four approved lens colors/recipes as selectable visual presets; swapping still requires a valid single-color lens and never overrides recipe restrictions. Cosmetic plus setup assistance. | 1 glass block + 1 glowstone dust + 2 ancient ingots | 24 × 20 |
 | 6 / 5 | Grand Pattern | Saves/restores one complete eligible rune layout as a projection. Building still uses actual inventory blocks, accepted placement and normal effects. One rune. | 1 map + 1 ender pearl + 2 ancient ingots | 24 × 25 |
-| 6 / 5 | Concordance | Small XP reduction for an intentional mix of rune families rather than stacking one effect: 1% per distinct active family, cap 6%; combined discount including Efficiency capped 30%. Never counts itself or mandatory keystones. | 1 ancient crystal + 1 lapis + 1 diamond + 1 ancient ingot | 24 × 25 |
+| 6 / 5 | Concordance | Diversity bonus for Master Craftsmanship: one rune grants +2 percentage points to the completion doubling chance if at least four other distinct functional rune families are active. Does not stack with itself; total doubling chance capped 12%. No XP discount, so Efficiency keeps its own role. | 1 ancient crystal + 1 lapis + 1 diamond + 1 ancient ingot | 24 × 25 |
 
 ## Recommended first implementation after discussion
 
 Start with Storage, Extraction, Input and Swift at their proposed tiers; settle the transfer naming first. Rename Sky Keystone without changing its art/role or invalidating saves. Add Efficiency and Master Craftsmanship only after confirming caps, speed-versus-total-XP behavior and duplication eligibility. Among optional candidates, Tempering, Conduit, Pattern and Reserve have the clearest distinct roles. Avoid adding weak cosmetic/stat runes merely to fill every tier; optional choices should earn their footprint.
 
-The strongest unresolved questions are whether Swift may reduce total batch XP at high investment, whether Master Craftsmanship can affect functional rune recipes, and which XP-pipe mod to support first. The recipes above are starting proposals for that discussion, not approved progression gates.
+Swift saving total batch XP at high investment is approved in principle. The strongest unresolved questions are the revised Efficiency strength/cap, whether Master Craftsmanship can affect functional rune recipes, and which XP-pipe mod to support first. The recipes above are starting proposals for that discussion, not approved progression gates.
