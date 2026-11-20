@@ -37,6 +37,7 @@ public final class AnvilSmithingTests {
                 l.destroyBlock(core,false);
             }
             l.setBlock(core,AncientAnvilContent.ANVIL.get().defaultBlockState(),3);AncientAnvilBlockEntity.refresh(l,core,l.getBlockState(core));var be=(AncientAnvilBlockEntity)l.getBlockEntity(core);
+            storageChecks(h,player,core);
             var hammer=new ItemStack(AncientAnvilContent.IRON_FORGE_HAMMER.get());player.setItemInHand(InteractionHand.MAIN_HAND,hammer);
             player.giveExperiencePoints(3);check(h,!AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&hammer.getDamageValue()==0&&AnvilExperience.available(player)==3,"Invalid recipes never spend XP or damage the hammer");
             for(var slot:List.of(AnvilSlot.NORTH_WEST,AnvilSlot.NORTH_EAST,AnvilSlot.SOUTH_WEST,AnvilSlot.SOUTH_EAST))be.placeInput(slot,new ItemStack(slot==AnvilSlot.NORTH_WEST?Items.DEEPSLATE:Items.COBBLED_DEEPSLATE));
@@ -44,17 +45,18 @@ public final class AnvilSmithingTests {
             player.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY);player.setShiftKeyDown(true);AnvilWork.interact(l,core,player,InteractionHand.MAIN_HAND,new BlockHitResult(AnvilSlot.CENTER.world(core,Direction.NORTH),Direction.UP,core.above(),false));check(h,be.inputCount()==5,"Opening the foundation guide never removes workpieces");player.setShiftKeyDown(false);player.setItemInHand(InteractionHand.MAIN_HAND,hammer);
             check(h,l.getBlockState(core).getValue(AncientAnvilBlock.TIER)==0&&AnvilRecipes.match(be)!=null,"The datapack recipe loads, accepts both deepslates and works at tier zero");
             be.placeInput(AnvilSlot.NORTH_INNER,new ItemStack(Items.STICK));check(h,!AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.inputCount()==6,"Extra ingredients block a recipe without losing anything");be.takeInput(AnvilSlot.NORTH_INNER);check(h,AnvilExperience.available(player)==3,"Extra-ingredient rejection does not spend XP");AnvilExperience.spend(player,3);
-            check(h,AnvilRecipes.match(be).work()==16&&AnvilRecipes.match(be).resultCount()==4&&AnvilRecipes.match(be).xpPerHit()==1,"Runestone data requires 16 strikes, four output and one XP per hit");
+            check(h,AnvilRecipes.match(be).work()==16&&AnvilRecipes.match(be).resultCount()==4&&AnvilRecipes.match(be).xpPerHit()==10,"Runestone data requires 16 strikes, four output and ten XP per hit");
             check(h,!AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==0&&be.inputCount()==5&&hammer.getDamageValue()==0,"No XP pauses work without taking ingredients or durability");
-            player.setGameMode(GameType.CREATIVE);check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==1&&AnvilExperience.available(player)==0&&hammer.getDamageValue()==0,"Creative forging skips XP and durability");be.takeInput(AnvilSlot.CENTER);be.placeInput(AnvilSlot.CENTER,new ItemStack(Items.GOLD_INGOT));be.lastStrike=-100;player.setGameMode(GameType.SURVIVAL);player.giveExperiencePoints(1);
-            check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==1&&be.output().isEmpty()&&AnvilExperience.available(player)==0,"The first hammer hit starts work without consuming the center ingredient");
+            be.insertExperience(9,false);player.setGameMode(GameType.CREATIVE);check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==1&&AnvilExperience.available(player)==0&&be.storedExperience()==9&&hammer.getDamageValue()==0,"Creative forging skips stored XP, player XP and durability");be.extractExperience(9,false);be.takeInput(AnvilSlot.CENTER);be.placeInput(AnvilSlot.CENTER,new ItemStack(Items.GOLD_INGOT));be.lastStrike=-100;player.setGameMode(GameType.SURVIVAL);player.giveExperiencePoints(6);be.insertExperience(3,false);
+            check(h,!AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==0&&be.storedExperience()==3&&AnvilExperience.available(player)==6&&hammer.getDamageValue()==0,"Insufficient combined wallets spend neither balance");player.giveExperiencePoints(1);
+            check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==1&&be.output().isEmpty()&&be.storedExperience()==0&&AnvilExperience.available(player)==0,"The first hammer hit starts work without consuming the center ingredient");
             check(h,!AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==1&&hammer.getDamageValue()==1&&AnvilExperience.available(player)==0,"Repeated packets in the same tick cannot craft faster or damage twice");
             var saved=be.saveWithFullMetadata(l.registryAccess());var restored=BlockEntity.loadStatic(core,be.getBlockState(),saved,l.registryAccess());check(h,restored instanceof AncientAnvilBlockEntity loaded&&loaded.work()==1&&loaded.inputCount()==5&&loaded.input(AnvilSlot.CENTER).is(Items.GOLD_INGOT),"All positions, center ingredient and partial forging work survive reload");
             h.runAtTickTime(12,()->{
                 check(h,!AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==1&&be.inputCount()==5&&hammer.getDamageValue()==1,"Running out of XP preserves partial progress and ingredients");
-                player.giveExperiencePoints(15);check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==2&&AnvilExperience.available(player)==14,"Adding XP resumes immediately; rejected hits do not stamp cooldown");
+                player.giveExperiencePoints(125);be.insertExperience(25,false);check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==2&&be.storedExperience()==15&&AnvilExperience.available(player)==125,"Adding XP resumes immediately; rejected hits do not stamp cooldown");
             });
-            for(int hit=3;hit<=15;hit++){int n=hit;h.runAtTickTime((n-1)*8+4,()->{check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==n&&be.output().isEmpty()&&be.inputCount()==5&&AnvilExperience.available(player)==16-n,"Intermediate strike "+n+" spends one XP and keeps inputs until completion");});}
+            for(int hit=3;hit<=15;hit++){int n=hit;h.runAtTickTime((n-1)*8+4,()->{check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.work()==n&&be.output().isEmpty()&&be.inputCount()==5&&be.storedExperience()==Math.max(0,35-10*n)&&AnvilExperience.available(player)+be.storedExperience()==10*(16-n),"Intermediate strike "+n+" spends ten XP, storage first, and keeps inputs until completion");});}
             h.runAtTickTime(124,()->{
                 check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND)&&be.output().is(AncientAnvilContent.RUNESTONE.get().asItem())&&be.output().getCount()==4&&be.inputCount()==0&&hammer.getDamageValue()==16&&AnvilExperience.available(player)==0,"Sixteen paid strikes consume five ingredients and produce four Runestone");
                 check(h,!AnvilWork.strike(be,player,InteractionHand.MAIN_HAND),"Uncollected output prevents duplicate crafting");
@@ -62,11 +64,36 @@ public final class AnvilSmithingTests {
                 player.setItemInHand(InteractionHand.MAIN_HAND,new ItemStack(Items.GOLD_INGOT,3));var hit=new BlockHitResult(AnvilSlot.CENTER.world(core,Direction.NORTH),Direction.UP,core.above(),false);
                 AnvilWork.interact(l,core,player,InteractionHand.MAIN_HAND,hit);check(h,be.output().isEmpty()&&be.input(AnvilSlot.CENTER).isEmpty()&&player.getMainHandItem().getCount()==3,"Picking up output while holding ingredients cannot overwrite it or consume held items");
                 int runeCount=0;for(int i=0;i<player.getInventory().getContainerSize();i++)if(player.getInventory().getItem(i).is(AncientAnvilContent.RUNESTONE_ITEM.get()))runeCount+=player.getInventory().getItem(i).getCount();check(h,runeCount==4,"Exactly four finished blocks reach inventory");
+                be.insertExperience(30,false);
                 be.placeInput(AnvilSlot.NORTH_OUTER,new ItemStack(Items.IRON_INGOT));be.placeInput(AnvilSlot.SOUTH_OUTER,new ItemStack(Items.GOLD_INGOT));
                 int before=drops(l,core,Items.IRON_INGOT)+drops(l,core,Items.GOLD_INGOT);l.destroyBlock(AncientAnvilStructure.CELLS.get(23).at(core,Direction.NORTH),true);check(h,drops(l,core,Items.IRON_INGOT)+drops(l,core,Items.GOLD_INGOT)==before+2,"Breaking a remote horn cell recovers stored workpieces exactly once");
-                System.out.println("ANVIL_SMITHING_CHECK: PASS: 13 positions x4 rotations, placement/retrieval/swaps, loaded recipe, tier0, normal/cobbled deepslate, exact ingredients, saved work/output, timed sixteen-strike craft, exact 16 XP, pause/resume and creative bypass, cooldown, durability, result pickup and break recovery");h.succeed();
+                check(h,be.storedExperience()==0&&l.getEntitiesOfClass(net.minecraft.world.entity.ExperienceOrb.class,new AABB(core).inflate(6)).stream().mapToInt(net.minecraft.world.entity.ExperienceOrb::getValue).sum()==30,"Breaking an anvil returns its stored XP once as native orbs");
+                System.out.println("ANVIL_SMITHING_CHECK: PASS: 13 positions x4 rotations, placement/retrieval/swaps, loaded recipe, tier0, normal/cobbled deepslate, exact ingredients, saved work/output, timed sixteen-strike craft, exact 160 XP, tier capacity/persistence/downgrade, atomic storage-first payment, deposit/recovery, pause/resume and creative bypass, cooldown, durability, result pickup and break recovery");h.succeed();
             });
         }
+    }
+    private static void storageChecks(GameTestHelper h,net.minecraft.server.level.ServerPlayer player,BlockPos core){
+        var bank=new AncientAnvilBlockEntity(core,AncientAnvilContent.ANVIL.get().defaultBlockState().setValue(AncientAnvilBlock.TIER,6));
+        int previous=0;for(int tier=0;tier<=6;tier++){int cap=AncientAnvilBlockEntity.experienceCapacity(tier);check(h,cap>previous,"Capacity grows at tier "+tier);previous=cap;}
+        check(h,bank.insertExperience(Integer.MAX_VALUE,true)==50000&&bank.storedExperience()==0,"Simulated insertion is capacity bounded and free");
+        check(h,bank.insertExperience(Integer.MAX_VALUE,false)==50000&&bank.insertExperience(1,false)==0,"Insertion cannot exceed capacity");
+        check(h,bank.extractExperience(50001,true)==50000&&bank.storedExperience()==50000,"Simulated extraction does not mutate storage");
+        check(h,bank.extractExperience(Integer.MAX_VALUE,false)==50000&&bank.extractExperience(1,false)==0,"Extraction cannot underflow");
+        check(h,bank.insertExperience(-1,false)==0&&bank.extractExperience(-1,false)==0,"Negative transfers never generate XP");
+        player.giveExperiencePoints(50);check(h,bank.depositExperience(player,30)==30&&bank.storedExperience()==30&&AnvilExperience.available(player)==20,"Depositing transfers exact player points");
+        bank.insertExperience(2000,false);
+        var reloaded=BlockEntity.loadStatic(core,AncientAnvilContent.ANVIL.get().defaultBlockState(),bank.saveWithFullMetadata(h.getLevel().registryAccess()),h.getLevel().registryAccess());
+        check(h,reloaded instanceof AncientAnvilBlockEntity,"Stored XP reloads with anvil data");var low=(AncientAnvilBlockEntity)reloaded;
+        check(h,low.experienceCapacity()==250&&low.storedExperience()==2030&&low.insertExperience(1,false)==0,"Downgrade preserves excess XP and refuses further deposits");
+        check(h,low.payExperience(player,10)&&low.storedExperience()==2020&&AnvilExperience.available(player)==20,"A full stored payment leaves player XP alone");
+        low.extractExperience(Integer.MAX_VALUE,false);low.insertExperience(5,false);
+        check(h,!low.payExperience(player,26)&&low.storedExperience()==5&&AnvilExperience.available(player)==20,"Failed combined payment is atomic");
+        check(h,low.payExperience(player,10)&&low.storedExperience()==0&&AnvilExperience.available(player)==15,"Split payment spends stored XP before exact player shortfall");
+        player.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY);
+        var real=(AncientAnvilBlockEntity)h.getLevel().getBlockEntity(core);var body=new BlockHitResult(new Vec3(core.getX()+.5,core.getY()+.5,core.getZ()),Direction.NORTH,core,false);
+        AnvilWork.interact(h.getLevel(),core,player,InteractionHand.MAIN_HAND,body);AnvilWork.interact(h.getLevel(),core,player,InteractionHand.MAIN_HAND,body);
+        check(h,real.storedExperience()==10&&AnvilExperience.available(player)==5,"Lower-body interaction deposits ten points once per cooldown");
+        real.extractExperience(Integer.MAX_VALUE,false);AnvilExperience.spend(player,5);
     }
     private static void xpChecks(GameTestHelper h,net.minecraft.server.level.ServerPlayer player){
         for(int points:new int[]{1,7,16,20,352,1507,1628}){

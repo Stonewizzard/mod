@@ -29,6 +29,13 @@ public final class AnvilWork {
         var held=player.getItemInHand(hand);
         if(player.isShiftKeyDown())return InteractionResult.SUCCESS; // Reserved for the client foundation guide.
         if(!state.getValue(AncientAnvilBlock.EXPANDED)){message(player,"Clear the 4 x 4 working space to assemble the anvil");return InteractionResult.SUCCESS;}
+        if(held.isEmpty()&&hand==InteractionHand.MAIN_HAND&&hit.getLocation().y<core.getY()+1.5){
+            if(level.getGameTime()-be.lastExperienceTransfer>=8){
+                be.lastExperienceTransfer=level.getGameTime();int deposited=be.depositExperience(player,10);
+                message(player,"Stored XP: "+be.storedExperience()+" / "+be.experienceCapacity()+(deposited>0?" | +"+deposited+" XP":" | Right-click the lower body to deposit up to 10 XP"));
+            }
+            return InteractionResult.SUCCESS;
+        }
         if(slot==AnvilSlot.CENTER&&!be.output().isEmpty()){give(player,be.takeOutput());return InteractionResult.SUCCESS;}
         if(held.getItem() instanceof ForgeHammerItem){strike(be,player,hand);return InteractionResult.SUCCESS;}
         if(slot==null)return InteractionResult.SUCCESS;
@@ -50,7 +57,7 @@ public final class AnvilWork {
         if(hammer.forgeTier()<recipe.hammerTier()){message(player,"This recipe needs a higher forge hammer tier");return false;}
         if(level.getGameTime()-be.lastStrike<8)return false;
         int xp=recipe.xpPerHit();
-        if(!AnvilExperience.spend(player,xp)){message(player,"Need "+xp+" XP point"+(xp==1?"":"s")+" to strike ("+AnvilExperience.available(player)+" available)");return false;}
+        if(!be.payExperience(player,xp)){message(player,"Need "+xp+" XP point"+(xp==1?"":"s")+" to strike ("+be.storedExperience()+" stored, "+AnvilExperience.available(player)+" carried)");return false;}
         be.lastStrike=level.getGameTime();
         if(!be.workRecipe.equals(recipe.id().toString())){be.workRecipe=recipe.id().toString();be.work=0;}
         be.work=Math.min(recipe.work(),be.work+hammer.workPerStrike());

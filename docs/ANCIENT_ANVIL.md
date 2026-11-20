@@ -79,7 +79,7 @@ the stable recipe ID. Resource-pack client code is not involved in recipe decisi
   "anvil_tier": 0,
   "hammer_tier": 1,
   "work": 16,
-  "xp_per_hit": 1,
+  "xp_per_hit": 10,
   "ingredients": {
     "north_west": {"tag": "examplemod:runestone_deepslate"},
     "north_east": {"tag": "examplemod:runestone_deepslate"},
@@ -267,8 +267,24 @@ See [the Tier 6 reference](ANCIENT_ANVIL_TIER6.md) for energized tower caps, nor
 
 ## Experience-powered smithing
 
-Accepted hammer strikes spend player XP points, not levels. The default cost is one point per strike for every anvil recipe. `xp_per_hit` is a per-recipe integer override from 0 through 100000; omission uses 1 and 0 allows a free recipe. An Iron Forge Hammer needs 16 accepted strikes and 16 XP points for four Runestone. The four deepslate inputs and center gold ingot are unchanged.
+Accepted hammer strikes spend stored XP first, then the player pays only the shortfall in points, not levels. `xp_per_hit` is a per-recipe integer override from 0 through 100000; omission uses 1 and 0 allows a free recipe. Runestone explicitly costs 10 XP per hit: 16 accepted Iron Forge Hammer strikes and 160 XP points produce four Runestone. The four deepslate inputs and center gold ingot are unchanged.
 
-Payment is checked on the server after recipe, tier, hammer and cooldown checks, before progress, durability or crafting effects. Insufficient XP leaves ingredients, progress and cooldown untouched. Gain XP to resume. Creative mode bypasses XP and durability costs. Guide construction and placing/retrieving ingredients are not hammer work. Current level/progress determines spendable XP; the lifetime `totalExperience` counter is not a wallet.
+Payment is checked on the server after recipe, tier, hammer and cooldown checks, before progress, durability or crafting effects. Insufficient combined XP leaves both wallets, ingredients, progress and cooldown untouched. Gain or deposit XP to resume. Creative mode bypasses both XP wallets and durability costs. Guide construction and placing/retrieving ingredients are not hammer work. Current level/progress determines spendable XP; the lifetime `totalExperience` counter is not a wallet.
 
 See [EXPERIENCE_ECONOMY.md](EXPERIENCE_ECONOMY.md) for the initial resource direction and tuning reference.
+
+### Anvil XP reservoir
+
+| Actual tier | Capacity (XP points) |
+|---|---:|
+| 0 | 250 |
+| 1 | 1,000 |
+| 2 | 2,500 |
+| 3 | 5,000 |
+| 4 | 10,000 |
+| 5 | 25,000 |
+| 6 | 50,000 |
+
+Empty-main-hand right-click on the lower body deposits up to 10 player XP, limited by balance and free space. Repeated packets share an eight-tick deposit cooldown. Top workpiece interactions and Shift-use guide controls are unchanged. The action bar displays storage and capacity. Capacity uses the actual validated structure tier; it does not grant a crafting tier.
+
+Stored points save and synchronize with the core. A downgrade preserves points above capacity and blocks further insertion until there is space. Breaking any part returns the stored XP once as native orbs, alongside existing item recovery. Insert/extract simulation methods prepare for later transfer runes, but no pipe capability or functional rune blocks are registered in this change.

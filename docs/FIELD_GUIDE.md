@@ -349,11 +349,15 @@ Place the recipe ingredients, then hit the anvil with an Iron Forge Hammer. Eith
 
 Iron Forge Hammer recipe: three iron ingots across the top and two sticks down the middle. It lasts 250 accepted strikes. More hammer tiers and anvil recipes can be added later.
 
-Tier 0 is sufficient. Put one deepslate or cobbled deepslate in each of the four diagonal corner positions, and one gold ingot in the center. Leave every other position empty. Strike sixteen times with the Iron Forge Hammer to make four Runestone. By default, the batch costs sixteen experience points.
+Tier 0 is sufficient. Put one deepslate or cobbled deepslate in each of the four diagonal corner positions, and one gold ingot in the center. Leave every other position empty. Strike sixteen times with the Iron Forge Hammer to make four Runestone. Each hit costs ten experience points, for 160 XP per batch.
 
 Runestone is a blank prepared stone base. Later recipes will inscribe specific functional Ancient Runes on it. It has no crafting-grid recipe.
 
-Each accepted hammer strike normally spends one experience point, not one level. If you run out of XP, your ingredients and partial work stay on the anvil. Gain more XP and continue. Invalid recipes and hits during the hammer cooldown do not spend XP. Creative smithing is free.
+Recipes specify both required work and XP per hit. Runestone costs 10 XP per hit; other recipes may differ. The anvil spends stored XP first and takes only the shortfall from your current XP points, not levels. If the combined balance cannot pay a hit, both balances, your ingredients and partial work stay unchanged. Invalid recipes and cooldown hits are free. Creative spends neither XP balance nor durability.
+
+With an empty main hand, right-click the lower body of the anvil to deposit up to 10 of your current XP points. The action bar shows stored XP and capacity. The working surface still places or retrieves ingredients; Shift + right-click still controls the placement guide.
+
+Capacity grows by actual anvil tier: 250 at Tier 0, 1,000 at Tier 1, 2,500 at Tier 2, 5,000 at Tier 3, 10,000 at Tier 4, 25,000 at Tier 5 and 50,000 at Tier 6. Stored XP survives saving and structure downgrades. If storage exceeds the reduced capacity, deposits stop until there is room. Breaking the anvil releases its stored XP as orbs.
 
 Build a centered 5 by 5 square of Runestone blocks directly one layer below the block where the anvil was placed. All 25 blocks are required. Metal blocks do not count.
 

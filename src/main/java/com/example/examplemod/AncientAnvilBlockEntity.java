@@ -16,6 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class AncientAnvilBlockEntity extends BlockEntity {
     private NonNullList<ItemStack> items=NonNullList.withSize(AnvilSlot.values().length+1,ItemStack.EMPTY);
     private boolean tierSixBuild;
+    private int storedExperience;
+    long lastExperienceTransfer=-100;
     public boolean tierSixBuild(){return tierSixBuild;}
     public long energyUntil,energyStarted;public int energyColor=0xffffff;
     int work;String workRecipe="";long lastStrike=-100,lastFoundationPlacement=-100;
@@ -23,6 +25,32 @@ public final class AncientAnvilBlockEntity extends BlockEntity {
     public ItemStack input(AnvilSlot slot){return items.get(slot.ordinal());}
     public ItemStack output(){return items.get(AnvilSlot.values().length);}
     public int work(){return work;}
+    public int storedExperience(){return storedExperience;}
+    public int experienceCapacity(){return experienceCapacity(getBlockState().getValue(AncientAnvilBlock.TIER));}
+    public static int experienceCapacity(int tier){return switch(Math.clamp(tier,0,6)){case 0->250;case 1->1000;case 2->2500;case 3->5000;case 4->10000;case 5->25000;default->50000;};}
+    /** Downgrading pauses deposits above the new capacity; existing XP is never truncated. */
+    public int insertExperience(int points,boolean simulate){
+        int accepted=Math.min(Math.max(0,points),Math.max(0,experienceCapacity()-storedExperience));
+        if(!simulate&&accepted>0){storedExperience+=accepted;sync();}return accepted;
+    }
+    public int extractExperience(int points,boolean simulate){
+        int extracted=Math.min(Math.max(0,points),storedExperience);
+        if(!simulate&&extracted>0){storedExperience-=extracted;sync();}return extracted;
+    }
+    /** Check the entire price before spending either wallet. Creative spends neither. */
+    public boolean payExperience(net.minecraft.world.entity.player.Player player,int points){
+        if(points<0)throw new IllegalArgumentException("XP cost cannot be negative");
+        if(player.getAbilities().instabuild||points==0)return true;
+        int fromStore=Math.min(storedExperience,points),fromPlayer=points-fromStore;
+        if(!AnvilExperience.spend(player,fromPlayer))return false;
+        extractExperience(fromStore,false);return true;
+    }
+    public int depositExperience(net.minecraft.world.entity.player.Player player,int limit){
+        if(player.getAbilities().instabuild||player.isSpectator())return 0;
+        int amount=insertExperience(Math.min(Math.max(0,limit),AnvilExperience.available(player)),true);
+        if(amount>0&&AnvilExperience.spend(player,amount))return insertExperience(amount,false);
+        return 0;
+    }
     public int inputCount(){return (int)Arrays.stream(AnvilSlot.values()).filter(s->!input(s).isEmpty()).count();}
     public void placeInput(AnvilSlot slot,ItemStack stack){items.set(slot.ordinal(),stack.copyWithCount(1));changedInputs();}
     public ItemStack takeInput(AnvilSlot slot){var stack=input(slot);items.set(slot.ordinal(),ItemStack.EMPTY);if(!stack.isEmpty())changedInputs();return stack;}
@@ -33,12 +61,12 @@ public final class AncientAnvilBlockEntity extends BlockEntity {
         items.set(AnvilSlot.values().length,recipe.result().copy());work=0;workRecipe="";sync();
     }
     public void sync(){setChanged();if(level instanceof ServerLevel)level.sendBlockUpdated(worldPosition,getBlockState(),getBlockState(),2);}
-    @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);tierSixBuild=input.read("AnvilTierSixBuild",com.mojang.serialization.Codec.BOOL).orElse(false);items=NonNullList.withSize(AnvilSlot.values().length+1,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);work=Math.max(0,input.read("ForgeWork",com.mojang.serialization.Codec.INT).orElse(0));workRecipe=input.read("ForgeRecipe",com.mojang.serialization.Codec.STRING).orElse("");lastStrike=-100;energyStarted=input.read("AnvilEnergyStarted",com.mojang.serialization.Codec.LONG).orElse(0L);energyUntil=input.read("AnvilEnergyUntil",com.mojang.serialization.Codec.LONG).orElse(0L);energyColor=input.read("AnvilEnergyColor",com.mojang.serialization.Codec.INT).orElse(0xffffff);}
-    @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);output.putBoolean("AnvilTierSixBuild",tierSixBuild);ContainerHelper.saveAllItems(output,items);output.putInt("ForgeWork",work);output.putString("ForgeRecipe",workRecipe);output.putLong("AnvilEnergyUntil",energyUntil);output.putLong("AnvilEnergyStarted",energyStarted);output.putInt("AnvilEnergyColor",energyColor);}
+    @Override protected void loadAdditional(ValueInput input){super.loadAdditional(input);storedExperience=Math.max(0,input.read("StoredExperience",com.mojang.serialization.Codec.INT).orElse(0));lastExperienceTransfer=-100;tierSixBuild=input.read("AnvilTierSixBuild",com.mojang.serialization.Codec.BOOL).orElse(false);items=NonNullList.withSize(AnvilSlot.values().length+1,ItemStack.EMPTY);ContainerHelper.loadAllItems(input,items);work=Math.max(0,input.read("ForgeWork",com.mojang.serialization.Codec.INT).orElse(0));workRecipe=input.read("ForgeRecipe",com.mojang.serialization.Codec.STRING).orElse("");lastStrike=-100;energyStarted=input.read("AnvilEnergyStarted",com.mojang.serialization.Codec.LONG).orElse(0L);energyUntil=input.read("AnvilEnergyUntil",com.mojang.serialization.Codec.LONG).orElse(0L);energyColor=input.read("AnvilEnergyColor",com.mojang.serialization.Codec.INT).orElse(0xffffff);}
+    @Override protected void saveAdditional(ValueOutput output){super.saveAdditional(output);output.putInt("StoredExperience",storedExperience);output.putBoolean("AnvilTierSixBuild",tierSixBuild);ContainerHelper.saveAllItems(output,items);output.putInt("ForgeWork",work);output.putString("ForgeRecipe",workRecipe);output.putLong("AnvilEnergyUntil",energyUntil);output.putLong("AnvilEnergyStarted",energyStarted);output.putInt("AnvilEnergyColor",energyColor);}
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries){return saveCustomOnly(registries);}
     @Override public ClientboundBlockEntityDataPacket getUpdatePacket(){return ClientboundBlockEntityDataPacket.create(this);}
     @Override public void preRemoveSideEffects(BlockPos pos,BlockState state){
-        if(level instanceof ServerLevel){var removed=items;items=NonNullList.withSize(AnvilSlot.values().length+1,ItemStack.EMPTY);for(var stack:removed)if(!stack.isEmpty())Containers.dropItemStack(level,pos.getX()+.5,pos.getY()+1.5,pos.getZ()+.5,stack);}
+        if(level instanceof ServerLevel server){int xp=storedExperience;storedExperience=0;if(xp>0)net.minecraft.world.entity.ExperienceOrb.award(server,net.minecraft.world.phys.Vec3.atCenterOf(pos),xp);var removed=items;items=NonNullList.withSize(AnvilSlot.values().length+1,ItemStack.EMPTY);for(var stack:removed)if(!stack.isEmpty())Containers.dropItemStack(level,pos.getX()+.5,pos.getY()+1.5,pos.getZ()+.5,stack);}
         super.preRemoveSideEffects(pos,state);
     }
     public static List<BlockPos> missing(Level level,BlockPos core){
