@@ -147,16 +147,20 @@ def run():
             command('smithing_aim',slot=slot);expect(smithAim=slot);process('xdotool','click','3');expect(smithInputs=count)
         process('xdotool','key','2');command('smithing_aim',slot='center');process('xdotool','click','3');expect(smithInputs=5,smithStones=12,smithGold=1)
         process('xdotool','key','3');time.sleep(.3);process('xdotool','click','3');time.sleep(.5);expect(smithWork=0,smithXp=0,smithHammerDamage=0,smithInputs=5)
-        native_chat_command('experience add @s 1 points');expect(smithXp=1);process('xdotool','click','3');expect(smithWork=1,smithXp=0,smithHammerDamage=1);time.sleep(.55)
-        process('xdotool','click','3');time.sleep(.5);expect(smithWork=1,smithXp=0,smithHammerDamage=1,smithInputs=5);capture('anvil-smithing-xp-paused')
-        native_chat_command('experience add @s 15 points');expect(smithXp=15);process('xdotool','click','--repeat','2','--delay','50','3');expect(smithWork=2,smithXp=14,smithHammerDamage=2);time.sleep(.5)
+        native_chat_command('experience add @s 25 points');expect(smithXp=25)
+        process('xdotool','key','9');command('smithing_storage_aim');process('xdotool','click','3');expect(smithStoredXp=10,smithXp=15,smithXpCapacity=250);time.sleep(.5)
+        process('xdotool','click','3');expect(smithStoredXp=20,smithXp=5);command('smithing_aim',slot='center');process('xdotool','key','3');time.sleep(.3)
+        process('xdotool','click','--repeat','2','--delay','50','3');expect(smithWork=1,smithStoredXp=10,smithXp=5,smithHammerDamage=1);time.sleep(.5)
+        process('xdotool','click','3');expect(smithWork=2,smithStoredXp=0,smithXp=5,smithHammerDamage=2);time.sleep(.5)
+        process('xdotool','click','3');time.sleep(.5);expect(smithWork=2,smithStoredXp=0,smithXp=5,smithHammerDamage=2,smithInputs=5);capture('anvil-smithing-xp-paused')
+        native_chat_command('experience add @s 135 points');expect(smithXp=140)
         for hit in range(3,17):
             process('xdotool','click','1' if hit%2 else '3')
-            expect(smithWork=hit if hit<16 else 0,smithXp=16-hit,smithHammerDamage=hit,smithInputs=5 if hit<16 else 0,smithOutput=hit==16)
+            expect(smithWork=hit if hit<16 else 0,smithStoredXp=0,smithXp=10*(16-hit),smithHammerDamage=hit,smithInputs=5 if hit<16 else 0,smithOutput=hit==16)
             time.sleep(.45)
         expect(smithOutputCount=4,smithXp=0);capture('anvil-smithing-xp-four-runestone')
         process('xdotool','key','9');process('xdotool','click','3');expect(smithOutput=False,smithRunes=4,smithXp=0,smithStones=12,smithGold=1)
-        print('ANVIL_XP_NATIVE_PASS: native ingredient placement, no-XP rejection, paid first hit, depleted pause, XP refill/resume, rapid-click protection, 16 paid hits/16 XP/16 durability, four output and exact collection',flush=True)
+        print('ANVIL_XP_NATIVE_PASS: native deposits, stored-first debit, insufficient combined XP pause, refill/resume, rapid-click protection, 16 paid hits/160 XP/16 durability, four output and exact collection',flush=True)
         (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-xp'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='runestone-art':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('tier6_fixture');command('tier6_ready_fixture');expect(anvilTier=6,energyBeams=24);native_chat_command('time set noon')
@@ -203,7 +207,7 @@ def run():
         for color in ('blue','red'):
             if color=='red':command('tier6_lens_red');expect(anvilTier=6,tier6Color=0xb02e26)
             command('tier6_recipe');command('anvil_auto_close');process('xdotool','key','1');time.sleep(.4)
-            native_chat_command('experience add @s 16 points')
+            native_chat_command('experience add @s 160 points')
             for n in range(1,17):
                 process('xdotool','click','3');expect(smithWork=n if n<16 else 0);time.sleep(.42 if n<16 else .05)
             expect(smithOutput=True,energyActive=True,energyColor=0x3ab3da if color=='blue' else 0xb02e26)
@@ -354,7 +358,7 @@ def run():
         capture('anvil-smithing-ingredients')
         process('xdotool','key','9');time.sleep(.2);toggle_anvil_guide();expect(screen='InGame',smithInputs=5,anvilGuide=True);toggle_anvil_guide();expect(screen='InGame',smithInputs=5,anvilGuide=False)
         process('xdotool','key','3');time.sleep(.5);capture('anvil-smithing-hammer-held')
-        native_chat_command('experience add @s 16 points')
+        native_chat_command('experience add @s 160 points')
         for work in (1,2):
             process('xdotool','click','1');expect(smithWork=work,smithOutput=False,smithHammerDamage=work);time.sleep(.55)
         capture('anvil-smithing-work')
@@ -485,7 +489,7 @@ def run():
     capture('anvil-smithing-ingredients')
     process('xdotool','key','9');time.sleep(.2);toggle_anvil_guide();expect(screen='InGame',smithInputs=5,anvilGuide=True);toggle_anvil_guide();expect(screen='InGame',smithInputs=5,anvilGuide=False)
     process('xdotool','key','3');time.sleep(.5);capture('anvil-smithing-hammer-held')
-    native_chat_command('experience add @s 16 points')
+    native_chat_command('experience add @s 160 points')
     for work in (1,2):
         process('xdotool','click','1');expect(smithWork=work,smithOutput=False,smithHammerDamage=work);time.sleep(.55)
     capture('anvil-smithing-work')

@@ -8,7 +8,7 @@ a='assets/examplemod/';d='data/examplemod/'
 write(a+'models/item/iron_forge_hammer.json',{'parent':'minecraft:item/handheld','textures':{'layer0':'examplemod:item/iron_forge_hammer'}})
 for item,model in [('iron_forge_hammer','item/iron_forge_hammer'),('runestone','block/runestone')]:write(a+'items/'+item+'.json',{'model':{'type':'minecraft:model','model':'examplemod:'+model}})
 write(d+'recipe/iron_forge_hammer.json',{'type':'minecraft:crafting_shaped','category':'equipment','pattern':['III',' S ',' S '],'key':{'I':'minecraft:iron_ingot','S':'minecraft:stick'},'result':{'id':'examplemod:iron_forge_hammer','count':1}})
-write(d+'anvil_recipes/runestone.json',{'anvil_tier':0,'hammer_tier':1,'work':16,'xp_per_hit':1,'ingredients':{**{s:{'tag':'examplemod:runestone_deepslate'} for s in ['north_west','north_east','south_west','south_east']},'center':{'item':'minecraft:gold_ingot'}},'result':{'id':'examplemod:runestone','count':4}})
+write(d+'anvil_recipes/runestone.json',{'anvil_tier':0,'hammer_tier':1,'work':16,'xp_per_hit':10,'ingredients':{**{s:{'tag':'examplemod:runestone_deepslate'} for s in ['north_west','north_east','south_west','south_east']},'center':{'item':'minecraft:gold_ingot'}},'result':{'id':'examplemod:runestone','count':4}})
 write(d+'tags/item/runestone_deepslate.json',{'replace':False,'values':['minecraft:deepslate','minecraft:cobbled_deepslate']})
 write(a+'blockstates/runestone.json',{'variants':{'':{'model':'examplemod:block/runestone'}}})
 # Blank prepared stone, ready for later rune inscription.
