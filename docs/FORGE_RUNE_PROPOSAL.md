@@ -6,7 +6,7 @@ Status: **ideas and proposed recipes, not rune-block implementation**. The imple
 
 The structure has many replaceable Runestone positions, particularly at later tiers. The user explicitly rejected arbitrary rune-count caps: substantial crafting investment should remain useful. Balance around the available positions and interactions, not “only the first N count.” The user also approved heavy Swift investment saving total XP and emphasized that Efficiency must remain worthwhile. Latest corrections: Tempering may reach zero hammer wear; surplus Swift runes must continue increasing XP cost after the one-swing floor; Efficiency should require substantially more investment to reach 50%, with diminishing returns after that threshold. Restoration is selected for any durability-bearing item, with more runes increasing repair speed.
 
-The following concepts are selected for continued design. Their numerical tuning and recipes remain proposals.
+The following concepts are selected for continued design. The user accepted the most recent zero-wear Tempering, surplus-Swift surcharge, slower Efficiency ramp and automatic XP Restoration direction in principle, then moved Efficiency to Tier 3. These remain design decisions, not implemented rune behavior. Recipe prices and remaining rates are still provisional.
 
 | Tier where active | Selected rune | Direction |
 |---|---|---|
@@ -17,9 +17,9 @@ The following concepts are selected for continued design. Their numerical tuning
 | 2 | Rune of Tempering | Reduces hammer wear and may reach zero wear; permanence is allowed with sufficient investment. |
 | 2 | Rune of Conduit | User selected increased XP transfer speed **both into and out of** the forge. No arbitrary count limit. |
 | 3 | Rune of Restoration | Put any item with durability in the center slot and spend XP to repair it. Additional runes increase repair speed. |
-| 4 | Rune of Efficiency | XP reduction with a substantially longer investment ramp to 50%, then diminishing returns; no arbitrary rune-count cutoff. |
+| 3 | Rune of Efficiency | XP reduction with a substantially longer investment ramp to 50%, then diminishing returns; no arbitrary rune-count cutoff. |
 | 4 | Rune of Batching | User-selected redesign: configure with Shift-right-click using an item on any face; other faces accept recipe inputs; pulls matching ingredients from the chest above. Multiple runes need coordinated scheduling. |
-| Enables 5 | Keystone Rune of the Sky | Rename/replace Canopy Keystone, retaining its sixteen structural positions and existing purpose; no added effect yet. Preserve saved worlds. |
+| Enables 5; excluded from functional-rune target | Keystone Rune of the Sky | Rename/replace Canopy Keystone, retaining its sixteen structural positions and existing purpose; no added effect yet. Preserve saved worlds. |
 | 6 | Rune of Master Craftsmanship | More completed output, initially described as a small per-rune chance to double. Scaling beyond guaranteed doubling needs discussion; do not silently impose a count cap. |
 | 6 | Rune of Grand Pattern | User-selected redesign: the rune directly beneath the anvil center packs the whole structure into a portable rune; placing that rune relocates/restores it. This replaces the old projection-only concept. |
 
@@ -54,15 +54,15 @@ These are the current geometry's budget, not a new cap or a promise that the lay
 
 ## Scaling without arbitrary count caps — proposed numbers
 
-These replace the earlier capped formulas; the user has not approved exact coefficients.
+These replace the earlier capped formulas. The user accepted the latest Tempering/Efficiency starting values in principle; other coefficients, interactions and recipe prices still need tuning before implementation.
 
 | Rune | Suggested scaling | Why further investment matters |
 |---|---|---|
 | Storage | Base tier capacity + `1,000 × storage runes` | Linear additional capacity, with no count cutoff. |
 | Conduit | Each rune adds 2 XP/second to the core's inbound budget **and** 2 XP/second to its outbound budget | Both directions benefit. Multiple ports share each directional budget, rather than each port duplicating the full rate. |
 | Swift | Swings = `max(1, base swings − swift runes)`; XP/hit multiplier = `1 + 0.10 × swift runes` | All Swift runes count toward cost, even after swings reach one. The +10% coefficient remains a proposal. |
-| Efficiency | Proposed price multiplier: `1 − 0.01 × E` for `E ≤ 50`; `50 / (E + 50)` for `E > 50`, where E is installed Efficiency runes | 5 runes save 5%; 50 save 50%; 100 save about 66.7%; 200 save 80%; 552 save about 91.7%. Every rune keeps contributing. Exact ramp/coefficients are unapproved. |
-| Tempering | Proposed hammer wear chance = `max(0, 1 − 0.01 × tempering runes)` | 50 runes halve expected wear; 100 eliminate wear. Zero wear is user-approved; the proposed 1% per rune still needs tuning. |
+| Efficiency | Proposed price multiplier: `1 − 0.01 × E` for `E ≤ 50`; `50 / (E + 50)` for `E > 50`, where E is installed Efficiency runes | 5 runes save 5%; 50 save 50%; 100 save about 66.7%; 200 save 80%; 552 save about 91.7%. Every rune keeps contributing. The user accepted this starting curve in principle; later balance tuning remains possible. |
+| Tempering | Proposed hammer wear chance = `max(0, 1 − 0.01 × tempering runes)` | 50 runes halve expected wear; 100 eliminate wear. The user accepted zero wear and this numerical starting point in principle; later tuning remains possible. |
 | Restoration | Repair throughput grows with installed Restoration runes; XP price is per actual durability restored | More runes repair faster, without implicitly reducing the XP price per durability point. General Efficiency can reduce that price separately. Exact rate and unit price remain open. |
 | Master Craftsmanship | Candidate: `0.01 × rune count` extra base-output batches in expectation | 25 runes: 25% chance of double; 100: guaranteed double; 125: guaranteed double plus 25% chance of triple. This extends the original double-only effect and requires discussion. |
 
@@ -154,7 +154,7 @@ Confirmed by the user:
 - Additional Restoration runes increase how quickly repair happens. No arbitrary count cutoff.
 - The operation restores the same item. Preserve its enchantments, name, components and other data; change only actual durability damage.
 
-Suggested behavior, not yet confirmed:
+Accepted operating direction from the previous discussion, with rates and implementation details still to settle:
 
 - Repair runs automatically while the item remains in the center. The other workpiece positions must be empty, and an active normal crafting job takes priority. Batching waits while a repair item occupies the plate.
 - Unattended repair uses **stored forge XP**, pausing when the next repair unit cannot be paid. It does not select a nearby player as an automatic XP source. Taking the item back stops repair.
@@ -162,16 +162,76 @@ Suggested behavior, not yet confirmed:
 - Swift and Tempering affect hammer work, not automatic repair speed; Master Craftsmanship does not duplicate a repaired item. Further Restoration runes are the dedicated speed investment.
 - Support normal item durability across mods without assuming every durability-bearing item is a pickaxe. Items using a separate custom charge/resource system need deliberate integration, rather than treating charge as durability.
 
-Automatic operation versus paid hammer pulses, base repair rate, XP per durability point, and the rune's recipe are still decisions to settle. Only the center-slot/XP/any-durability-item/speed-scaling concept is confirmed.
+Automatic repair from stored XP is the accepted direction. Base repair rate, XP per durability point, exact job precedence and the rune's recipe remain to settle; do not reopen the automatic-versus-hammered question without a concrete reason.
 
-The other recent candidate operations (Reforging, Reclamation, Awakening and Transference) are removed from the active proposal. Tier 5 still has no selected additional functional rune beyond its required Sky Keystone. Avoid adding filler just to populate the tier.
+The other recent candidate operations (Reforging, Reclamation, Awakening and Transference) are removed from the active proposal. Tier 5 still has no user-selected optional functional rune. Sky Keystone is explicitly excluded from the requested three-per-tier count. The fresh candidates below are suggestions for the user to choose, not approved additions.
+
+## Three functional runes per tier — new candidates, not yet approved
+
+The user requests at least three per tier, excluding Sky Keystone for now. With Efficiency moved to Tier 3, there are **11 selected functional runes**: 3 / 3 / 2 / 1 / 0 / 2 across Tiers 1–6. Seven additional selections would give eighteen total, three per tier. Keep the structural Sky Keystone separately; excluding it from this exercise does not remove it from the build.
+
+| Tier | Already selected | New candidates to reach three |
+|---|---|---|
+| 1 | Storage, Extraction, Input | None needed |
+| 2 | Swift Forging, Tempering, Conduit | None needed |
+| 3 | Restoration, Efficiency | Inscription |
+| 4 | Batching | Parallel Forging, Striking |
+| 5 | None in this count | Ascendance, Commission, Vigilance |
+| 6 | Master Craftsmanship, Grand Pattern | Dispatch |
+
+### Tier 3 — Rune of Inscription
+
+Apply enchanted books to the item in the center using XP and ordinary enchantment compatibility rules. This gives the workshop a general enchanting operation alongside universal XP repair. Each Inscription rune can provide a physical enchanted-book input socket: further runes stage additional books in one job, with each actual book and its XP cost consumed once. Preserve item data and reject incompatible combinations before spending. Efficiency applies to the XP charge. Existing rune positions become a visible book staging area rather than a new general inventory screen.
+
+This is **not** the rejected artifact-modifier Transference concept: it works with actual enchanted books and existing enchantments. Ordinary Inscription respects normal enchantment level limits. Exact socket interaction, pricing and integration with Batching remain open. Do not impose a hidden first-N socket limit; the actual item compatibility and loaded inputs determine the useful job.
+
+### Tier 4 — Rune of Parallel Forging
+
+Perform multiple copies of the **same selected recipe** in one hammering job. Each additional rune adds another parallel batch lane. Reserve the complete materials and XP for all lanes before committing a strike, and produce only the paid copies. Multiple Batching runes can supply the lanes through their coordinated buffers; the physical plate can display the representative recipe and batch quantity.
+
+Example: four lanes forge four Runestone batches together, consuming all sixteen stone inputs, four gold ingots and four batches' XP, then producing sixteen Runestone. This saves repeated manual hammering, not ingredients or baseline XP. Swift changes swings per job; Parallel increases paid quantity per job; Master Craftsmanship is a separate eligible output bonus. Extra lanes beyond available materials, XP or result space wait rather than partially consuming an unaffordable job.
+
+### Tier 4 — Rune of Striking
+
+A redstone-controlled powered striker hammers the forge using a **real installed Forge Hammer**. It pays the recipe's stored-XP cost, uses the correct hammer tier and consumes normal durability; Tempering applies. Empty storage, a broken/missing hammer, invalid ingredients or waiting output pauses the striker. It does not drain a nearby player automatically.
+
+More Striking runes supply hammer stations and increase aggregate automatic strike throughput; one anvil-wide scheduler prevents overlapping completion or double-spending. Exact timing and aggregation need balance work. This provides a physical automation payoff after players have learned manual smithing. It complements Batching's input loading and Parallel's batch size. Output collection still needs a deliberate solution; the proposed Commission/Dispatch runes offer later progression for that.
+
+### Tier 5 — Rune of Ascendance
+
+Dedicated forging recipes can raise **supported enchantments above their normal vanilla maximum**: for example, an appropriate Efficiency V item/book combination could create Efficiency VI. Inputs and XP escalate with the requested upgrade. This is an explicit forge operation, not a passive global increase to every held item's enchantments.
+
+Inscription handles ordinary book application at Tier 3; Ascendance introduces a stronger Tier 5 product. More Ascendance runes contribute to the forge's upgrade capability, with the exact relationship between rune investment, supported target level and XP cost still to design. Enchantment eligibility must be deliberate and compatible with recipe/modpack rules; do not promise unsupported mod enchantments or invent a fixed rune-count cutoff. This candidate expands gear progression and requires the user's approval before recipe design.
+
+### Tier 5 — Rune of Commission
+
+Configure a finite workshop order such as **“make 64 Restoration runes.”** The core schedules known, configured forge recipes to fulfill it, including intermediate forge recipes supplied by the linked Batching setup, and collects completed results into a local output chest. Only available, explicitly connected supplies are used. Every step still pays materials, XP and hammer wear; it does not invent crafting-table recipes or search arbitrary inventories.
+
+Each Commission rune stores an independent order, adding useful requests as more runes are installed. Orders share a fair scheduler. Detect unavailable ingredients and dependency loops, then wait with a clear missing-material explanation rather than consuming an incomplete plan. Batching stages one recipe's inputs; Commission manages requested quantities, intermediate forge jobs and finished local delivery. Striking is needed for unattended hammering. This is workshop-scoped production planning, not a universal replacement for a modpack's storage/crafting network.
+
+### Tier 5 — Rune of Vigilance
+
+Keeps the **forge and its explicitly linked workshop endpoints active while the player is away**, funded by stored XP. This lets the automated workshop finish orders while the player explores, giving the large structure an ongoing purpose instead of requiring the player to stand nearby.
+
+Each rune can anchor a forge-related chunk or endpoint; more runes allow a larger functioning workshop footprint. Charge for the actual maintained area and time, not once per overlapping anchor. Coordinate repeated anchors in one chunk. Chunk loading and server integration need explicit implementation design, and no XP generation is introduced. No fixed first-N rune count; actual related chunks/endpoints determine useful anchors. Server compatibility and honest ongoing costs matter more than decorative effects.
+
+### Tier 6 — Rune of Dispatch
+
+A forge-specific delivery endpoint sends completed workshop orders to an **explicitly bound receiving chest** while the receiving location is available. Each Dispatch rune stores a destination and optional output filter, so additional runes provide additional deliveries. A player could leave the forge producing supplies and have its orders delivered to a working site.
+
+This upgrades Commission's local collection into remote workshop delivery; it does not move players or become a general-purpose teleportation rune. Transfers move actual completed output exactly once, with no delivery bonus from Master Craftsmanship. Full or unavailable destinations leave the output safely staged. Distance/dimension reach and XP delivery costs are open choices; avoid promising unloaded-world delivery without the required loading/linking design. Paired endpoint blocks/items would need separate approval and recipes if chosen.
+
+### Strength and scope assessment
+
+The clearest immediate candidates are Inscription, Parallel Forging and Striking: each has a distinct concrete operation. Ascendance has the strongest new gear payoff but needs the most balance discussion. Commission plus Vigilance give Tier 5 a coherent large-workshop automation role; they add meaningful scheduling/loading implementation work and may be optional integration-heavy choices. Dispatch is a Tier 6 logistics payoff, but the user may prefer another forging operation over remote delivery. These are **seven proposals**, not seven approved additions.
+
+Do not restore the rejected Reforging/Reclamation/Awakening/Transference ideas under these names. Rune recipes should be priced after the user selects the actual operations. Keep all existing no-cap, whole-structure-budget and stored-XP payment principles.
 
 ## Decisions still open
 
-- Efficiency's proposed 50-rune ramp to 50%, diminishing returns beyond it, and Tempering's proposed 1% wear reduction per rune. The user has approved zero wear and surplus-Swift XP penalties, not these exact numbers.
-- Fractional XP accounting and future hammer interactions.
-- Restoration's automatic-versus-hammered operation, base repair rate, XP per durability point and recipe.
+- Which of the seven candidates actually earns a place in the selected list; Sky Keystone is excluded from the target count.
+- Numerical tuning against 25–552 replaceable positions, fractional XP accounting and future hammer interactions. Efficiency is now Tier 3.
+- Restoration's base repair rate, XP per durability point and recipe; automatic stored-XP operation is accepted in principle.
 - Master Craftsmanship beyond 100%: guaranteed extra batches versus staying double-only with diminishing chance.
 - Batching's template item interpretation, recipe-variant selection and output collection/re-arming policy.
 - Grand Pattern's recipe, placement confirmation, optional decorative floor handling and relocation XP cost.
-- Additional Tier 5 ideas only if a compelling distinct forge use emerges; the rejected candidates are not a backlog commitment.
