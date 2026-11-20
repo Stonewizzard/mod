@@ -166,71 +166,54 @@ Automatic repair from stored XP is the accepted direction. Base repair rate, XP 
 
 The other recent candidate operations (Reforging, Reclamation, Awakening and Transference) are removed from the active proposal. Tier 5 still has no user-selected optional functional rune. Sky Keystone is explicitly excluded from the requested three-per-tier count. The fresh candidates below are suggestions for the user to choose, not approved additions.
 
-## Three functional runes per tier — new candidates, not yet approved
+## Latest workshop direction: Tier 3 first
 
-The user requests at least three per tier, excluding Sky Keystone for now. With Efficiency moved to Tier 3, there are **11 selected functional runes**: 3 / 3 / 2 / 1 / 0 / 2 across Tiers 1–6. Seven additional selections would give eighteen total, three per tier. Keep the structural Sky Keystone separately; excluding it from this exercise does not remove it from the build.
+The user clarified that they are **not a fan of the previous additional forge ideas**. Inscription, Parallel Forging, Striking, Ascendance, Commission and Dispatch are therefore rejected, not selected or awaiting implementation. Do not carry them into the forge roster or rename them as accepted features.
 
-| Tier | Already selected | New candidates to reach three |
-|---|---|---|
-| 1 | Storage, Extraction, Input | None needed |
-| 2 | Swift Forging, Tempering, Conduit | None needed |
-| 3 | Restoration, Efficiency | Inscription |
-| 4 | Batching | Parallel Forging, Striking |
-| 5 | None in this count | Ascendance, Commission, Vigilance |
-| 6 | Master Craftsmanship, Grand Pattern | Dispatch |
+The user likes **Vigilance as a general-purpose chunk-loading rune that can be placed anywhere**, rather than an Ancient Anvil upgrade. Move that concept to the general functional-rune list with no forge tier assigned yet. It does not count toward the requested three forge runes per tier. Its fuel, loading footprint and recipe remain open; the prior stored-forge-XP-only design is not an approved restriction for the standalone rune.
 
-### Tier 3 — Rune of Inscription
+Efficiency remains moved to Tier 3. Forge-only selected counts, excluding Sky Keystone, are still **3 / 3 / 2 / 1 / 0 / 2** for tiers 1–6, eleven total. The user now wants to choose the next Tier 3 idea before moving on. Do not force a complete eighteen-rune lineup with weak filler.
 
-Apply enchanted books to the item in the center using XP and ordinary enchantment compatibility rules. This gives the workshop a general enchanting operation alongside universal XP repair. Each Inscription rune can provide a physical enchanted-book input socket: further runes stage additional books in one job, with each actual book and its XP cost consumed once. Preserve item data and reject incompatible combinations before spending. Efficiency applies to the XP charge. Existing rune positions become a visible book staging area rather than a new general inventory screen.
+### Current Tier 3
 
-This is **not** the rejected artifact-modifier Transference concept: it works with actual enchanted books and existing enchantments. Ordinary Inscription respects normal enchantment level limits. Exact socket interaction, pricing and integration with Batching remain open. Do not impose a hidden first-N socket limit; the actual item compatibility and loaded inputs determine the useful job.
+- **Restoration:** any durability-bearing item in the center, automatic repair using stored XP, more runes increase repair speed.
+- **Efficiency:** the accepted slower XP-discount ramp, with diminishing returns after 50%.
+- **Third slot:** open. The options below are new, unapproved alternatives, not three additions to the selected list.
 
-### Tier 4 — Rune of Parallel Forging
+### Candidate: Rune of Offering
 
-Perform multiple copies of the **same selected recipe** in one hammering job. Each additional rune adds another parallel batch lane. Reserve the complete materials and XP for all lanes before committing a strike, and produce only the paid copies. Multiple Batching runes can supply the lanes through their coordinated buffers; the physical plate can display the representative recipe and batch quantity.
+Sacrifice an unwanted artifact at the anvil to turn its ancient power into **stored forge XP**. This gives archaeology another resource decision: keep the artifact, recover its Ancient Scrap through the existing routes, or sacrifice it for XP. It ties the forge's main resource directly to archaeological discoveries.
 
-Example: four lanes forge four Runestone batches together, consuming all sixteen stone inputs, four gold ingots and four batches' XP, then producing sixteen Runestone. This saves repeated manual hammering, not ingredients or baseline XP. Swift changes swings per job; Parallel increases paid quantity per job; Master Craftsmanship is a separate eligible output bonus. Extra lanes beyond available materials, XP or result space wait rather than partially consuming an unaffordable job.
+XP yields would be authored by artifact type/tier/rarity, not inferred from arbitrary item's crafting cost. Additional Offering runes improve recovery of that authored XP value with diminishing returns. The artifact is consumed, and the stored result obeys available capacity; do not destroy a valuable artifact if the complete yield cannot be accepted. This is an active material sacrifice, not passive XP generation.
 
-### Tier 4 — Rune of Striking
+Pricing/yield, eligible artifacts and whether this needs hammering remain open. Direct XP conversion must not receive Master Craftsmanship output bonuses or permit a forge-craft-to-XP profit loop. The concept is not a salvage-material refund operation; it creates a deliberate XP-versus-scrap choice.
 
-A redstone-controlled powered striker hammers the forge using a **real installed Forge Hammer**. It pays the recipe's stored-XP cost, uses the correct hammer tier and consumes normal durability; Tempering applies. Empty storage, a broken/missing hammer, invalid ingredients or waiting output pauses the striker. It does not drain a nearby player automatically.
+### Candidate: Rune of Reinforcement
 
-More Striking runes supply hammer stations and increase aggregate automatic strike throughput; one anvil-wide scheduler prevents overlapping completion or double-spending. Exact timing and aggregation need balance work. This provides a physical automation payoff after players have learned manual smithing. It complements Batching's input loading and Parallel's batch size. Output collection still needs a deliberate solution; the proposed Commission/Dispatch runes offer later progression for that.
+Use XP and Ancient Metal to **increase the maximum durability** of a compatible item placed in the center. Restoration repairs current wear; Reinforcement invests in the item's future durability. More installed runes allow stronger reinforcement, with material and XP costs scaling with the actual improvement.
 
-### Tier 5 — Rune of Ascendance
+Use the ordinary durability bar rather than adding a second charge/shield system. Preserve enchantments and item data. Repeated reinforcement should charge only for a real new improvement and should not also erase existing wear for free. Exact scaling, compatibility and recipe quantities remain open. This proposal adds material costs only to reinforcement; the already-selected Restoration repair remains XP-only.
 
-Dedicated forging recipes can raise **supported enchantments above their normal vanilla maximum**: for example, an appropriate Efficiency V item/book combination could create Efficiency VI. Inputs and XP escalate with the requested upgrade. This is an explicit forge operation, not a passive global increase to every held item's enchantments.
+This is an equipment-forging upgrade, not the rejected component-swapping Reforging operation. It offers a practical workshop payoff without enchantment-level systems or remote automation.
 
-Inscription handles ordinary book application at Tier 3; Ascendance introduces a stronger Tier 5 product. More Ascendance runes contribute to the forge's upgrade capability, with the exact relationship between rune investment, supported target level and XP cost still to design. Enchantment eligibility must be deliberate and compatible with recipe/modpack rules; do not promise unsupported mod enchantments or invent a fixed rune-count cutoff. This candidate expands gear progression and requires the user's approval before recipe design.
+### Candidate: Rune of Containment
 
-### Tier 5 — Rune of Commission
+Stabilize the **four ritual fluid basins**: keep their fluids contained and stop unwanted flow/mixing. A stronger payoff would be enabling water-based forge basins in the Nether, so players can use the intended fluid recipes there.
 
-Configure a finite workshop order such as **“make 64 Restoration runes.”** The core schedules known, configured forge recipes to fulfill it, including intermediate forge recipes supplied by the linked Batching setup, and collects completed results into a local output chest. Only available, explicitly connected supplies are used. Every step still pays materials, XP and hammer wear; it does not invent crafting-table recipes or search arbitrary inventories.
+More runes increase the number of basin cells that can be stabilized, up to the actual cells in the structure. These effects apply to the linked forge's designated pools, not arbitrary liquids across the world. Fluid type, recipe matching and actual fluid contents remain meaningful; it does not invent free liquids or bypass recipe requirements.
 
-Each Commission rune stores an independent order, adding useful requests as more runes are installed. Orders share a fair scheduler. Detect unavailable ingredients and dependency loops, then wait with a clear missing-material explanation rather than consuming an incomplete plan. Batching stages one recipe's inputs; Commission manages requested quantities, intermediate forge jobs and finished local delivery. Striking is needed for unattended hammering. This is workshop-scoped production planning, not a universal replacement for a modpack's storage/crafting network.
+Which containment properties are included, activation during basin filling, supported mod fluids and behavior when a structure/rune is removed need design before implementation. Do not sell this as a generic world fluid-control rune: its purpose is making the ritual basins practical in an ancient workshop.
 
-### Tier 5 — Rune of Vigilance
+### Preference and unresolved choices
 
-Keeps the **forge and its explicitly linked workshop endpoints active while the player is away**, funded by stored XP. This lets the automated workshop finish orders while the player explores, giving the large structure an ongoing purpose instead of requiring the player to stand nearby.
-
-Each rune can anchor a forge-related chunk or endpoint; more runes allow a larger functioning workshop footprint. Charge for the actual maintained area and time, not once per overlapping anchor. Coordinate repeated anchors in one chunk. Chunk loading and server integration need explicit implementation design, and no XP generation is introduced. No fixed first-N rune count; actual related chunks/endpoints determine useful anchors. Server compatibility and honest ongoing costs matter more than decorative effects.
-
-### Tier 6 — Rune of Dispatch
-
-A forge-specific delivery endpoint sends completed workshop orders to an **explicitly bound receiving chest** while the receiving location is available. Each Dispatch rune stores a destination and optional output filter, so additional runes provide additional deliveries. A player could leave the forge producing supplies and have its orders delivered to a working site.
-
-This upgrades Commission's local collection into remote workshop delivery; it does not move players or become a general-purpose teleportation rune. Transfers move actual completed output exactly once, with no delivery bonus from Master Craftsmanship. Full or unavailable destinations leave the output safely staged. Distance/dimension reach and XP delivery costs are open choices; avoid promising unloaded-world delivery without the required loading/linking design. Paired endpoint blocks/items would need separate approval and recipes if chosen.
-
-### Strength and scope assessment
-
-The clearest immediate candidates are Inscription, Parallel Forging and Striking: each has a distinct concrete operation. Ascendance has the strongest new gear payoff but needs the most balance discussion. Commission plus Vigilance give Tier 5 a coherent large-workshop automation role; they add meaningful scheduling/loading implementation work and may be optional integration-heavy choices. Dispatch is a Tier 6 logistics payoff, but the user may prefer another forging operation over remote delivery. These are **seven proposals**, not seven approved additions.
-
-Do not restore the rejected Reforging/Reclamation/Awakening/Transference ideas under these names. Rune recipes should be priced after the user selects the actual operations. Keep all existing no-cap, whole-structure-budget and stored-XP payment principles.
+Offering has the strongest direct connection between archaeology and the new XP economy. Reinforcement is the clearest general equipment payoff. Containment is a more specialized physical-structure/dimension option. The user has not selected any of them. Prices and exact stacking values should follow the chosen effect, not precede it.
 
 ## Decisions still open
 
-- Which of the seven candidates actually earns a place in the selected list; Sky Keystone is excluded from the target count.
-- Numerical tuning against 25–552 replaceable positions, fractional XP accounting and future hammer interactions. Efficiency is now Tier 3.
+- Which third Tier 3 forge rune to select. Offering, Reinforcement and Containment are alternatives only.
+- Tier 4/5/6 additions remain open after the rejected lineup; Sky Keystone remains excluded from the three-per-tier exercise.
+- Vigilance's standalone general-purpose design and progression tier, separate from the forge.
+- Numerical tuning, fractional XP accounting and future hammer interactions.
 - Restoration's base repair rate, XP per durability point and recipe; automatic stored-XP operation is accepted in principle.
 - Master Craftsmanship beyond 100%: guaranteed extra batches versus staying double-only with diminishing chance.
 - Batching's template item interpretation, recipe-variant selection and output collection/re-arming policy.
