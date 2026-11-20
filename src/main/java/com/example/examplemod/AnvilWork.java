@@ -49,6 +49,8 @@ public final class AnvilWork {
         if(be.getBlockState().getValue(AncientAnvilBlock.TIER)<recipe.anvilTier()){message(player,"This recipe needs a higher anvil tier");return false;}
         if(hammer.forgeTier()<recipe.hammerTier()){message(player,"This recipe needs a higher forge hammer tier");return false;}
         if(level.getGameTime()-be.lastStrike<8)return false;
+        int xp=recipe.xpPerHit();
+        if(!AnvilExperience.spend(player,xp)){message(player,"Need "+xp+" XP point"+(xp==1?"":"s")+" to strike ("+AnvilExperience.available(player)+" available)");return false;}
         be.lastStrike=level.getGameTime();
         if(!be.workRecipe.equals(recipe.id().toString())){be.workRecipe=recipe.id().toString();be.work=0;}
         be.work=Math.min(recipe.work(),be.work+hammer.workPerStrike());
@@ -67,7 +69,7 @@ public final class AnvilWork {
         if(be.work>=recipe.work()){
             be.finish(recipe);level.playSound(null,be.getBlockPos(),SoundEvents.ANVIL_LAND,SoundSource.BLOCKS,.65F,1.2F);
             level.sendParticles(ParticleTypes.ENCHANT,center.x,center.y+.2,center.z,14,.2,.1,.2,.05);message(player,"Craft complete - take the result from the center");
-        }else{be.sync();message(player,"Forging: "+be.work+" / "+recipe.work());}
+        }else{be.sync();message(player,"Forging: "+be.work+" / "+recipe.work()+(!player.getAbilities().instabuild&&xp>0?" | -"+xp+" XP":""));}
         player.containerMenu.broadcastChanges();return true;
     }
     public static void message(Player player,String text){if(player instanceof ServerPlayer server)server.connection.send(new net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket(Component.literal(text)));}

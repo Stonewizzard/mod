@@ -139,6 +139,25 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='anvil-xp':
+        process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_fixture');process('xdotool','key','2');time.sleep(.5);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0,anvilLarge=True)
+        command('smithing_fixture');native_chat_command('experience set @s 0 levels');native_chat_command('experience set @s 0 points');expect(smithXp=0,smithInputs=0)
+        process('xdotool','key','1')
+        for count,slot in enumerate(('north_west','north_east','south_west','south_east'),1):
+            command('smithing_aim',slot=slot);expect(smithAim=slot);process('xdotool','click','3');expect(smithInputs=count)
+        process('xdotool','key','2');command('smithing_aim',slot='center');process('xdotool','click','3');expect(smithInputs=5,smithStones=12,smithGold=1)
+        process('xdotool','key','3');time.sleep(.3);process('xdotool','click','3');time.sleep(.5);expect(smithWork=0,smithXp=0,smithHammerDamage=0,smithInputs=5)
+        native_chat_command('experience add @s 1 points');expect(smithXp=1);process('xdotool','click','3');expect(smithWork=1,smithXp=0,smithHammerDamage=1);time.sleep(.55)
+        process('xdotool','click','3');time.sleep(.5);expect(smithWork=1,smithXp=0,smithHammerDamage=1,smithInputs=5);capture('anvil-smithing-xp-paused')
+        native_chat_command('experience add @s 15 points');expect(smithXp=15);process('xdotool','click','--repeat','2','--delay','50','3');expect(smithWork=2,smithXp=14,smithHammerDamage=2);time.sleep(.5)
+        for hit in range(3,17):
+            process('xdotool','click','1' if hit%2 else '3')
+            expect(smithWork=hit if hit<16 else 0,smithXp=16-hit,smithHammerDamage=hit,smithInputs=5 if hit<16 else 0,smithOutput=hit==16)
+            time.sleep(.45)
+        expect(smithOutputCount=4,smithXp=0);capture('anvil-smithing-xp-four-runestone')
+        process('xdotool','key','9');process('xdotool','click','3');expect(smithOutput=False,smithRunes=4,smithXp=0,smithStones=12,smithGold=1)
+        print('ANVIL_XP_NATIVE_PASS: native ingredient placement, no-XP rejection, paid first hit, depleted pause, XP refill/resume, rapid-click protection, 16 paid hits/16 XP/16 durability, four output and exact collection',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'anvil-xp'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='runestone-art':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('tier6_fixture');command('tier6_ready_fixture');expect(anvilTier=6,energyBeams=24);native_chat_command('time set noon')
         command('runestone_wall');process('xdotool','key','F1');capture('ancient-anvil-runestone-sootstone-comparison');process('xdotool','key','F1')
@@ -184,8 +203,9 @@ def run():
         for color in ('blue','red'):
             if color=='red':command('tier6_lens_red');expect(anvilTier=6,tier6Color=0xb02e26)
             command('tier6_recipe');command('anvil_auto_close');process('xdotool','key','1');time.sleep(.4)
-            for n in range(1,5):
-                process('xdotool','click','3');expect(smithWork=n if n<4 else 0);time.sleep(.42 if n<4 else .05)
+            native_chat_command('experience add @s 16 points')
+            for n in range(1,17):
+                process('xdotool','click','3');expect(smithWork=n if n<16 else 0);time.sleep(.42 if n<16 else .05)
             expect(smithOutput=True,energyActive=True,energyColor=0x3ab3da if color=='blue' else 0xb02e26)
             command('tier6_blast_view');process('xdotool','key','F1');capture('ancient-anvil-tier6-blast-'+color);process('xdotool','key','F1')
         command('tier6_lens_mixed');expect(anvilTier=5,guideTier=6,guideMissing=1,energyBeams=0);capture('ancient-anvil-tier6-mixed-lens')
@@ -334,13 +354,14 @@ def run():
         capture('anvil-smithing-ingredients')
         process('xdotool','key','9');time.sleep(.2);toggle_anvil_guide();expect(screen='InGame',smithInputs=5,anvilGuide=True);toggle_anvil_guide();expect(screen='InGame',smithInputs=5,anvilGuide=False)
         process('xdotool','key','3');time.sleep(.5);capture('anvil-smithing-hammer-held')
+        native_chat_command('experience add @s 16 points')
         for work in (1,2):
             process('xdotool','click','1');expect(smithWork=work,smithOutput=False,smithHammerDamage=work);time.sleep(.55)
         capture('anvil-smithing-work')
-        process('xdotool','click','3');expect(smithWork=3,smithHammerDamage=3);time.sleep(.55)
-        process('xdotool','click','3');expect(smithInputs=0,smithWork=0,smithOutput=True,smithHammerDamage=4)
+        for work in range(3,17):
+            process('xdotool','click','3');expect(smithWork=work if work<16 else 0,smithHammerDamage=work,smithInputs=5 if work<16 else 0,smithOutput=work==16);time.sleep(.45)
         process('xdotool','key','9');capture('anvil-smithing-runestone-ready')
-        process('xdotool','click','3');expect(smithOutput=False,smithRunes=1)
+        process('xdotool','click','3');expect(smithOutput=False,smithRunes=4)
         # Outer/inner spots are usable too, including the raised rear heel.
         for slot in ('north_outer','east_outer','south_outer','west_outer','north_inner','east_inner','south_inner','west_inner'):
             process('xdotool','key','4');command('smithing_aim',slot=slot);expect(smithAim=slot);process('xdotool','click','3');expect(smithInputs=1)
@@ -464,13 +485,14 @@ def run():
     capture('anvil-smithing-ingredients')
     process('xdotool','key','9');time.sleep(.2);toggle_anvil_guide();expect(screen='InGame',smithInputs=5,anvilGuide=True);toggle_anvil_guide();expect(screen='InGame',smithInputs=5,anvilGuide=False)
     process('xdotool','key','3');time.sleep(.5);capture('anvil-smithing-hammer-held')
+    native_chat_command('experience add @s 16 points')
     for work in (1,2):
         process('xdotool','click','1');expect(smithWork=work,smithOutput=False,smithHammerDamage=work);time.sleep(.55)
     capture('anvil-smithing-work')
-    process('xdotool','click','3');expect(smithWork=3,smithHammerDamage=3);time.sleep(.55)
-    process('xdotool','click','3');expect(smithInputs=0,smithWork=0,smithOutput=True,smithHammerDamage=4)
+    for work in range(3,17):
+        process('xdotool','click','3');expect(smithWork=work if work<16 else 0,smithHammerDamage=work,smithInputs=5 if work<16 else 0,smithOutput=work==16);time.sleep(.45)
     process('xdotool','key','9');capture('anvil-smithing-runestone-ready')
-    process('xdotool','click','3');expect(smithOutput=False,smithRunes=1)
+    process('xdotool','click','3');expect(smithOutput=False,smithRunes=4)
     # Outer/inner spots are usable too, including the raised rear heel.
     for slot in ('north_outer','east_outer','south_outer','west_outer','north_inner','east_inner','south_inner','west_inner'):
         process('xdotool','key','4');command('smithing_aim',slot=slot);expect(smithAim=slot);process('xdotool','click','3');expect(smithInputs=1)

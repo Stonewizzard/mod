@@ -12,6 +12,15 @@ import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
 /** Server datapack recipes, deliberately separate from the crafting-table recipe type. */
 public final class AnvilRecipes extends SimplePreparableReloadListener<List<AnvilRecipes.Recipe>> {
+    public static final int DEFAULT_XP_PER_HIT=1,MAX_XP_PER_HIT=100000;
+    public static int readXpPerHit(JsonObject json){
+        if(!json.has("xp_per_hit"))return DEFAULT_XP_PER_HIT;
+        var value=json.get("xp_per_hit");
+        if(!value.isJsonPrimitive()||!value.getAsJsonPrimitive().isNumber())throw new IllegalArgumentException("xp_per_hit must be an integer");
+        int cost=value.getAsBigDecimal().intValueExact();
+        if(cost<0||cost>MAX_XP_PER_HIT)throw new IllegalArgumentException("xp_per_hit must be between 0 and "+MAX_XP_PER_HIT);
+        return cost;
+    }
     public record Input(Identifier item,TagKey<Item> tag){
         boolean accepts(ItemStack stack){return stack.getCount()==1&&(tag!=null?stack.is(tag):BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(item));}
     }
@@ -31,7 +40,9 @@ public final class AnvilRecipes extends SimplePreparableReloadListener<List<Anvi
         }
         return Map.copyOf(out);
     }
-    public record Recipe(Identifier id,int anvilTier,int hammerTier,int work,Map<AnvilSlot,Input> inputs,Item resultItem,int resultCount,Map<AnvilBasins.Side,FluidInput> fluids){
+    public record Recipe(Identifier id,int anvilTier,int hammerTier,int work,Map<AnvilSlot,Input> inputs,Item resultItem,int resultCount,Map<AnvilBasins.Side,FluidInput> fluids,int xpPerHit){
+        public Recipe{if(xpPerHit<0||xpPerHit>MAX_XP_PER_HIT)throw new IllegalArgumentException("Invalid XP cost");}
+        public Recipe(Identifier id,int anvilTier,int hammerTier,int work,Map<AnvilSlot,Input> inputs,Item resultItem,int resultCount,Map<AnvilBasins.Side,FluidInput> fluids){this(id,anvilTier,hammerTier,work,inputs,resultItem,resultCount,fluids,DEFAULT_XP_PER_HIT);}
         public boolean fluidsMatch(AncientAnvilBlockEntity be){
             if(fluids.isEmpty())return true;
             var basins=AnvilBasins.inspect(be.getLevel(),be.getBlockPos(),be.getBlockState().getValue(AncientAnvilBlock.FACING));
@@ -68,7 +79,7 @@ public final class AnvilRecipes extends SimplePreparableReloadListener<List<Anvi
             int tier=number(json,"anvil_tier",0),hammer=number(json,"hammer_tier",1),work=number(json,"work",4);
             if(tier<0||tier>6||hammer<1||work<1||work>10000)throw new IllegalArgumentException("Invalid work/tier requirements");
             var fluids=readFluids(json);
-            result.add(new Recipe(id,fluids.isEmpty()?tier:Math.max(2,tier),hammer,work,Map.copyOf(inputs),item,count,fluids));
+            result.add(new Recipe(id,fluids.isEmpty()?tier:Math.max(2,tier),hammer,work,Map.copyOf(inputs),item,count,fluids,readXpPerHit(json)));
         }catch(Exception failure){ExampleMod.LOGGER.error("Cannot load anvil recipe {}",entry.getKey(),failure);}
         return List.copyOf(result);
     }

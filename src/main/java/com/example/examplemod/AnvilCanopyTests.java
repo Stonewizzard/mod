@@ -39,14 +39,14 @@ public final class AnvilCanopyTests {
                 l.destroyBlock(core,false);for(var req:stage.blocks())l.setBlock(req.at(core,front),Blocks.AIR.defaultBlockState(),3);
             }
             prepare(l,core,Direction.NORTH);refresh(l,core);tier(h,l,core,4,"Complete ground workshop unlocks the canopy");
-            var player=h.makeMockServerPlayerInLevel();player.setGameMode(GameType.SURVIVAL);player.snapTo(core.getX()+.5,core.getY()+2.5,core.getZ()+.5,0,90);
+            var player=h.makeMockServerPlayerInLevel();player.setGameMode(GameType.SURVIVAL);player.giveExperiencePoints(8);player.snapTo(core.getX()+.5,core.getY()+2.5,core.getZ()+.5,0,90);
             var hammer=new ItemStack(AncientAnvilContent.IRON_FORGE_HAMMER.get());player.setItemInHand(InteractionHand.MAIN_HAND,hammer);var be=(AncientAnvilBlockEntity)l.getBlockEntity(core);
             for(var slot:List.of(AnvilSlot.NORTH_WEST,AnvilSlot.NORTH_EAST,AnvilSlot.SOUTH_WEST,AnvilSlot.SOUTH_EAST))be.placeInput(slot,new ItemStack(AncientAnvilContent.RUNESTONE_ITEM.get()));
             for(var slot:List.of(AnvilSlot.NORTH_INNER,AnvilSlot.EAST_INNER,AnvilSlot.SOUTH_INNER,AnvilSlot.WEST_INNER))be.placeInput(slot,new ItemStack(AncientAnvilContent.INGOT.get()));
             be.placeInput(AnvilSlot.CENTER,new ItemStack(Items.GLOWSTONE_DUST));
             check(h,AnvilRecipes.match(be)!=null&&AnvilRecipes.match(be).anvilTier()==4,"Keystone recipe loads and requires Tier 4");
             for(int i=0;i<8;i++){be.lastStrike=l.getGameTime()-8;check(h,AnvilWork.strike(be,player,InteractionHand.MAIN_HAND),"Iron hammer crafts a keystone batch");}
-            check(h,be.output().is(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get())&&be.output().getCount()==4&&be.inputCount()==0,"Four Runestone, four ancient ingots and glowstone produce four keystones");be.takeOutput();
+            check(h,be.output().is(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get())&&be.output().getCount()==4&&be.inputCount()==0&&AnvilExperience.available(player)==0,"Four Runestone, four ancient ingots and glowstone produce four keystones");be.takeOutput();
             be.placeInput(AnvilSlot.CENTER,new ItemStack(Items.GOLD_INGOT));int damage=hammer.getDamageValue();player.setShiftKeyDown(true);
             for(int i=1;i<=3;i++)player.getInventory().setItem(i,new ItemStack(AncientAnvilContent.RUNESTONE_ITEM.get(),i==3?28:64));
             player.getInventory().setItem(7,new ItemStack(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get(),16));

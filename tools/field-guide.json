@@ -790,8 +790,9 @@
       {
         "title": "Forge a Runestone",
         "paragraphs": [
-          "Tier 0 is sufficient. Put one deepslate or cobbled deepslate in each of the four diagonal corner positions, and one gold ingot in the center. Leave every other position empty. Strike four times with the Iron Forge Hammer to make one Runestone.",
-          "Runestone is a blank prepared stone base. Later recipes will inscribe specific functional Ancient Runes on it. It has no crafting-grid recipe."
+          "Tier 0 is sufficient. Put one deepslate or cobbled deepslate in each of the four diagonal corner positions, and one gold ingot in the center. Leave every other position empty. Strike sixteen times with the Iron Forge Hammer to make four Runestone. By default, the batch costs sixteen experience points.",
+          "Runestone is a blank prepared stone base. Later recipes will inscribe specific functional Ancient Runes on it. It has no crafting-grid recipe.",
+          "Each accepted hammer strike normally spends one experience point, not one level. If you run out of XP, your ingredients and partial work stay on the anvil. Gain more XP and continue. Invalid recipes and hits during the hammer cooldown do not spend XP. Creative smithing is free."
         ]
       },
       {
@@ -860,7 +861,7 @@
       "reconstruction",
       "runic_canopy"
     ],
-    "keywords": "ancient anvil tier 0 tier 1 Runestone foundation multiblock blood magic ritual guide ingot runestone deepslate gold iron forge hammer smithing thirteen corners hold build guide inventory placement tier 2 basins fluids water lava bridge tier 3 tier 4 pillars ring caps workshop tier 5 canopy keystone floating",
+    "keywords": "ancient anvil tier 0 tier 1 Runestone foundation multiblock blood magic ritual guide ingot runestone deepslate gold iron forge hammer smithing thirteen corners hold build guide inventory placement tier 2 basins fluids water lava bridge tier 3 tier 4 pillars ring caps workshop tier 5 canopy keystone floating experience xp points hammer cost smithing",
     "recipes": [
       "ancient_anvil"
     ]

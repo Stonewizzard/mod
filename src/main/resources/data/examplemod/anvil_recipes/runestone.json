@@ -1,7 +1,7 @@
 {
   "anvil_tier": 0,
   "hammer_tier": 1,
-  "work": 4,
+  "work": 16,
   "ingredients": {
     "north_west": {
       "tag": "examplemod:runestone_deepslate"
@@ -21,6 +21,7 @@
   },
   "result": {
     "id": "examplemod:runestone",
-    "count": 1
-  }
+    "count": 4
+  },
+  "xp_per_hit": 1
 }
