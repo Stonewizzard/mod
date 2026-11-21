@@ -359,18 +359,31 @@ The user accepted the Tier 4 recipe using all thirteen positions:
 
 Output: **1 Rune of Collection**. Its selected function exports finished items, rather than XP or recipe inputs. XP tuning is deferred and work count is unreviewed.
 
-## Recipe review 16 — Rune of Deliberation: proposed next
+## Recipe review 16 — Rune of Deliberation: agreed
 
-Propose a Tier 4 recipe using all thirteen positions:
+The user accepted the Tier 4 recipe using all thirteen positions:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
-| Center | 1 Clock (`minecraft:clock`) |
-| Four inner cardinal positions | 1 Soul Sand each — 4 total (`minecraft:soul_sand`, not Soul Soil) |
+| Center | 1 Clock |
+| Four inner cardinal positions | 1 Soul Sand each — 4 total |
 | Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
 
-Proposed output: **1 Rune of Deliberation**. The Clock and Soul Sand represent its selected slower-forging/lower-total-XP tradeoff. This ingredient layout awaits review; do not turn the XP benefit into merely a per-hit discount that makes the total craft more expensive. XP tuning is deferred and work count is unreviewed. Tier 5 Specialization follows if accepted.
+Output: **1 Rune of Deliberation**. Its selected effect adds swings in exchange for lower **total** XP per craft. All four Tier 4 rune ingredient layouts are now reviewed. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 17 — Rune of Specialization: proposed next
+
+Propose a Tier 5 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Smithing Table (`minecraft:smithing_table`) |
+| Four inner cardinal positions | 1 Diamond each — 4 total (`minecraft:diamond`) |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Proposed output: **1 Rune of Specialization**. Ingredients/layout await review. Its selected effect remains a preferred recipe category's XP discount plus an outside-category XP penalty; the Smithing Table ingredient does not restrict its function to equipment recipes. Category selection, quantitative scaling and reconfiguration are separate design questions. XP tuning is deferred and work count is unreviewed. Familiarity follows if accepted.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -393,8 +406,9 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Batching | **Agreed:** 4 blank Runestone corners + 1 Hopper center + 4 Chests inner ring + 4 Redstone Comparators outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Invocation | **Agreed:** 4 blank Runestone corners + 1 Nether Star center + 4 Ancient Ingots inner ring + 4 Blaze Rods outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Collection | **Agreed:** 4 blank Runestone corners + 1 Dropper center + 4 Hoppers inner ring + 4 Chests outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Deliberation | **Proposed next:** 4 blank Runestone corners + 1 Clock center + 4 Soul Sand inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Specialization, Familiarity, Alternation (Tier 5) | Choose recipe ingredients after operating details and numerical scaling | To decide |
+| Deliberation | **Agreed:** 4 blank Runestone corners + 1 Clock center + 4 Soul Sand inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Specialization | **Proposed next:** 4 blank Runestone corners + 1 Smithing Table center + 4 Diamonds inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Familiarity, Alternation (Tier 5) | Choose recipe ingredients after operating details and numerical scaling | To decide |
 | Master Craftsmanship | Ancient crystal + diamond + 2 ancient ingots | 24 × 25 |
 | Mutation | Deferred; select supported alternative-output recipes and chance behavior before fixing rune ingredients | To decide |
 | Grand Pattern | Map + ender pearl + 2 ancient ingots; revisit cost for actual relocation power | 24 × 25; revisit |
