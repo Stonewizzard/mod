@@ -240,7 +240,7 @@ The user removed the Copper Ingot ingredients from the proposal. The Tier 2 layo
 
 Output: **1 Rune of Conduit**. This occupies **nine** of the thirteen available positions: 4 + 1 + 4. Do not insert another ingredient into the inner ring or move the Redstone inward without user direction. The Copper **Block** remains; only the four separate Copper **Ingots** were removed.
 
-Its selected effect increases XP transfer speed both into and out of the forge, including supported pipes and standing transfers. XP tuning is deferred and work count is not reviewed. Tier 3 Restoration is reviewed below; Efficiency and Expansion are reviewed below; Overworld Transmutation is the next proposal.
+Its selected effect increases XP transfer speed both into and out of the forge, including supported pipes and standing transfers. XP tuning is deferred and work count is not reviewed. Subsequent Tier 3 recipes are reviewed below in roster order.
 
 ## Recipe review 7 — Rune of Restoration: agreed, Iron Blocks on inner ring
 
@@ -281,18 +281,31 @@ The user accepted the Tier 3 recipe after confirming that Expansion adds physica
 
 Output: **1 Rune of Expansion**. Uses all thirteen positions. The recipe is selected; exactly where the additional sockets appear and expanded recipe addressing remain future design work. XP tuning is deferred and work count is unreviewed.
 
-## Recipe review 10 — Rune of Transmutation (Overworld): proposed next
+## Recipe review 10 — Rune of Transmutation (Overworld): agreed
+
+The user accepted the Tier 3 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Emerald Block (`minecraft:emerald_block`) |
+| Four inner cardinal positions | 1 Amethyst Shard each — 4 total |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Output: **1 Rune of Transmutation**, the Overworld-targeting base variant. This is the rune's crafting recipe; individual item-conversion recipes remain to design. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 11 — Rune of Nether Transmutation: proposed next
 
 Propose a Tier 3 recipe using all thirteen positions:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
-| Center | 1 Emerald Block (`minecraft:emerald_block`) |
-| Four inner cardinal positions | 1 Amethyst Shard each — 4 total (`minecraft:amethyst_shard`) |
+| Center | 1 Magma Block (`minecraft:magma_block`) |
+| Four inner cardinal positions | 1 Blaze Powder each — 4 total (`minecraft:blaze_powder`) |
 | Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
 
-Proposed output: **1 Rune of Transmutation**, the already-selected Overworld-targeting base variant. Ingredients/layout are awaiting review. This is the rune's crafting recipe, not a specific item-conversion recipe or a fourth universal variant. It enables authored item-input conversions into Overworld-associated materials using XP; individual conversions remain to design. XP tuning is deferred and work count is unreviewed. Nether Transmutation follows if accepted.
+Proposed output: **1 Rune of Nether Transmutation**. The ingredients/layout await user review; its Tier 3 placement and Nether-targeting item-conversion effect are already selected. Individual conversion recipes/costs are separate future work. XP tuning is deferred and work count is unreviewed. End Transmutation follows if accepted.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -307,8 +320,9 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Tempering | **Agreed:** 4 blank Runestone corners + 1 Iron Block center + 4 Ancient Ingots inner ring + 4 Obsidian outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Conduit | **Revised by user:** 4 blank Runestone corners + 1 Copper Block center + 4 Redstone Dust outer ring; inner ring empty; output 1 | Work not reviewed; XP tuning deferred |
 | Expansion | **Agreed:** 4 blank Runestone corners + 1 Crafting Table center + 4 Pistons inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Transmutation (Overworld) | **Proposed next:** 4 blank Runestone corners + 1 Emerald Block center + 4 Amethyst Shards inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Nether and End Transmutation | Separate rune recipes and conversion catalysts to decide; both are Tier 3 | To decide |
+| Transmutation (Overworld) | **Agreed:** 4 blank Runestone corners + 1 Emerald Block center + 4 Amethyst Shards inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Nether Transmutation | **Proposed next:** 4 blank Runestone corners + 1 Magma Block center + 4 Blaze Powder inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| End Transmutation | Rune recipe and conversion catalysts to decide; Tier 3 | To decide |
 | Restoration | **Agreed:** 4 blank Runestone corners + 1 Anvil center + 4 Iron Blocks inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Efficiency | **Agreed:** 4 blank Runestone corners + 1 Enchanting Table center + 4 Gold Ingots inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Batching | Chest + hopper + ancient ingot | 16 × 15 |
