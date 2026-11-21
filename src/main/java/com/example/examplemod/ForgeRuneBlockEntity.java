@@ -47,7 +47,7 @@ public final class ForgeRuneBlockEntity extends BlockEntity implements Container
         AnvilWork.message(p,be==null?"Place this rune in a completed Tier "+kind().tier+"+ anvil structure":kind().title()+" | XP: "+be.storedExperience()+" / "+be.experienceCapacity());
     }
     private static void give(Player p,ItemStack s){if(!s.isEmpty()&&!p.getInventory().add(s))Containers.dropItemStack(p.level(),p.getX(),p.getY(),p.getZ(),s);}
-    public ItemStack insert(ItemStack offered){var left=offered.copy();for(int i=0;i<27&&!left.isEmpty();i++)if(canPlaceItem(i,left)){
+    public ItemStack insert(ItemStack offered){var left=offered.copy();for(int i=0;i<27&&!left.isEmpty();i++)if(kind()==ForgeRune.COLLECTION||canPlaceItem(i,left)){
         var old=getItem(i);if(!old.isEmpty()&&!ItemStack.isSameItemSameComponents(old,left))continue;
         int n=Math.min(left.getCount(),left.getMaxStackSize()-old.getCount());if(n<=0)continue;setItem(i,left.copyWithCount(old.getCount()+n));left.shrink(n);
     }return left;}

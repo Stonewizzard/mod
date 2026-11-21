@@ -41,6 +41,7 @@ public final class ClientVisualQa {
                 if(id!=commandId){
                     commandId=id;
                     switch(command.get("action").getAsString()){
+                        case "rune_gallery","rune_detail","rune_workshop","rune_overview"->{var action=command.get("action").getAsString();var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();server.execute(()->ForgeRuneVisualQa.command(server.getPlayerList().getPlayer(uuid),action));}
                         case "open_book"->{navigation=new FieldGuideNavigation();minecraft.gui.setScreen(new FieldGuideScreen(navigation,command.has("design")?GuideDesign.valueOf(command.get("design").getAsString()):GuideDesign.MANUAL));}
                         case "seed_books"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();

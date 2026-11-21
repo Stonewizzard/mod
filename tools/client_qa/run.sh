@@ -21,7 +21,7 @@ renderDistance:2
 simulationDistance:5
 EOF
 # The aerial canopy needs more view distance than the close-up book routes.
-if [ "${CLIENT_QA_SCOPE:-}" = "anvil-canopy" ] || [ "${CLIENT_QA_SCOPE:-}" = "anvil-tier6" ] || [ "${CLIENT_QA_SCOPE:-}" = "anvil-tier6-repair" ] || [ "${CLIENT_QA_SCOPE:-}" = "runestone-art" ]; then
+if [ "${CLIENT_QA_SCOPE:-}" = "anvil-canopy" ] || [ "${CLIENT_QA_SCOPE:-}" = "anvil-tier6" ] || [ "${CLIENT_QA_SCOPE:-}" = "anvil-tier6-repair" ] || [ "${CLIENT_QA_SCOPE:-}" = "runestone-art" ] || [ "${CLIENT_QA_SCOPE:-}" = "forge-runes" ]; then
     sed -i 's/renderDistance:2/renderDistance:5/' run/visual-qa/options.txt
 fi
 ./gradlew runClientVisualQa >build/client-qa/client.log 2>&1 &

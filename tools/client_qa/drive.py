@@ -139,6 +139,13 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='forge-runes':
+        process('xdotool','key','Escape');expect(screen='InGame');native_chat_command('time set noon');command('rune_gallery');time.sleep(4)
+        process('xdotool','key','F1');capture('forge-runes-gallery');process('xdotool','key','F1')
+        command('rune_detail');time.sleep(2);process('xdotool','key','F1');capture('forge-runes-detail');process('xdotool','key','F1')
+        command('rune_workshop');time.sleep(3);process('xdotool','key','F1');capture('forge-runes-workshop');process('xdotool','key','F1')
+        command('rune_overview');time.sleep(3);process('xdotool','key','F1');capture('forge-runes-overview');process('xdotool','key','F1')
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'forge-runes'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-xp':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_fixture');process('xdotool','key','2');time.sleep(.5);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0,anvilLarge=True)
         command('smithing_fixture');native_chat_command('experience set @s 0 levels');native_chat_command('experience set @s 0 points');expect(smithXp=0,smithInputs=0)

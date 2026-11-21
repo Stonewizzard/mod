@@ -40,8 +40,8 @@ public final class ForgeRuneAutomation {
         };
         public int size(){return 1;}
         public FluidResource getResource(int i){return getAmountAsInt(i)>0?FluidResource.of(XP.get()):FluidResource.EMPTY;}
-        public int getAmountAsInt(int i){var be=rune.core();return be==null?0:be.storedExperience();}
-        public int getCapacityAsInt(int i,FluidResource r){var be=rune.core();return be==null?0:be.experienceCapacity();}
+        public long getAmountAsLong(int i){var be=rune.core();return be==null?0:be.storedExperience();}
+        public long getCapacityAsLong(int i,FluidResource r){var be=rune.core();return be==null?0:be.experienceCapacity();}
         public boolean isValid(int i,FluidResource r){return !r.isEmpty()&&r.getFluid().defaultFluidState().is(XP_TAG)&&r.isComponentsPatchEmpty();}
         public int insert(int i,FluidResource r,int n,TransactionContext tx){
             var be=rune.core();if(i!=0||be==null||rune.kind()!=ForgeRune.INPUT||n<=0||!isValid(i,r))return 0;
