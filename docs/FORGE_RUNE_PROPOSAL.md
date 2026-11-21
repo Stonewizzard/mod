@@ -32,6 +32,7 @@ The following concepts are selected for continued design. The user accepted the 
 | Enables 5; excluded from functional-rune target | Keystone Rune of the Sky | Rename/replace Canopy Keystone, retaining its sixteen structural positions and existing purpose; no added effect yet. Preserve saved worlds. |
 | 6 | Rune of Master Craftsmanship | More completed output, initially described as a small per-rune chance to double. Scaling beyond guaranteed doubling needs discussion; do not silently impose a count cap. |
 | 6 | Rune of Grand Pattern | User-selected redesign: the rune directly beneath the anvil center packs the whole structure into a portable rune; placing that rune relocates/restores it. This replaces the old projection-only concept. |
+| 6 | Rune of Mutation | Selected for now: supported Transmutation recipes can produce a rarer alternative item instead of the normal result. Exact outcomes, chance scaling and recipe costs remain deferred. |
 
 The previous Tier 3 suggestions (Workpiece Memory, Rhythm, Basin Attunement) and Tier 5 suggestions (Sky Conduit, Crystal Anchor, Precision) were rejected. Do not treat them as planned features. Resonant Sight, the old Pattern/Reserve suggestions, Spectrum and Concordance are not on the selected list either. Of the newer candidates, only Restoration was selected. Reforging, Reclamation, Awakening and Transference are also rejected; do not carry them forward as planned mechanics.
 
@@ -155,6 +156,7 @@ Ordinary recipes below consume **one blank Runestone plus** the listed extras an
 | Invocation | To decide; the rune and first summoning seal must be obtainable before defeating the Forgemaster | To decide |
 | Collection, Deliberation (Tier 4); Specialization, Familiarity, Alternation (Tier 5) | Choose recipe ingredients after operating details and numerical scaling | To decide |
 | Master Craftsmanship | Ancient crystal + diamond + 2 ancient ingots | 24 × 25 |
+| Mutation | Deferred; select supported alternative-output recipes and chance behavior before fixing rune ingredients | To decide |
 | Grand Pattern | Map + ender pearl + 2 ancient ingots; revisit cost for actual relocation power | 24 × 25; revisit |
 | Sky Keystone | Add a Forgemaster material to the recipe. Existing 4 Runestone + 4 ancient ingots + glowstone is a reference; whether the drop replaces glowstone or is additional is open. | Existing 8 × 1 → 4 is a reference; new costs/output/drop quantities remain open |
 
@@ -196,7 +198,7 @@ Current Tier 3 selected roster:
 
 All earlier added forge candidates (Inscription, Parallel Forging, Striking, Ascendance, Commission and Dispatch) remain rejected. **Vigilance is selected as a general-purpose chunk-loading rune usable anywhere**, outside the forge roster, with its progression/fuel still open.
 
-Excluding Sky Keystone, selected forge counts are now **3 / 3 / 6 / 4 / 3 / 2** across tiers 1–6: twenty-one functional runes. The user selected Alternation, authorized moving one or two Tier 4 runes into Tier 5, and asked to move on to Tier 6. Move Specialization and Familiarity to Tier 5, grouping the recipe-category/streak XP modifiers together; keep Batching, Invocation, Collection and Deliberation at Tier 4. One further Tier 6 selection would reach at least three at each tier, with twenty-two functional runes total. Do not add candidates as accepted just to fill the gaps.
+Excluding Sky Keystone, selected forge counts are now **3 / 3 / 6 / 4 / 3 / 3** across tiers 1–6: twenty-two functional runes. The user selected Alternation and authorized moving one or two Tier 4 runes into Tier 5; Specialization and Familiarity moved together, keeping Batching, Invocation, Collection and Deliberation at Tier 4. The user then selected Mutation for Tier 6 **for now**, explicitly allowing a later revisit. The initial roster now meets at least three functional runes per tier; this does not finalize numerical tuning, recipes or implementation.
 
 ### Expansion — selected operation, socket design still open
 
@@ -270,39 +272,42 @@ Consecutive crafts that change recipes build an XP discount; repeating the same 
 
 Price each new job from the streak applicable to that job: do not accidentally apply the preceding recipe's Familiarity discount to a switched recipe and then also award Alternation. Recipe identity, whether a longer sequence must contain distinct recipes rather than just alternate two recipes, growth/decay and save data remain design details. The user selected the general behavior, not these unsettled details.
 
-## Tier 6 workshop — new alternatives, not approved
+## Tier 6 selection — Mutation, provisional details
 
-Tier 6 currently has **Master Craftsmanship and Grand Pattern**. One further selection reaches the requested minimum. Sky Keystone remains structural and excluded; Vigilance remains general-purpose. The following candidates stay focused on the forge and are **unapproved**.
+The user selected **Mutation** as the third Tier 6 rune, saying it is good for now and can be revisited. Tier 6 has **Master Craftsmanship, Grand Pattern and Mutation**. The initial forge roster is complete for the current three-per-tier exercise.
 
-| Candidate | Proposed forge effect |
-|---|---|
-| Rune of Perfection | Improve existing numerical modifier rolls on supported crafted ancient components/equipment, eventually guaranteeing the top of their normal allowed range through investment. |
-| Rune of Legacy | Convert part of a supported ancient-tool craft's XP expenditure into starting tool XP on its result, respecting separate ascension requirements. |
-| Rune of Empowerment | Pay an optional additional XP charge to strengthen Master Craftsmanship's extra-output benefit for a craft. |
-| Rune of Crescendo | A sustained run of completed crafts builds a stronger Master Craftsmanship benefit; an idle break loses the buildup. |
-| Rune of Overstrike | Convert genuinely excess paid work from a powerful finishing hammer strike into an increased Master Craftsmanship benefit. |
-| Rune of Multidiscipline | Let groups of Specialization runes support additional chosen recipe categories in one forge, rather than a single core-wide specialty. |
+Selected Mutation concept: **supported Transmutation recipes may produce a rarer alternative item instead of their normal result**. This changes the output type; it is not automatically an extra copy, an improved numerical modifier roll or a guaranteed global rarity upgrade.
 
-### Candidate distinctions and open details
+Keep its details open:
+- Which Overworld, Nether and End transmutation recipes support Mutation.
+- Exact alternative items, rarity ordering and weights.
+- Rune-count scaling, chance limits and benefits of further investment, respecting the no-arbitrary-first-N-cap direction.
+- Any XP premium, catalyst or additional material requirement.
+- Interaction/order with Master Craftsmanship and other job-pricing/output effects.
+- Mutation rune ingredients, crafting work and XP/hit.
 
-Perfection affects existing legal numerical rolls rather than inventing new modifier types, increasing rarity by consuming several artifacts, or transferring modifiers between artifacts. It must have real eligible forge recipes producing rolled components/equipment; ordinary Rune blocks and ingots do not acquire imaginary quality stats. Exact roll improvement and behavior at the normal maximum remain open.
+Use authored alternative-output data if implemented; do not automatically infer value from item names or allow arbitrary modded outputs. Recipes without a declared mutation outcome keep their ordinary result. These are implementation principles for later design, not approved weights or conversion ratios. The user has explicitly deferred a detailed revisit.
 
-Legacy concerns **the ancient tool's own XP**, not player-XP refunds. It requires supported equipment-forging recipes; it must not silently apply to Reconstruction Table output or skip unpaid ascension gates. Exact conversion rate, tool eligibility and maximum useful training remain open. This does not create a new forge-level progression system.
+The preceding Tier 6 sets were rejected: Perfection, Legacy, Empowerment, Crescendo, Overstrike and Multidiscipline; then Imprinting, Tethering, Recall, Salvation, Duality and Projection. The last set's other options (Frugality, Breakthrough, Remnants, Forgemaster's Favor and Greater Transmutation) were not selected. Do not carry these forward as approved features.
 
-Empowerment offers a controllable XP-for-output tradeoff. The surcharge must be part of the complete server-priced job and cannot be enabled only on the final strike to retroactively obtain a cheaply funded bonus. Master Craftsmanship's existing recipe eligibility rules still apply.
+## Initial selected forge roster
 
-Crescendo is an output-production bonus based on activity, distinct from Familiarity's same-recipe XP discount. It can potentially work with Alternation across different recipe jobs. Timing, growth, idle reset and scaling are proposals, not selected behavior; do not introduce it as automatic hammering or passive free crafts.
+Sky Keystone remains a structural Tier 5 requirement and is excluded from these counts. Vigilance remains a separate general-purpose chunk-loading rune.
 
-Overstrike is useful only with future hammers that give more than one work per strike or other real excess-work sources; the current Iron hammer generally offers none. It converts real otherwise-unused paid work rather than granting a free client-reported bonus. Exact work/cost identity and its relationship to surplus Swift cost need design. This is not the rejected Carryover proposal of banking progress for later batches.
-
-Multidiscipline adds selected **categories**, not a blanket reduction of Specialization's outside-category penalty (the rejected Versatility effect). Recipe categories beyond the configured specialties still face the normal penalty. Decide how actual Specialization rune groups are assigned; do not multiply every group's strength into every category for free. Extra category capacity follows installed rune investment, not a hidden first-N limit.
-
-These are six alternatives for the next slot, not approved rune additions. Perfection/Legacy provide crafted-equipment payoffs and require appropriate recipes; Empowerment/Crescendo/Overstrike support the already-selected Master Craftsmanship output system through different conditions. Multidiscipline extends the newly placed Tier 5 category system. Exact mechanics, stacking and recipes follow user selection.
+| Tier | Count | Selected functional runes |
+|---|---:|---|
+| 1 | 3 | Storage, Extraction, Input |
+| 2 | 3 | Swift Forging, Tempering, Conduit |
+| 3 | 6 | Restoration, Efficiency, Expansion, Transmutation (Overworld), Nether Transmutation, End Transmutation |
+| 4 | 4 | Batching, Invocation, Collection, Deliberation |
+| 5 | 3 | Specialization, Familiarity, Alternation |
+| 6 | 3 | Master Craftsmanship, Grand Pattern, Mutation |
+| Total | 22 | At least three per tier; effects and recipes still require detailed design before implementation |
 
 ## Decisions still open
 
-- Which additional Tier 6 rune(s) to select alongside Master Craftsmanship and Grand Pattern.
-- Numerical curves/configuration for Tier 5 Specialization, Familiarity and Alternation; their current tier placement is settled by this authorized move.
+- Mutation's alternatives, probabilities, scaling, costs and recipe; deliberately deferred for a later revisit.
+- Numerical curves/configuration for Tier 5 Specialization, Familiarity and Alternation.
 - Collection and Deliberation scaling/recipes at Tier 4.
 - Forgemaster drop identity/quantity and the revised Sky Keystone recipe; whether one normal kill should cover all sixteen required keystones.
 - Invocation seal ingredients/XP, boss difficulty, repeat encounters and rewards.
@@ -314,3 +319,5 @@ These are six alternatives for the next slot, not approved rune additions. Perfe
 - Master Craftsmanship beyond 100%: guaranteed extra batches versus staying double-only with diminishing chance.
 - Batching's template item interpretation, recipe-variant selection and output collection/re-arming policy.
 - Grand Pattern's recipe, placement confirmation, optional decorative floor handling and relocation XP cost.
+
+This document records **selected design directions**, provisional numbers/recipes and deferred questions. It does not authorize or imply that all twenty-two rune blocks have been implemented.
