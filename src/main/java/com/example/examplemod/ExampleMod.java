@@ -220,6 +220,7 @@ public class ExampleMod {
             modEventBus.addListener(AnvilSidePlacementTests::register);
             modEventBus.addListener(AnvilSmithingTests::register);
             modEventBus.addListener(ForgeRuneTests::register);
+            modEventBus.addListener(ForgeRuneIntegrationTests::register);
             modEventBus.addListener(LargeAnvilTests::register);
             modEventBus.addListener(AncientScrapTests::register);
             modEventBus.addListener(FireboxProcessTests::register);
