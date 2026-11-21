@@ -117,9 +117,10 @@ public final class ForgeRunes {
     // Vanilla skips block interaction when sneaking with a held item. Templates must still reach
     // the rune.
     // Unrecognized BlockItems retain vanilla sneak-placement, so chests can be placed on top.
-    if (held.isEmpty()
-        || AnvilRecipes.all().stream().anyMatch(r -> r.resultItem() == held.getItem()))
-      event.setUseBlock(net.minecraft.util.TriState.TRUE);
+    if (held.getItem() instanceof net.minecraft.world.item.BlockItem item
+        && item.getBlock() instanceof net.minecraft.world.level.block.EntityBlock
+        && !(item.getBlock() instanceof ForgeRuneBlock)) return;
+    event.setUseBlock(net.minecraft.util.TriState.TRUE);
   }
 
   private ForgeRunes() {}

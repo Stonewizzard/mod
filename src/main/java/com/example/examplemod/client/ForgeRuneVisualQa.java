@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.Blocks;
 
 /** Disposable real-world fixtures; screenshots and interaction still use the native game window. */
 public final class ForgeRuneVisualQa {
-  private static BlockPos core;
+  private static BlockPos core, gallery;
   public static BlockPos batchPos;
 
   public static void command(ServerPlayer player, String action) {
@@ -29,15 +29,17 @@ public final class ForgeRuneVisualQa {
       AnvilTierSixTests.prepare(
           level, core, Direction.NORTH, AnvilTierSix.stainedGlass("light_blue"), true);
       AncientAnvilBlockEntity.refresh(level, core, level.getBlockState(core));
+      gallery = core.east(32);
       var kinds = ForgeRune.values();
       for (int i = 0; i < kinds.length; i++) {
         int x = i % 11, z = i / 11;
-        var at = core.offset(x - 5, 0, -9 - z * 2);
+        var at = gallery.offset(x - 5, z * 2, 0);
         level.setBlock(at, ForgeRunes.BLOCKS.get(kinds[i]).get().defaultBlockState(), 3);
       }
       player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
       player.getInventory().clearContent();
-      player.connection.teleport(core.getX() + .5, core.getY() + 5, core.getZ() - 16, 0, 26);
+      player.connection.teleport(
+          gallery.getX() + .5, gallery.getY() + .5, gallery.getZ() - 9, 0, 0);
     } else if (action.equals("rune_workshop")) {
       var kinds = ForgeRune.values();
       var sockets =
@@ -63,7 +65,8 @@ public final class ForgeRuneVisualQa {
           batchPos.getX() + .5, batchPos.getY() + 1.2, batchPos.getZ() + .5, 0, 90);
       player.containerMenu.broadcastChanges();
     } else if (action.equals("rune_detail")) {
-      player.connection.teleport(core.getX() + .5, core.getY() + 3, core.getZ() - 12, 0, 35);
+      player.connection.teleport(
+          gallery.getX() + .5, gallery.getY() + .1, gallery.getZ() - 5, 0, 0);
     } else if (action.equals("rune_overview")) {
       player.connection.teleport(core.getX() - 22, core.getY() + 12, core.getZ() - 24, -42, 15);
     }
