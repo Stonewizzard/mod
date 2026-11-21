@@ -136,13 +136,38 @@ Conduit upgrades both directions, including standing transfer and supported pipe
 
 No universal XP-pipe unit exists across mods. Plan a point-based storage interface plus explicitly supported NeoForge capabilities/adapters. XP-fluid integrations need a configured conversion and conserved fractional remainders. Arbitrary fluid and Forge Energy are not XP. Unknown pipes simply do not connect. Do focused adapter checks once a concrete integration exists.
 
+## Recipe review 1 — Rune of Storage
+
+The user is reviewing anvil recipes **one at a time**, starting with Storage. The following **ingredients and positions are explicitly selected**:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners (`north_west`, `north_east`, `south_west`, `south_east`) | 1 blank Runestone each — 4 total |
+| Center (`center`) | 1 **Block of Lapis Lazuli** |
+| Four inner cardinal positions (`north_inner`, `east_inner`, `south_inner`, `west_inner`) | 1 Gold Ingot each — 4 total |
+| Four outer cardinal positions | Empty |
+
+Logical layout on the thirteen-position working surface:
+
+```text
+R G R
+G L G
+R G R
+```
+
+R = blank Runestone, G = Gold Ingot, L = Block of Lapis Lazuli. This replaces the earlier tentative two-Ancient-Ingot/lapis-item/gold recipe. Do not use individual lapis lazuli instead of its block.
+
+Remaining **proposed values from the first recipe presentation**, not separately confirmed by the ingredient correction: craft at Tier 1, Iron Forge Hammer or better, 8 swings at 5 XP per swing (40 XP), output 1 Rune of Storage. Activation at Tier 1 was already selected. Do not silently change the yield to four merely because four Runestone are inputs; output count can be reviewed explicitly. The general earlier craft-one-tier-before-activation suggestion remains unapproved.
+
+This is recipe-design documentation only. Do not add a live recipe referencing an unregistered rune block before rune implementation is authorized.
+
 ## Draft recipes — retained for discussion, not approved
 
-Ordinary recipes below consume **one blank Runestone plus** the listed extras and produce one rune. Sky Keystone's existing four-output batch is a starting reference, but its recipe must now include a Forgemaster drop as selected by the user. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
+The rows below remain preliminary except for Storage's explicitly reviewed ingredients/layout above. Unless otherwise stated, earlier ordinary-rune proposals used **one blank Runestone plus** the listed extras and one-rune output. Storage is now an exception with **four blank Runestone inputs**; its output/work/XP values remain proposed. Sky Keystone's existing four-output batch is a starting reference, but its recipe must now include a Forgemaster drop as selected by the user. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
 
-| Rune | Extra ingredients | Proposed swings × XP/hit |
+| Rune | Inputs (earlier rows use one blank Runestone unless stated) | Proposed swings × XP/hit |
 |---|---|---:|
-| Storage | 2 ancient ingots + lapis + gold ingot | 8 × 5 |
+| Storage | **Confirmed layout:** 4 blank Runestone at corners + 1 Block of Lapis Lazuli at center + 4 Gold Ingots on inner cardinal positions | Proposed 8 × 5; output 1 remains proposed |
 | Extraction | Hopper + ancient ingot + lapis | 8 × 8 |
 | Input | Hopper + ancient ingot + redstone | 8 × 8 |
 | Swift Forging | Sugar + redstone + ancient ingot | 12 × 10 |
@@ -305,6 +330,8 @@ Sky Keystone remains a structural Tier 5 requirement and is excluded from these 
 | Total | 22 | At least three per tier; effects and recipes still require detailed design before implementation |
 
 ## Decisions still open
+
+- Continue recipe review one rune at a time. Storage ingredients/layout are selected; its Tier 1 craft requirement, 8 swings, 5 XP/hit and one-rune output are still proposed.
 
 - Mutation's alternatives, probabilities, scaling, costs and recipe; deliberately deferred for a later revisit.
 - Numerical curves/configuration for Tier 5 Specialization, Familiarity and Alternation.
