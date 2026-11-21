@@ -24,6 +24,10 @@ The following concepts are selected for continued design. The user accepted the 
 | 3 | Rune of End Transmutation | Authored item-to-item conversions into End materials, using XP. |
 | 4 | Rune of Batching | User-selected redesign: configure with Shift-right-click using an item on any face; other faces accept recipe inputs; pulls matching ingredients from the chest above. Multiple runes need coordinated scheduling. |
 | 4 | Rune of Invocation | Selected in principle: forge ritual seals for the Forgemaster encounter. A Forgemaster drop becomes an ingredient for the Sky Keystones needed to reach Tier 5. |
+| 4 | Rune of Collection | Selected: route completed forge results into a chest above the rune or connected item pipes, clearing the working center. |
+| 4 | Rune of Specialization | Selected: reduce XP cost for a chosen recipe category while increasing XP costs outside that category. |
+| 4 | Rune of Familiarity | Selected: consecutive crafts of the same recipe build an XP discount; switching recipes resets it. |
+| 4 | Rune of Deliberation | Selected: add required hammer swings in exchange for a reduction in the craft's total XP cost. |
 | Enables 5; excluded from functional-rune target | Keystone Rune of the Sky | Rename/replace Canopy Keystone, retaining its sixteen structural positions and existing purpose; no added effect yet. Preserve saved worlds. |
 | 6 | Rune of Master Craftsmanship | More completed output, initially described as a small per-rune chance to double. Scaling beyond guaranteed doubling needs discussion; do not silently impose a count cap. |
 | 6 | Rune of Grand Pattern | User-selected redesign: the rune directly beneath the anvil center packs the whole structure into a portable rune; placing that rune relocates/restores it. This replaces the old projection-only concept. |
@@ -148,6 +152,7 @@ Ordinary recipes below consume **one blank Runestone plus** the listed extras an
 | Efficiency | Diamond + 2 ancient ingots + lapis | 16 × 15 |
 | Batching | Chest + hopper + ancient ingot | 16 × 15 |
 | Invocation | To decide; the rune and first summoning seal must be obtainable before defeating the Forgemaster | To decide |
+| Collection, Specialization, Familiarity, Deliberation | Newly selected Tier 4 effects; choose recipe ingredients after operating details and numerical scaling | To decide |
 | Master Craftsmanship | Ancient crystal + diamond + 2 ancient ingots | 24 × 25 |
 | Grand Pattern | Map + ender pearl + 2 ancient ingots; revisit cost for actual relocation power | 24 × 25; revisit |
 | Sky Keystone | Add a Forgemaster material to the recipe. Existing 4 Runestone + 4 ancient ingots + glowstone is a reference; whether the drop replaces glowstone or is additional is open. | Existing 8 × 1 → 4 is a reference; new costs/output/drop quantities remain open |
@@ -190,7 +195,7 @@ Current Tier 3 selected roster:
 
 All earlier added forge candidates (Inscription, Parallel Forging, Striking, Ascendance, Commission and Dispatch) remain rejected. **Vigilance is selected as a general-purpose chunk-loading rune usable anywhere**, outside the forge roster, with its progression/fuel still open.
 
-Excluding Sky Keystone, selected forge counts are now **3 / 3 / 6 / 2 / 0 / 2** across tiers 1–6: sixteen functional runes. Tier 4 now has Batching and Invocation. The user wants further Tier 4 suggestions, with at least one more selection needed. A minimum-three-per-tier lineup retaining the six selected Tier 3 runes would have at least twenty-one functional runes, not the old eighteen-rune estimate. Do not add candidates as accepted just to fill the gaps.
+Excluding Sky Keystone, selected forge counts are now **3 / 3 / 6 / 6 / 0 / 2** across tiers 1–6: twenty functional runes. Tier 4 is complete for the current exercise, and the user wants Tier 5 suggestions next. A minimum-three-per-tier lineup retaining the selected six each at Tiers 3 and 4 would have at least twenty-four functional runes. Do not add candidates as accepted just to fill the gaps.
 
 ### Expansion — selected operation, socket design still open
 
@@ -221,34 +226,81 @@ Recommended balance target, not yet approved: one normal victory should provide 
 
 The other preceding Tier 4 candidates (Conjuration, Refinement, Adaptation, Liquefaction and Solidification) remain unselected. The user did not like most of that group; do not carry them into this new shortlist as approved features.
 
-## Tier 4 reset — all six preceding suggestions rejected
+## Tier 4 selections complete — move discussion to Tier 5
 
-The user rejected Compression, Amplification, Convergence, Challenge, Reconstruction and Safekeeping. Remove them from the active shortlist; they are not approved features or a backlog to implement. Tier 4 still has **Batching and Invocation**, with the selected Forgemaster-drop-to-Sky-Keystone progression unchanged.
+The user selected **Collection, Specialization, Familiarity and Deliberation** from the most recent modifier list and asked to move to the next tier. Tier 4 therefore has six selected runes:
 
-The repeated rejections call for testing a different direction before producing another broad stat/utility list. The user's earlier mod vision explicitly liked reviving extinct Sniffer-like creatures, archaeological discoveries and rebuilding ancient workshops. The following are **three unapproved directions** for the third Tier 4 slot, not additions to the selected roster:
+1. Batching
+2. Invocation
+3. Collection
+4. Specialization
+5. Familiarity
+6. Deliberation
 
-| Candidate | Proposed forge capability |
+Compression, Amplification, Convergence, Challenge, Reconstruction and Safekeeping remain rejected. Reanimation, Engraving and Seals were also rejected. Sustaining, Exertion, Saturation and Rebate from the last modifier list were not selected; do not silently promote them to Tier 5.
+
+### Collection — selected effect
+
+Move finished forge output into a chest directly above the rune or connected item pipes, freeing the center for subsequent crafting. Keep output in the forge if the destination cannot accept it; never overwrite inputs or lose items. Additional runes offer output access/storage-routing points, rather than a first-N count cutoff. Exact filters, fair distribution, capabilities and chest interactions remain to design.
+
+Collection concerns actual finished items, distinct from Tier 1 Extraction's XP export. It supports Batching's input handling without introducing the rejected remote delivery or automatic order-planning systems.
+
+### Specialization — selected effect
+
+Select a recipe category. Crafting in that category costs less XP, while crafting outside it costs more. Additional runes strengthen the specialization, including its tradeoff; precise curves remain open. Define categories from recipe data so new content can be added without hard-coded item lists.
+
+Category selection and reconfiguration need deliberate design. Freeze the selected category and effective price for an active job; do not allow free per-hit switching to capture every bonus while avoiding every penalty.
+
+### Familiarity — selected effect
+
+Repeated successful crafts of the same recipe build an XP discount. Switching recipes resets the accumulated benefit. Extra runes improve how familiarity develops or its strength; the exact curve is not yet approved. This rewards sustained production and complements Batching.
+
+Recipe identity, successful-craft counting, persistence and the exact reset trigger remain to design. Do not grant progress from failed hammer attempts or let a client decide the discount. The Retention candidate below proposes modifying the reset behavior, but is not selected yet.
+
+### Deliberation — selected effect
+
+Require additional hammer swings in exchange for a reduction in the craft's **total XP cost**. Do not accidentally make a supposedly cheaper craft cost more overall merely because there are more paid hits. More runes deepen the slower/cheaper tradeoff; exact curves and interaction order with Swift, Familiarity and Efficiency are open.
+
+Keep the existing Swift rule: every installed Swift rune adds its surcharge even after the one-swing floor. Calculate the full effective job price/work consistently rather than silently dropping surplus Swift cost. Fractional XP accounting remains relevant when distributing the discounted total across more swings.
+
+## Fresh Tier 5 candidates — not approved
+
+Sky Keystone remains a structural requirement and is **excluded** from this functional-rune count. Tier 5 currently has no user-selected functional forge rune. The following options build on the selected crafting modifiers and item handling; they are not added to the selected roster.
+
+| Candidate | Proposed forge effect |
 |---|---|
-| Rune of Reanimation | Use excavated remains, recipe materials and XP to restore an ancient egg, enabling deliberate revival of an extinct creature. |
-| Rune of Engraving | Forge standalone functional runes with effects outside the multiblock, potentially including Vigilance, by inscribing prepared Runestone. |
-| Rune of Seals | Forge ancient keys/seals from excavation fragments to access sealed ruin chambers or caches. |
+| Rune of Retention | Preserve part of Familiarity's accumulated benefit when switching recipes, so mixed production loses less progress. |
+| Rune of Versatility | Reduce Specialization's extra XP penalty outside its preferred category while keeping the preferred-category discount. |
+| Rune of Counterbalance | Offset some of Deliberation's extra swings while retaining its XP discount. |
+| Rune of Economy | Reduce XP per craft when committing the complete materials for several batches up front. |
+| Rune of Equivalence | Spend additional XP to reduce source-material quantities required by approved Transmutation recipes. |
+| Rune of Exchange | Consume additional approved recipe materials in return for a lower total XP bill. |
+| Rune of Carryover | Save otherwise unused forging work from a finishing strike for later batches of the same recipe. |
+| Rune of Signalling | Produce configurable redstone signals for forge XP thresholds, missing ingredients or completed crafts. |
 
-**Reanimation** connects directly to the user's earlier interest in ancient creatures with different roles. It is a forge ritual using real excavated remains, not an automatic breeding or mass-production loop. Creature choices, acquisition, materials and XP remain open; nothing here approves a specific new mob or recipe.
+### Candidate scope and open details
 
-**Engraving** would make the forge a production route for general functional runes. Vigilance would still work independently wherever placed; this proposal concerns how such runes are crafted, not requiring them to stay attached to the forge. Whether they need this enabling rune or merely an ordinary forge recipe is an important open question. Do not treat Vigilance's crafting tier as already settled.
+Retention changes Familiarity's reset penalty; it does not restore the earlier rejected Workpiece Memory proposal about lifting inputs mid-craft. Versatility modifies only Specialization's outside-category surcharge. Counterbalance targets Deliberation's added work, not the base work requirement or Swift's XP surcharge. All three offer further investment in the selected Tier 4 system, with quantitative stacking still open.
 
-**Seals** adds a concrete archaeology/world-access payoff. It requires actual sealed structures or caches and fragment acquisition design; it must not silently gate all existing loot or assume suitable structures exist in every modpack. This is a proposal for new content, not an approved change to current archaeology.
+Economy rewards **committed available batches**, not merely the count of past completions that Familiarity already tracks. Reserve full real material lots before awarding a bulk discount; do not let a temporarily full chest grant a cheap single craft and then withdraw the rest. It does not implement the rejected Parallel Forging behavior of crafting multiple copies through one hammering sequence.
 
-Reanimation is the most direct fit to an earlier user-endorsed direction. Ask whether this sort of content/crafting capability is closer to the desired Tier 4 rune before fixing prices or filling other tiers.
+Equivalence trades more XP for fewer actual source items in eligible Transmutation recipes. It does not introduce the rejected Conjuration operation of generating basic resources from XP alone. Exchange offers the opposite resource trade: consume additional materials to save XP. Recipe authors must identify eligible consumable ingredients; a center workpiece/tool or reusable catalyst must not be unintentionally destroyed as surplus payment. Do not allow conversion loops to mint XP or materials.
+
+Carryover uses **real excess paid work** from a finishing strike, not free passive work. It becomes meaningful with future higher-work Forge Hammers; the current Iron hammer's one work per strike generally leaves none. Work and cost identity must match when applying saved work. Preserve the normal one-swing floor and define storage/expiry so cancellation, reload or rune changes cannot duplicate paid work. This is not the rejected input-removal progress-memory feature.
+
+Signalling reads the linked forge's actual state, rather than acting as a general standalone world sensor. Each rune can provide an individually selected output condition. Exact redstone/comparator interfaces and selection interaction remain open. It is a machine-control utility, not an approval for automatic hammering.
+
+These eight are suggestions, not approved recipes/effects. Quantitative values and rune recipes should follow the user's choices. The user has consistently preferred concrete forge behavior over unrelated content unlocks; do not fill Tier 5 by reviving the rejected broader-content or automation candidates.
 
 ## Decisions still open
 
-- Which further Tier 4 rune(s) to select alongside Batching and Invocation. The preceding six suggestions are rejected; Reanimation, Engraving and Seals are new unapproved directions.
+- Which Tier 5 functional rune ideas to select. Sky Keystone stays excluded from this count.
+- Quantitative stacking and configuration for Collection, Specialization, Familiarity and Deliberation; their Tier 4 selection is settled.
 - Forgemaster drop identity/quantity and the revised Sky Keystone recipe; whether one normal kill should cover all sixteen required keystones.
 - Invocation seal ingredients/XP, boss difficulty, repeat encounters and rewards.
 - Expansion socket placement, ingredient addressing and interaction with expanded recipes/Batching.
 - Transmutation source/target recipes, catalysts, XP costs and extra-copy benefits. Tier 3 for all three variants is settled.
-- Tier 5/6 forge additions, excluding Sky Keystone from the target count.
+- Further Tier 6 forge choices alongside Master Craftsmanship and Grand Pattern.
 - Vigilance's standalone general-purpose design and progression tier, separate from the forge.
 - Numerical tuning, fractional XP accounting and future hammer interactions.
 - Restoration's base repair rate, XP per durability point and recipe; automatic stored-XP operation is accepted in principle.
