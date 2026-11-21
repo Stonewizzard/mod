@@ -7,6 +7,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -71,13 +72,15 @@ public final class AncientAnvilBlockEntity extends BlockEntity {
     public ItemStack takeOutput(){var stack=output();items.set(AnvilSlot.values().length,overflow.isEmpty()?ItemStack.EMPTY:overflow.removeFirst());sync();return stack;}
     private void changedInputs(){work=0;workRecipe="";planSignature="";sync();}
     void finish(AnvilRecipes.Recipe recipe){
-        for(var slot:recipe.inputs().keySet()){var input=items.get(slot.ordinal());var remainder=input.getItem().getCraftingRemainder();if(remainder!=Items.AIR)queueOutput(new ItemStack(remainder));items.set(slot.ordinal(),ItemStack.EMPTY);}
-        var extras=ForgeRuneCrafting.expansions(this);for(int i=0;i<recipe.extras().size();i++){var stack=extras.get(i).removeItem(0,1);var rem=stack.getItem().getCraftingRemainder();if(rem!=Items.AIR)queueOutput(new ItemStack(rem));}
+        var remainders=new ArrayList<ItemStack>();
+        for(var slot:recipe.inputs().keySet()){var input=items.get(slot.ordinal());var remainder=input.getItem().getCraftingRemainder();if(remainder!=null)remainders.add(remainder.create());items.set(slot.ordinal(),ItemStack.EMPTY);}
+        var extras=ForgeRuneCrafting.expansions(this);for(int i=0;i<recipe.extras().size();i++){var stack=extras.get(i).removeItem(0,1);var rem=stack.getItem().getCraftingRemainder();if(rem!=null)remainders.add(rem.create());}
         var counts=ForgeRunes.counts(this);var result=recipe.result();
         if(recipe.mutationItem()!=Items.AIR&&level.getRandom().nextDouble()<ForgeRuneMath.mutationChance(counts.getOrDefault(ForgeRune.MUTATION,0)))result=new ItemStack(recipe.mutationItem(),recipe.mutationCount());
         int mastery=recipe.bonus()?counts.getOrDefault(ForgeRune.MASTER_CRAFTSMANSHIP,0):0;
         int batches=1+mastery/100+(level.getRandom().nextInt(100)<mastery%100?1:0);
         for(int i=0;i<batches;i++)queueOutput(result.copy());
+        for(var rem:remainders)queueOutput(rem);
         familiarStreak=lastCompleted.equals(recipe.id().toString())?familiarStreak+1:1;
         alternateStreak=!lastCompleted.isEmpty()&&!lastCompleted.equals(recipe.id().toString())?alternateStreak+1:0;
         lastCompleted=recipe.id().toString();work=0;workRecipe="";planSignature="";sync();

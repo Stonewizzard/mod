@@ -16,7 +16,7 @@ import net.minecraft.sounds.*;
 
 /** First encounter: a persistent fireproof melee guardian with a visible, avoidable slam. */
 public final class Forgemaster extends IronGolem {
-    private final ServerBossEvent bar=new ServerBossEvent(Component.literal("The Forgemaster"),BossEvent.BossBarColor.YELLOW,BossEvent.BossBarOverlay.PROGRESS);
+    private final ServerBossEvent bar=new ServerBossEvent(java.util.UUID.randomUUID(),Component.literal("The Forgemaster"),BossEvent.BossBarColor.YELLOW,BossEvent.BossBarOverlay.PROGRESS);
     public Forgemaster(EntityType<? extends IronGolem> type,Level l){super(type,l);setPersistenceRequired();}
     @Override public void aiStep(){
         super.aiStep();bar.setProgress(getHealth()/getMaxHealth());

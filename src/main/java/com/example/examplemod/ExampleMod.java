@@ -248,8 +248,7 @@ public class ExampleMod {
         BLOCKS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
-        BLOCK_ForgeRuneAutomation.FLUIDS.register(modEventBus);ForgeRuneAutomation.TYPES.register(modEventBus);
-        ENTITIES.register(modEventBus);
+        BLOCK_ENTITIES.register(modEventBus);
         MENUS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);

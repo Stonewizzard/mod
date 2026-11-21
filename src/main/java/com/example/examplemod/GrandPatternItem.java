@@ -32,7 +32,7 @@ public final class GrandPatternItem extends Item {
             if(!level.hasChunkAt(at)||!level.getWorldBorder().isWithinBounds(at)||!level.mayInteract(player,at)){AnvilWork.message(p,"Workshop crosses unavailable or protected space");return;}
             var block=level.getBlockState(at);var entity=level.getBlockEntity(at);
             if(entity!=null&&!(entity instanceof AncientAnvilBlockEntity)&&!(entity instanceof ForgeRuneBlockEntity)){AnvilWork.message(p,"Remove containers from required structure positions before packing");return;}
-            if(NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(level,at,block,player)).isCanceled()){AnvilWork.message(p,"Packing was blocked by world protection");return;}
+            if(net.neoforged.neoforge.common.CommonHooks.fireBlockBreak(level,player.gameMode.getGameModeForPlayer(),player,at,block).isCanceled()){AnvilWork.message(p,"Packing was blocked by world protection");return;}
             var c=new CompoundTag();c.putInt("X",at.getX()-core.getX());c.putInt("Y",at.getY()-core.getY());c.putInt("Z",at.getZ()-core.getZ());c.put("State",NbtUtils.writeBlockState(block));if(entity!=null)c.put("Entity",entity.saveWithFullMetadata(level.registryAccess()));cells.add(c);
         }
         var crystals=new ListTag();for(var r:AnvilTierSix.requirements(AnvilStages.all(),AnvilTierSix.OBSIDIAN)){var crystal=AnvilTierSix.crystal(level,r.at(core,front));if(crystal==null){AnvilWork.message(p,"Restore all four crystals before packing");return;}var tag=new CompoundTag();tag.putDouble("X",crystal.getX()-core.getX());tag.putDouble("Y",crystal.getY()-core.getY());tag.putDouble("Z",crystal.getZ()-core.getZ());tag.putBoolean("Bottom",crystal.showsBottom());crystals.add(tag);}
