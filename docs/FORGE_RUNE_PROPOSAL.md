@@ -212,11 +212,37 @@ The user requested Nether Quartz in the remaining four slots of the proposed Tie
 
 This occupies **all thirteen workpiece positions**: 4 + 1 + 4 + 4 = 13. Output: **1 Rune of Swift Forging**. Do not leave the outer positions empty or revert to the older Sugar/Redstone/Ancient-Ingot draft.
 
-The effect remains fewer required hammer swings, minimum one, with every installed Swift rune adding its XP surcharge even beyond the swing floor. XP tuning remains deferred; this recipe's work count is not separately reviewed yet. The next rune in the agreed review order is **Rune of Tempering**, Tier 2.
+The effect remains fewer required hammer swings, minimum one, with every installed Swift rune adding its XP surcharge even beyond the swing floor. XP tuning remains deferred; this recipe's work count is not separately reviewed yet. Rune of Tempering is reviewed below; Rune of Conduit is the next proposal.
+
+## Recipe review 5 — Rune of Tempering: agreed
+
+The user accepted the proposed Tier 2 recipe using all thirteen workpiece positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Iron Block (`minecraft:iron_block`) |
+| Four inner cardinal positions | 1 Ancient Ingot each — 4 total |
+| Four outer cardinal positions | 1 Obsidian each — 4 total |
+
+Output: **1 Rune of Tempering**. The selected effect remains reduced hammer wear, allowed to reach zero with investment. XP tuning remains deferred; work count is not reviewed. Do not revert to the old iron-ingot/copper draft.
+
+## Recipe review 6 — Rune of Conduit: proposed next
+
+Propose a Tier 2 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Copper Block (`minecraft:copper_block`) |
+| Four inner cardinal positions | 1 Copper Ingot each — 4 total |
+| Four outer cardinal positions | 1 Redstone Dust each — 4 total |
+
+Proposed output: **1 Rune of Conduit**. Its selected effect improves XP transfer speed both **into and out of** the forge, including supported pipes and standing transfers. This ingredient layout is a proposal awaiting the user's review, not an approved recipe. XP/work tuning remains deferred. If accepted, the next rune in the roster is Tier 3 Restoration.
 
 ## Draft recipes — retained for discussion, not approved
 
-The rows below remain preliminary except for the reviewed ingredient layouts for Storage, Extraction, Input and Swift Forging above. All four reviewed recipes use four blank Runestone corners. Extraction uses a Dispenser and Input uses a Hopper, as corrected by the user. Swift Forging uses all thirteen positions, with Nether Quartz on its outer ring. XP-value tuning is deferred by the user. Unless otherwise stated, earlier ordinary-rune proposals used **one blank Runestone plus** the listed extras and one-rune output. Storage is now an exception with **four blank Runestone inputs**; its output/work/XP values remain proposed. Sky Keystone's existing four-output batch is a starting reference, but its recipe must now include a Forgemaster drop as selected by the user. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
+The rows below remain preliminary except for the reviewed ingredient layouts for Storage, Extraction, Input, Swift Forging and Tempering above. Conduit is the next proposal. All four reviewed recipes use four blank Runestone corners. Extraction uses a Dispenser and Input uses a Hopper, as corrected by the user. Swift Forging uses all thirteen positions, with Nether Quartz on its outer ring. XP-value tuning is deferred by the user. Unless otherwise stated, earlier ordinary-rune proposals used **one blank Runestone plus** the listed extras and one-rune output. Storage is now an exception with **four blank Runestone inputs**; its output/work/XP values remain proposed. Sky Keystone's existing four-output batch is a starting reference, but its recipe must now include a Forgemaster drop as selected by the user. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
 
 | Rune | Inputs (earlier rows use one blank Runestone unless stated) | Proposed swings × XP/hit |
 |---|---|---:|
@@ -224,8 +250,8 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Extraction | **Agreed, corrected:** 4 blank Runestone at corners + 1 Dispenser at center + 4 Redstone Dust on inner cardinal positions; outer positions empty; output 1 | Work/XP tuning deferred |
 | Input | **Agreed, corrected:** 4 blank Runestone at corners + 1 Hopper at center + 4 Redstone Dust on inner cardinal positions; outer positions empty; output 1 | Work/XP tuning deferred |
 | Swift Forging | **Agreed:** 4 blank Runestone corners + 1 Clock center + 4 Sugar inner cardinal positions + 4 Nether Quartz outer cardinal positions; output 1 | Work not yet reviewed; XP tuning deferred |
-| Tempering | 2 iron ingots + copper ingot | 10 × 8 |
-| Conduit | 2 copper ingots + redstone | 10 × 8 |
+| Tempering | **Agreed:** 4 blank Runestone corners + 1 Iron Block center + 4 Ancient Ingots inner ring + 4 Obsidian outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Conduit | **Proposed next:** 4 blank Runestone corners + 1 Copper Block center + 4 Copper Ingots inner ring + 4 Redstone Dust outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Expansion | To decide after socket placement/recipe design | To decide |
 | Transmutation: base, Nether, End | Separate recipes/catalysts to decide; all three are Tier 3 | To decide |
 | Restoration | To decide after repair rate and XP-per-durability are settled | To decide |
@@ -384,7 +410,7 @@ Sky Keystone remains a structural Tier 5 requirement and is excluded from these 
 
 ## Decisions still open
 
-- Continue recipe review one rune at a time. Storage, Extraction, Input and Swift Forging ingredient layouts are selected. Swift uses four outer Nether Quartz to occupy all thirteen slots. Tempering is next. The user deferred XP-value tuning; remaining work/cost details can be reviewed later.
+- Continue recipe review one rune at a time. Storage, Extraction, Input, Swift Forging and Tempering ingredient layouts are selected. Conduit's Copper Block/Copper Ingot/Redstone recipe is the next proposal, also using all thirteen positions. The user deferred XP-value tuning; remaining work/cost details can be reviewed later.
 
 - Mutation's alternatives, probabilities, scaling, costs and recipe; deliberately deferred for a later revisit.
 - Numerical curves/configuration for Tier 5 Specialization, Familiarity and Alternation.
