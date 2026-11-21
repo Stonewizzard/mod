@@ -23,6 +23,7 @@ The following concepts are selected for continued design. The user accepted the 
 | 3 | Rune of Nether Transmutation | Authored item-to-item conversions into Nether materials, using XP. |
 | 3 | Rune of End Transmutation | Authored item-to-item conversions into End materials, using XP. |
 | 4 | Rune of Batching | User-selected redesign: configure with Shift-right-click using an item on any face; other faces accept recipe inputs; pulls matching ingredients from the chest above. Multiple runes need coordinated scheduling. |
+| 4 | Rune of Invocation | Selected in principle: forge ritual seals for the Forgemaster encounter. A Forgemaster drop becomes an ingredient for the Sky Keystones needed to reach Tier 5. |
 | Enables 5; excluded from functional-rune target | Keystone Rune of the Sky | Rename/replace Canopy Keystone, retaining its sixteen structural positions and existing purpose; no added effect yet. Preserve saved worlds. |
 | 6 | Rune of Master Craftsmanship | More completed output, initially described as a small per-rune chance to double. Scaling beyond guaranteed doubling needs discussion; do not silently impose a count cap. |
 | 6 | Rune of Grand Pattern | User-selected redesign: the rune directly beneath the anvil center packs the whole structure into a portable rune; placing that rune relocates/restores it. This replaces the old projection-only concept. |
@@ -52,7 +53,7 @@ These are the current geometry's budget, not a new cap or a promise that the lay
 - Actual validated tier gates rune effects. A higher-tier rune may still satisfy a Runestone position at lower tiers, but its functional effect is inactive. Mandatory Sky Keystones, lens glass, energized caps, fluids and other special structural materials retain their roles.
 - Existing structure size is the build budget. No arbitrary first-N limits on Storage, Conduit, Efficiency, Tempering, Swift or Master Craftsmanship. Utility blocks gain usefulness through their individual position, ports, templates or buffers rather than inventing percentage bonuses for every block.
 - Swift retains the user's natural one-swing floor. Every installed Swift rune continues to add its XP surcharge, including surplus runes after that floor. A layout optimized for a long recipe can therefore cost more than necessary on short recipes. Do not silently clamp the price calculation to the number of useful swing reductions.
-- Crafting a rune one tier before it activates remains a proposal, not an approved requirement. It lets players prepare the next upgrade. Optional functional runes should not become mandatory just to advance a tier; Sky Keystone is the explicit structural exception.
+- Crafting a rune one tier before it activates remains a proposal, not an approved requirement. It lets players prepare the next upgrade. Ordinary stat/utility runes need not all become mandatory to advance tiers. Invocation is now an explicit progression exception selected by the user: it enables the Forgemaster encounter whose material is needed to craft the structural Sky Keystones for Tier 5.
 - Keep each recipe's base swings and XP/hit independent. Show effective swings, XP/hit and total batch XP in the manual/recipe inspection. Freeze a job's rune-derived pricing/work parameters so moving runes cannot combine cheap early hits with a fast final hit.
 - No passive XP creation. Transfer blocks move conserved points; efficiency reduces expenditure. Recipe-specific output bonuses must account for recycling and reversible conversions.
 
@@ -131,7 +132,7 @@ No universal XP-pipe unit exists across mods. Plan a point-based storage interfa
 
 ## Draft recipes — retained for discussion, not approved
 
-Ordinary recipes below consume **one blank Runestone plus** the listed extras and produce one rune. Sky Keystone retains its existing four-output batch. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
+Ordinary recipes below consume **one blank Runestone plus** the listed extras and produce one rune. Sky Keystone's existing four-output batch is a starting reference, but its recipe must now include a Forgemaster drop as selected by the user. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
 
 | Rune | Extra ingredients | Proposed swings × XP/hit |
 |---|---|---:|
@@ -146,9 +147,10 @@ Ordinary recipes below consume **one blank Runestone plus** the listed extras an
 | Restoration | To decide after repair rate and XP-per-durability are settled | To decide |
 | Efficiency | Diamond + 2 ancient ingots + lapis | 16 × 15 |
 | Batching | Chest + hopper + ancient ingot | 16 × 15 |
+| Invocation | To decide; the rune and first summoning seal must be obtainable before defeating the Forgemaster | To decide |
 | Master Craftsmanship | Ancient crystal + diamond + 2 ancient ingots | 24 × 25 |
 | Grand Pattern | Map + ender pearl + 2 ancient ingots; revisit cost for actual relocation power | 24 × 25; revisit |
-| Sky Keystone | Existing 4 Runestone + 4 ancient ingots + glowstone dust → 4 keystones | Existing 8 × 1; review separately |
+| Sky Keystone | Add a Forgemaster material to the recipe. Existing 4 Runestone + 4 ancient ingots + glowstone is a reference; whether the drop replaces glowstone or is additional is open. | Existing 8 × 1 → 4 is a reference; new costs/output/drop quantities remain open |
 
 Master Craftsmanship must be recipe-eligible. Exclude currency conversion, refund/recycling, reusable-catalyst and reversible conversion recipes by default; review artifact melting, Cruncher recovery and scrap conversions for output-profit loops. Relocation and XP transfers are never multiplied crafts.
 
@@ -188,7 +190,7 @@ Current Tier 3 selected roster:
 
 All earlier added forge candidates (Inscription, Parallel Forging, Striking, Ascendance, Commission and Dispatch) remain rejected. **Vigilance is selected as a general-purpose chunk-loading rune usable anywhere**, outside the forge roster, with its progression/fuel still open.
 
-Excluding Sky Keystone, selected forge counts are now **3 / 3 / 6 / 1 / 0 / 2** across tiers 1–6: fifteen functional runes. Tier 4 currently has only Batching. The user wants Tier 4 suggestions next. A minimum-three-per-tier lineup retaining the six selected Tier 3 runes would have at least twenty-one functional runes, not the old eighteen-rune estimate. Do not add candidates as accepted just to fill the gaps.
+Excluding Sky Keystone, selected forge counts are now **3 / 3 / 6 / 2 / 0 / 2** across tiers 1–6: sixteen functional runes. Tier 4 now has Batching and Invocation. The user wants further Tier 4 suggestions, with at least one more selection needed. A minimum-three-per-tier lineup retaining the six selected Tier 3 runes would have at least twenty-one functional runes, not the old eighteen-rune estimate. Do not add candidates as accepted just to fill the gaps.
 
 ### Expansion — selected operation, socket design still open
 
@@ -207,34 +209,52 @@ Each dimensional variant enables authored recipes converting **item inputs into 
 - Account for reverse conversions and Master Craftsmanship eligibility when choosing ratios. No direct XP-currency multiplication or unintended item-conversion profit loop.
 - These are rune-enabled item conversions, distinct from the Ruined Ancient Forge's existing alloying job. The new candidates below do not change its current recipes.
 
-## Fresh Tier 4 candidates — not approved
+## Invocation and the Tier 5 progression link — selected direction
 
-These are alternatives to discuss alongside the already-selected Rune of Batching. No candidate has been added to the selected roster and no block behavior is implemented.
+The user selected Invocation for Tier 4 in principle and explicitly proposed using **a Forgemaster drop to craft the Sky Keystones needed for Tier 5**. The progression is now:
+
+**Validated Tier 4 forge → Invocation ritual/seal → Forgemaster encounter → boss material → Sky Keystone crafting → Tier 5 canopy.**
+
+The drop's identity, name, amount, whether it replaces glowstone or supplements existing ingredients, and the Sky Keystone batch/XP costs remain open. Do not present a named boss item or exact recipe as approved. Invocation's rune and the first seal must be obtainable before this boss material exists, avoiding a circular unlock.
+
+Recommended balance target, not yet approved: one normal victory should provide enough material for the required sixteen Sky Keystones; repeat encounters can supply other future forge recipes. This respects the user's earlier concern about substantial effort having a worthwhile payoff. Boss difficulty, repeat summoning costs and loot still need separate design.
+
+The other preceding Tier 4 candidates (Conjuration, Refinement, Adaptation, Liquefaction and Solidification) remain unselected. The user did not like most of that group; do not carry them into this new shortlist as approved features.
+
+## More Tier 4 candidates — not approved
+
+Tier 4 has **Batching and Invocation**. The following are new alternatives for the next slot; none is selected or implemented.
 
 | Candidate | Concrete forge function |
 |---|---|
-| Rune of Conjuration | Create selected basic materials directly from stored XP, with recipe-authored costs. Transmutation changes one material into another; Conjuration makes the resource from XP alone. |
-| Rune of Refinement | Combine several lower-tier artifacts into a higher-tier artifact of the same family, using a substantial XP/material investment. |
-| Rune of Adaptation | Allow approved alternative ingredients in a forge recipe, paying an XP premium for substitution instead of requiring the exact normal material. |
-| Rune of Liquefaction | Turn selected solids into fluids directly in the forge basins, using XP: possible examples are ice into water or magma materials into lava. |
-| Rune of Solidification | Use selected basin fluids as crafting inputs to form solid items or blocks, giving the physical pools a material-processing role. |
-| Rune of Invocation | Forge ritual seals for the planned Forgemaster encounter, connecting the workshop to the user's earlier boss idea. |
+| Rune of Compression | Increase how many of an ingredient a physical socket can hold, allowing recipes with large quantities without requiring dozens of duplicate sockets. |
+| Rune of Amplification | Strengthen adjacent installed stat runes, rewarding deliberate placement and combinations. Amplification runes do not amplify one another recursively. |
+| Rune of Convergence | Unlock hybrid transmutation recipes combining Overworld, Nether and End components into new materials. |
+| Rune of Challenge | Make the forge-invoked Forgemaster harder in exchange for increased encounter rewards. |
+| Rune of Reconstruction | Rebuild missing multiblock pieces from a stocked supply of matching blocks, spending XP; more runes increase reconstruction throughput. |
+| Rune of Safekeeping | Preserve stored forge XP inside the recovered anvil item when dismantled or broken, rather than releasing the protected portion as loose XP orbs. |
 
-### Design distinctions and open work
+### Candidate distinctions and unresolved details
 
-Conjuration needs a deliberate basic-material list and authored XP prices; it must not silently provide rare archaeological progression items or every modded resource. Refinement offers a rarity-upgrading material sink and needs its own family rules, ratios and relationship to discoveries. It is not approved as a replacement for exploration.
+**Compression** concerns ingredient **quantity**, while selected Expansion adds physical ingredient **positions/types**. Bulk recipes could require, for example, a large amount of one metal in a socket alongside other distinct ingredients. Exact quantity growth and how the socket stores/displays multiple ordinary stacks remain open; do not silently restrict every socket back to one physical item's normal stack size if that makes additional runes stop contributing. Recipe authoring and Batching must respect actual quantities and consume them exactly once.
 
-Adaptation changes accepted ingredients within a paid recipe. It does not add the previously rejected automatic order-planning network or arbitrary substitution of progression-critical materials.
+**Amplification** boosts appropriate count-based effects such as Storage, Conduit, Restoration, Efficiency or Tempering. It does not grant higher actual forge tiers or multiply structural keystones, unlock-only runes or itself. Exact adjacency, strength and stacking need discussion; this introduces physical-layout choices beyond counting blocks. Do not add it as a disguised arbitrary count limit.
 
-Liquefaction and Solidification would extend recipe data to real fluid insertion/consumption in the designated basins. Current fluid detection alone does not implement these effects. Exact volume accounting, capacity, remaining fluid, mod-fluid support and the two directions' ratios are design work; do not assume a detected source block is an infinite supply. They are related options, and the user may choose one rather than both.
+**Convergence** would extend the selected dimensional transmutation system into authored hybrid-material recipes. It does not automatically allow every possible combination or turn the Ruined Ancient Forge's existing alloy recipes into anvil recipes. Specific useful products must be designed if selected; otherwise it risks being an empty recipe unlock.
 
-Invocation specifically refers back to the user's **Forgemaster boss** plan: the forge makes the encounter's seal from materials/XP. Boss timing, seal ingredients, rewards and repeat encounters need separate design. It does not introduce a new mandatory structure-tier gate by itself.
+**Challenge** applies specifically to the Invocation encounter. Greater investment raises encounter difficulty and rewards together. Its relationship to Invocation rune count needs agreement; the normal first fight should remain a valid route to Sky Keystone material. The future Sculk-infected Forgemaster is still a separate progression concept, not silently folded into this rune.
 
-Of these candidates, Conjuration and Refinement have direct material/progression payoffs, and Invocation has the strongest connection to the existing boss/workshop vision. All six remain suggestions; choose effects before crafting rune recipes or fixing numerical stacking.
+**Reconstruction** restores a remembered, previously completed layout using actual matching supplies. It does not provide free blocks or overwrite unrelated occupied positions. Because damage lowers the active tier, repair authorization would need remembered build intent independently of crafting-tier validation, similar to construction guidance. Exact supply inventory and treatment of data-bearing rune blocks need design. It is repair of an existing multiblock, not the rejected automatic hammering/order-planning system.
+
+**Safekeeping** protects the XP reservoir, not free duplicate anvils/items. Proposed scaling would increase the portion of stored XP protected; unprotected XP could retain the current orb behavior. Full recovery is a natural maximum for a finite wallet, not a first-N rune cap. At ordinary dismantling this is narrower than Grand Pattern: it does not move the whole structure, foundation, crystals or stored ingredient network. No protected XP may also be emitted as orbs.
+
+Compression is the most direct complement to Expansion. Challenge directly complements the newly selected boss progression. Amplification offers a build-layout/stat option, whereas Reconstruction and Safekeeping are utility choices. All are suggestions; rates, costs and recipes follow selection.
 
 ## Decisions still open
 
-- Which additional Tier 4 runes to select alongside Batching. The six candidates above are unapproved.
+- Which further Tier 4 rune(s) to select alongside Batching and Invocation.
+- Forgemaster drop identity/quantity and the revised Sky Keystone recipe; whether one normal kill should cover all sixteen required keystones.
+- Invocation seal ingredients/XP, boss difficulty, repeat encounters and rewards.
 - Expansion socket placement, ingredient addressing and interaction with expanded recipes/Batching.
 - Transmutation source/target recipes, catalysts, XP costs and extra-copy benefits. Tier 3 for all three variants is settled.
 - Tier 5/6 forge additions, excluding Sky Keystone from the target count.
