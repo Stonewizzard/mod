@@ -450,7 +450,37 @@ The user accepted the Tier 6 recipe using all thirteen positions:
 
 Output: **1 Rune of Mutation**. Recipe End Crystals are inventory ingredients, not the placed structure entities. The outer ring uses energized crystal blocks, not regular blocks or loose crystals.
 
-This completes the ingredient-layout review for **all twenty-two functional forge runes**. Their reviewed ingredients/positions are agreed; XP/work tuning and detailed effect behavior remain separate future work. Mutation's alternative-output lists, chance scaling and exact XP/catalyst rules remain deferred as previously requested. Crystal acquisition/energization is also still future work. Sky Keystone and standalone Vigilance are outside this twenty-two-rune count and still need their separate recipe review.
+This completes the ingredient-layout review for **all twenty-two functional forge runes**. Their reviewed ingredients/positions are agreed; XP/work tuning and detailed effect behavior remain separate future work. Mutation's alternative-output lists, chance scaling and exact XP/catalyst rules remain deferred as previously requested. Crystal acquisition/energization is also still future work. Sky Keystone and standalone Vigilance are outside this twenty-two-rune count; their separate proposals follow below.
+
+## Additional recipe A — Keystone Rune of the Sky: proposed
+
+This is a separate structural recipe, outside the twenty-two functional-rune count. Craft at **Tier 4**, before Sky Keystones enable Tier 5. Proposed layout uses all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 **Forgemaster Core** — proposed name for the boss drop, not an existing approved item |
+| Four inner cardinal positions | 1 Ancient Ingot each — 4 total |
+| Four outer cardinal positions | 1 Glowstone Dust each — 4 total |
+
+Proposed output: **4 Keystone Runes of the Sky**, preserving the existing four-output batch as a starting point. Four crafts would supply the sixteen required keystones and consume four proposed cores. The earlier recommendation of one normal victory covering the structure would mean four cores per normal victory; that loot quantity remains **unapproved**, not an implicit boss implementation.
+
+All ingredients/layout/output above await user review. The core's final name and drop quantity are open. The existing item/world compatibility approach for renaming Canopy Keystone remains. This rune recipe must not require Tier 5 to craft, avoiding the boss/key/structure circularity. XP/work tuning remains deferred.
+
+## Additional recipe B — Rune of Vigilance: proposed
+
+This is the general-purpose chunk-loading rune, **not** a forge-multiblock upgrade. Propose crafting it at a **Tier 3 anvil**; this crafting-tier choice is new and unapproved. Once placed, its chunk-loading function would work independently of a forge, as the user selected.
+
+Proposed layout uses all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Lodestone (`minecraft:lodestone`) |
+| Four inner cardinal positions | 1 Ender Pearl each — 4 total |
+| Four outer cardinal positions | 1 Redstone Block each — 4 total (`minecraft:redstone_block`) |
+
+Proposed output: **1 Rune of Vigilance**. The Lodestone and Ender Pearls fit anchoring a world location; Redstone Blocks represent continued operation. These ingredients/output await user review. Chunk radius, activation, fuel/XP upkeep and server-loading behavior remain separate unresolved design choices; do not impose a forge link merely because it was crafted on an anvil. XP/work tuning remains deferred.
 
 ## Reviewed ingredient summary — XP and work still provisional
 
@@ -458,7 +488,7 @@ The twenty-two recipe-review sections above record the user's agreed ingredient 
 
 **XP values are deliberately deferred**, and individual work/swing counts have not been reviewed. Earlier draft numbers elsewhere in this design reference are not an approved balance pass. These are planning records, not live registered rune blocks or implemented recipes.
 
-Sky Keystone is a **separate structural recipe still awaiting review**: it must include the selected Forgemaster drop, but that drop and quantities remain undefined. Its old four-output batch is a starting reference only. General-purpose Vigilance's recipe and progression are also separate. Crystal acquisition/energization remains future work; these ingredient approvals do not invent an acquisition route.
+Sky Keystone and general-purpose Vigilance have **separate proposals above, awaiting review**. Sky Keystone is proposed as a Tier 4 craft with a newly named Forgemaster Core and four-output batch; neither the exact drop nor its quantity is approved. Vigilance is proposed as a Tier 3 craft with a standalone placement effect; its craft tier and ingredients are not yet approved. Crystal acquisition/energization remains future work; these ingredient approvals do not invent an acquisition route.
 
 | Rune | Inputs (earlier rows use one blank Runestone unless stated) | Proposed swings × XP/hit |
 |---|---|---:|
@@ -484,7 +514,8 @@ Sky Keystone is a **separate structural recipe still awaiting review**: it must 
 | Master Craftsmanship | **Agreed:** 4 blank Runestone corners + 1 Nether Star center + 4 regular Blocks of Ancient Crystal inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Mutation | **Agreed:** 4 blank Runestone corners + 1 Dragon's Breath center + 4 End Crystal items inner ring + 4 Blocks of Energized Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Grand Pattern | **Agreed:** 4 blank Runestone corners + 1 Ender Chest center + 4 Nether Stars inner ring + 4 regular Blocks of Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Sky Keystone | Add a Forgemaster material to the recipe. Existing 4 Runestone + 4 ancient ingots + glowstone is a reference; whether the drop replaces glowstone or is additional is open. | Existing 8 × 1 → 4 is a reference; new costs/output/drop quantities remain open |
+| Sky Keystone (additional proposal) | **Proposed:** Tier 4 craft; 4 blank Runestone corners + 1 proposed Forgemaster Core center + 4 Ancient Ingots inner ring + 4 Glowstone Dust outer ring; output 4 | Work/XP and boss drop quantities unreviewed |
+| Vigilance (additional proposal) | **Proposed:** Tier 3 craft; 4 blank Runestone corners + 1 Lodestone center + 4 Ender Pearls inner ring + 4 Redstone Blocks outer ring; output 1; standalone placement effect | Craft tier/work/XP unreviewed |
 
 Master Craftsmanship must be recipe-eligible. Exclude currency conversion, refund/recycling, reusable-catalyst and reversible conversion recipes by default; review artifact melting, Cruncher recovery and scrap conversions for output-profit loops. Relocation and XP transfers are never multiplied crafts.
 
@@ -632,7 +663,7 @@ Sky Keystone remains a structural Tier 5 requirement and is excluded from these 
 
 ## Decisions still open
 
-- All twenty-two functional-rune ingredient layouts are agreed. Tune XP/work later; review Sky Keystone and general-purpose Vigilance separately.
+- All twenty-two functional-rune ingredient layouts are agreed. Sky Keystone and Vigilance now have separate pending proposals; review their ingredients, output and craft tiers. Tune XP/work later.
 
 - Mutation's alternative outputs, probabilities, scaling and operation costs remain deferred; its rune-crafting ingredient layout is agreed in review 22.
 - Numerical curves/configuration for Tier 5 Specialization, Familiarity and Alternation.
