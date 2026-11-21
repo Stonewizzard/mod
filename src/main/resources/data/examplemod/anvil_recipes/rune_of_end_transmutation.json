@@ -1,0 +1,53 @@
+{
+  "anvil_tier": 3,
+  "hammer_tier": 1,
+  "work": 28,
+  "xp_per_hit": 30,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:dragon_breath"
+    },
+    "north_inner": {
+      "item": "minecraft:ender_pearl"
+    },
+    "east_inner": {
+      "item": "minecraft:ender_pearl"
+    },
+    "south_inner": {
+      "item": "minecraft:ender_pearl"
+    },
+    "west_inner": {
+      "item": "minecraft:ender_pearl"
+    },
+    "north_outer": {
+      "item": "minecraft:shulker_shell"
+    },
+    "east_outer": {
+      "item": "minecraft:shulker_shell"
+    },
+    "south_outer": {
+      "item": "minecraft:shulker_shell"
+    },
+    "west_outer": {
+      "item": "minecraft:shulker_shell"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_end_transmutation",
+    "count": 1
+  }
+}

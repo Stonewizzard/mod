@@ -1,0 +1,53 @@
+{
+  "anvil_tier": 4,
+  "hammer_tier": 1,
+  "work": 32,
+  "xp_per_hit": 40,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:clock"
+    },
+    "north_inner": {
+      "item": "minecraft:soul_sand"
+    },
+    "east_inner": {
+      "item": "minecraft:soul_sand"
+    },
+    "south_inner": {
+      "item": "minecraft:soul_sand"
+    },
+    "west_inner": {
+      "item": "minecraft:soul_sand"
+    },
+    "north_outer": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "east_outer": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "south_outer": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "west_outer": {
+      "item": "examplemod:ancient_ingot"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_deliberation",
+    "count": 1
+  }
+}

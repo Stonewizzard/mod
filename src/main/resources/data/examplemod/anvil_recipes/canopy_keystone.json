@@ -1,7 +1,8 @@
 {
   "anvil_tier": 4,
-  "hammer_tier": 1,
-  "work": 8,
+  "work": 32,
+  "xp_per_hit": 40,
+  "category": "keystones",
   "ingredients": {
     "north_west": {
       "item": "examplemod:runestone"
@@ -15,6 +16,9 @@
     "south_east": {
       "item": "examplemod:runestone"
     },
+    "center": {
+      "item": "examplemod:forgemaster_core"
+    },
     "north_inner": {
       "item": "examplemod:ancient_ingot"
     },
@@ -27,7 +31,16 @@
     "west_inner": {
       "item": "examplemod:ancient_ingot"
     },
-    "center": {
+    "north_outer": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "east_outer": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "south_outer": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "west_outer": {
       "item": "minecraft:glowstone_dust"
     }
   },

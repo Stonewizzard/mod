@@ -56,15 +56,25 @@ public final class AnvilWork {
         if(be.getBlockState().getValue(AncientAnvilBlock.TIER)<recipe.anvilTier()){message(player,"This recipe needs a higher anvil tier");return false;}
         if(hammer.forgeTier()<recipe.hammerTier()){message(player,"This recipe needs a higher forge hammer tier");return false;}
         if(level.getGameTime()-be.lastStrike<8)return false;
-        int xp=recipe.xpPerHit();
+        var counts=ForgeRunes.counts(be);
+        int swift=counts.getOrDefault(ForgeRune.SWIFT_FORGING,0),deliberation=counts.getOrDefault(ForgeRune.DELIBERATION,0);
+        int required=ForgeRuneMath.swings(recipe.work(),swift,deliberation);
+        double price=ForgeRuneMath.hitPrice(recipe.xpPerHit(),recipe.work(),required,swift,counts.getOrDefault(ForgeRune.EFFICIENCY,0),deliberation);
+        for(var rune:ForgeRunes.members(be))if(rune.kind()==ForgeRune.SPECIALIZATION&&!rune.category.isEmpty())price*=rune.category.equals(recipe.category())?1/1.01:1.01;
+        price*=ForgeRuneMath.sequenceDiscount(counts.getOrDefault(ForgeRune.FAMILIARITY,0),be.lastCompleted.equals(recipe.id().toString())?be.familiarStreak:0);
+        price*=ForgeRuneMath.sequenceDiscount(counts.getOrDefault(ForgeRune.ALTERNATION,0),!be.lastCompleted.equals(recipe.id().toString())?be.alternateStreak:0);
+        String signature=recipe.toString()+counts+ForgeRunes.members(be).stream().map(r->r.category+":"+r.getItem(0)).toList();
+        if(!be.planSignature.equals(signature)){be.work=0;be.workRecipe="";be.planSignature=signature;}
+        int xp=(int)Math.min(Integer.MAX_VALUE,Math.max(0,Math.ceil(price-be.xpCredit-1e-9)));
         if(!be.payExperience(player,xp)){message(player,"Need "+xp+" XP point"+(xp==1?"":"s")+" to strike ("+be.storedExperience()+" stored, "+AnvilExperience.available(player)+" carried)");return false;}
         be.lastStrike=level.getGameTime();
+        if(!player.getAbilities().instabuild)be.xpCredit=Math.max(0,be.xpCredit+xp-price);
         if(!be.workRecipe.equals(recipe.id().toString())){be.workRecipe=recipe.id().toString();be.work=0;}
-        be.work=Math.min(recipe.work(),be.work+hammer.workPerStrike());
+        be.work=Math.min(required,be.work+hammer.workPerStrike());
         if(be.getBlockState().getValue(AncientAnvilBlock.TIER)==6){
             var lens=AnvilTierSix.inspect(level,be.getBlockPos(),be.getBlockState().getValue(AncientAnvilBlock.FACING),AnvilStages.all());
             if(lens.complete()){
-                be.energyColor=lens.color();be.energyStarted=level.getGameTime();be.energyUntil=level.getGameTime()+(be.work>=recipe.work()?36:24);
+                be.energyColor=lens.color();be.energyStarted=level.getGameTime();be.energyUntil=level.getGameTime()+(be.work>=required?36:24);
                 var lensCenter=be.getBlockPos().above(16);level.sendParticles(new DustParticleOptions(lens.color(),1.35F),lensCenter.getX()+.5,lensCenter.getY()+.25,lensCenter.getZ()+.5,12,.7,.12,.7,.03);
                 level.playSound(null,be.getBlockPos(),SoundEvents.BEACON_POWER_SELECT,SoundSource.BLOCKS,.65F,1.25F);
             }
@@ -72,11 +82,11 @@ public final class AnvilWork {
         var center=AnvilSlot.CENTER.world(be.getBlockPos(),be.getBlockState().getValue(AncientAnvilBlock.FACING));
         level.playSound(null,be.getBlockPos(),SoundEvents.ANVIL_USE,SoundSource.BLOCKS,.55F,.95F+level.getRandom().nextFloat()*.15F);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK,Blocks.DEEPSLATE.defaultBlockState()),center.x,center.y+.1,center.z,8,.15,.05,.15,.02);
-        if(!player.getAbilities().instabuild)player.getItemInHand(hand).hurtAndBreak(1,level,player instanceof ServerPlayer server?server:null,unused->{});
-        if(be.work>=recipe.work()){
+        if(!player.getAbilities().instabuild){be.wearCredit+=ForgeRuneMath.wear(counts.getOrDefault(ForgeRune.TEMPERING,0));int wear=(int)Math.floor(be.wearCredit+1e-9);be.wearCredit-=wear;if(wear>0)player.getItemInHand(hand).hurtAndBreak(wear,level,player instanceof ServerPlayer server?server:null,unused->{});}
+        if(be.work>=required){
             be.finish(recipe);level.playSound(null,be.getBlockPos(),SoundEvents.ANVIL_LAND,SoundSource.BLOCKS,.65F,1.2F);
             level.sendParticles(ParticleTypes.ENCHANT,center.x,center.y+.2,center.z,14,.2,.1,.2,.05);message(player,"Craft complete - take the result from the center");
-        }else{be.sync();message(player,"Forging: "+be.work+" / "+recipe.work()+(!player.getAbilities().instabuild&&xp>0?" | -"+xp+" XP":""));}
+        }else{be.sync();message(player,"Forging: "+be.work+" / "+required+(!player.getAbilities().instabuild&&xp>0?" | -"+xp+" XP":""));}
         player.containerMenu.broadcastChanges();return true;
     }
     public static void message(Player player,String text){if(player instanceof ServerPlayer server)server.connection.send(new net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket(Component.literal(text)));}

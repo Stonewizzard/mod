@@ -1,0 +1,28 @@
+{
+  "anvil_tier": 4,
+  "requires_rune": "invocation",
+  "work": 24,
+  "xp_per_hit": 30,
+  "category": "rituals",
+  "ingredients": {
+    "center": {
+      "item": "minecraft:blaze_powder"
+    },
+    "north_inner": {
+      "item": "minecraft:iron_block"
+    },
+    "east_inner": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "south_inner": {
+      "item": "minecraft:iron_block"
+    },
+    "west_inner": {
+      "item": "examplemod:ancient_ingot"
+    }
+  },
+  "result": {
+    "id": "examplemod:forgemaster_seal",
+    "count": 1
+  }
+}

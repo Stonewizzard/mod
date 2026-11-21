@@ -1,81 +1,680 @@
-# Forge rune proposal — discussion, not implemented
+# Forge runes — ongoing design workshop
 
-The user requested discussion of tiers, recipes and effects before adding rune blocks. Only the Runestone price (10 XP/hit) and tier-scaled core storage are implemented in this iteration. “Forge” below refers to the Ancient Anvil and its ritual structure, not the Ruined Ancient Forge alloying station.
+Status: **ideas and proposed recipes, not rune-block implementation**. The implemented foundation is Runestone at 16 hits × 10 XP/hit → 4 blocks, plus tier-scaled Ancient Anvil XP storage and storage-first payment. “Forge” here means the Ancient Anvil ritual structure; the Ruined Ancient Forge remains the alloying station.
 
-## Shared rules
+## User direction and selected list
 
-- Functional runes replace eligible Runestone positions in the existing validated structure. Blank Runestone remains valid. Each coordinate counts once, for one core; shared/overlapping structures must not multiply the same rune's effect.
-- An active rune needs both a valid position and its minimum **actual** structure tier. A higher-tier rune below that tier remains a structural block but contributes no effect. Decorative off-structure copies do nothing.
-- Separate the tier where a rune is crafted from the tier where it activates. Craft Tier 1 runes at Tier 0, Tier 2 at Tier 1, and so forth, so players can prepare the next upgrade. Building tiers still depends on the existing structure, not these optional effects. Sky Keystone is the one explicit structural exception.
-- Ordinary upgrades consume one blank Runestone and produce one functional rune. Materials below are proposals; use exact physical anvil positions in the eventual recipe JSON. Existing slots support up to thirteen workpieces; the largest proposal here needs nine.
-- Each recipe owns its work and XP/hit. Effects modify effective swing count and XP/hit together. Show both figures and total XP in the manual/recipe preview. Lock the effective recipe parameters for the active craft; changing runes mid-craft pauses until that setup is restored or ingredients are reset, preventing cheap-hit/fast-finish swapping.
-- Starting limits are deliberately conservative and tunable. Higher tiers unlock more choices; they should not require installing every rune. No rune passively creates XP or rewards standing still. Storage and transfer throughput are separate upgrades.
-- Reserve mandatory Sky Keystone positions for their structural purpose. Ordinary runes replace Runestone, never lens glass, obsidian, energized caps, required fluids or keystones.
+The structure has many replaceable Runestone positions, particularly at later tiers. The user explicitly rejected arbitrary rune-count caps: substantial crafting investment should remain useful. Balance around the available positions and interactions, not “only the first N count.” The user also approved heavy Swift investment saving total XP and emphasized that Efficiency must remain worthwhile. Latest corrections: Tempering may reach zero hammer wear; surplus Swift runes must continue increasing XP cost after the one-swing floor; Efficiency should require substantially more investment to reach 50%, with diminishing returns after that threshold. Restoration is selected for any durability-bearing item, with more runes increasing repair speed.
 
-## Requested runes
+The following concepts are selected for continued design. The user accepted the most recent zero-wear Tempering, surplus-Swift surcharge, slower Efficiency ramp and automatic XP Restoration direction in principle, then moved Efficiency to Tier 3. These remain design decisions, not implemented rune behavior. Recipe prices and remaining rates are still provisional.
 
-Costs and caps below are proposals, not changes to current recipes. All XP figures are **points**, never levels. All ordinary recipes include the one blank Runestone listed in the shared rule; extra materials are below.
+| Tier where active | Selected rune | Direction |
+|---|---|---|
+| 1 | Rune of Storage | More stored XP; every installed rune contributes. |
+| 1 | Rune of Extraction | Pipe export from storage; standing on the rune deposits player XP, faster while crouching. |
+| 1 | Rune of Input | Pipe import to storage; standing on the rune withdraws stored XP, faster while crouching. |
+| 2 | Rune of Swift Forging | One fewer swing per rune, minimum one swing; raises XP per swing. No arbitrary count limit. |
+| 2 | Rune of Tempering | Reduces hammer wear and may reach zero wear; permanence is allowed with sufficient investment. |
+| 2 | Rune of Conduit | User selected increased XP transfer speed **both into and out of** the forge. No arbitrary count limit. |
+| 3 | Rune of Restoration | Put any item with durability in the center slot and spend XP to repair it. Additional runes increase repair speed. |
+| 3 | Rune of Efficiency | XP reduction with a substantially longer investment ramp to 50%, then diminishing returns; no arbitrary rune-count cutoff. |
+| 3 | Rune of Expansion | Adds physical ingredient sockets to the forge, supporting larger and more elaborate recipes. More installed runes provide more sockets; placement details remain open. |
+| 3 | Rune of Transmutation | The base/Overworld variant: authored item-to-item conversions into Overworld materials, using XP. |
+| 3 | Rune of Nether Transmutation | Authored item-to-item conversions into Nether materials, using XP. |
+| 3 | Rune of End Transmutation | Authored item-to-item conversions into End materials, using XP. |
+| 4 | Rune of Batching | User-selected redesign: configure with Shift-right-click using an item on any face; other faces accept recipe inputs; pulls matching ingredients from the chest above. Multiple runes need coordinated scheduling. |
+| 4 | Rune of Invocation | Selected in principle: forge ritual seals for the Forgemaster encounter. A Forgemaster drop becomes an ingredient for the Sky Keystones needed to reach Tier 5. |
+| 4 | Rune of Collection | Selected: route completed forge results into a chest above the rune or connected item pipes, clearing the working center. |
+| 4 | Rune of Deliberation | Selected: add required hammer swings in exchange for a reduction in the craft's total XP cost. |
+| 5 | Rune of Specialization | Selected: reduce XP cost for a chosen recipe category while increasing XP costs outside that category. |
+| 5 | Rune of Familiarity | Selected: consecutive crafts of the same recipe build an XP discount; switching recipes resets it. |
+| 5 | Rune of Alternation | Selected: consecutive crafts that change recipes build an XP discount; repeating the same recipe resets this streak. |
+| Enables 5; excluded from functional-rune target | Keystone Rune of the Sky | Rename/replace Canopy Keystone, retaining its sixteen structural positions and existing purpose; no added effect yet. Preserve saved worlds. |
+| 6 | Rune of Master Craftsmanship | More completed output, initially described as a small per-rune chance to double. Scaling beyond guaranteed doubling needs discussion; do not silently impose a count cap. |
+| 6 | Rune of Grand Pattern | User-selected redesign: the rune directly beneath the anvil center packs the whole structure into a portable rune; placing that rune relocates/restores it. This replaces the old projection-only concept. |
+| 6 | Rune of Mutation | Selected for now: supported Transmutation recipes can produce a rarer alternative item instead of the normal result. Exact outcomes, chance scaling and recipe costs remain deferred. |
 
-| Rune | Active tier / craft tier | Proposed effect | Proposed extra ingredients | Swings × XP/hit → output |
-|---|---|---|---|---|
-| Storage | 1 / 0 | +1,000 capacity each; first 16 count. No free XP or transfer speed. | 2 ancient ingots + 1 lapis lazuli + 1 gold ingot | 8 × 5 → 1 |
-| Extraction | 1 / 0 | Pipe **export** from core storage. Standing on it deposits player XP into the core: 2 XP/second, crouch 10/second. | 1 hopper + 1 ancient ingot + 1 lapis | 8 × 8 → 1 |
-| Input | 1 / 0 | Pipe **import** into core storage. Standing on it withdraws stored XP to the player at the same rates. | 1 hopper + 1 ancient ingot + 1 redstone dust | 8 × 8 → 1 |
-| Swift Forging | 2 / 1 | Each rune removes one required swing (minimum 1), and adds **10% of base XP/hit**. First 8 count. | 1 sugar + 1 redstone dust + 1 ancient ingot | 12 × 10 → 1 |
-| Efficiency | 4 / 3 | Each rune reduces the **final XP/hit, including Swift surcharge, by 10%**; first 5 count (50%). Discounts add within this family, then multiply the Swift-adjusted price. Positive-price recipes stay at least 1 XP/hit. | 1 diamond + 2 ancient ingots + 1 lapis | 16 × 15 → 1 |
-| Keystone Rune of the Sky | enables 5 / 4 | Renames/replaces Canopy Keystone. The existing sixteen required canopy nodes enable Tier 5; no additional effect. Preserve old worlds and recipe IDs. | Keep existing batch: 4 Runestone + 4 ancient ingots + 1 glowstone dust | Keep 8 × 1 → 4 initially; review price separately |
-| Master Craftsmanship | 6 / 5 | +1% chance per rune to double a completed recipe's base output, capped at 10%. Roll once per craft; a doubling never recursively rolls. | 1 ancient crystal + 1 diamond + 2 ancient ingots | 24 × 25 → 1 |
+The previous Tier 3 suggestions (Workpiece Memory, Rhythm, Basin Attunement) and Tier 5 suggestions (Sky Conduit, Crystal Anchor, Precision) were rejected. Do not treat them as planned features. Resonant Sight, the old Pattern/Reserve suggestions, Spectrum and Concordance are not on the selected list either. Of the newer candidates, only Restoration was selected. Reforging, Reclamation, Awakening and Transference are also rejected; do not carry them forward as planned mechanics.
 
-### Speed/efficiency calculation
+## Actual current layout budget
 
-For a future recipe requiring `S` base swings and `C` XP/hit:
+Counting the foundation, unique Tier 2 frame/bridge cells, then cumulative stage requirements gives the following **full Runestone positions**. These exclude mandatory keystones, metal/energized/obsidian caps, glass, fluids and slabs. Duplicate corner coordinates count once.
 
-- `S_effective = max(1, S - min(swiftCount, 8))`.
-- `C_effective = ceil(C × (1 + 0.10 × min(swiftCount, 8)) × (1 - 0.10 × min(efficiencyCount, 5)))`.
-- Preserve explicitly free recipes at zero; otherwise clamp to at least 1. Round only once at the end.
+| Tier | Cumulative replaceable full Runestone positions |
+|---|---:|
+| 0 | 0 |
+| 1 | 25 |
+| 2 | 52 |
+| 3 | 124 |
+| 4 | 364 |
+| 5 | 520 |
+| 6 | 552 |
 
-Example: Runestone is 16 swings × 10 XP = 160 XP. Four Swift runes give 12 × 14 = 168 XP. Four Swift + five Efficiency give 12 × 7 = 84 XP. Efficiency without Swift gives 16 × 5 = 80 XP: efficient crafting and faster crafting remain distinct choices, and using both is powerful. Eight Swift give 8 × 18 = 144 XP: speed investment eventually also saves total XP, even though each swing costs more. The user explicitly approved allowing heavy Swift investment to save total XP. The user also emphasized that Efficiency must remain useful; the stronger final-cost discount above is the revised proposal, not an implemented rune effect.
+These are the current geometry's budget, not a new cap or a promise that the layout can never change. Balance the proposed formulas against these counts. For scale, 552 Storage runes would add 552,000 capacity; 552 Master runes under the extra-batch proposal would produce 6 guaranteed base batches plus a 52% chance of a seventh. Those extreme builds must pay the actual rune material/XP cost and give up the other rune families' positions.
 
-Future hammer work/swing must compose explicitly with these formulas. Do not silently treat work units as swings for hammers that provide more than one work. The current Iron Forge Hammer provides one.
+## Shared structure and progression rules — proposals
 
-### Transfer behavior and compatibility
+- Functional runes replace eligible Runestone in the validated structure. Count each coordinate once for one core; overlapping builds must not multiply the same installed rune. Decorative off-structure copies have no forge effect.
+- Current Tier 1/2 validators reject all block entities in Runestone positions. When runes are implemented, explicitly permit the mod's valid rune block entities there while continuing to reject arbitrary inventories/containers; adding a tag alone will not make buffered Batching runes work.
+- Actual validated tier gates rune effects. A higher-tier rune may still satisfy a Runestone position at lower tiers, but its functional effect is inactive. Mandatory Sky Keystones, lens glass, energized caps, fluids and other special structural materials retain their roles.
+- Existing structure size is the build budget. No arbitrary first-N limits on Storage, Conduit, Efficiency, Tempering, Swift or Master Craftsmanship. Utility blocks gain usefulness through their individual position, ports, templates or buffers rather than inventing percentage bonuses for every block.
+- Swift retains the user's natural one-swing floor. Every installed Swift rune continues to add its XP surcharge, including surplus runes after that floor. A layout optimized for a long recipe can therefore cost more than necessary on short recipes. Do not silently clamp the price calculation to the number of useful swing reductions.
+- Crafting a rune one tier before it activates remains a proposal, not an approved requirement. It lets players prepare the next upgrade. Ordinary stat/utility runes need not all become mandatory to advance tiers. Invocation is now an explicit progression exception selected by the user: it enables the Forgemaster encounter whose material is needed to craft the structural Sky Keystones for Tier 5.
+- Keep each recipe's base swings and XP/hit independent. Show effective swings, XP/hit and total batch XP in the manual/recipe inspection. Freeze a job's rune-derived pricing/work parameters so moving runes cannot combine cheap early hits with a fast final hit.
+- No passive XP creation. Transfer blocks move conserved points; efficiency reduces expenditure. Recipe-specific output bonuses must account for recycling and reversible conversions.
 
-The Extraction/Input naming follows the user's requested pipe directions, while player standing transfers move the other way relative to that player. Manual text and arrows on the blocks must say **deposit** or **withdraw**, plus **pipe export/import**, so players never have to infer direction from the name alone. Consider renaming later to Offering/Draw if the current names prove confusing.
+## Scaling without arbitrary count caps — proposed numbers
 
-Standing transfer needs the actual player above an active, linked rune. Cap rate per player per core, not per touching rune, and never auto-transfer a Creative player's free XP. Crouching increases rate rather than starting a second transfer. Use an exact integer debit/credit, no loose orbs, with balances/capacity checked before either side changes. Simultaneous opposite runes must not bounce the same points back and forth; choose the single rune directly below the player.
+These replace the earlier capped formulas. The user accepted the latest Tempering/Efficiency starting values in principle; other coefficients, interactions and recipe prices still need tuning before implementation.
 
-There is no universal XP-pipe unit across mods. Plan an internal point-based storage API plus explicitly supported NeoForge capability/adapters. If a mod represents XP as fluid, require a configured point-to-fluid conversion and preserve fractional remainders; never pretend arbitrary fluid or Forge Energy is XP. Export must respect simulation, bandwidth and stored points. Unknown pipes simply do not connect. Do focused adapter smoke checks when those integrations exist; do not promise all pipe mods work now.
+| Rune | Suggested scaling | Why further investment matters |
+|---|---|---|
+| Storage | Base tier capacity + `1,000 × storage runes` | Linear additional capacity, with no count cutoff. |
+| Conduit | Each rune adds 2 XP/second to the core's inbound budget **and** 2 XP/second to its outbound budget | Both directions benefit. Multiple ports share each directional budget, rather than each port duplicating the full rate. |
+| Swift | Swings = `max(1, base swings − swift runes)`; XP/hit multiplier = `1 + 0.10 × swift runes` | All Swift runes count toward cost, even after swings reach one. The +10% coefficient remains a proposal. |
+| Efficiency | Proposed price multiplier: `1 − 0.01 × E` for `E ≤ 50`; `50 / (E + 50)` for `E > 50`, where E is installed Efficiency runes | 5 runes save 5%; 50 save 50%; 100 save about 66.7%; 200 save 80%; 552 save about 91.7%. Every rune keeps contributing. The user accepted this starting curve in principle; later balance tuning remains possible. |
+| Tempering | Proposed hammer wear chance = `max(0, 1 − 0.01 × tempering runes)` | 50 runes halve expected wear; 100 eliminate wear. The user accepted zero wear and this numerical starting point in principle; later tuning remains possible. |
+| Restoration | Repair throughput grows with installed Restoration runes; XP price is per actual durability restored | More runes repair faster, without implicitly reducing the XP price per durability point. General Efficiency can reduce that price separately. Exact rate and unit price remain open. |
+| Master Craftsmanship | Candidate: `0.01 × rune count` extra base-output batches in expectation | 25 runes: 25% chance of double; 100: guaranteed double; 125: guaranteed double plus 25% chance of triple. This extends the original double-only effect and requires discussion. |
 
-### Duplication limits
+For Master Craftsmanship, a strictly “double at most” effect naturally saturates at 100% chance. The extra-batch proposal rewards further runes without a hidden cap; it is not approved yet. Roll once per completion, not once per hit; bonus output never recursively rolls. Split large outputs into ordinary legal stacks/buffers, without discarding over-stack results.
 
-Master Craftsmanship only doubles eligible completed **base outputs**, not transferred XP, stored XP, prior bonuses or structure refunds. Default-disable it on currency conversion, salvage/recycling, reversible conversion, and recipes containing reusable catalysts. Evaluate every recipe alongside artifact melting, Cruncher recovery and the 9-scrap/netherite conversions to prevent material-profit loops. Keep chance/eligibility in server recipe/rune data. Do not consume a random roll on a failed hammer hit.
+### Efficiency and fractional XP
 
-Ancient crystals are currently Creative-only. Master Craftsmanship therefore remains survival-inaccessible until crystal acquisition is designed; do not add an accidental permanent survival gate around it.
+Do not round each individual discounted swing upward to a whole point: that would make additional Efficiency runes stop helping cheap recipes. Track fractional XP accounting across paid work/crafts, with a persistent high-precision remainder and whole-point player transfers. Final precision/rounding and presentation need implementation design; this is not currently present in the integer reservoir. Payment must still be atomic and must not reset fractional accounting on save, cancellation, rune swaps or relocation. Avoid random per-hit discounts as a substitute for predictable pricing.
 
-## Additional candidates by tier
+Expected cost examples below show the formula before integer wallet settlement. Preserve explicitly free recipes at zero. Heavy investment saving total XP is an approved direction.
 
-Each candidate below is an alternative choice, not a commitment to add every block. All proposed recipes yield **one rune** and consume one blank Runestone plus the listed extras. No new fluid or progression ingredient is required.
+| Runestone setup | Swings | Effective XP/hit | Expected total XP |
+|---|---:|---:|---:|
+| No runes | 16 | 10 | 160 |
+| 5 Efficiency | 16 | 9.5 | 152 |
+| 50 Efficiency | 16 | 5 | 80 |
+| 100 Efficiency | 16 | about 3.333 | about 53.33 |
+| 8 Swift | 8 | 18 | 144 |
+| 8 Swift + 50 Efficiency | 8 | 9 | 72 |
+| 15 Swift | 1 | 25 | 25 |
+| 20 Swift | 1 | 30 | 30 |
+| 20 Swift + 100 Efficiency | 1 | 10 | 10 |
 
-| Active tier / craft tier | Candidate | Role and initial limit | Extra ingredients | Swings × XP/hit |
-|---|---|---|---|---|
-| 2 / 1 | Tempering | 5% chance per rune to avoid hammer wear, cap 50%; accepted strike still spends full XP. | 2 iron ingots + 1 copper ingot | 10 × 8 |
-| 2 / 1 | Conduit | +2 XP/second to transfer-rune throughput per rune, cap +20; never changes capacity or creates XP. | 2 copper ingots + 1 redstone | 10 × 8 |
-| 2 / 1 | Resonant Sight | One rune projects recipe positions and missing ingredients onto the surface; more copies add no effect. | 1 glass block + 1 lapis + 1 gold ingot | 8 × 10 |
-| 3 / 2 | Workpiece Memory | Preserve a paused recipe's earned work when its ingredients are lifted, then resume only with the exact same recipe/configuration and required items restored. One remembered job per core; no free input/output copying. | 1 book + 1 lapis + 2 ancient ingots | 12 × 12 |
-| 3 / 2 | Rhythm | Rewards accurately timed manual strikes with a slightly shorter strike cooldown; cap 25%. Never adds automatic swings or bypasses payment. | 1 clock + 1 copper ingot + 1 redstone | 12 × 12 |
-| 3 / 2 | Basin Attunement | Select a satisfied recipe fluid profile when several recipes share inputs, using a visible marker/cycle interaction; no fluid generation or recipe requirement bypass. One rune. | 1 glass block + 1 gold ingot + 1 lapis | 12 × 10 |
-| 4 / 3 | Pattern | Stores one selected recipe as a ghost placement pattern. Shows required tier, ingredients, swings and XP; consumes nothing until a normal craft. One recipe per rune, cap 4. | 1 paper + 1 diamond + 1 ancient ingot | 16 × 12 |
-| 4 / 3 | Batch | Repeat the selected recipe from an explicitly loaded ingredient buffer; each batch still needs normal paid hammer strikes. One pending batch per rune, cap 4. No automatic hammering or remote inventory scanning. | 1 chest + 1 hopper + 1 ancient ingot | 16 × 15 |
-| 4 / 3 | Reserve | Select a protected XP floor that external export and standing withdrawals cannot cross; smithing can use it. One core-wide setting, no extra effect from duplicates. | 1 comparator + 1 gold ingot + 1 ancient ingot | 12 × 15 |
-| 5 / 4 | Sky Conduit | Adds transfer range to a linked workshop XP connection, +4 blocks/rune, cap 16; only between owned/explicitly paired nodes, no extra XP. Requires later linking support. | 1 ender pearl + 1 copper ingot + 2 ancient ingots | 20 × 18 |
-| 5 / 4 | Crystal Anchor | Protects the ritual's own blocks/nearby normal End Crystals from crystal-chain explosion damage while active; does not make players or the world explosion-immune. One rune; behavior needs a deliberate End Crystal safety decision. | 1 obsidian + 1 ender pearl + 2 ancient ingots | 20 × 20 |
-| 5 / 4 | Precision | Shows the expected output and eligible bonuses before the final strike; warns if there is no room for a doubled stack. More copies add no effect; does not improve odds. | 1 spyglass + 1 diamond + 1 ancient ingot | 16 × 18 |
-| 6 / 5 | Spectrum | Saves up to four approved lens colors/recipes as selectable visual presets; swapping still requires a valid single-color lens and never overrides recipe restrictions. Cosmetic plus setup assistance. | 1 glass block + 1 glowstone dust + 2 ancient ingots | 24 × 20 |
-| 6 / 5 | Grand Pattern | Saves/restores one complete eligible rune layout as a projection. Building still uses actual inventory blocks, accepted placement and normal effects. One rune. | 1 map + 1 ender pearl + 2 ancient ingots | 24 × 25 |
-| 6 / 5 | Concordance | Diversity bonus for Master Craftsmanship: one rune grants +2 percentage points to the completion doubling chance if at least four other distinct functional rune families are active. Does not stack with itself; total doubling chance capped 12%. No XP discount, so Efficiency keeps its own role. | 1 ancient crystal + 1 lapis + 1 diamond + 1 ancient ingot | 24 × 25 |
+These are intentionally powerful late-investment examples. Tune coefficients against the **actual replaceable-block counts per tier**, recipe cost and material investment before implementation. The old +10% Swift surcharge is still only a proposal; uncapped stacking changes its balance substantially. Future hammers with more than one work per strike need an explicit composition rule rather than confusing work units with swings.
 
-## Recommended first implementation after discussion
+## Rune of Batching — proposed interaction and multiple-rune solution
 
-Start with Storage, Extraction, Input and Swift at their proposed tiers; settle the transfer naming first. Rename Sky Keystone without changing its art/role or invalidating saves. Add Efficiency and Master Craftsmanship only after confirming caps, speed-versus-total-XP behavior and duplication eligibility. Among optional candidates, Tempering, Conduit, Pattern and Reserve have the clearest distinct roles. Avoid adding weak cosmetic/stat runes merely to fill every tier; optional choices should earn their footprint.
+User requirements: Shift-click an item onto **any** face; other faces accept inputs; pull ingredients from the chest above, filtered to the configured recipe.
 
-Swift saving total batch XP at high investment is approved in principle. The strongest unresolved questions are the revised Efficiency strength/cap, whether Master Craftsmanship can affect functional rune recipes, and which XP-pipe mod to support first. The recipes above are starting proposals for that discussion, not approved progression gates.
+Proposed interpretation of the template item: the **finished output** chooses the recipe. Shift-right-click copies a ghost template onto that face without consuming the item. The user has not yet confirmed output-versus-ingredient interpretation. Display its icon on the configured face; other faces accept valid ingredients. Clear/reconfigure with an explicit deliberate interaction, never accidentally during ordinary insertion.
+
+- Each Batching rune has its own saved template, selected **recipe ID**, and ingredient buffer. More runes provide more independently filtered ports, buffer capacity and prepared recipes. No first-four-runes limit.
+- If an output has several recipes, let the player choose the exact variant in the Workshop Manual before the rune starts pulling. Never silently pick a different fluid/material recipe. A configured face is for the template, not a consumed catalyst.
+- Accept player/pipe insertion through the other faces only for ingredients the selected recipe needs. The chest directly above supplies the same filtered ingredients. Tags and item components must match the selected recipe. Leave unrelated items in the chest. Stop pulling when the rune's recipe-aware buffer is full.
+- A **single coordinator per anvil** schedules complete ready jobs round-robin among the linked runes. Skip a rune missing ingredients, fluids or tier; it must not block a ready rune elsewhere. Finish or pause the current job before changing the plate.
+- Different-template runes prepare different jobs. Same-template runes feed a coordinated recipe group; they increase staging capacity and entry points rather than trying to start overlapping crafts.
+- Reserve one full batch atomically before loading the physical plate. Runes sharing a double chest must not each reserve the same stack. Re-check shared inventory extraction; no item removal until the full reservation can commit.
+- Batching handles ingredient staging and loading. **It does not automatically swing the hammer.** Normal recipe swings, stored-first XP payment, durability and output rules still apply. Auto-rearming/output collection policy remains open: default should wait for the center to be collected rather than overwrite output.
+- Do not seize items already placed manually on the plate. A manually occupied plate pauses automatic loading; player control takes priority. Breaking/reconfiguring a rune returns its actual buffered ingredients, never ghost templates.
+
+## Rune of Grand Pattern — proposed relocation behavior
+
+The active Tier 6 rune sits in the Runestone position directly beneath the anvil's placement center. Its positional role is the user's design, not an arbitrary stat-rune count limit.
+
+1. Preview and confirm the complete relocation footprint from that central rune. Freeze job scheduling/transfers while packing. Pack **registered multiblock contents**, including functional runes, keystones, glass, crystal/metal caps, required fluid cells and the normal End Crystal entities associated with the ritual.
+2. Preserve stored XP, fractional accounting if later added, workpieces, output, paid progress, Batching templates/buffers and orientations. Suspend the structure's effects while packed.
+3. Turn the central control rune into one unstackable packed rune carrying the structure. Remove the original only after successful capture. Never include nearby terrain, player builds/chests or decorative floor blocks merely because they lie inside a bounding box. Whether to include optional decorative floors is a separate choice.
+4. At the new site, placing the packed rune shows a whole-structure preview above it. Permit rotation. Place only if every destination block/entity location is loaded, in bounds, permitted and clear; validate support/containment for fluid pools. Do not overwrite chests, protected blocks or other players' builds.
+5. Restore the full structure and data as one transaction; consume the packed state once. If placement cannot complete, retain the packed rune and leave the world unchanged. A server relocation identity/journal must prevent crash rollback from duplicating both the package and the live structure.
+
+Move End Crystals without damaging/exploding them during capture; restored crystals remain normal player-placed, breakable/explosive End Crystals. Move only the required pool cells, not an attached river or unlimited surrounding fluid. Chest-above-Batching inventories remain external; the Batching rune's own buffers move with it.
+
+The desired payoff is **move an entire invested ancient workshop**, not just save a blueprint or rebuild it from another inventory. Rune recipe and any relocation XP charge remain open; do not charge until an operation successfully commits.
+
+## Transfer behavior and compatibility
+
+Extraction/Input names follow the user's requested pipe directions; player standing transfer goes the opposite way relative to that player. Show explicit deposit/withdraw and pipe import/export arrows so players do not have to infer direction from the name alone.
+
+Conduit upgrades both directions, including standing transfer and supported pipe adapters. Use shared per-core directional budgets so extra faces or overlapping player collision checks cannot multiply a transfer. More rune positions remain useful; these budgets are the rune-upgraded throughput, not a count cap. No Creative XP creation. Simultaneous opposite runes must not bounce points back and forth; choose the player's actual support rune.
+
+No universal XP-pipe unit exists across mods. Plan a point-based storage interface plus explicitly supported NeoForge capabilities/adapters. XP-fluid integrations need a configured conversion and conserved fractional remainders. Arbitrary fluid and Forge Energy are not XP. Unknown pipes simply do not connect. Do focused adapter checks once a concrete integration exists.
+
+## Recipe review 1 — Rune of Storage
+
+The user is reviewing anvil recipes **one at a time**, starting with Storage. The following **ingredients and positions are explicitly selected**:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners (`north_west`, `north_east`, `south_west`, `south_east`) | 1 blank Runestone each — 4 total |
+| Center (`center`) | 1 **Block of Lapis Lazuli** |
+| Four inner cardinal positions (`north_inner`, `east_inner`, `south_inner`, `west_inner`) | 1 Gold Ingot each — 4 total |
+| Four outer cardinal positions | Empty |
+
+Logical layout on the thirteen-position working surface:
+
+```text
+R G R
+G L G
+R G R
+```
+
+R = blank Runestone, G = Gold Ingot, L = Block of Lapis Lazuli. This replaces the earlier tentative two-Ancient-Ingot/lapis-item/gold recipe. Do not use individual lapis lazuli instead of its block.
+
+Remaining **proposed values from the first recipe presentation**, not separately confirmed by the ingredient correction: craft at Tier 1, Iron Forge Hammer or better, 8 swings at 5 XP per swing (40 XP), output 1 Rune of Storage. Activation at Tier 1 was already selected. Do not silently change the yield to four merely because four Runestone are inputs; output count can be reviewed explicitly. The general earlier craft-one-tier-before-activation suggestion remains unapproved.
+
+This is recipe-design documentation only. Do not add a live recipe referencing an unregistered rune block before rune implementation is authorized.
+
+## Recipe review 2 — Rune of Extraction: agreed, corrected center
+
+The user corrected the center ingredient to a **Dispenser**, replacing the earlier Hopper proposal. Keep the existing Tier 1 frame and one-rune output:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 **Dispenser** (`minecraft:dispenser`) |
+| Four inner cardinal positions | 1 Redstone Dust each — 4 total |
+| Four outer cardinal positions | Empty |
+
+```text
+R D R
+D X D
+R D R
+```
+
+R = blank Runestone, D = Redstone Dust, X = Dispenser. Output: **1 Rune of Extraction**. Its selected function remains pipe XP export and player-standing XP deposit, faster while crouching. The user explicitly deferred XP-value tuning.
+
+## Recipe review 3 — Rune of Input: agreed, corrected center
+
+The user selected a **Hopper**, replacing the earlier Dropper proposal. Keep the existing Tier 1 frame and one-rune output:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 **Hopper** (`minecraft:hopper`) |
+| Four inner cardinal positions | 1 Redstone Dust each — 4 total |
+| Four outer cardinal positions | Empty |
+
+```text
+R D R
+D H D
+R D R
+```
+
+R = blank Runestone, D = Redstone Dust, H = Hopper. Output: **1 Rune of Input**. Its selected function remains pipe XP import and player-standing XP withdrawal, faster while crouching. Work/XP tuning remains deferred. Tier 2 Swift Forging is reviewed below.
+
+## Recipe review 4 — Rune of Swift Forging: agreed, all thirteen positions
+
+The user requested Nether Quartz in the remaining four slots of the proposed Tier 2 Swift Forging recipe. The full selected ingredient layout is:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners (`north_west`, `north_east`, `south_west`, `south_east`) | 1 blank Runestone each — 4 total |
+| Center (`center`) | 1 Clock |
+| Four inner cardinal positions (`north_inner`, `east_inner`, `south_inner`, `west_inner`) | 1 Sugar each — 4 total |
+| Four outer cardinal positions (`north_outer`, `east_outer`, `south_outer`, `west_outer`) | 1 **Nether Quartz** each — 4 total (`minecraft:quartz`, not quartz blocks or ore) |
+
+This occupies **all thirteen workpiece positions**: 4 + 1 + 4 + 4 = 13. Output: **1 Rune of Swift Forging**. Do not leave the outer positions empty or revert to the older Sugar/Redstone/Ancient-Ingot draft.
+
+The effect remains fewer required hammer swings, minimum one, with every installed Swift rune adding its XP surcharge even beyond the swing floor. XP tuning remains deferred; this recipe's work count is not separately reviewed yet. Rune of Tempering is reviewed below; Rune of Conduit is reviewed below with its Copper Ingot inputs removed.
+
+## Recipe review 5 — Rune of Tempering: agreed
+
+The user accepted the proposed Tier 2 recipe using all thirteen workpiece positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Iron Block (`minecraft:iron_block`) |
+| Four inner cardinal positions | 1 Ancient Ingot each — 4 total |
+| Four outer cardinal positions | 1 Obsidian each — 4 total |
+
+Output: **1 Rune of Tempering**. The selected effect remains reduced hammer wear, allowed to reach zero with investment. XP tuning remains deferred; work count is not reviewed. Do not revert to the old iron-ingot/copper draft.
+
+## Recipe review 6 — Rune of Conduit: revised, Copper Ingots removed
+
+The user removed the Copper Ingot ingredients from the proposal. The Tier 2 layout is:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Copper Block (`minecraft:copper_block`) |
+| Four inner cardinal positions | **Empty** |
+| Four outer cardinal positions | 1 Redstone Dust each — 4 total |
+
+Output: **1 Rune of Conduit**. This occupies **nine** of the thirteen available positions: 4 + 1 + 4. Do not insert another ingredient into the inner ring or move the Redstone inward without user direction. The Copper **Block** remains; only the four separate Copper **Ingots** were removed.
+
+Its selected effect increases XP transfer speed both into and out of the forge, including supported pipes and standing transfers. XP tuning is deferred and work count is not reviewed. Subsequent Tier 3 recipes are reviewed below in roster order.
+
+## Recipe review 7 — Rune of Restoration: agreed, Iron Blocks on inner ring
+
+The user replaced the proposed four Lapis Lazuli with **Iron Blocks**, one per inner cardinal slot. The Tier 3 recipe uses all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Anvil |
+| Four inner cardinal positions | 1 **Iron Block** each — 4 total (`minecraft:iron_block`, not Iron Ingots) |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Output: **1 Rune of Restoration**. Do not retain the earlier Lapis Lazuli ingredients. The selected operating effect remains XP-only repair of any durability-bearing item in the center; these metal ingredients are for **crafting the rune**, not additional repair materials. XP tuning is deferred and work count remains unreviewed.
+
+## Recipe review 8 — Rune of Efficiency: agreed
+
+The user accepted the Tier 3 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Enchanting Table (`minecraft:enchanting_table`) |
+| Four inner cardinal positions | 1 Gold Ingot each — 4 total |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Output: **1 Rune of Efficiency**. Effect and Tier 3 placement remain selected. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 9 — Rune of Expansion: agreed
+
+The user accepted the Tier 3 recipe after confirming that Expansion adds physical ingredient positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Crafting Table (`minecraft:crafting_table`) |
+| Four inner cardinal positions | 1 ordinary Piston each — 4 total |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Output: **1 Rune of Expansion**. Uses all thirteen positions. The recipe is selected; exactly where the additional sockets appear and expanded recipe addressing remain future design work. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 10 — Rune of Transmutation (Overworld): agreed
+
+The user accepted the Tier 3 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Emerald Block (`minecraft:emerald_block`) |
+| Four inner cardinal positions | 1 Amethyst Shard each — 4 total |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Output: **1 Rune of Transmutation**, the Overworld-targeting base variant. This is the rune's crafting recipe; individual item-conversion recipes remain to design. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 11 — Rune of Nether Transmutation: agreed, corrected materials
+
+The user replaced Blaze Powder with **Blaze Rods**, the Magma Block with **Gilded Blackstone**, and Ancient Ingots with **Wither Roses**. The selected Tier 3 recipe uses all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 **Gilded Blackstone** (`minecraft:gilded_blackstone`) |
+| Four inner cardinal positions | 1 **Blaze Rod** each — 4 total (`minecraft:blaze_rod`) |
+| Four outer cardinal positions | 1 **Wither Rose** each — 4 total (`minecraft:wither_rose`) |
+
+Output: **1 Rune of Nether Transmutation**. Do not retain the old Magma Block, Blaze Powder or Ancient Ingot ingredients in this recipe. These are the rune's crafting ingredients; exact Nether-targeting item-conversion recipes remain future work. All three Transmutation variants stay Tier 3. XP tuning is deferred and work count is unreviewed. Subsequent recipes are reviewed below in roster order.
+
+## Recipe review 12 — Rune of End Transmutation: agreed
+
+The user accepted the Tier 3 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Dragon's Breath (`minecraft:dragon_breath`) |
+| Four inner cardinal positions | 1 Ender Pearl each — 4 total |
+| Four outer cardinal positions | 1 Shulker Shell each — 4 total |
+
+Output: **1 Rune of End Transmutation**. All three dimensional rune-crafting recipes are now reviewed; the actual item-conversion recipes remain future work. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 13 — Rune of Batching: agreed
+
+The user accepted the Tier 4 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Hopper |
+| Four inner cardinal positions | 1 Chest each — 4 total |
+| Four outer cardinal positions | 1 Redstone Comparator each — 4 total |
+
+Output: **1 Rune of Batching**. Its selected filtered input/buffer behavior remains; template-item interpretation, exact input interfaces and scheduling are separate design questions. It does not automatically hammer. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 14 — Rune of Invocation: agreed
+
+The user accepted the Tier 4 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Nether Star (`minecraft:nether_star`) |
+| Four inner cardinal positions | 1 Ancient Ingot each — 4 total |
+| Four outer cardinal positions | 1 Blaze Rod each — 4 total |
+
+Output: **1 Rune of Invocation**. The Nether Star is the vanilla Wither drop, available before the first Forgemaster encounter. This crafts the rune; the separate summoning-seal/ritual recipe remains open. The selected Forgemaster-drop-to-Sky-Keystone progression stays intact. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 15 — Rune of Collection: agreed
+
+The user accepted the Tier 4 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Dropper (`minecraft:dropper`) |
+| Four inner cardinal positions | 1 Hopper each — 4 total |
+| Four outer cardinal positions | 1 Chest each — 4 total |
+
+Output: **1 Rune of Collection**. Its selected function exports finished items, rather than XP or recipe inputs. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 16 — Rune of Deliberation: agreed
+
+The user accepted the Tier 4 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Clock |
+| Four inner cardinal positions | 1 Soul Sand each — 4 total |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Output: **1 Rune of Deliberation**. Its selected effect adds swings in exchange for lower **total** XP per craft. All four Tier 4 rune ingredient layouts are now reviewed. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 17 — Rune of Specialization: agreed
+
+The user accepted the Tier 5 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Smithing Table |
+| Four inner cardinal positions | 1 Diamond each — 4 total |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Output: **1 Rune of Specialization**. The selected category-based XP tradeoff remains; this ingredient does not restrict its effect to equipment recipes. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 18 — Rune of Familiarity: agreed, harder recipe
+
+The user accepted the harder Tier 5 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Book and Quill (`minecraft:writable_book`) |
+| Four inner cardinal positions | 1 Diamond Block each — 4 total |
+| Four outer cardinal positions | 1 Block of Ancient Metal each — 4 total |
+
+Output: **1 Rune of Familiarity**. Its blocks represent **36 Diamonds and 36 Ancient Ingots**. Do not revert to the rejected easier Lapis Block/individual Ancient Ingot proposal. The center remains an ordinary Book and Quill. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 19 — Rune of Alternation: agreed, distinct recipe
+
+The user accepted the revised Tier 5 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Redstone Comparator (`minecraft:comparator`) |
+| Four inner cardinal positions | 1 Emerald Block each — 4 total |
+| Four outer cardinal positions | 1 Netherite Ingot each — 4 total, not blocks |
+
+Output: **1 Rune of Alternation**. This replaces the rejected Observer/Diamond Block/Ancient Metal Block draft; Familiarity's accepted harder recipe stays distinct. All functional rune ingredient layouts through Tier 5 are now reviewed. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 20 — Rune of Master Craftsmanship: agreed
+
+The user accepted the Tier 6 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Nether Star |
+| Four inner cardinal positions | 1 regular Block of Ancient Crystal each — 4 total, not energized |
+| Four outer cardinal positions | 1 Netherite Ingot each — 4 total, not blocks |
+
+Output: **1 Rune of Master Craftsmanship**. Preserve the existing crystal-block alloying recipe and deferred Ancient Crystal acquisition work. Exact bonus chance/above-100% behavior and recipe eligibility remain open. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 21 — Rune of Grand Pattern: agreed
+
+The user accepted the Tier 6 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Ender Chest |
+| Four inner cardinal positions | 1 Nether Star each — 4 total |
+| Four outer cardinal positions | 1 regular Block of Ancient Crystal each — 4 total, not energized |
+
+Output: **1 Rune of Grand Pattern**. This crafts the empty packing rune; it is not a recurring relocation fee. Keep the selected center-foundation placement and whole-structure packing/restoration behavior. Crystal acquisition, XP tuning and work counts remain deferred/open as recorded.
+
+## Recipe review 22 — Rune of Mutation: agreed
+
+The user accepted the Tier 6 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Dragon's Breath (`minecraft:dragon_breath`) |
+| Four inner cardinal positions | 1 End Crystal inventory item each — 4 total |
+| Four outer cardinal positions | 1 Block of Energized Ancient Crystal each — 4 total, the energized variant |
+
+Output: **1 Rune of Mutation**. Recipe End Crystals are inventory ingredients, not the placed structure entities. The outer ring uses energized crystal blocks, not regular blocks or loose crystals.
+
+This completes the ingredient-layout review for **all twenty-two functional forge runes**. Their reviewed ingredients/positions are agreed; XP/work tuning and detailed effect behavior remain separate future work. Mutation's alternative-output lists, chance scaling and exact XP/catalyst rules remain deferred as previously requested. Crystal acquisition/energization is also still future work. Sky Keystone and standalone Vigilance are outside this twenty-two-rune count; their separately agreed recipes follow below.
+
+## Additional recipe A — Keystone Rune of the Sky: agreed
+
+The user accepted the following **Tier 4 anvil** recipe. Crafting it before Tier 5 avoids circular progression. It uses all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 **Forgemaster Core**, the selected working name for the new Forgemaster drop |
+| Four inner cardinal positions | 1 Ancient Ingot each — 4 total |
+| Four outer cardinal positions | 1 Glowstone Dust each — 4 total |
+
+Output: **4 Keystone Runes of the Sky**. Four crafts supply the sixteen required keystones and consume four cores. The boss's **drop quantity** remains unsettled: the earlier one-victory target would mean four cores per normal victory, but that loot number was not part of the accepted recipe presentation.
+
+The working item name and ingredient layout are selected; the boss, drop item and recipe are not implemented by this documentation. Preserve compatibility when renaming the existing Canopy Keystone. XP/work tuning remains deferred.
+
+## Additional recipe B — Rune of Vigilance: agreed
+
+The user accepted crafting this general-purpose rune at a **Tier 3 anvil**. Its chunk-loading effect works independently wherever placed, without requiring an active forge nearby. The recipe uses all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Lodestone (`minecraft:lodestone`) |
+| Four inner cardinal positions | 1 Ender Pearl each — 4 total |
+| Four outer cardinal positions | 1 Redstone Block each — 4 total (`minecraft:redstone_block`) |
+
+Output: **1 Rune of Vigilance**. Its craft tier, ingredients and output are agreed. Chunk radius, activation, fuel/XP upkeep and loading behavior remain separate unresolved implementation choices. Do not require a forge link after placement. XP/work tuning remains deferred.
+
+## Reviewed ingredient summary — XP and work still provisional
+
+The twenty-two recipe-review sections above record the user's agreed ingredient layouts. Each reviewed functional-rune recipe uses **four blank Runestone in the diagonal corners** and produces **one rune** as presented. Inner/outer positions may be empty when explicitly selected (Extraction, Input and Conduit); do not fill them merely to occupy all thirteen slots.
+
+**XP values are deliberately deferred**, and individual work/swing counts have not been reviewed. Earlier draft numbers elsewhere in this design reference are not an approved balance pass. These are planning records, not live registered rune blocks or implemented recipes.
+
+Sky Keystone and general-purpose Vigilance have **separately agreed recipes above**, bringing the total to **twenty-four reviewed rune ingredient layouts**. Sky Keystone is crafted at Tier 4 using a Forgemaster Core, output four. Vigilance is crafted at Tier 3, output one, and functions independently after placement. Boss drop quantity and Vigilance upkeep/loading details remain open. Crystal acquisition/energization remains future work; these ingredient approvals do not invent an acquisition route.
+
+| Rune | Inputs (earlier rows use one blank Runestone unless stated) | Proposed swings × XP/hit |
+|---|---|---:|
+| Storage | **Confirmed layout:** 4 blank Runestone at corners + 1 Block of Lapis Lazuli at center + 4 Gold Ingots on inner cardinal positions | Proposed 8 × 5; output 1 remains proposed |
+| Extraction | **Agreed, corrected:** 4 blank Runestone at corners + 1 Dispenser at center + 4 Redstone Dust on inner cardinal positions; outer positions empty; output 1 | Work/XP tuning deferred |
+| Input | **Agreed, corrected:** 4 blank Runestone at corners + 1 Hopper at center + 4 Redstone Dust on inner cardinal positions; outer positions empty; output 1 | Work/XP tuning deferred |
+| Swift Forging | **Agreed:** 4 blank Runestone corners + 1 Clock center + 4 Sugar inner cardinal positions + 4 Nether Quartz outer cardinal positions; output 1 | Work not yet reviewed; XP tuning deferred |
+| Tempering | **Agreed:** 4 blank Runestone corners + 1 Iron Block center + 4 Ancient Ingots inner ring + 4 Obsidian outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Conduit | **Revised by user:** 4 blank Runestone corners + 1 Copper Block center + 4 Redstone Dust outer ring; inner ring empty; output 1 | Work not reviewed; XP tuning deferred |
+| Expansion | **Agreed:** 4 blank Runestone corners + 1 Crafting Table center + 4 Pistons inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Transmutation (Overworld) | **Agreed:** 4 blank Runestone corners + 1 Emerald Block center + 4 Amethyst Shards inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Nether Transmutation | **Agreed, corrected:** 4 blank Runestone corners + 1 Gilded Blackstone center + 4 Blaze Rods inner ring + 4 Wither Roses outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| End Transmutation | **Agreed:** 4 blank Runestone corners + 1 Dragon's Breath center + 4 Ender Pearls inner ring + 4 Shulker Shells outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Restoration | **Agreed:** 4 blank Runestone corners + 1 Anvil center + 4 Iron Blocks inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Efficiency | **Agreed:** 4 blank Runestone corners + 1 Enchanting Table center + 4 Gold Ingots inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Batching | **Agreed:** 4 blank Runestone corners + 1 Hopper center + 4 Chests inner ring + 4 Redstone Comparators outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Invocation | **Agreed:** 4 blank Runestone corners + 1 Nether Star center + 4 Ancient Ingots inner ring + 4 Blaze Rods outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Collection | **Agreed:** 4 blank Runestone corners + 1 Dropper center + 4 Hoppers inner ring + 4 Chests outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Deliberation | **Agreed:** 4 blank Runestone corners + 1 Clock center + 4 Soul Sand inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Specialization | **Agreed:** 4 blank Runestone corners + 1 Smithing Table center + 4 Diamonds inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Familiarity | **Agreed, harder recipe:** 4 blank Runestone corners + 1 Book and Quill center + 4 Diamond Blocks inner ring + 4 Blocks of Ancient Metal outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Alternation | **Agreed, distinct recipe:** 4 blank Runestone corners + 1 Redstone Comparator center + 4 Emerald Blocks inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Master Craftsmanship | **Agreed:** 4 blank Runestone corners + 1 Nether Star center + 4 regular Blocks of Ancient Crystal inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Mutation | **Agreed:** 4 blank Runestone corners + 1 Dragon's Breath center + 4 End Crystal items inner ring + 4 Blocks of Energized Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Grand Pattern | **Agreed:** 4 blank Runestone corners + 1 Ender Chest center + 4 Nether Stars inner ring + 4 regular Blocks of Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Sky Keystone (additional agreed recipe) | **Agreed:** Tier 4 craft; 4 blank Runestone corners + 1 Forgemaster Core center + 4 Ancient Ingots inner ring + 4 Glowstone Dust outer ring; output 4 | Work/XP and boss drop quantities unreviewed |
+| Vigilance (additional agreed recipe) | **Agreed:** Tier 3 craft; 4 blank Runestone corners + 1 Lodestone center + 4 Ender Pearls inner ring + 4 Redstone Blocks outer ring; output 1; standalone placement effect | Work/XP and upkeep/loading details unreviewed |
+
+Master Craftsmanship must be recipe-eligible. Exclude currency conversion, refund/recycling, reusable-catalyst and reversible conversion recipes by default; review artifact melting, Cruncher recovery and scrap conversions for output-profit loops. Relocation and XP transfers are never multiplied crafts.
+
+## Rune of Restoration — selected Tier 3 direction
+
+Confirmed by the user:
+
+- Place **any item with durability** in the anvil's center slot to repair it using XP. This includes vanilla and modded tools, weapons, armor and other durability-bearing items; do not restrict the rune to ancient equipment or require a repair-material recipe.
+- Additional Restoration runes increase how quickly repair happens. No arbitrary count cutoff.
+- The operation restores the same item. Preserve its enchantments, name, components and other data; change only actual durability damage.
+
+Accepted operating direction from the previous discussion, with rates and implementation details still to settle:
+
+- Repair runs automatically while the item remains in the center. The other workpiece positions must be empty, and an active normal crafting job takes priority. Batching waits while a repair item occupies the plate.
+- Unattended repair uses **stored forge XP**, pausing when the next repair unit cannot be paid. It does not select a nearby player as an automatic XP source. Taking the item back stops repair.
+- Charge a configurable XP price **per actual durability restored**, not per tick/rune. More Restoration runes increase throughput; Efficiency discounts XP per durability using its normal scaling. Do not charge for repair beyond full durability or while paused.
+- Swift and Tempering affect hammer work, not automatic repair speed; Master Craftsmanship does not duplicate a repaired item. Further Restoration runes are the dedicated speed investment.
+- Support normal item durability across mods without assuming every durability-bearing item is a pickaxe. Items using a separate custom charge/resource system need deliberate integration, rather than treating charge as durability.
+
+Automatic repair from stored XP is the accepted direction. Base repair rate, XP per durability point, exact job precedence and the rune's recipe remain to settle; do not reopen the automatic-versus-hammered question without a concrete reason.
+
+The other recent candidate operations (Reforging, Reclamation, Awakening and Transference) are removed from the active proposal. Tier 5 still has no user-selected optional functional rune. Sky Keystone is explicitly excluded from the requested three-per-tier count. The fresh candidates below are suggestions for the user to choose, not approved additions.
+
+## Latest selections: Expansion and three Tier 3 Transmutation runes
+
+The user rejected Offering, Reinforcement and Containment, then selected **Expansion** from the next group of Tier 3 suggestions. The other suggestions from that group remain unselected. Do not carry the rejected artifact-sacrifice, durability-reinforcement or basin-containment operations into the active list.
+
+The user then requested **Rune of Transmutation plus Nether and End variants** and explicitly answered that **all three belong at Tier 3**. Interpret the base Rune of Transmutation as the Overworld-targeting variant, not an additional fourth universal rune. Exact item conversion recipes and XP costs remain to be designed.
+
+Current Tier 3 selected roster:
+- Restoration
+- Efficiency
+- Expansion
+- Rune of Transmutation (Overworld)
+- Rune of Nether Transmutation
+- Rune of End Transmutation
+
+All earlier added forge candidates (Inscription, Parallel Forging, Striking, Ascendance, Commission and Dispatch) remain rejected. **Vigilance is selected as a general-purpose chunk-loading rune usable anywhere**, outside the forge roster, with its Tier 3 craft now agreed and fuel/loading details still open.
+
+Excluding Sky Keystone, selected forge counts are now **3 / 3 / 6 / 4 / 3 / 3** across tiers 1–6: twenty-two functional runes. The user selected Alternation and authorized moving one or two Tier 4 runes into Tier 5; Specialization and Familiarity moved together, keeping Batching, Invocation, Collection and Deliberation at Tier 4. The user then selected Mutation for Tier 6 **for now**, explicitly allowing a later revisit. The initial roster now meets at least three functional runes per tier; this does not finalize numerical tuning, recipes or implementation.
+
+### Expansion — selected operation, socket design still open
+
+Expansion increases the forge's actual physical ingredient positions, rather than an arbitrary passive stat. The additional sockets allow recipes with more inputs than the original thirteen-position working surface. Exactly where the sockets appear or whether the Expansion rune itself holds an ingredient is open. Preserve clear item graphics/selection feedback and future Batching support. Do not register sockets from arbitrary unlinked blocks or impose a hidden first-N rune-count cutoff.
+
+### Transmutation — selected operation, recipes still open
+
+Each dimensional variant enables authored recipes converting **item inputs into item outputs associated with its target dimension**, spending XP through the ordinary forge system. Examples and prices must be selected deliberately; do not enable every item or infer automatic value ratios from rarity or crafting cost.
+
+- Rune of Transmutation: Overworld-target recipes.
+- Rune of Nether Transmutation: Nether-target recipes.
+- Rune of End Transmutation: End-target recipes.
+- All three variants are active at Tier 3, as explicitly selected by the user. They do not require placing the forge in the target dimension unless a future individual recipe deliberately says so.
+- What additional copies improve (conversion cost, ratio, throughput or recipe access) remains open; preserve the user's substantial-investment/no-arbitrary-count-cap direction.
+- Multiple variants may coexist, each enabling its own recipes. Source inputs, catalysts, target lists, discovery requirements and XP are recipe decisions still to discuss.
+- Account for reverse conversions and Master Craftsmanship eligibility when choosing ratios. No direct XP-currency multiplication or unintended item-conversion profit loop.
+- These are rune-enabled item conversions, distinct from the Ruined Ancient Forge's existing alloying job. The new candidates below do not change its current recipes.
+
+## Invocation and the Tier 5 progression link — selected direction
+
+The user selected Invocation for Tier 4 in principle and explicitly proposed using **a Forgemaster drop to craft the Sky Keystones needed for Tier 5**. The progression is now:
+
+**Validated Tier 4 forge → Invocation ritual/seal → Forgemaster encounter → boss material → Sky Keystone crafting → Tier 5 canopy.**
+
+The Sky Keystone recipe is now agreed in additional review A: Forgemaster Core at center, four Glowstone Dust on the outer ring, four Ancient Ingots on the inner ring and four corner Runestone produce four keystones at Tier 4. Boss drop quantity and XP/work costs remain open. 'Forgemaster Core' is the selected working name; the item/boss are still to be implemented. Invocation's rune and the first seal must be obtainable before this boss material exists, avoiding a circular unlock.
+
+Recommended balance target, not yet approved: one normal victory should provide enough material for the required sixteen Sky Keystones; repeat encounters can supply other future forge recipes. This respects the user's earlier concern about substantial effort having a worthwhile payoff. Boss difficulty, repeat summoning costs and loot still need separate design.
+
+The other preceding Tier 4 candidates (Conjuration, Refinement, Adaptation, Liquefaction and Solidification) remain unselected. The user did not like most of that group; do not carry them into this new shortlist as approved features.
+
+## Tier 4 and Tier 5 — current selected roster
+
+The user selected Collection, Specialization, Familiarity and Deliberation, then selected **Alternation** and authorized moving **one or two** Tier 4 runes into Tier 5 before discussing Tier 6. The chosen placement is:
+
+| Tier | Selected runes |
+|---|---|
+| 4 | Batching, Invocation, Collection, Deliberation |
+| 5 | Specialization, Familiarity, Alternation |
+
+Moving Specialization and Familiarity keeps the recipe-family and recipe-streak XP behavior together at Tier 5. This is an authorized design placement, not an implementation change or permission request. Exact craft costs, activation code and rune recipes remain future work.
+
+Compression, Amplification, Convergence, Challenge, Reconstruction and Safekeeping remain rejected, as do Reanimation, Engraving and Seals. The first Tier 5 set (Retention, Versatility, Counterbalance, Economy, Equivalence, Exchange, Carryover and Signalling) was rejected. In the next set, only Alternation was selected; Solar/Lunar/Storm Forging, Renewal, Rejuvenation, Cooperation, Intricacy and Attunement were not selected.
+
+### Collection — selected effect
+
+Move finished forge output into a chest directly above the rune or connected item pipes, freeing the center for subsequent crafting. Keep output in the forge if the destination cannot accept it; never overwrite inputs or lose items. Additional runes offer output access/storage-routing points, rather than a first-N count cutoff. Exact filters, fair distribution, capabilities and chest interactions remain to design.
+
+Collection concerns actual finished items, distinct from Tier 1 Extraction's XP export. It supports Batching's input handling without introducing the rejected remote delivery or automatic order-planning systems.
+
+### Specialization — selected Tier 5 effect
+
+Select a recipe category. Crafting in that category costs less XP, while crafting outside it costs more. Additional runes strengthen the specialization, including its tradeoff; precise curves remain open. Define categories from recipe data so new content can be added without hard-coded item lists.
+
+Category selection and reconfiguration need deliberate design. Freeze the selected category and effective price for an active job; do not allow free per-hit switching to capture every bonus while avoiding every penalty.
+
+### Familiarity — selected Tier 5 effect
+
+Repeated successful crafts of the same recipe build an XP discount. Switching recipes resets the accumulated benefit. Extra runes improve how familiarity develops or its strength; the exact curve is not yet approved. This rewards sustained production and complements Batching.
+
+Recipe identity, successful-craft counting, persistence and the exact reset trigger remain to design. Do not grant progress from failed hammer attempts or let a client decide the discount. The prior Retention proposal was rejected; do not silently preserve Familiarity across recipe changes.
+
+### Deliberation — selected effect
+
+Require additional hammer swings in exchange for a reduction in the craft's **total XP cost**. Do not accidentally make a supposedly cheaper craft cost more overall merely because there are more paid hits. More runes deepen the slower/cheaper tradeoff; exact curves and interaction order with Swift, Familiarity and Efficiency are open.
+
+Keep the existing Swift rule: every installed Swift rune adds its surcharge even after the one-swing floor. Calculate the full effective job price/work consistently rather than silently dropping surplus Swift cost. Fractional XP accounting remains relevant when distributing the discounted total across more swings.
+
+### Alternation — selected Tier 5 effect
+
+Consecutive crafts that change recipes build an XP discount; repeating the same recipe resets this buildup. More runes strengthen this production style, with exact scaling open. Familiarity rewards repeated production; Alternation rewards variety. Neither choice is an arbitrary count cap.
+
+Price each new job from the streak applicable to that job: do not accidentally apply the preceding recipe's Familiarity discount to a switched recipe and then also award Alternation. Recipe identity, whether a longer sequence must contain distinct recipes rather than just alternate two recipes, growth/decay and save data remain design details. The user selected the general behavior, not these unsettled details.
+
+## Tier 6 selection — Mutation, provisional details
+
+The user selected **Mutation** as the third Tier 6 rune, saying it is good for now and can be revisited. Tier 6 has **Master Craftsmanship, Grand Pattern and Mutation**. The initial forge roster is complete for the current three-per-tier exercise.
+
+Selected Mutation concept: **supported Transmutation recipes may produce a rarer alternative item instead of their normal result**. This changes the output type; it is not automatically an extra copy, an improved numerical modifier roll or a guaranteed global rarity upgrade.
+
+Keep its details open:
+- Which Overworld, Nether and End transmutation recipes support Mutation.
+- Exact alternative items, rarity ordering and weights.
+- Rune-count scaling, chance limits and benefits of further investment, respecting the no-arbitrary-first-N-cap direction.
+- Any XP premium, catalyst or additional material requirement.
+- Interaction/order with Master Craftsmanship and other job-pricing/output effects.
+- Mutation rune ingredients are now proposed in recipe review 22 below; work and XP/hit remain unreviewed/deferred.
+
+Use authored alternative-output data if implemented; do not automatically infer value from item names or allow arbitrary modded outputs. Recipes without a declared mutation outcome keep their ordinary result. These are implementation principles for later design, not approved weights or conversion ratios. The user has explicitly deferred a detailed revisit.
+
+The preceding Tier 6 sets were rejected: Perfection, Legacy, Empowerment, Crescendo, Overstrike and Multidiscipline; then Imprinting, Tethering, Recall, Salvation, Duality and Projection. The last set's other options (Frugality, Breakthrough, Remnants, Forgemaster's Favor and Greater Transmutation) were not selected. Do not carry these forward as approved features.
+
+## Initial selected forge roster
+
+Sky Keystone remains a structural Tier 5 requirement and is excluded from these counts. Vigilance remains a separate general-purpose chunk-loading rune.
+
+| Tier | Count | Selected functional runes |
+|---|---:|---|
+| 1 | 3 | Storage, Extraction, Input |
+| 2 | 3 | Swift Forging, Tempering, Conduit |
+| 3 | 6 | Restoration, Efficiency, Expansion, Transmutation (Overworld), Nether Transmutation, End Transmutation |
+| 4 | 4 | Batching, Invocation, Collection, Deliberation |
+| 5 | 3 | Specialization, Familiarity, Alternation |
+| 6 | 3 | Master Craftsmanship, Grand Pattern, Mutation |
+| Total | 22 | At least three per tier; effects and recipes still require detailed design before implementation |
+
+## Decisions still open
+
+- All twenty-four rune ingredient layouts are agreed: twenty-two functional forge runes plus structural Sky Keystone and general-purpose Vigilance. Tune XP/work later.
+
+- Mutation's alternative outputs, probabilities, scaling and operation costs remain deferred; its rune-crafting ingredient layout is agreed in review 22.
+- Numerical curves/configuration for Tier 5 Specialization, Familiarity and Alternation.
+- Collection and Deliberation scaling/recipes at Tier 4.
+- Forgemaster drop identity/quantity and the revised Sky Keystone recipe; whether one normal kill should cover all sixteen required keystones.
+- Invocation seal ingredients/XP, boss difficulty, repeat encounters and rewards.
+- Expansion socket placement, ingredient addressing and interaction with expanded recipes/Batching.
+- Transmutation source/target recipes, catalysts, XP costs and extra-copy benefits. Tier 3 for all three variants is settled.
+- Vigilance's standalone chunk radius, activation and upkeep; its Tier 3 crafting requirement is agreed and separate from placement behavior.
+- Numerical tuning, fractional XP accounting and future hammer interactions.
+- Restoration's base repair rate and XP per durability point; its rune-crafting ingredients are agreed, and automatic stored-XP operation is accepted in principle.
+- Master Craftsmanship beyond 100%: guaranteed extra batches versus staying double-only with diminishing chance.
+- Batching's template item interpretation, recipe-variant selection and output collection/re-arming policy.
+- Grand Pattern's placement confirmation, optional decorative floor handling and relocation XP cost; its rune-crafting ingredients are agreed.
+
+This document records **selected design directions**, provisional numbers/recipes and deferred questions. It does not authorize or imply that all twenty-two rune blocks have been implemented.

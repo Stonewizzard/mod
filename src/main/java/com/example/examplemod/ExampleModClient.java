@@ -58,6 +58,7 @@ public class ExampleModClient {
         event.registerBlockEntityRenderer(ReconstructionContent.ENTITY.get(),com.example.examplemod.client.AncientForgeRenderer::new);
         event.registerBlockEntityRenderer(AncientAnvilContent.ENTITY.get(),com.example.examplemod.client.AncientAnvilRenderer::new);
         event.registerEntityRenderer(ExampleMod.CRUNCHER.get(), CruncherRenderer::new);
+        event.registerEntityRenderer(ForgeRunes.FORGEMASTER.get(),net.minecraft.client.renderer.entity.IronGolemRenderer::new);
         event.registerEntityRenderer(ExampleMod.SKULK_PARASITE.get(), SkulkParasiteRenderer::new);
         event.registerEntityRenderer(ExampleMod.SKULK_ZOMBIE.get(), SkulkZombieRenderer::new);
         event.registerEntityRenderer(ExampleMod.SKULK_COW.get(), SkulkCowRenderer::new);

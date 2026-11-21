@@ -1,0 +1,53 @@
+{
+  "anvil_tier": 5,
+  "hammer_tier": 1,
+  "work": 36,
+  "xp_per_hit": 50,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:writable_book"
+    },
+    "north_inner": {
+      "item": "minecraft:diamond_block"
+    },
+    "east_inner": {
+      "item": "minecraft:diamond_block"
+    },
+    "south_inner": {
+      "item": "minecraft:diamond_block"
+    },
+    "west_inner": {
+      "item": "minecraft:diamond_block"
+    },
+    "north_outer": {
+      "item": "examplemod:ancient_metal_block"
+    },
+    "east_outer": {
+      "item": "examplemod:ancient_metal_block"
+    },
+    "south_outer": {
+      "item": "examplemod:ancient_metal_block"
+    },
+    "west_outer": {
+      "item": "examplemod:ancient_metal_block"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_familiarity",
+    "count": 1
+  }
+}

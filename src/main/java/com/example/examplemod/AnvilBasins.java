@@ -33,14 +33,14 @@ public final class AnvilBasins {
     }
     public static State inspect(Level level,BlockPos core,Direction front){
         boolean complete=true;var fluids=new EnumMap<Side,Fluid>(Side.class);
-        for(var p:frame(core,front))if(!level.hasChunkAt(p)||!level.getWorldBorder().isWithinBounds(p)||!level.getBlockState(p).is(AncientAnvilContent.FOUNDATION)||level.getBlockEntity(p)!=null)complete=false;
+        for(var p:frame(core,front))if(!level.hasChunkAt(p)||!level.getWorldBorder().isWithinBounds(p)||!level.getBlockState(p).is(AncientAnvilContent.FOUNDATION)||!ForgeRunes.allowedEntity(level,p))complete=false;
         for(var side:Side.values()){
             Fluid same=null;boolean valid=true;
             for(var p:pool(core,front,side)){
                 if(!level.hasChunkAt(p)||!level.getWorldBorder().isWithinBounds(p)){valid=false;continue;}
                 var state=level.getFluidState(p);
                 // Basins contain actual fluid blocks, not waterlogged stairs or containers.
-                if(state.isEmpty()||level.getBlockEntity(p)!=null||!level.getBlockState(p).equals(state.createLegacyBlock())){valid=false;continue;}
+                if(state.isEmpty()||!ForgeRunes.allowedEntity(level,p)||!level.getBlockState(p).equals(state.createLegacyBlock())){valid=false;continue;}
                 var fluid=canonical(state.getType());
                 if(same==null)same=fluid;else if(!same.isSame(fluid))valid=false;
             }

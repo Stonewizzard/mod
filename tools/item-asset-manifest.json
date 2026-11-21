@@ -424,5 +424,29 @@
       0.5,
       0.85
     ]
+  },
+  "forgemaster_core": {
+    "source": "tools/asset_sources/forge-runes/forgemaster_core.png",
+    "min_longest": 24,
+    "max_longest": 28,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "forgemaster_seal": {
+    "source": "tools/asset_sources/forge-runes/forgemaster_seal.png",
+    "min_longest": 24,
+    "max_longest": 28,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
+  },
+  "packed_grand_pattern": {
+    "source": "tools/asset_sources/forge-runes/packed_grand_pattern.png",
+    "min_longest": 24,
+    "max_longest": 28,
+    "allowed_holes": [],
+    "separate_fragments": false,
+    "model": true
   }
 }

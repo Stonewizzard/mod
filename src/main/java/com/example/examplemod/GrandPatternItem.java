@@ -1,0 +1,64 @@
+package com.example.examplemod;
+
+import java.util.*;
+import net.minecraft.core.*;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.*;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.*;
+import net.minecraft.world.*;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.entity.*;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockEvent;
+
+/** Move actual blocks, never a duplicating blueprint. Preflight everything before touching the world. */
+public final class GrandPatternItem extends Item {
+    public GrandPatternItem(Properties p){super(p);}
+    public static void pack(ForgeRuneBlockEntity rune,net.minecraft.world.entity.player.Player p,InteractionHand hand){
+        var be=rune.core();if(be==null||!(p instanceof ServerPlayer player)||!rune.getBlockPos().equals(be.getBlockPos().below())){AnvilWork.message(p,"Grand Pattern must be directly under the center of a Tier 6 anvil");return;}
+        if(!p.getItemInHand(hand).isEmpty()){AnvilWork.message(p,"Crouch with an empty hand to pack the workshop");return;}
+        var level=player.level();var core=be.getBlockPos();var front=be.getBlockState().getValue(AncientAnvilBlock.FACING);var positions=new LinkedHashSet<BlockPos>();positions.addAll(ForgeRunes.sockets(core,front,6));
+        for(var stage:AnvilStages.all())for(var r:stage.blocks())positions.add(r.at(core,front));
+        for(var side:AnvilBasins.Side.values())positions.addAll(AnvilBasins.pool(core,front,side));
+        for(var cell:AncientAnvilStructure.OCCUPIED)positions.add(cell.at(core,front));positions.add(core);
+        var cells=new ListTag();
+        for(var at:positions){
+            if(!level.hasChunkAt(at)||!level.getWorldBorder().isWithinBounds(at)||!level.mayInteract(player,at)){AnvilWork.message(p,"Workshop crosses unavailable or protected space");return;}
+            var block=level.getBlockState(at);var entity=level.getBlockEntity(at);
+            if(entity!=null&&!(entity instanceof AncientAnvilBlockEntity)&&!(entity instanceof ForgeRuneBlockEntity)){AnvilWork.message(p,"Remove containers from required structure positions before packing");return;}
+            if(NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(level,at,block,player)).isCanceled()){AnvilWork.message(p,"Packing was blocked by world protection");return;}
+            var c=new CompoundTag();c.putInt("X",at.getX()-core.getX());c.putInt("Y",at.getY()-core.getY());c.putInt("Z",at.getZ()-core.getZ());c.put("State",NbtUtils.writeBlockState(block));if(entity!=null)c.put("Entity",entity.saveWithFullMetadata(level.registryAccess()));cells.add(c);
+        }
+        var crystals=new ListTag();for(var r:AnvilTierSix.requirements(AnvilStages.all(),AnvilTierSix.OBSIDIAN)){var crystal=AnvilTierSix.crystal(level,r.at(core,front));if(crystal==null){AnvilWork.message(p,"Restore all four crystals before packing");return;}var tag=new CompoundTag();tag.putDouble("X",crystal.getX()-core.getX());tag.putDouble("Y",crystal.getY()-core.getY());tag.putDouble("Z",crystal.getZ()-core.getZ());tag.putBoolean("Bottom",crystal.showsBottom());crystals.add(tag);}
+        var data=new CompoundTag();data.put("Cells",cells);data.put("Crystals",crystals);data.putInt("Version",1);
+        // A bounded payload keeps custom modded inventories below network packet limits.
+        if(data.toString().length()>500000){AnvilWork.message(p,"Empty bulky rune inventories before packing");return;}
+        var packed=new ItemStack(ForgeRunes.PATTERN.get());packed.set(DataComponents.CUSTOM_DATA,CustomData.of(data));
+        for(var r:AnvilTierSix.requirements(AnvilStages.all(),AnvilTierSix.OBSIDIAN))AnvilTierSix.crystal(level,r.at(core,front)).discard();
+        for(var at:positions)level.removeBlockEntity(at);
+        for(var at:positions)level.setBlock(at,Blocks.AIR.defaultBlockState(),2);
+        p.setItemInHand(hand,packed);AnvilWork.message(p,"Workshop packed: place the pattern to restore its original orientation");
+    }
+    @Override public InteractionResult useOn(UseOnContext c){
+        if(!(c.getLevel() instanceof ServerLevel level)||!(c.getPlayer() instanceof ServerPlayer player))return InteractionResult.SUCCESS;
+        var root=c.getItemInHand().getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();if(root.getIntOr("Version",0)!=1)return InteractionResult.FAIL;
+        var origin=c.getClickedPos().relative(c.getClickedFace());var cells=root.getListOrEmpty("Cells");if(cells.isEmpty()||cells.size()>4096)return InteractionResult.FAIL;
+        var offsets=new HashSet<BlockPos>();
+        for(int i=0;i<cells.size();i++){var cell=cells.getCompoundOrEmpty(i);var delta=new BlockPos(cell.getIntOr("X",0),cell.getIntOr("Y",0),cell.getIntOr("Z",0));var at=origin.offset(delta);
+            if(!offsets.add(delta)||Math.abs(delta.getX())>32||Math.abs(delta.getZ())>32||Math.abs(delta.getY())>32||!level.hasChunkAt(at)||!level.isInWorldBounds(at)||!level.getWorldBorder().isWithinBounds(at)||!level.mayInteract(player,at)||level.getBlockEntity(at)!=null||!level.getBlockState(at).canBeReplaced()){
+                AnvilWork.message(player,"Restore needs clear, loaded, buildable space for the whole workshop");return InteractionResult.FAIL;}
+        }
+        // Block data is already validated by the server when creating this unstackable item.
+        for(int i=0;i<cells.size();i++){var cell=cells.getCompoundOrEmpty(i);var at=origin.offset(cell.getIntOr("X",0),cell.getIntOr("Y",0),cell.getIntOr("Z",0));var state=NbtUtils.readBlockState(level.registryAccess().lookupOrThrow(Registries.BLOCK),cell.getCompoundOrEmpty("State"));level.setBlock(at,state,2);}
+        for(int i=0;i<cells.size();i++){var cell=cells.getCompoundOrEmpty(i);if(!cell.contains("Entity"))continue;var at=origin.offset(cell.getIntOr("X",0),cell.getIntOr("Y",0),cell.getIntOr("Z",0));var tag=cell.getCompoundOrEmpty("Entity").copy();tag.putInt("x",at.getX());tag.putInt("y",at.getY());tag.putInt("z",at.getZ());var entity=BlockEntity.loadStatic(at,level.getBlockState(at),tag,level.registryAccess());if(entity!=null)level.setBlockEntity(entity);}
+        var crystals=root.getListOrEmpty("Crystals");for(int i=0;i<crystals.size();i++){var t=crystals.getCompoundOrEmpty(i);var entity=new EndCrystal(EntityTypes.END_CRYSTAL,level);entity.snapTo(origin.getX()+t.getDoubleOr("X",0),origin.getY()+t.getDoubleOr("Y",0),origin.getZ()+t.getDoubleOr("Z",0),0,0);entity.setShowBottom(t.getBooleanOr("Bottom",true));level.addFreshEntity(entity);}
+        c.getItemInHand().shrink(1); // Even Creative must move, not copy, stored XP/items/crystals.
+        AnvilWork.message(player,"Workshop restored");return InteractionResult.SUCCESS;
+    }
+}

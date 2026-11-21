@@ -66,7 +66,10 @@ def build():
  from generate_smithing_assets import item_exports
  result.update(metals());result.update(item_exports());
  from generate_crystal_assets import item_exports as crystal_items
- result.update(crystal_items());return result
+ result.update(crystal_items());
+ for path in sorted((SOURCES/"forge-runes").glob("*.png")):
+  if not path.stem.endswith("_16"):result[path.stem]=cutout(Image.open(path).convert("RGBA"))
+ return result
 
 def main():
  parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args();result=build();bad=[]

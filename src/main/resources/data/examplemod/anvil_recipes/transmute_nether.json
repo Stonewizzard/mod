@@ -1,0 +1,20 @@
+{
+  "anvil_tier": 3,
+  "requires_rune": "nether_transmutation",
+  "category": "transmutation",
+  "work": 8,
+  "xp_per_hit": 8,
+  "ingredients": {
+    "center": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "result": {
+    "id": "minecraft:netherrack",
+    "count": 1
+  },
+  "mutation_result": {
+    "id": "minecraft:quartz",
+    "count": 1
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "anvil_tier": 3,
+  "hammer_tier": 1,
+  "work": 28,
+  "xp_per_hit": 30,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:anvil"
+    },
+    "north_inner": {
+      "item": "minecraft:iron_block"
+    },
+    "east_inner": {
+      "item": "minecraft:iron_block"
+    },
+    "south_inner": {
+      "item": "minecraft:iron_block"
+    },
+    "west_inner": {
+      "item": "minecraft:iron_block"
+    },
+    "north_outer": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "east_outer": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "south_outer": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "west_outer": {
+      "item": "examplemod:ancient_ingot"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_restoration",
+    "count": 1
+  }
+}

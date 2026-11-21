@@ -1,0 +1,53 @@
+{
+  "anvil_tier": 3,
+  "hammer_tier": 1,
+  "work": 28,
+  "xp_per_hit": 30,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:emerald_block"
+    },
+    "north_inner": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "east_inner": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "south_inner": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "west_inner": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "north_outer": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "east_outer": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "south_outer": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "west_outer": {
+      "item": "examplemod:ancient_ingot"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_transmutation",
+    "count": 1
+  }
+}
