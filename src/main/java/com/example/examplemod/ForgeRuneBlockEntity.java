@@ -68,6 +68,7 @@ public final class ForgeRuneBlockEntity extends BlockEntity implements Container
     @Override public void preRemoveSideEffects(BlockPos p,BlockState s){if(level instanceof ServerLevel){Containers.dropContents(level,p,this);clearContent();}super.preRemoveSideEffects(p,s);}
     public static void tick(Level l,BlockPos p,BlockState s,ForgeRuneBlockEntity rune){
         if(!(l instanceof ServerLevel server)||l.getGameTime()%10!=0)return;var be=rune.core();if(be==null)return;
+        if(rune.kind()!=ForgeRune.EXTRACTION&&rune.kind()!=ForgeRune.INPUT&&rune.kind()!=ForgeRune.BATCHING)return;
         int speed=10*(1+ForgeRunes.counts(be).getOrDefault(ForgeRune.CONDUIT,0));
         if(rune.kind()==ForgeRune.EXTRACTION||rune.kind()==ForgeRune.INPUT)for(var player:server.getEntitiesOfClass(Player.class,new net.minecraft.world.phys.AABB(p.above()).inflate(0,.15,0))){
             if(player.isSpectator()||player.getAbilities().instabuild)continue;int rate=player.isShiftKeyDown()?speed*4:speed;
