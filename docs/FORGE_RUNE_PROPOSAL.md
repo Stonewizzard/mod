@@ -197,18 +197,33 @@ D H D
 R D R
 ```
 
-R = blank Runestone, D = Redstone Dust, H = Hopper. Output: **1 Rune of Input**. Its selected function remains pipe XP import and player-standing XP withdrawal, faster while crouching. Work/XP tuning remains deferred. The next rune in the review order is Tier 2 Swift Forging.
+R = blank Runestone, D = Redstone Dust, H = Hopper. Output: **1 Rune of Input**. Its selected function remains pipe XP import and player-standing XP withdrawal, faster while crouching. Work/XP tuning remains deferred. Tier 2 Swift Forging is reviewed below.
+
+## Recipe review 4 — Rune of Swift Forging: agreed, all thirteen positions
+
+The user requested Nether Quartz in the remaining four slots of the proposed Tier 2 Swift Forging recipe. The full selected ingredient layout is:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners (`north_west`, `north_east`, `south_west`, `south_east`) | 1 blank Runestone each — 4 total |
+| Center (`center`) | 1 Clock |
+| Four inner cardinal positions (`north_inner`, `east_inner`, `south_inner`, `west_inner`) | 1 Sugar each — 4 total |
+| Four outer cardinal positions (`north_outer`, `east_outer`, `south_outer`, `west_outer`) | 1 **Nether Quartz** each — 4 total (`minecraft:quartz`, not quartz blocks or ore) |
+
+This occupies **all thirteen workpiece positions**: 4 + 1 + 4 + 4 = 13. Output: **1 Rune of Swift Forging**. Do not leave the outer positions empty or revert to the older Sugar/Redstone/Ancient-Ingot draft.
+
+The effect remains fewer required hammer swings, minimum one, with every installed Swift rune adding its XP surcharge even beyond the swing floor. XP tuning remains deferred; this recipe's work count is not separately reviewed yet. The next rune in the agreed review order is **Rune of Tempering**, Tier 2.
 
 ## Draft recipes — retained for discussion, not approved
 
-The rows below remain preliminary except for Storage's explicitly reviewed ingredients/layout and Extraction's accepted recipe above. Extraction uses a Dispenser and Input uses a Hopper, as corrected by the user. Both ingredient layouts are selected. XP-value tuning is deferred by the user. Unless otherwise stated, earlier ordinary-rune proposals used **one blank Runestone plus** the listed extras and one-rune output. Storage is now an exception with **four blank Runestone inputs**; its output/work/XP values remain proposed. Sky Keystone's existing four-output batch is a starting reference, but its recipe must now include a Forgemaster drop as selected by the user. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
+The rows below remain preliminary except for the reviewed ingredient layouts for Storage, Extraction, Input and Swift Forging above. All four reviewed recipes use four blank Runestone corners. Extraction uses a Dispenser and Input uses a Hopper, as corrected by the user. Swift Forging uses all thirteen positions, with Nether Quartz on its outer ring. XP-value tuning is deferred by the user. Unless otherwise stated, earlier ordinary-rune proposals used **one blank Runestone plus** the listed extras and one-rune output. Storage is now an exception with **four blank Runestone inputs**; its output/work/XP values remain proposed. Sky Keystone's existing four-output batch is a starting reference, but its recipe must now include a Forgemaster drop as selected by the user. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
 
 | Rune | Inputs (earlier rows use one blank Runestone unless stated) | Proposed swings × XP/hit |
 |---|---|---:|
 | Storage | **Confirmed layout:** 4 blank Runestone at corners + 1 Block of Lapis Lazuli at center + 4 Gold Ingots on inner cardinal positions | Proposed 8 × 5; output 1 remains proposed |
 | Extraction | **Agreed, corrected:** 4 blank Runestone at corners + 1 Dispenser at center + 4 Redstone Dust on inner cardinal positions; outer positions empty; output 1 | Work/XP tuning deferred |
 | Input | **Agreed, corrected:** 4 blank Runestone at corners + 1 Hopper at center + 4 Redstone Dust on inner cardinal positions; outer positions empty; output 1 | Work/XP tuning deferred |
-| Swift Forging | Sugar + redstone + ancient ingot | 12 × 10 |
+| Swift Forging | **Agreed:** 4 blank Runestone corners + 1 Clock center + 4 Sugar inner cardinal positions + 4 Nether Quartz outer cardinal positions; output 1 | Work not yet reviewed; XP tuning deferred |
 | Tempering | 2 iron ingots + copper ingot | 10 × 8 |
 | Conduit | 2 copper ingots + redstone | 10 × 8 |
 | Expansion | To decide after socket placement/recipe design | To decide |
@@ -369,7 +384,7 @@ Sky Keystone remains a structural Tier 5 requirement and is excluded from these 
 
 ## Decisions still open
 
-- Continue recipe review one rune at a time. Storage, Extraction and Input ingredient layouts are selected. Extraction's center is a Dispenser and Input's is a Hopper. Swift Forging is next. The user deferred XP-value tuning; remaining work/cost details can be reviewed later.
+- Continue recipe review one rune at a time. Storage, Extraction, Input and Swift Forging ingredient layouts are selected. Swift uses four outer Nether Quartz to occupy all thirteen slots. Tempering is next. The user deferred XP-value tuning; remaining work/cost details can be reviewed later.
 
 - Mutation's alternatives, probabilities, scaling, costs and recipe; deliberately deferred for a later revisit.
 - Numerical curves/configuration for Tier 5 Specialization, Familiarity and Alternation.
