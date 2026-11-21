@@ -305,7 +305,7 @@ The user replaced Blaze Powder with **Blaze Rods**, the Magma Block with **Gilde
 | Four inner cardinal positions | 1 **Blaze Rod** each — 4 total (`minecraft:blaze_rod`) |
 | Four outer cardinal positions | 1 **Wither Rose** each — 4 total (`minecraft:wither_rose`) |
 
-Output: **1 Rune of Nether Transmutation**. Do not retain the old Magma Block, Blaze Powder or Ancient Ingot ingredients in this recipe. These are the rune's crafting ingredients; exact Nether-targeting item-conversion recipes remain future work. All three Transmutation variants stay Tier 3. XP tuning is deferred and work count is unreviewed. End Transmutation is reviewed below; Batching is the next proposal.
+Output: **1 Rune of Nether Transmutation**. Do not retain the old Magma Block, Blaze Powder or Ancient Ingot ingredients in this recipe. These are the rune's crafting ingredients; exact Nether-targeting item-conversion recipes remain future work. All three Transmutation variants stay Tier 3. XP tuning is deferred and work count is unreviewed. End Transmutation and Batching are reviewed below; Invocation is the next proposal.
 
 ## Recipe review 12 — Rune of End Transmutation: agreed
 
@@ -320,18 +320,31 @@ The user accepted the Tier 3 recipe using all thirteen positions:
 
 Output: **1 Rune of End Transmutation**. All three dimensional rune-crafting recipes are now reviewed; the actual item-conversion recipes remain future work. XP tuning is deferred and work count is unreviewed.
 
-## Recipe review 13 — Rune of Batching: proposed next
+## Recipe review 13 — Rune of Batching: agreed
+
+The user accepted the Tier 4 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Hopper |
+| Four inner cardinal positions | 1 Chest each — 4 total |
+| Four outer cardinal positions | 1 Redstone Comparator each — 4 total |
+
+Output: **1 Rune of Batching**. Its selected filtered input/buffer behavior remains; template-item interpretation, exact input interfaces and scheduling are separate design questions. It does not automatically hammer. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 14 — Rune of Invocation: proposed next
 
 Propose a Tier 4 recipe using all thirteen positions:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
-| Center | 1 Hopper (`minecraft:hopper`) |
-| Four inner cardinal positions | 1 Chest each — 4 total (`minecraft:chest`) |
-| Four outer cardinal positions | 1 Redstone Comparator each — 4 total (`minecraft:comparator`) |
+| Center | 1 Nether Star (`minecraft:nether_star`) |
+| Four inner cardinal positions | 1 Ancient Ingot each — 4 total |
+| Four outer cardinal positions | 1 Blaze Rod each — 4 total |
 
-Proposed output: **1 Rune of Batching**. The storage and filtering components fit its selected recipe-specific input handling. This ingredient layout is awaiting review; its existing Tier 4 function and multiple-rune coordination remain selected directions. It does not automatically hammer. Template-item interpretation, exact input interfaces and job scheduling are separate design questions, not settled by this recipe. XP tuning is deferred and work count is unreviewed. Invocation follows if accepted.
+Proposed output: **1 Rune of Invocation**. Ingredients/layout await review. The Nether Star is an existing vanilla Wither drop and can be obtained before the first Forgemaster encounter, avoiding a circular requirement for that boss's own material. This is the rune's crafting recipe, not the separate summoning-seal/ritual recipe, which remains open. The selected Forgemaster-drop-to-Sky-Keystone progression stays intact. XP tuning is deferred and work count is unreviewed. Collection follows if accepted.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -351,8 +364,8 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | End Transmutation | **Agreed:** 4 blank Runestone corners + 1 Dragon's Breath center + 4 Ender Pearls inner ring + 4 Shulker Shells outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Restoration | **Agreed:** 4 blank Runestone corners + 1 Anvil center + 4 Iron Blocks inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Efficiency | **Agreed:** 4 blank Runestone corners + 1 Enchanting Table center + 4 Gold Ingots inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Batching | **Proposed next:** 4 blank Runestone corners + 1 Hopper center + 4 Chests inner ring + 4 Redstone Comparators outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Invocation | To decide; the rune and first summoning seal must be obtainable before defeating the Forgemaster | To decide |
+| Batching | **Agreed:** 4 blank Runestone corners + 1 Hopper center + 4 Chests inner ring + 4 Redstone Comparators outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Invocation | **Proposed next:** 4 blank Runestone corners + 1 Nether Star center + 4 Ancient Ingots inner ring + 4 Blaze Rods outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Collection, Deliberation (Tier 4); Specialization, Familiarity, Alternation (Tier 5) | Choose recipe ingredients after operating details and numerical scaling | To decide |
 | Master Craftsmanship | Ancient crystal + diamond + 2 ancient ingots | 24 × 25 |
 | Mutation | Deferred; select supported alternative-output recipes and chance behavior before fixing rune ingredients | To decide |
