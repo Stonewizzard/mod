@@ -701,7 +701,7 @@
         "title": "Feed a Cruncher",
         "paragraphs": [
           "Right-click an adult, idle Cruncher while holding an artifact. It consumes one artifact, gives one Ancient Scrap and chews for two seconds. It cannot accept another while chewing or crunching a geode. This interaction does not breed it.",
-          "The reward is delivered immediately. With a full inventory it drops at your feet. The existing wither-rose interaction remains the Cruncher’s food interaction."
+          "The reward is delivered immediately. With a full inventory it drops at your feet. The existing wither-rose interaction remains the Cruncher\u2019s food interaction."
         ]
       },
       {
@@ -1473,6 +1473,710 @@
         "paragraphs": [
           "Hammer a valid craft on the completed Tier 6 Ancient Anvil. A large energy column blasts down through the glass lens to the anvil, colored by the glass you chose. Existing anvil crafts work for this too.",
           "The column is visual only: no damage, explosions or broken blocks. Invalid crafts and hits rejected by the normal hammer cooldown do not trigger it. No new crafting payoffs are added with this structure."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_storage",
+    "title": "Rune of Storage",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_storage",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 1",
+    "sections": [
+      {
+        "title": "Tier 1 effect",
+        "paragraphs": [
+          "Adds 1,000 stored XP capacity per rune. XP is kept safely if capacity decreases."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; lapis block at center. Inner ring: four gold ingot.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 1 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_extraction",
+    "title": "Rune of Extraction",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_extraction",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 1",
+    "sections": [
+      {
+        "title": "Tier 1 effect",
+        "paragraphs": [
+          "Exports stored XP to pipes. Stand on it to deposit your carried XP; crouch to transfer faster. Despite its name, standing deposits into the bank."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; dispenser at center. Inner ring: four redstone.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 1 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_input",
+    "title": "Rune of Input",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_input",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 1",
+    "sections": [
+      {
+        "title": "Tier 1 effect",
+        "paragraphs": [
+          "Imports liquid XP from pipes. Stand on it to withdraw stored XP; crouch to transfer faster."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; hopper at center. Inner ring: four redstone.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 1 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_swift_forging",
+    "title": "Rune of Swift Forging",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_swift_forging",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 2",
+    "sections": [
+      {
+        "title": "Tier 2 effect",
+        "paragraphs": [
+          "Removes one required hammer swing per rune, down to one. Every rune adds 5% XP per swing, including surplus runes after the one-swing floor."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; clock at center. Inner ring: four sugar. Outer ring: four quartz.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 2 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_tempering",
+    "title": "Rune of Tempering",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_tempering",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 2",
+    "sections": [
+      {
+        "title": "Tier 2 effect",
+        "paragraphs": [
+          "Reduces hammer wear by one percentage point per rune. At 100 runes, forging causes no hammer wear."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; iron block at center. Inner ring: four ancient ingot. Outer ring: four obsidian.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 2 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_conduit",
+    "title": "Rune of Conduit",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_conduit",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 2",
+    "sections": [
+      {
+        "title": "Tier 2 effect",
+        "paragraphs": [
+          "Raises the shared XP import and export rate. Both directions have separate per-anvil budgets, shared across all ports."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; copper block at center. Outer ring: four redstone.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 2 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_restoration",
+    "title": "Rune of Restoration",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_restoration",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 3",
+    "sections": [
+      {
+        "title": "Tier 3 effect",
+        "paragraphs": [
+          "Place any damaged item with durability alone in the center. Stored XP repairs it automatically, preserving its enchantments and other properties. More runes repair faster."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; anvil at center. Inner ring: four iron block. Outer ring: four ancient ingot.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_efficiency",
+    "title": "Rune of Efficiency",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_efficiency",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 3",
+    "sections": [
+      {
+        "title": "Tier 3 effect",
+        "paragraphs": [
+          "Reduces XP cost by one percentage point per rune for the first 50 runes; then each additional rune still helps with diminishing returns. No rune-count cap."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; enchanting table at center. Inner ring: four gold ingot. Outer ring: four ancient ingot.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_expansion",
+    "title": "Rune of Expansion",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_expansion",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 3",
+    "sections": [
+      {
+        "title": "Tier 3 effect",
+        "paragraphs": [
+          "Adds a physical ingredient socket on top of each Expansion rune. Right-click to place or retrieve its ingredient. Recipes can declare extra_ingredients beyond the thirteen anvil marks."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; crafting table at center. Inner ring: four piston. Outer ring: four ancient ingot.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_transmutation",
+    "title": "Rune of Transmutation",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_transmutation",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 3",
+    "sections": [
+      {
+        "title": "Tier 3 effect",
+        "paragraphs": [
+          "Enables Overworld conversion recipes. Starter conversion: Netherrack at the center becomes Cobblestone."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; emerald block at center. Inner ring: four amethyst shard. Outer ring: four ancient ingot.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_nether_transmutation",
+    "title": "Rune of Nether Transmutation",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_nether_transmutation",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 3",
+    "sections": [
+      {
+        "title": "Tier 3 effect",
+        "paragraphs": [
+          "Enables Nether conversion recipes. Starter conversion: Cobblestone at the center becomes Netherrack."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; gilded blackstone at center. Inner ring: four blaze rod. Outer ring: four wither rose.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_end_transmutation",
+    "title": "Rune of End Transmutation",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_end_transmutation",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 3",
+    "sections": [
+      {
+        "title": "Tier 3 effect",
+        "paragraphs": [
+          "Enables End conversion recipes. Starter conversion: Cobblestone at the center becomes End Stone."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; dragon breath at center. Inner ring: four ender pearl. Outer ring: four shulker shell.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_batching",
+    "title": "Rune of Batching",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_batching",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 4",
+    "sections": [
+      {
+        "title": "Tier 4 effect",
+        "paragraphs": [
+          "Crouch-right-click any face holding a desired recipe result to set its template; repeat to cycle recipes with that output. Empty-handed crouch-click clears the template. Other clicks and pipes supply matching ingredients. It also pulls from a chest above. Multiple runes share a fair queue and never hammer automatically."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; hopper at center. Inner ring: four chest. Outer ring: four comparator.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 4 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_invocation",
+    "title": "Rune of Invocation",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_invocation",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 4",
+    "sections": [
+      {
+        "title": "Tier 4 effect",
+        "paragraphs": [
+          "Enables crafting Forgemaster Seals. Use a seal on the anvil with clear space seven blocks in front to summon the Forgemaster. Its cores craft the Sky Keystones needed for Tier 5."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; nether star at center. Inner ring: four ancient ingot. Outer ring: four blaze rod.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 4 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_collection",
+    "title": "Rune of Collection",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_collection",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 4",
+    "sections": [
+      {
+        "title": "Tier 4 effect",
+        "paragraphs": [
+          "Moves finished output into a chest above the rune, or its own buffer for item pipes. Full destinations safely pause collection. Empty-hand right-click retrieves a buffered stack."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; dropper at center. Inner ring: four hopper. Outer ring: four chest.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 4 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_deliberation",
+    "title": "Rune of Deliberation",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_deliberation",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 4",
+    "sections": [
+      {
+        "title": "Tier 4 effect",
+        "paragraphs": [
+          "Adds one swing per rune while reducing the total XP for the entire craft. It trades more manual work for a lower total cost."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; clock at center. Inner ring: four soul sand. Outer ring: four ancient ingot.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 4 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_specialization",
+    "title": "Rune of Specialization",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_specialization",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 5",
+    "sections": [
+      {
+        "title": "Tier 5 effect",
+        "paragraphs": [
+          "Crouch-right-click holding a recipe result to specialize this rune in that recipe category. Matching crafts cost less XP; other categories cost more. Empty-handed crouch-click clears it."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; smithing table at center. Inner ring: four diamond. Outer ring: four ancient ingot.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 5 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_familiarity",
+    "title": "Rune of Familiarity",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_familiarity",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 5",
+    "sections": [
+      {
+        "title": "Tier 5 effect",
+        "paragraphs": [
+          "Consecutive crafts of the same recipe build an XP discount. Changing recipe resets the streak."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; writable book at center. Inner ring: four diamond block. Outer ring: four ancient metal block.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 5 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_alternation",
+    "title": "Rune of Alternation",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_alternation",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 5",
+    "sections": [
+      {
+        "title": "Tier 5 effect",
+        "paragraphs": [
+          "Consecutive changes of recipe build an XP discount. Repeating the same recipe resets the streak."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; comparator at center. Inner ring: four emerald block. Outer ring: four netherite ingot.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 5 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_master_craftsmanship",
+    "title": "Rune of Master Craftsmanship",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_master_craftsmanship",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 6",
+    "sections": [
+      {
+        "title": "Tier 6 effect",
+        "paragraphs": [
+          "Each rune adds one percentage point of extra-batch chance on eligible recipes. Above 100%, whole extra batches are guaranteed and the remainder is rolled. Recycling and currency conversions do not receive this bonus by default."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; nether star at center. Inner ring: four ancient crystal block. Outer ring: four netherite ingot.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 6 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_grand_pattern",
+    "title": "Rune of Grand Pattern",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_grand_pattern",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 6",
+    "sections": [
+      {
+        "title": "Tier 6 effect",
+        "paragraphs": [
+          "Place directly under the Tier 6 anvil center. Crouch-click with an empty hand to pack the actual workshop, its inventories, XP, work, fluids and four End Crystals. Place the packed pattern in clear space to move it. External chests and decorative floors are excluded."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; ender chest at center. Inner ring: four nether star. Outer ring: four ancient crystal block.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 6 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "forge_rune_mutation",
+    "title": "Rune of Mutation",
+    "category": "STATIONS",
+    "group": "ALL",
+    "icon": "examplemod:rune_of_mutation",
+    "links": [
+      "ancient_anvil"
+    ],
+    "keywords": "forge anvil rune xp tier 6",
+    "sections": [
+      {
+        "title": "Tier 6 effect",
+        "paragraphs": [
+          "Supported transmutation recipes can produce a rarer replacement output. More runes improve the chance with diminishing returns; this replaces the ordinary result rather than creating a second copy."
+        ]
+      },
+      {
+        "title": "Craft at the anvil",
+        "paragraphs": [
+          "Four blank Runestone corners; dragon breath at center. Inner ring: four end crystal. Outer ring: four energized ancient crystal block.",
+          "Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional."
+        ]
+      },
+      {
+        "title": "Placement",
+        "paragraphs": [
+          "Replace any full Runestone position in the completed structure. This rune needs Tier 6 or higher to activate. Ordinary full Runestone remains valid in every replaceable position."
         ]
       }
     ]

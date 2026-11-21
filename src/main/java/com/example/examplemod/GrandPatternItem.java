@@ -49,13 +49,17 @@ public final class GrandPatternItem extends Item {
         if(!(c.getLevel() instanceof ServerLevel level)||!(c.getPlayer() instanceof ServerPlayer player))return InteractionResult.SUCCESS;
         var root=c.getItemInHand().getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();if(root.getIntOr("Version",0)!=1)return InteractionResult.FAIL;
         var origin=c.getClickedPos().relative(c.getClickedFace());var cells=root.getListOrEmpty("Cells");if(cells.isEmpty()||cells.size()>4096)return InteractionResult.FAIL;
-        var offsets=new HashSet<BlockPos>();
+        if(!player.getAbilities().mayBuild)return InteractionResult.FAIL;
+        var offsets=new HashSet<BlockPos>();var snapshots=new ArrayList<net.neoforged.neoforge.common.util.BlockSnapshot>();
         for(int i=0;i<cells.size();i++){var cell=cells.getCompoundOrEmpty(i);var delta=new BlockPos(cell.getIntOr("X",0),cell.getIntOr("Y",0),cell.getIntOr("Z",0));var at=origin.offset(delta);
             if(!offsets.add(delta)||Math.abs(delta.getX())>32||Math.abs(delta.getZ())>32||Math.abs(delta.getY())>32||!level.hasChunkAt(at)||!level.isInWorldBounds(at)||!level.getWorldBorder().isWithinBounds(at)||!level.mayInteract(player,at)||level.getBlockEntity(at)!=null||!level.getBlockState(at).canBeReplaced()){
                 AnvilWork.message(player,"Restore needs clear, loaded, buildable space for the whole workshop");return InteractionResult.FAIL;}
         }
+        for(var delta:offsets)snapshots.add(net.neoforged.neoforge.common.util.BlockSnapshot.create(level.dimension(),level,origin.offset(delta)));
         // Block data is already validated by the server when creating this unstackable item.
         for(int i=0;i<cells.size();i++){var cell=cells.getCompoundOrEmpty(i);var at=origin.offset(cell.getIntOr("X",0),cell.getIntOr("Y",0),cell.getIntOr("Z",0));var state=NbtUtils.readBlockState(level.registryAccess().lookupOrThrow(Registries.BLOCK),cell.getCompoundOrEmpty("State"));level.setBlock(at,state,2);}
+        var placeEvent=new BlockEvent.EntityMultiPlaceEvent(snapshots,level.getBlockState(c.getClickedPos()),player);
+        if(NeoForge.EVENT_BUS.post(placeEvent).isCanceled()){for(var snapshot:snapshots)snapshot.restore(true,false);AnvilWork.message(player,"Restoration was blocked by world protection");return InteractionResult.FAIL;}
         for(int i=0;i<cells.size();i++){var cell=cells.getCompoundOrEmpty(i);if(!cell.contains("Entity"))continue;var at=origin.offset(cell.getIntOr("X",0),cell.getIntOr("Y",0),cell.getIntOr("Z",0));var tag=cell.getCompoundOrEmpty("Entity").copy();tag.putInt("x",at.getX());tag.putInt("y",at.getY());tag.putInt("z",at.getZ());var entity=BlockEntity.loadStatic(at,level.getBlockState(at),tag,level.registryAccess());if(entity!=null)level.setBlockEntity(entity);}
         var crystals=root.getListOrEmpty("Crystals");for(int i=0;i<crystals.size();i++){var t=crystals.getCompoundOrEmpty(i);var entity=new EndCrystal(EntityTypes.END_CRYSTAL,level);entity.snapTo(origin.getX()+t.getDoubleOr("X",0),origin.getY()+t.getDoubleOr("Y",0),origin.getZ()+t.getDoubleOr("Z",0),0,0);entity.setShowBottom(t.getBooleanOr("Bottom",true));level.addFreshEntity(entity);}
         c.getItemInHand().shrink(1); // Even Creative must move, not copy, stored XP/items/crystals.
