@@ -411,20 +411,33 @@ The user accepted the revised Tier 5 recipe using all thirteen positions:
 
 Output: **1 Rune of Alternation**. This replaces the rejected Observer/Diamond Block/Ancient Metal Block draft; Familiarity's accepted harder recipe stays distinct. All functional rune ingredient layouts through Tier 5 are now reviewed. XP tuning is deferred and work count is unreviewed.
 
-## Recipe review 20 — Rune of Master Craftsmanship: proposed next
+## Recipe review 20 — Rune of Master Craftsmanship: agreed
+
+The user accepted the Tier 6 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Nether Star |
+| Four inner cardinal positions | 1 regular Block of Ancient Crystal each — 4 total, not energized |
+| Four outer cardinal positions | 1 Netherite Ingot each — 4 total, not blocks |
+
+Output: **1 Rune of Master Craftsmanship**. Preserve the existing crystal-block alloying recipe and deferred Ancient Crystal acquisition work. Exact bonus chance/above-100% behavior and recipe eligibility remain open. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 21 — Rune of Grand Pattern: proposed next
 
 Propose a Tier 6 recipe using all thirteen positions:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
-| Center | 1 Nether Star |
-| Four inner cardinal positions | 1 Block of Ancient Crystal each — 4 total, the regular non-energized blocks |
-| Four outer cardinal positions | 1 Netherite Ingot each — 4 total, not blocks |
+| Center | 1 Ender Chest (`minecraft:ender_chest`) |
+| Four inner cardinal positions | 1 Nether Star each — 4 total |
+| Four outer cardinal positions | 1 regular Block of Ancient Crystal each — 4 total, not energized |
 
-Proposed output: **1 Rune of Master Craftsmanship**. Ingredients/layout await review. With the existing crystal-block recipe, four regular crystal blocks represent 48 Ancient Crystals and four Diamond Blocks; this proposal does not change that alloying recipe.
+Proposed output: **1 Rune of Grand Pattern**. Ingredients/layout await review. The Ender Chest represents relocation and storage; the stars/crystal blocks represent the scale of the selected whole-structure packing role. The user's placement under the anvil center and packing/restoration behavior remain unchanged. This is the empty rune's crafting recipe, not a new recurring relocation fee.
 
-Ancient Crystal acquisition is currently a deferred archaeology/survival task; this planning recipe does not invent a new source or require the energized variant. Master Craftsmanship's selected output-bonus effect remains, with numerical chance/above-100% behavior and eligibility still open. XP tuning is deferred and work count is unreviewed. Grand Pattern follows if accepted.
+Crystal acquisition remains deferred; this proposal does not invent an acquisition route or change block recipes. XP tuning is deferred and work count is unreviewed. Mutation follows if accepted.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -451,9 +464,9 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Specialization | **Agreed:** 4 blank Runestone corners + 1 Smithing Table center + 4 Diamonds inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Familiarity | **Agreed, harder recipe:** 4 blank Runestone corners + 1 Book and Quill center + 4 Diamond Blocks inner ring + 4 Blocks of Ancient Metal outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Alternation | **Agreed, distinct recipe:** 4 blank Runestone corners + 1 Redstone Comparator center + 4 Emerald Blocks inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Master Craftsmanship | **Proposed next:** 4 blank Runestone corners + 1 Nether Star center + 4 regular Blocks of Ancient Crystal inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Master Craftsmanship | **Agreed:** 4 blank Runestone corners + 1 Nether Star center + 4 regular Blocks of Ancient Crystal inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Mutation | Deferred; select supported alternative-output recipes and chance behavior before fixing rune ingredients | To decide |
-| Grand Pattern | Map + ender pearl + 2 ancient ingots; revisit cost for actual relocation power | 24 × 25; revisit |
+| Grand Pattern | **Proposed next:** 4 blank Runestone corners + 1 Ender Chest center + 4 Nether Stars inner ring + 4 regular Blocks of Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Sky Keystone | Add a Forgemaster material to the recipe. Existing 4 Runestone + 4 ancient ingots + glowstone is a reference; whether the drop replaces glowstone or is additional is open. | Existing 8 × 1 → 4 is a reference; new costs/output/drop quantities remain open |
 
 Master Craftsmanship must be recipe-eligible. Exclude currency conversion, refund/recycling, reusable-catalyst and reversible conversion recipes by default; review artifact melting, Cruncher recovery and scrap conversions for output-profit loops. Relocation and XP transfers are never multiplied crafts.
