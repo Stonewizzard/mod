@@ -23,7 +23,7 @@ public final class ForgeRuneIntegrationTests {
         Test(TestData<Holder<TestEnvironmentDefinition<?>>> d){super(d);}
         public MapCodec<? extends GameTestInstance> codec(){return MapCodec.unit(this);}
         protected MutableComponent typeDescription(){return Component.literal("Full forge rune crafts, modifiers, automation, repair and relocation");}
-        protected void run(GameTestHelper h){
+        public void run(GameTestHelper h){
             var l=h.getLevel();var core=h.absolutePos(new BlockPos(20,8,20));AnvilTierSixTests.prepare(l,core,Direction.NORTH,AnvilTierSix.stainedGlass("blue"),true);
             var be=(AncientAnvilBlockEntity)l.getBlockEntity(core);var player=h.makeMockServerPlayerInLevel();player.setGameMode(GameType.SURVIVAL);player.snapTo(core.getX()+7,core.getY()+2,core.getZ()+7);
             check(h,be.getBlockState().getValue(AncientAnvilBlock.TIER)==6,"Fixture reaches Tier 6");
