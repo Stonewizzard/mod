@@ -41,7 +41,7 @@ public final class ClientVisualQa {
                 if(id!=commandId){
                     commandId=id;
                     switch(command.get("action").getAsString()){
-                        case "rune_gallery","rune_detail","rune_workshop","rune_overview"->{var action=command.get("action").getAsString();var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();server.execute(()->ForgeRuneVisualQa.command(server.getPlayerList().getPlayer(uuid),action));}
+                        case "rune_gallery","rune_detail","rune_workshop","rune_overview","rune_batch_fixture"->{var action=command.get("action").getAsString();var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();server.execute(()->ForgeRuneVisualQa.command(server.getPlayerList().getPlayer(uuid),action));}
                         case "open_book"->{navigation=new FieldGuideNavigation();minecraft.gui.setScreen(new FieldGuideScreen(navigation,command.has("design")?GuideDesign.valueOf(command.get("design").getAsString()):GuideDesign.MANUAL));}
                         case "seed_books"->{
                             var server=minecraft.getSingleplayerServer();var uuid=minecraft.player.getUUID();
@@ -387,6 +387,7 @@ public final class ClientVisualQa {
         if(System.currentTimeMillis()-lastWrite<150)return;lastWrite=System.currentTimeMillis();
         try{
             Files.createDirectories(DIRECTORY);var state=new JsonObject();var window=minecraft.getWindow();
+            if(ForgeRuneVisualQa.batchPos!=null&&minecraft.level!=null&&minecraft.level.getBlockEntity(ForgeRuneVisualQa.batchPos) instanceof com.example.examplemod.ForgeRuneBlockEntity rune){state.addProperty("runeTemplate",rune.recipeId);int n=0;for(int i=0;i<rune.getContainerSize();i++)n+=rune.getItem(i).getCount();state.addProperty("runeBuffer",n);}
             state.addProperty("sequence",++sequence);state.addProperty("frames",frames);state.addProperty("commandId",commandId);
             state.addProperty("screen",screen==null?"InGame":screen.getClass().getSimpleName());state.addProperty("windowWidth",window.getScreenWidth());state.addProperty("windowHeight",window.getScreenHeight());
             state.addProperty("guiWidth",window.getGuiScaledWidth());state.addProperty("guiHeight",window.getGuiScaledHeight());state.addProperty("guiScale",window.getGuiScale());state.addProperty("inWorld",minecraft.level!=null);

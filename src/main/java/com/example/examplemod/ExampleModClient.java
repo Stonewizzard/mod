@@ -57,6 +57,7 @@ public class ExampleModClient {
         event.registerBlockEntityRenderer(ExampleMod.ARCHAEOLOGY_TABLE_ENTITY.get(),com.example.examplemod.client.ArchaeologyTableRenderer::new);
         event.registerBlockEntityRenderer(ReconstructionContent.ENTITY.get(),com.example.examplemod.client.AncientForgeRenderer::new);
         event.registerBlockEntityRenderer(AncientAnvilContent.ENTITY.get(),com.example.examplemod.client.AncientAnvilRenderer::new);
+        event.registerBlockEntityRenderer(ForgeRunes.ENTITY.get(),com.example.examplemod.client.ForgeRuneRenderer::new);
         event.registerEntityRenderer(ExampleMod.CRUNCHER.get(), CruncherRenderer::new);
         event.registerEntityRenderer(ForgeRunes.FORGEMASTER.get(),net.minecraft.client.renderer.entity.IronGolemRenderer::new);
         event.registerEntityRenderer(ExampleMod.SKULK_PARASITE.get(), SkulkParasiteRenderer::new);

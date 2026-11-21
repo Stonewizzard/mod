@@ -145,6 +145,9 @@ def run():
         command('rune_detail');time.sleep(2);process('xdotool','key','F1');capture('forge-runes-detail');process('xdotool','key','F1')
         command('rune_workshop');time.sleep(3);process('xdotool','key','F1');capture('forge-runes-workshop');process('xdotool','key','F1')
         command('rune_overview');time.sleep(3);process('xdotool','key','F1');capture('forge-runes-overview');process('xdotool','key','F1')
+        command('rune_batch_fixture');time.sleep(2);process('xdotool','key','1');process('xdotool','keydown','Shift_L');process('xdotool','click','3');process('xdotool','keyup','Shift_L');expect(runeTemplate='examplemod:runestone')
+        process('xdotool','key','2');process('xdotool','click','3');expect(runeBuffer=4);capture('forge-runes-native-batching-template')
+        print('FORGE_RUNES_NATIVE_PASS: real world gallery/workshop and native shift-right-click Batching template plus ingredient insertion',flush=True)
         (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'forge-runes'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='anvil-xp':
         process('xdotool','key','Escape');expect(screen='InGame');command('forge_fixture');command('anvil_fixture');process('xdotool','key','2');time.sleep(.5);process('xdotool','click','3');expect(anvilPlaced=True,anvilTier=0,anvilLarge=True)

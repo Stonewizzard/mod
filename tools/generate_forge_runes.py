@@ -49,7 +49,7 @@ for name,tier,center,inner,outer,glyph in rows:
    for slot in slots:ingredients[slot]={'item':item if ':' in item else 'minecraft:'+item}
  write(D/f'anvil_recipes/{id}.json',{'anvil_tier':tier,'hammer_tier':1,'work':16+4*tier,'xp_per_hit':10*tier,'category':'runes','allow_bonus':True,'ingredients':ingredients,'result':{'id':'examplemod:'+id,'count':1}})
  lang['block.examplemod.'+id]='Rune of '+' '.join(w.title() for w in name.split('_'))
-for path in [D/'tags/block/ancient_anvil_foundation.json',D/'tags/item/ancient_anvil_foundation.json',D/'tags/block/mineable/pickaxe.json']:
+for path in [D/'tags/block/ancient_anvil_foundation.json',D/'tags/block/ancient_anvil_runes.json',D/'tags/item/ancient_anvil_foundation.json',D/'tags/block/mineable/pickaxe.json']:
  if path.exists():
   obj=json.loads(path.read_text());obj['values']=list(dict.fromkeys(obj['values']+ids));write(path,obj)
 # Vanilla pickaxe mining tag.
