@@ -372,18 +372,31 @@ The user accepted the Tier 4 recipe using all thirteen positions:
 
 Output: **1 Rune of Deliberation**. Its selected effect adds swings in exchange for lower **total** XP per craft. All four Tier 4 rune ingredient layouts are now reviewed. XP tuning is deferred and work count is unreviewed.
 
-## Recipe review 17 — Rune of Specialization: proposed next
+## Recipe review 17 — Rune of Specialization: agreed
+
+The user accepted the Tier 5 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Smithing Table |
+| Four inner cardinal positions | 1 Diamond each — 4 total |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Output: **1 Rune of Specialization**. The selected category-based XP tradeoff remains; this ingredient does not restrict its effect to equipment recipes. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 18 — Rune of Familiarity: proposed next
 
 Propose a Tier 5 recipe using all thirteen positions:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
-| Center | 1 Smithing Table (`minecraft:smithing_table`) |
-| Four inner cardinal positions | 1 Diamond each — 4 total (`minecraft:diamond`) |
+| Center | 1 Book and Quill (`minecraft:writable_book`) |
+| Four inner cardinal positions | 1 Lapis Block each — 4 total (`minecraft:lapis_block`, not individual lapis lazuli) |
 | Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
 
-Proposed output: **1 Rune of Specialization**. Ingredients/layout await review. Its selected effect remains a preferred recipe category's XP discount plus an outside-category XP penalty; the Smithing Table ingredient does not restrict its function to equipment recipes. Category selection, quantitative scaling and reconfiguration are separate design questions. XP tuning is deferred and work count is unreviewed. Familiarity follows if accepted.
+Proposed output: **1 Rune of Familiarity**. Ingredients/layout await review. This is a Book and Quill, not a Written Book or Knowledge Book, and no custom written content is required. The selected effect remains consecutive-same-recipe XP savings that reset on switching; the book represents learning through repetition, not a new research gate. XP tuning is deferred and work count is unreviewed. Alternation follows if accepted.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -407,8 +420,9 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Invocation | **Agreed:** 4 blank Runestone corners + 1 Nether Star center + 4 Ancient Ingots inner ring + 4 Blaze Rods outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Collection | **Agreed:** 4 blank Runestone corners + 1 Dropper center + 4 Hoppers inner ring + 4 Chests outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Deliberation | **Agreed:** 4 blank Runestone corners + 1 Clock center + 4 Soul Sand inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Specialization | **Proposed next:** 4 blank Runestone corners + 1 Smithing Table center + 4 Diamonds inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Familiarity, Alternation (Tier 5) | Choose recipe ingredients after operating details and numerical scaling | To decide |
+| Specialization | **Agreed:** 4 blank Runestone corners + 1 Smithing Table center + 4 Diamonds inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Familiarity | **Proposed next:** 4 blank Runestone corners + 1 Book and Quill center + 4 Lapis Blocks inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Alternation (Tier 5) | Choose recipe ingredients after operating details and numerical scaling | To decide |
 | Master Craftsmanship | Ancient crystal + diamond + 2 ancient ingots | 24 × 25 |
 | Mutation | Deferred; select supported alternative-output recipes and chance behavior before fixing rune ingredients | To decide |
 | Grand Pattern | Map + ender pearl + 2 ancient ingots; revisit cost for actual relocation power | 24 × 25; revisit |
