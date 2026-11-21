@@ -424,20 +424,33 @@ The user accepted the Tier 6 recipe using all thirteen positions:
 
 Output: **1 Rune of Master Craftsmanship**. Preserve the existing crystal-block alloying recipe and deferred Ancient Crystal acquisition work. Exact bonus chance/above-100% behavior and recipe eligibility remain open. XP tuning is deferred and work count is unreviewed.
 
-## Recipe review 21 — Rune of Grand Pattern: proposed next
+## Recipe review 21 — Rune of Grand Pattern: agreed
+
+The user accepted the Tier 6 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Ender Chest |
+| Four inner cardinal positions | 1 Nether Star each — 4 total |
+| Four outer cardinal positions | 1 regular Block of Ancient Crystal each — 4 total, not energized |
+
+Output: **1 Rune of Grand Pattern**. This crafts the empty packing rune; it is not a recurring relocation fee. Keep the selected center-foundation placement and whole-structure packing/restoration behavior. Crystal acquisition, XP tuning and work counts remain deferred/open as recorded.
+
+## Recipe review 22 — Rune of Mutation: proposed next
 
 Propose a Tier 6 recipe using all thirteen positions:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
-| Center | 1 Ender Chest (`minecraft:ender_chest`) |
-| Four inner cardinal positions | 1 Nether Star each — 4 total |
-| Four outer cardinal positions | 1 regular Block of Ancient Crystal each — 4 total, not energized |
+| Center | 1 Dragon's Breath (`minecraft:dragon_breath`) |
+| Four inner cardinal positions | 1 End Crystal item each — 4 total (`minecraft:end_crystal`) |
+| Four outer cardinal positions | 1 **Block of Energized Ancient Crystal** each — 4 total, the energized variant |
 
-Proposed output: **1 Rune of Grand Pattern**. Ingredients/layout await review. The Ender Chest represents relocation and storage; the stars/crystal blocks represent the scale of the selected whole-structure packing role. The user's placement under the anvil center and packing/restoration behavior remain unchanged. This is the empty rune's crafting recipe, not a new recurring relocation fee.
+Proposed output: **1 Rune of Mutation**. Ingredients/layout await review. End Crystals here are recipe inventory items, not removal or sacrifice of the structure's four placed End Crystal entities. The outer ring uses energized crystal **blocks**, not regular Ancient Crystal Blocks or loose crystal items.
 
-Crystal acquisition remains deferred; this proposal does not invent an acquisition route or change block recipes. XP tuning is deferred and work count is unreviewed. Mutation follows if accepted.
+This is the final recipe in the twenty-two functional-rune review order. Mutation's supported alternative-output recipes, probabilities/scaling and precise costs remain deferred. Existing crystal acquisition/energizing recipes are still future work; this proposal does not create an acquisition route. XP tuning is deferred and work count is unreviewed. Sky Keystone and standalone Vigilance are outside this twenty-two-rune count and have not received their separate final recipe review.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -465,8 +478,8 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Familiarity | **Agreed, harder recipe:** 4 blank Runestone corners + 1 Book and Quill center + 4 Diamond Blocks inner ring + 4 Blocks of Ancient Metal outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Alternation | **Agreed, distinct recipe:** 4 blank Runestone corners + 1 Redstone Comparator center + 4 Emerald Blocks inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Master Craftsmanship | **Agreed:** 4 blank Runestone corners + 1 Nether Star center + 4 regular Blocks of Ancient Crystal inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Mutation | Deferred; select supported alternative-output recipes and chance behavior before fixing rune ingredients | To decide |
-| Grand Pattern | **Proposed next:** 4 blank Runestone corners + 1 Ender Chest center + 4 Nether Stars inner ring + 4 regular Blocks of Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Mutation | **Proposed next:** 4 blank Runestone corners + 1 Dragon's Breath center + 4 End Crystal items inner ring + 4 Blocks of Energized Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Grand Pattern | **Agreed:** 4 blank Runestone corners + 1 Ender Chest center + 4 Nether Stars inner ring + 4 regular Blocks of Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Sky Keystone | Add a Forgemaster material to the recipe. Existing 4 Runestone + 4 ancient ingots + glowstone is a reference; whether the drop replaces glowstone or is additional is open. | Existing 8 × 1 → 4 is a reference; new costs/output/drop quantities remain open |
 
 Master Craftsmanship must be recipe-eligible. Exclude currency conversion, refund/recycling, reusable-catalyst and reversible conversion recipes by default; review artifact melting, Cruncher recovery and scrap conversions for output-profit loops. Relocation and XP transfers are never multiplied crafts.
@@ -593,7 +606,7 @@ Keep its details open:
 - Rune-count scaling, chance limits and benefits of further investment, respecting the no-arbitrary-first-N-cap direction.
 - Any XP premium, catalyst or additional material requirement.
 - Interaction/order with Master Craftsmanship and other job-pricing/output effects.
-- Mutation rune ingredients, crafting work and XP/hit.
+- Mutation rune ingredients are now proposed in recipe review 22 below; work and XP/hit remain unreviewed/deferred.
 
 Use authored alternative-output data if implemented; do not automatically infer value from item names or allow arbitrary modded outputs. Recipes without a declared mutation outcome keep their ordinary result. These are implementation principles for later design, not approved weights or conversion ratios. The user has explicitly deferred a detailed revisit.
 
