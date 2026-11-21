@@ -106,5 +106,21 @@ public final class ForgeRunes {
     return counts;
   }
 
+  public static void interact(
+      net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+    if (!event.getEntity().isShiftKeyDown()
+        || event.getHand() != net.minecraft.world.InteractionHand.MAIN_HAND) return;
+    var state = event.getLevel().getBlockState(event.getPos());
+    if (!(state.getBlock() instanceof ForgeRuneBlock block)) return;
+    if (block.kind != ForgeRune.BATCHING && block.kind != ForgeRune.SPECIALIZATION) return;
+    var held = event.getItemStack();
+    // Vanilla skips block interaction when sneaking with a held item. Templates must still reach
+    // the rune.
+    // Unrecognized BlockItems retain vanilla sneak-placement, so chests can be placed on top.
+    if (held.isEmpty()
+        || AnvilRecipes.all().stream().anyMatch(r -> r.resultItem() == held.getItem()))
+      event.setUseBlock(net.minecraft.util.TriState.TRUE);
+  }
+
   private ForgeRunes() {}
 }

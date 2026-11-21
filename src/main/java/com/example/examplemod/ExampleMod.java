@@ -189,6 +189,7 @@ public class ExampleMod {
         ENTITIES.register(modEventBus);
         SkulkStatus.register(modEventBus);
         PickaxeEvents.register();
+        NeoForge.EVENT_BUS.addListener(ForgeRunes::interact);
         modEventBus.addListener(ExcavationPayload::register);
         modEventBus.addListener(ComponentStationPayload::register);
         modEventBus.addListener(AnvilStrikePayload::register);

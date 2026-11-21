@@ -99,16 +99,17 @@ public final class ForgeRuneAutomation {
 
     public long getAmountAsLong(int i) {
       var be = rune.core();
-      return be == null ? 0 : be.storedExperience();
+      return be == null || i != 0 ? 0 : be.storedExperience();
     }
 
     public long getCapacityAsLong(int i, FluidResource r) {
       var be = rune.core();
-      return be == null ? 0 : be.experienceCapacity();
+      return be == null || i != 0 || (!r.isEmpty() && !isValid(i, r)) ? 0 : be.experienceCapacity();
     }
 
     public boolean isValid(int i, FluidResource r) {
-      return !r.isEmpty()
+      return i == 0
+          && !r.isEmpty()
           && r.getFluid().defaultFluidState().is(XP_TAG)
           && r.isComponentsPatchEmpty();
     }
@@ -121,7 +122,10 @@ public final class ForgeRuneAutomation {
       if (amount == 0) return 0;
       journal.updateSnapshots(tx);
       be.transferBudget(true, amount, false);
-      return be.insertExperience(amount, false);
+      var state = be.transferSnapshot();
+      state[0] += amount;
+      be.restoreTransfer(state);
+      return amount;
     }
 
     public int extract(int i, FluidResource r, int n, TransactionContext tx) {
@@ -135,7 +139,10 @@ public final class ForgeRuneAutomation {
       if (amount == 0) return 0;
       journal.updateSnapshots(tx);
       be.transferBudget(false, amount, false);
-      return be.extractExperience(amount, false);
+      var state = be.transferSnapshot();
+      state[0] -= amount;
+      be.restoreTransfer(state);
+      return amount;
     }
   }
 
