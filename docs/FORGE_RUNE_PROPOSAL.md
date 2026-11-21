@@ -294,18 +294,18 @@ The user accepted the Tier 3 recipe using all thirteen positions:
 
 Output: **1 Rune of Transmutation**, the Overworld-targeting base variant. This is the rune's crafting recipe; individual item-conversion recipes remain to design. XP tuning is deferred and work count is unreviewed.
 
-## Recipe review 11 — Rune of Nether Transmutation: proposed next
+## Recipe review 11 — Rune of Nether Transmutation: agreed, corrected materials
 
-Propose a Tier 3 recipe using all thirteen positions:
+The user replaced Blaze Powder with **Blaze Rods**, the Magma Block with **Gilded Blackstone**, and Ancient Ingots with **Wither Roses**. The selected Tier 3 recipe uses all thirteen positions:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
-| Center | 1 Magma Block (`minecraft:magma_block`) |
-| Four inner cardinal positions | 1 Blaze Powder each — 4 total (`minecraft:blaze_powder`) |
-| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+| Center | 1 **Gilded Blackstone** (`minecraft:gilded_blackstone`) |
+| Four inner cardinal positions | 1 **Blaze Rod** each — 4 total (`minecraft:blaze_rod`) |
+| Four outer cardinal positions | 1 **Wither Rose** each — 4 total (`minecraft:wither_rose`) |
 
-Proposed output: **1 Rune of Nether Transmutation**. The ingredients/layout await user review; its Tier 3 placement and Nether-targeting item-conversion effect are already selected. Individual conversion recipes/costs are separate future work. XP tuning is deferred and work count is unreviewed. End Transmutation follows if accepted.
+Output: **1 Rune of Nether Transmutation**. Do not retain the old Magma Block, Blaze Powder or Ancient Ingot ingredients in this recipe. These are the rune's crafting ingredients; exact Nether-targeting item-conversion recipes remain future work. All three Transmutation variants stay Tier 3. XP tuning is deferred and work count is unreviewed. End Transmutation is next in recipe-review order.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -321,7 +321,7 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Conduit | **Revised by user:** 4 blank Runestone corners + 1 Copper Block center + 4 Redstone Dust outer ring; inner ring empty; output 1 | Work not reviewed; XP tuning deferred |
 | Expansion | **Agreed:** 4 blank Runestone corners + 1 Crafting Table center + 4 Pistons inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Transmutation (Overworld) | **Agreed:** 4 blank Runestone corners + 1 Emerald Block center + 4 Amethyst Shards inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Nether Transmutation | **Proposed next:** 4 blank Runestone corners + 1 Magma Block center + 4 Blaze Powder inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Nether Transmutation | **Agreed, corrected:** 4 blank Runestone corners + 1 Gilded Blackstone center + 4 Blaze Rods inner ring + 4 Wither Roses outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | End Transmutation | Rune recipe and conversion catalysts to decide; Tier 3 | To decide |
 | Restoration | **Agreed:** 4 blank Runestone corners + 1 Anvil center + 4 Iron Blocks inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Efficiency | **Agreed:** 4 blank Runestone corners + 1 Enchanting Table center + 4 Gold Ingots inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
