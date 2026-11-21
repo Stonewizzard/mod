@@ -221,38 +221,29 @@ Recommended balance target, not yet approved: one normal victory should provide 
 
 The other preceding Tier 4 candidates (Conjuration, Refinement, Adaptation, Liquefaction and Solidification) remain unselected. The user did not like most of that group; do not carry them into this new shortlist as approved features.
 
-## More Tier 4 candidates — not approved
+## Tier 4 reset — all six preceding suggestions rejected
 
-Tier 4 has **Batching and Invocation**. The following are new alternatives for the next slot; none is selected or implemented.
+The user rejected Compression, Amplification, Convergence, Challenge, Reconstruction and Safekeeping. Remove them from the active shortlist; they are not approved features or a backlog to implement. Tier 4 still has **Batching and Invocation**, with the selected Forgemaster-drop-to-Sky-Keystone progression unchanged.
 
-| Candidate | Concrete forge function |
+The repeated rejections call for testing a different direction before producing another broad stat/utility list. The user's earlier mod vision explicitly liked reviving extinct Sniffer-like creatures, archaeological discoveries and rebuilding ancient workshops. The following are **three unapproved directions** for the third Tier 4 slot, not additions to the selected roster:
+
+| Candidate | Proposed forge capability |
 |---|---|
-| Rune of Compression | Increase how many of an ingredient a physical socket can hold, allowing recipes with large quantities without requiring dozens of duplicate sockets. |
-| Rune of Amplification | Strengthen adjacent installed stat runes, rewarding deliberate placement and combinations. Amplification runes do not amplify one another recursively. |
-| Rune of Convergence | Unlock hybrid transmutation recipes combining Overworld, Nether and End components into new materials. |
-| Rune of Challenge | Make the forge-invoked Forgemaster harder in exchange for increased encounter rewards. |
-| Rune of Reconstruction | Rebuild missing multiblock pieces from a stocked supply of matching blocks, spending XP; more runes increase reconstruction throughput. |
-| Rune of Safekeeping | Preserve stored forge XP inside the recovered anvil item when dismantled or broken, rather than releasing the protected portion as loose XP orbs. |
+| Rune of Reanimation | Use excavated remains, recipe materials and XP to restore an ancient egg, enabling deliberate revival of an extinct creature. |
+| Rune of Engraving | Forge standalone functional runes with effects outside the multiblock, potentially including Vigilance, by inscribing prepared Runestone. |
+| Rune of Seals | Forge ancient keys/seals from excavation fragments to access sealed ruin chambers or caches. |
 
-### Candidate distinctions and unresolved details
+**Reanimation** connects directly to the user's earlier interest in ancient creatures with different roles. It is a forge ritual using real excavated remains, not an automatic breeding or mass-production loop. Creature choices, acquisition, materials and XP remain open; nothing here approves a specific new mob or recipe.
 
-**Compression** concerns ingredient **quantity**, while selected Expansion adds physical ingredient **positions/types**. Bulk recipes could require, for example, a large amount of one metal in a socket alongside other distinct ingredients. Exact quantity growth and how the socket stores/displays multiple ordinary stacks remain open; do not silently restrict every socket back to one physical item's normal stack size if that makes additional runes stop contributing. Recipe authoring and Batching must respect actual quantities and consume them exactly once.
+**Engraving** would make the forge a production route for general functional runes. Vigilance would still work independently wherever placed; this proposal concerns how such runes are crafted, not requiring them to stay attached to the forge. Whether they need this enabling rune or merely an ordinary forge recipe is an important open question. Do not treat Vigilance's crafting tier as already settled.
 
-**Amplification** boosts appropriate count-based effects such as Storage, Conduit, Restoration, Efficiency or Tempering. It does not grant higher actual forge tiers or multiply structural keystones, unlock-only runes or itself. Exact adjacency, strength and stacking need discussion; this introduces physical-layout choices beyond counting blocks. Do not add it as a disguised arbitrary count limit.
+**Seals** adds a concrete archaeology/world-access payoff. It requires actual sealed structures or caches and fragment acquisition design; it must not silently gate all existing loot or assume suitable structures exist in every modpack. This is a proposal for new content, not an approved change to current archaeology.
 
-**Convergence** would extend the selected dimensional transmutation system into authored hybrid-material recipes. It does not automatically allow every possible combination or turn the Ruined Ancient Forge's existing alloy recipes into anvil recipes. Specific useful products must be designed if selected; otherwise it risks being an empty recipe unlock.
-
-**Challenge** applies specifically to the Invocation encounter. Greater investment raises encounter difficulty and rewards together. Its relationship to Invocation rune count needs agreement; the normal first fight should remain a valid route to Sky Keystone material. The future Sculk-infected Forgemaster is still a separate progression concept, not silently folded into this rune.
-
-**Reconstruction** restores a remembered, previously completed layout using actual matching supplies. It does not provide free blocks or overwrite unrelated occupied positions. Because damage lowers the active tier, repair authorization would need remembered build intent independently of crafting-tier validation, similar to construction guidance. Exact supply inventory and treatment of data-bearing rune blocks need design. It is repair of an existing multiblock, not the rejected automatic hammering/order-planning system.
-
-**Safekeeping** protects the XP reservoir, not free duplicate anvils/items. Proposed scaling would increase the portion of stored XP protected; unprotected XP could retain the current orb behavior. Full recovery is a natural maximum for a finite wallet, not a first-N rune cap. At ordinary dismantling this is narrower than Grand Pattern: it does not move the whole structure, foundation, crystals or stored ingredient network. No protected XP may also be emitted as orbs.
-
-Compression is the most direct complement to Expansion. Challenge directly complements the newly selected boss progression. Amplification offers a build-layout/stat option, whereas Reconstruction and Safekeeping are utility choices. All are suggestions; rates, costs and recipes follow selection.
+Reanimation is the most direct fit to an earlier user-endorsed direction. Ask whether this sort of content/crafting capability is closer to the desired Tier 4 rune before fixing prices or filling other tiers.
 
 ## Decisions still open
 
-- Which further Tier 4 rune(s) to select alongside Batching and Invocation.
+- Which further Tier 4 rune(s) to select alongside Batching and Invocation. The preceding six suggestions are rejected; Reanimation, Engraving and Seals are new unapproved directions.
 - Forgemaster drop identity/quantity and the revised Sky Keystone recipe; whether one normal kill should cover all sixteen required keystones.
 - Invocation seal ingredients/XP, boss difficulty, repeat encounters and rewards.
 - Expansion socket placement, ingredient addressing and interaction with expanded recipes/Batching.
