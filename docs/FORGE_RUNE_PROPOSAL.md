@@ -305,7 +305,33 @@ The user replaced Blaze Powder with **Blaze Rods**, the Magma Block with **Gilde
 | Four inner cardinal positions | 1 **Blaze Rod** each — 4 total (`minecraft:blaze_rod`) |
 | Four outer cardinal positions | 1 **Wither Rose** each — 4 total (`minecraft:wither_rose`) |
 
-Output: **1 Rune of Nether Transmutation**. Do not retain the old Magma Block, Blaze Powder or Ancient Ingot ingredients in this recipe. These are the rune's crafting ingredients; exact Nether-targeting item-conversion recipes remain future work. All three Transmutation variants stay Tier 3. XP tuning is deferred and work count is unreviewed. End Transmutation is next in recipe-review order.
+Output: **1 Rune of Nether Transmutation**. Do not retain the old Magma Block, Blaze Powder or Ancient Ingot ingredients in this recipe. These are the rune's crafting ingredients; exact Nether-targeting item-conversion recipes remain future work. All three Transmutation variants stay Tier 3. XP tuning is deferred and work count is unreviewed. End Transmutation is reviewed below; Batching is the next proposal.
+
+## Recipe review 12 — Rune of End Transmutation: agreed
+
+The user accepted the Tier 3 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Dragon's Breath (`minecraft:dragon_breath`) |
+| Four inner cardinal positions | 1 Ender Pearl each — 4 total |
+| Four outer cardinal positions | 1 Shulker Shell each — 4 total |
+
+Output: **1 Rune of End Transmutation**. All three dimensional rune-crafting recipes are now reviewed; the actual item-conversion recipes remain future work. XP tuning is deferred and work count is unreviewed.
+
+## Recipe review 13 — Rune of Batching: proposed next
+
+Propose a Tier 4 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Hopper (`minecraft:hopper`) |
+| Four inner cardinal positions | 1 Chest each — 4 total (`minecraft:chest`) |
+| Four outer cardinal positions | 1 Redstone Comparator each — 4 total (`minecraft:comparator`) |
+
+Proposed output: **1 Rune of Batching**. The storage and filtering components fit its selected recipe-specific input handling. This ingredient layout is awaiting review; its existing Tier 4 function and multiple-rune coordination remain selected directions. It does not automatically hammer. Template-item interpretation, exact input interfaces and job scheduling are separate design questions, not settled by this recipe. XP tuning is deferred and work count is unreviewed. Invocation follows if accepted.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -322,10 +348,10 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Expansion | **Agreed:** 4 blank Runestone corners + 1 Crafting Table center + 4 Pistons inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Transmutation (Overworld) | **Agreed:** 4 blank Runestone corners + 1 Emerald Block center + 4 Amethyst Shards inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Nether Transmutation | **Agreed, corrected:** 4 blank Runestone corners + 1 Gilded Blackstone center + 4 Blaze Rods inner ring + 4 Wither Roses outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| End Transmutation | Rune recipe and conversion catalysts to decide; Tier 3 | To decide |
+| End Transmutation | **Agreed:** 4 blank Runestone corners + 1 Dragon's Breath center + 4 Ender Pearls inner ring + 4 Shulker Shells outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Restoration | **Agreed:** 4 blank Runestone corners + 1 Anvil center + 4 Iron Blocks inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Efficiency | **Agreed:** 4 blank Runestone corners + 1 Enchanting Table center + 4 Gold Ingots inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Batching | Chest + hopper + ancient ingot | 16 × 15 |
+| Batching | **Proposed next:** 4 blank Runestone corners + 1 Hopper center + 4 Chests inner ring + 4 Redstone Comparators outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Invocation | To decide; the rune and first summoning seal must be obtainable before defeating the Forgemaster | To decide |
 | Collection, Deliberation (Tier 4); Specialization, Familiarity, Alternation (Tier 5) | Choose recipe ingredients after operating details and numerical scaling | To decide |
 | Master Craftsmanship | Ancient crystal + diamond + 2 ancient ingots | 24 × 25 |
