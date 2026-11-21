@@ -398,18 +398,20 @@ The user accepted the harder Tier 5 recipe using all thirteen positions:
 
 Output: **1 Rune of Familiarity**. Its blocks represent **36 Diamonds and 36 Ancient Ingots**. Do not revert to the rejected easier Lapis Block/individual Ancient Ingot proposal. The center remains an ordinary Book and Quill. XP tuning is deferred and work count is unreviewed.
 
-## Recipe review 19 — Rune of Alternation: proposed next
+## Recipe review 19 — Rune of Alternation: distinct revised proposal
 
-Propose a Tier 5 recipe using all thirteen positions and matching Familiarity's block-material investment:
+The user rejected copying Familiarity's Diamond Block/Ancient Metal Block rings and requested a different center too. The new Tier 5 proposal uses all thirteen positions:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
-| Center | 1 Observer (`minecraft:observer`) |
-| Four inner cardinal positions | 1 Diamond Block each — 4 total |
-| Four outer cardinal positions | 1 Block of Ancient Metal each — 4 total |
+| Center | 1 Redstone Comparator (`minecraft:comparator`) |
+| Four inner cardinal positions | 1 Emerald Block each — 4 total (`minecraft:emerald_block`) |
+| Four outer cardinal positions | 1 **Netherite Ingot** each — 4 total (`minecraft:netherite_ingot`, not Netherite Blocks) |
 
-Proposed output: **1 Rune of Alternation**. The Observer represents detecting recipe changes. The selected effect rewards consecutive changed recipes, unlike Familiarity's same-recipe streak; exact stacking remains open. This recipe is awaiting user acceptance. XP tuning is deferred and work count is unreviewed. Tier 6 Master Craftsmanship follows if accepted.
+Proposed output: **1 Rune of Alternation**. This uses 36 Emeralds and four Netherite Ingots, plus the Comparator and Runestone. It replaces the rejected Observer-centered recipe with Diamond Blocks and Blocks of Ancient Metal. Familiarity's accepted harder recipe stays as recorded.
+
+The revised ingredients remain **awaiting user acceptance**. Alternation's selected changed-recipe XP-discount behavior stays intact; the comparator represents comparing successive recipes. XP tuning is deferred and work count is unreviewed. Tier 6 Master Craftsmanship follows after acceptance.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -435,7 +437,7 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Deliberation | **Agreed:** 4 blank Runestone corners + 1 Clock center + 4 Soul Sand inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Specialization | **Agreed:** 4 blank Runestone corners + 1 Smithing Table center + 4 Diamonds inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Familiarity | **Agreed, harder recipe:** 4 blank Runestone corners + 1 Book and Quill center + 4 Diamond Blocks inner ring + 4 Blocks of Ancient Metal outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Alternation | **Proposed next:** 4 blank Runestone corners + 1 Observer center + 4 Diamond Blocks inner ring + 4 Blocks of Ancient Metal outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Alternation | **Distinct revised proposal:** 4 blank Runestone corners + 1 Redstone Comparator center + 4 Emerald Blocks inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Master Craftsmanship | Ancient crystal + diamond + 2 ancient ingots | 24 × 25 |
 | Mutation | Deferred; select supported alternative-output recipes and chance behavior before fixing rune ingredients | To decide |
 | Grand Pattern | Map + ender pearl + 2 ancient ingots; revisit cost for actual relocation power | 24 × 25; revisit |
