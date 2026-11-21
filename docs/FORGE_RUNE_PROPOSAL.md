@@ -161,14 +161,33 @@ Remaining **proposed values from the first recipe presentation**, not separately
 
 This is recipe-design documentation only. Do not add a live recipe referencing an unregistered rune block before rune implementation is authorized.
 
-## Recipe review 2 — Rune of Extraction: agreed
+## Recipe review 2 — Rune of Extraction: agreed, corrected center
 
-The user accepted the proposed Tier 1 recipe and one-rune output:
+The user corrected the center ingredient to a **Dispenser**, replacing the earlier Hopper proposal. Keep the existing Tier 1 frame and one-rune output:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
-| Center | 1 Hopper |
+| Center | 1 **Dispenser** (`minecraft:dispenser`) |
+| Four inner cardinal positions | 1 Redstone Dust each — 4 total |
+| Four outer cardinal positions | Empty |
+
+```text
+R D R
+D X D
+R D R
+```
+
+R = blank Runestone, D = Redstone Dust, X = Dispenser. Output: **1 Rune of Extraction**. Its selected function remains pipe XP export and player-standing XP deposit, faster while crouching. The user explicitly deferred XP-value tuning.
+
+## Recipe review 3 — Rune of Input: agreed, corrected center
+
+The user selected a **Hopper**, replacing the earlier Dropper proposal. Keep the existing Tier 1 frame and one-rune output:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 **Hopper** (`minecraft:hopper`) |
 | Four inner cardinal positions | 1 Redstone Dust each — 4 total |
 | Four outer cardinal positions | Empty |
 
@@ -178,36 +197,17 @@ D H D
 R D R
 ```
 
-R = blank Runestone, D = Redstone Dust, H = Hopper. Output: **1 Rune of Extraction**. Its selected function remains pipe XP export and player-standing XP deposit, faster while crouching. The user explicitly deferred XP-value tuning; do not reopen XP balance on each recipe review.
-
-## Recipe review 3 — Rune of Input: proposed next
-
-Propose the same Tier 1 frame with **1 Dropper at the center**, distinguishing the opposite XP-flow recipe from Extraction:
-
-| Position | Input |
-|---|---|
-| Four diagonal corners | 1 blank Runestone each — 4 total |
-| Center | 1 Dropper |
-| Four inner cardinal positions | 1 Redstone Dust each — 4 total |
-| Four outer cardinal positions | Empty |
-
-```text
-R D R
-D P D
-R D R
-```
-
-R = blank Runestone, D = Redstone Dust, P = Dropper. Proposed output: **1 Rune of Input**. Its already-selected effect remains pipe XP import and player-standing XP withdrawal, faster while crouching. Ingredients/layout/output above are still **proposed**, not yet accepted; continue review one recipe at a time. XP values remain deferred.
+R = blank Runestone, D = Redstone Dust, H = Hopper. Output: **1 Rune of Input**. Its selected function remains pipe XP import and player-standing XP withdrawal, faster while crouching. Work/XP tuning remains deferred. The next rune in the review order is Tier 2 Swift Forging.
 
 ## Draft recipes — retained for discussion, not approved
 
-The rows below remain preliminary except for Storage's explicitly reviewed ingredients/layout and Extraction's accepted recipe above. Input is the next proposal under review. XP-value tuning is deferred by the user. Unless otherwise stated, earlier ordinary-rune proposals used **one blank Runestone plus** the listed extras and one-rune output. Storage is now an exception with **four blank Runestone inputs**; its output/work/XP values remain proposed. Sky Keystone's existing four-output batch is a starting reference, but its recipe must now include a Forgemaster drop as selected by the user. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
+The rows below remain preliminary except for Storage's explicitly reviewed ingredients/layout and Extraction's accepted recipe above. Extraction uses a Dispenser and Input uses a Hopper, as corrected by the user. Both ingredient layouts are selected. XP-value tuning is deferred by the user. Unless otherwise stated, earlier ordinary-rune proposals used **one blank Runestone plus** the listed extras and one-rune output. Storage is now an exception with **four blank Runestone inputs**; its output/work/XP values remain proposed. Sky Keystone's existing four-output batch is a starting reference, but its recipe must now include a Forgemaster drop as selected by the user. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
 
 | Rune | Inputs (earlier rows use one blank Runestone unless stated) | Proposed swings × XP/hit |
 |---|---|---:|
 | Storage | **Confirmed layout:** 4 blank Runestone at corners + 1 Block of Lapis Lazuli at center + 4 Gold Ingots on inner cardinal positions | Proposed 8 × 5; output 1 remains proposed |
-| Extraction | **Agreed:** 4 blank Runestone at corners + 1 Hopper at center + 4 Redstone Dust on inner cardinal positions; outer positions empty; output 1 | Work/XP tuning deferred |
-| Input | **Proposed next:** 4 blank Runestone at corners + 1 Dropper at center + 4 Redstone Dust on inner cardinal positions; outer positions empty; output 1 | Work/XP tuning deferred |
+| Extraction | **Agreed, corrected:** 4 blank Runestone at corners + 1 Dispenser at center + 4 Redstone Dust on inner cardinal positions; outer positions empty; output 1 | Work/XP tuning deferred |
+| Input | **Agreed, corrected:** 4 blank Runestone at corners + 1 Hopper at center + 4 Redstone Dust on inner cardinal positions; outer positions empty; output 1 | Work/XP tuning deferred |
 | Swift Forging | Sugar + redstone + ancient ingot | 12 × 10 |
 | Tempering | 2 iron ingots + copper ingot | 10 × 8 |
 | Conduit | 2 copper ingots + redstone | 10 × 8 |
@@ -369,7 +369,7 @@ Sky Keystone remains a structural Tier 5 requirement and is excluded from these 
 
 ## Decisions still open
 
-- Continue recipe review one rune at a time. Storage ingredients/layout and Extraction's recipe are agreed. Input's Dropper-centered recipe is the next proposal. The user deferred XP-value tuning; remaining work/cost details can be reviewed later.
+- Continue recipe review one rune at a time. Storage, Extraction and Input ingredient layouts are selected. Extraction's center is a Dispenser and Input's is a Hopper. Swift Forging is next. The user deferred XP-value tuning; remaining work/cost details can be reviewed later.
 
 - Mutation's alternatives, probabilities, scaling, costs and recipe; deliberately deferred for a later revisit.
 - Numerical curves/configuration for Tier 5 Specialization, Familiarity and Alternation.
