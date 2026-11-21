@@ -437,24 +437,28 @@ The user accepted the Tier 6 recipe using all thirteen positions:
 
 Output: **1 Rune of Grand Pattern**. This crafts the empty packing rune; it is not a recurring relocation fee. Keep the selected center-foundation placement and whole-structure packing/restoration behavior. Crystal acquisition, XP tuning and work counts remain deferred/open as recorded.
 
-## Recipe review 22 — Rune of Mutation: proposed next
+## Recipe review 22 — Rune of Mutation: agreed
 
-Propose a Tier 6 recipe using all thirteen positions:
+The user accepted the Tier 6 recipe using all thirteen positions:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
 | Center | 1 Dragon's Breath (`minecraft:dragon_breath`) |
-| Four inner cardinal positions | 1 End Crystal item each — 4 total (`minecraft:end_crystal`) |
-| Four outer cardinal positions | 1 **Block of Energized Ancient Crystal** each — 4 total, the energized variant |
+| Four inner cardinal positions | 1 End Crystal inventory item each — 4 total |
+| Four outer cardinal positions | 1 Block of Energized Ancient Crystal each — 4 total, the energized variant |
 
-Proposed output: **1 Rune of Mutation**. Ingredients/layout await review. End Crystals here are recipe inventory items, not removal or sacrifice of the structure's four placed End Crystal entities. The outer ring uses energized crystal **blocks**, not regular Ancient Crystal Blocks or loose crystal items.
+Output: **1 Rune of Mutation**. Recipe End Crystals are inventory ingredients, not the placed structure entities. The outer ring uses energized crystal blocks, not regular blocks or loose crystals.
 
-This is the final recipe in the twenty-two functional-rune review order. Mutation's supported alternative-output recipes, probabilities/scaling and precise costs remain deferred. Existing crystal acquisition/energizing recipes are still future work; this proposal does not create an acquisition route. XP tuning is deferred and work count is unreviewed. Sky Keystone and standalone Vigilance are outside this twenty-two-rune count and have not received their separate final recipe review.
+This completes the ingredient-layout review for **all twenty-two functional forge runes**. Their reviewed ingredients/positions are agreed; XP/work tuning and detailed effect behavior remain separate future work. Mutation's alternative-output lists, chance scaling and exact XP/catalyst rules remain deferred as previously requested. Crystal acquisition/energization is also still future work. Sky Keystone and standalone Vigilance are outside this twenty-two-rune count and still need their separate recipe review.
 
-## Draft recipes — retained for discussion, not approved
+## Reviewed ingredient summary — XP and work still provisional
 
-The rows below remain preliminary except for the reviewed ingredient layouts for Storage, Extraction, Input, Swift Forging and Tempering above. Conduit is the next proposal. All four reviewed recipes use four blank Runestone corners. Extraction uses a Dispenser and Input uses a Hopper, as corrected by the user. Swift Forging uses all thirteen positions, with Nether Quartz on its outer ring. XP-value tuning is deferred by the user. Unless otherwise stated, earlier ordinary-rune proposals used **one blank Runestone plus** the listed extras and one-rune output. Storage is now an exception with **four blank Runestone inputs**; its output/work/XP values remain proposed. Sky Keystone's existing four-output batch is a starting reference, but its recipe must now include a Forgemaster drop as selected by the user. The earlier “craft one tier before activation” proposal still needs agreement. Crystal acquisition is currently Creative-only, so crystal-based survival gates need archaeology acquisition before release.
+The twenty-two recipe-review sections above record the user's agreed ingredient layouts. Each reviewed functional-rune recipe uses **four blank Runestone in the diagonal corners** and produces **one rune** as presented. Inner/outer positions may be empty when explicitly selected (Extraction, Input and Conduit); do not fill them merely to occupy all thirteen slots.
+
+**XP values are deliberately deferred**, and individual work/swing counts have not been reviewed. Earlier draft numbers elsewhere in this design reference are not an approved balance pass. These are planning records, not live registered rune blocks or implemented recipes.
+
+Sky Keystone is a **separate structural recipe still awaiting review**: it must include the selected Forgemaster drop, but that drop and quantities remain undefined. Its old four-output batch is a starting reference only. General-purpose Vigilance's recipe and progression are also separate. Crystal acquisition/energization remains future work; these ingredient approvals do not invent an acquisition route.
 
 | Rune | Inputs (earlier rows use one blank Runestone unless stated) | Proposed swings × XP/hit |
 |---|---|---:|
@@ -478,7 +482,7 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Familiarity | **Agreed, harder recipe:** 4 blank Runestone corners + 1 Book and Quill center + 4 Diamond Blocks inner ring + 4 Blocks of Ancient Metal outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Alternation | **Agreed, distinct recipe:** 4 blank Runestone corners + 1 Redstone Comparator center + 4 Emerald Blocks inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Master Craftsmanship | **Agreed:** 4 blank Runestone corners + 1 Nether Star center + 4 regular Blocks of Ancient Crystal inner ring + 4 Netherite Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Mutation | **Proposed next:** 4 blank Runestone corners + 1 Dragon's Breath center + 4 End Crystal items inner ring + 4 Blocks of Energized Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Mutation | **Agreed:** 4 blank Runestone corners + 1 Dragon's Breath center + 4 End Crystal items inner ring + 4 Blocks of Energized Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Grand Pattern | **Agreed:** 4 blank Runestone corners + 1 Ender Chest center + 4 Nether Stars inner ring + 4 regular Blocks of Ancient Crystal outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Sky Keystone | Add a Forgemaster material to the recipe. Existing 4 Runestone + 4 ancient ingots + glowstone is a reference; whether the drop replaces glowstone or is additional is open. | Existing 8 × 1 → 4 is a reference; new costs/output/drop quantities remain open |
 
@@ -628,9 +632,9 @@ Sky Keystone remains a structural Tier 5 requirement and is excluded from these 
 
 ## Decisions still open
 
-- Continue recipe review one rune at a time. Storage, Extraction, Input, Swift Forging, Tempering, Conduit and Restoration ingredient layouts are selected. Restoration uses four Iron Blocks on its inner ring, replacing Lapis Lazuli. Efficiency is the next proposal. The user deferred XP-value tuning; remaining work/cost details can be reviewed later.
+- All twenty-two functional-rune ingredient layouts are agreed. Tune XP/work later; review Sky Keystone and general-purpose Vigilance separately.
 
-- Mutation's alternatives, probabilities, scaling, costs and recipe; deliberately deferred for a later revisit.
+- Mutation's alternative outputs, probabilities, scaling and operation costs remain deferred; its rune-crafting ingredient layout is agreed in review 22.
 - Numerical curves/configuration for Tier 5 Specialization, Familiarity and Alternation.
 - Collection and Deliberation scaling/recipes at Tier 4.
 - Forgemaster drop identity/quantity and the revised Sky Keystone recipe; whether one normal kill should cover all sixteen required keystones.
@@ -639,9 +643,9 @@ Sky Keystone remains a structural Tier 5 requirement and is excluded from these 
 - Transmutation source/target recipes, catalysts, XP costs and extra-copy benefits. Tier 3 for all three variants is settled.
 - Vigilance's standalone general-purpose design and progression tier, separate from the forge.
 - Numerical tuning, fractional XP accounting and future hammer interactions.
-- Restoration's base repair rate, XP per durability point and recipe; automatic stored-XP operation is accepted in principle.
+- Restoration's base repair rate and XP per durability point; its rune-crafting ingredients are agreed, and automatic stored-XP operation is accepted in principle.
 - Master Craftsmanship beyond 100%: guaranteed extra batches versus staying double-only with diminishing chance.
 - Batching's template item interpretation, recipe-variant selection and output collection/re-arming policy.
-- Grand Pattern's recipe, placement confirmation, optional decorative floor handling and relocation XP cost.
+- Grand Pattern's placement confirmation, optional decorative floor handling and relocation XP cost; its rune-crafting ingredients are agreed.
 
 This document records **selected design directions**, provisional numbers/recipes and deferred questions. It does not authorize or imply that all twenty-two rune blocks have been implemented.
