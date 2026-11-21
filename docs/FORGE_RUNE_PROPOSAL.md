@@ -240,7 +240,33 @@ The user removed the Copper Ingot ingredients from the proposal. The Tier 2 layo
 
 Output: **1 Rune of Conduit**. This occupies **nine** of the thirteen available positions: 4 + 1 + 4. Do not insert another ingredient into the inner ring or move the Redstone inward without user direction. The Copper **Block** remains; only the four separate Copper **Ingots** were removed.
 
-Its selected effect increases XP transfer speed both into and out of the forge, including supported pipes and standing transfers. XP tuning is deferred and work count is not reviewed. The next rune in the review order is Tier 3 Restoration.
+Its selected effect increases XP transfer speed both into and out of the forge, including supported pipes and standing transfers. XP tuning is deferred and work count is not reviewed. Tier 3 Restoration is reviewed below; Efficiency is the next proposal.
+
+## Recipe review 7 — Rune of Restoration: agreed, Iron Blocks on inner ring
+
+The user replaced the proposed four Lapis Lazuli with **Iron Blocks**, one per inner cardinal slot. The Tier 3 recipe uses all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Anvil |
+| Four inner cardinal positions | 1 **Iron Block** each — 4 total (`minecraft:iron_block`, not Iron Ingots) |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Output: **1 Rune of Restoration**. Do not retain the earlier Lapis Lazuli ingredients. The selected operating effect remains XP-only repair of any durability-bearing item in the center; these metal ingredients are for **crafting the rune**, not additional repair materials. XP tuning is deferred and work count remains unreviewed.
+
+## Recipe review 8 — Rune of Efficiency: proposed next
+
+Propose a Tier 3 recipe using all thirteen positions:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Enchanting Table (`minecraft:enchanting_table`) |
+| Four inner cardinal positions | 1 Gold Ingot each — 4 total |
+| Four outer cardinal positions | 1 Ancient Ingot each — 4 total |
+
+Proposed output: **1 Rune of Efficiency**. These ingredients/layout are awaiting review; the effect and Tier 3 placement are already selected. XP tuning remains deferred and work count is not reviewed. If accepted, Expansion is next in the roster.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -256,8 +282,8 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Conduit | **Revised by user:** 4 blank Runestone corners + 1 Copper Block center + 4 Redstone Dust outer ring; inner ring empty; output 1 | Work not reviewed; XP tuning deferred |
 | Expansion | To decide after socket placement/recipe design | To decide |
 | Transmutation: base, Nether, End | Separate recipes/catalysts to decide; all three are Tier 3 | To decide |
-| Restoration | To decide after repair rate and XP-per-durability are settled | To decide |
-| Efficiency | Diamond + 2 ancient ingots + lapis | 16 × 15 |
+| Restoration | **Agreed:** 4 blank Runestone corners + 1 Anvil center + 4 Iron Blocks inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Efficiency | **Proposed next:** 4 blank Runestone corners + 1 Enchanting Table center + 4 Gold Ingots inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Batching | Chest + hopper + ancient ingot | 16 × 15 |
 | Invocation | To decide; the rune and first summoning seal must be obtainable before defeating the Forgemaster | To decide |
 | Collection, Deliberation (Tier 4); Specialization, Familiarity, Alternation (Tier 5) | Choose recipe ingredients after operating details and numerical scaling | To decide |
@@ -412,7 +438,7 @@ Sky Keystone remains a structural Tier 5 requirement and is excluded from these 
 
 ## Decisions still open
 
-- Continue recipe review one rune at a time. Storage, Extraction, Input, Swift Forging and Tempering ingredient layouts are selected. Conduit's revised recipe uses a Copper Block and outer-ring Redstone, with the inner ring empty; Tier 3 Restoration is next. The user deferred XP-value tuning; remaining work/cost details can be reviewed later.
+- Continue recipe review one rune at a time. Storage, Extraction, Input, Swift Forging, Tempering, Conduit and Restoration ingredient layouts are selected. Restoration uses four Iron Blocks on its inner ring, replacing Lapis Lazuli. Efficiency is the next proposal. The user deferred XP-value tuning; remaining work/cost details can be reviewed later.
 
 - Mutation's alternatives, probabilities, scaling, costs and recipe; deliberately deferred for a later revisit.
 - Numerical curves/configuration for Tier 5 Specialization, Familiarity and Alternation.
