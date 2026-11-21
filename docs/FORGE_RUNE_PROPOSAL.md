@@ -385,20 +385,31 @@ The user accepted the Tier 5 recipe using all thirteen positions:
 
 Output: **1 Rune of Specialization**. The selected category-based XP tradeoff remains; this ingredient does not restrict its effect to equipment recipes. XP tuning is deferred and work count is unreviewed.
 
-## Recipe review 18 — Rune of Familiarity: harder revised proposal
+## Recipe review 18 — Rune of Familiarity: agreed, harder recipe
 
-The user said the first proposal was too easy to craft. The revised Tier 5 proposal keeps the Book and Quill theme and increases the material investment:
+The user accepted the harder Tier 5 recipe using all thirteen positions:
 
 | Position | Input |
 |---|---|
 | Four diagonal corners | 1 blank Runestone each — 4 total |
 | Center | 1 Book and Quill (`minecraft:writable_book`) |
-| Four inner cardinal positions | 1 **Diamond Block** each — 4 total |
-| Four outer cardinal positions | 1 **Block of Ancient Metal** each — 4 total |
+| Four inner cardinal positions | 1 Diamond Block each — 4 total |
+| Four outer cardinal positions | 1 Block of Ancient Metal each — 4 total |
 
-Proposed output: **1 Rune of Familiarity**. Uses all thirteen positions. The blocks represent **36 Diamonds and 36 Ancient Ingots**, in addition to the four blank Runestone and Book and Quill. This replaces the rejected easier proposal's four Lapis Blocks and four individual Ancient Ingots.
+Output: **1 Rune of Familiarity**. Its blocks represent **36 Diamonds and 36 Ancient Ingots**. Do not revert to the rejected easier Lapis Block/individual Ancient Ingot proposal. The center remains an ordinary Book and Quill. XP tuning is deferred and work count is unreviewed.
 
-The revised ingredients are **awaiting user acceptance**, not selected yet. The center remains an ordinary Book and Quill, without custom written content or a command-only Knowledge Book requirement. Its selected same-recipe XP-discount effect stays unchanged. XP tuning is deferred and work count is unreviewed. Alternation follows after this recipe is accepted.
+## Recipe review 19 — Rune of Alternation: proposed next
+
+Propose a Tier 5 recipe using all thirteen positions and matching Familiarity's block-material investment:
+
+| Position | Input |
+|---|---|
+| Four diagonal corners | 1 blank Runestone each — 4 total |
+| Center | 1 Observer (`minecraft:observer`) |
+| Four inner cardinal positions | 1 Diamond Block each — 4 total |
+| Four outer cardinal positions | 1 Block of Ancient Metal each — 4 total |
+
+Proposed output: **1 Rune of Alternation**. The Observer represents detecting recipe changes. The selected effect rewards consecutive changed recipes, unlike Familiarity's same-recipe streak; exact stacking remains open. This recipe is awaiting user acceptance. XP tuning is deferred and work count is unreviewed. Tier 6 Master Craftsmanship follows if accepted.
 
 ## Draft recipes — retained for discussion, not approved
 
@@ -423,8 +434,8 @@ The rows below remain preliminary except for the reviewed ingredient layouts for
 | Collection | **Agreed:** 4 blank Runestone corners + 1 Dropper center + 4 Hoppers inner ring + 4 Chests outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Deliberation | **Agreed:** 4 blank Runestone corners + 1 Clock center + 4 Soul Sand inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Specialization | **Agreed:** 4 blank Runestone corners + 1 Smithing Table center + 4 Diamonds inner ring + 4 Ancient Ingots outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Familiarity | **Harder revised proposal:** 4 blank Runestone corners + 1 Book and Quill center + 4 Diamond Blocks inner ring + 4 Blocks of Ancient Metal outer ring; output 1 | Work not reviewed; XP tuning deferred |
-| Alternation (Tier 5) | Choose recipe ingredients after operating details and numerical scaling | To decide |
+| Familiarity | **Agreed, harder recipe:** 4 blank Runestone corners + 1 Book and Quill center + 4 Diamond Blocks inner ring + 4 Blocks of Ancient Metal outer ring; output 1 | Work not reviewed; XP tuning deferred |
+| Alternation | **Proposed next:** 4 blank Runestone corners + 1 Observer center + 4 Diamond Blocks inner ring + 4 Blocks of Ancient Metal outer ring; output 1 | Work not reviewed; XP tuning deferred |
 | Master Craftsmanship | Ancient crystal + diamond + 2 ancient ingots | 24 × 25 |
 | Mutation | Deferred; select supported alternative-output recipes and chance behavior before fixing rune ingredients | To decide |
 | Grand Pattern | Map + ender pearl + 2 ancient ingots; revisit cost for actual relocation power | 24 × 25; revisit |
