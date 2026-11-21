@@ -18,6 +18,10 @@ The following concepts are selected for continued design. The user accepted the 
 | 2 | Rune of Conduit | User selected increased XP transfer speed **both into and out of** the forge. No arbitrary count limit. |
 | 3 | Rune of Restoration | Put any item with durability in the center slot and spend XP to repair it. Additional runes increase repair speed. |
 | 3 | Rune of Efficiency | XP reduction with a substantially longer investment ramp to 50%, then diminishing returns; no arbitrary rune-count cutoff. |
+| 3 | Rune of Expansion | Adds physical ingredient sockets to the forge, supporting larger and more elaborate recipes. More installed runes provide more sockets; placement details remain open. |
+| 3 | Rune of Transmutation | The base/Overworld variant: authored item-to-item conversions into Overworld materials, using XP. |
+| 3 | Rune of Nether Transmutation | Authored item-to-item conversions into Nether materials, using XP. |
+| 3 | Rune of End Transmutation | Authored item-to-item conversions into End materials, using XP. |
 | 4 | Rune of Batching | User-selected redesign: configure with Shift-right-click using an item on any face; other faces accept recipe inputs; pulls matching ingredients from the chest above. Multiple runes need coordinated scheduling. |
 | Enables 5; excluded from functional-rune target | Keystone Rune of the Sky | Rename/replace Canopy Keystone, retaining its sixteen structural positions and existing purpose; no added effect yet. Preserve saved worlds. |
 | 6 | Rune of Master Craftsmanship | More completed output, initially described as a small per-rune chance to double. Scaling beyond guaranteed doubling needs discussion; do not silently impose a count cap. |
@@ -137,6 +141,8 @@ Ordinary recipes below consume **one blank Runestone plus** the listed extras an
 | Swift Forging | Sugar + redstone + ancient ingot | 12 × 10 |
 | Tempering | 2 iron ingots + copper ingot | 10 × 8 |
 | Conduit | 2 copper ingots + redstone | 10 × 8 |
+| Expansion | To decide after socket placement/recipe design | To decide |
+| Transmutation: base, Nether, End | Separate recipes/catalysts to decide; all three are Tier 3 | To decide |
 | Restoration | To decide after repair rate and XP-per-durability are settled | To decide |
 | Efficiency | Diamond + 2 ancient ingots + lapis | 16 × 15 |
 | Batching | Chest + hopper + ancient ingot | 16 × 15 |
@@ -166,52 +172,72 @@ Automatic repair from stored XP is the accepted direction. Base repair rate, XP 
 
 The other recent candidate operations (Reforging, Reclamation, Awakening and Transference) are removed from the active proposal. Tier 5 still has no user-selected optional functional rune. Sky Keystone is explicitly excluded from the requested three-per-tier count. The fresh candidates below are suggestions for the user to choose, not approved additions.
 
-## Latest workshop direction: Tier 3 first
+## Latest selections: Expansion and three Tier 3 Transmutation runes
 
-The user clarified that they are **not a fan of the previous additional forge ideas**. Inscription, Parallel Forging, Striking, Ascendance, Commission and Dispatch are therefore rejected, not selected or awaiting implementation. Do not carry them into the forge roster or rename them as accepted features.
+The user rejected Offering, Reinforcement and Containment, then selected **Expansion** from the next group of Tier 3 suggestions. The other suggestions from that group remain unselected. Do not carry the rejected artifact-sacrifice, durability-reinforcement or basin-containment operations into the active list.
 
-The user likes **Vigilance as a general-purpose chunk-loading rune that can be placed anywhere**, rather than an Ancient Anvil upgrade. Move that concept to the general functional-rune list with no forge tier assigned yet. It does not count toward the requested three forge runes per tier. Its fuel, loading footprint and recipe remain open; the prior stored-forge-XP-only design is not an approved restriction for the standalone rune.
+The user then requested **Rune of Transmutation plus Nether and End variants** and explicitly answered that **all three belong at Tier 3**. Interpret the base Rune of Transmutation as the Overworld-targeting variant, not an additional fourth universal rune. Exact item conversion recipes and XP costs remain to be designed.
 
-Efficiency remains moved to Tier 3. Forge-only selected counts, excluding Sky Keystone, are still **3 / 3 / 2 / 1 / 0 / 2** for tiers 1–6, eleven total. The user now wants to choose the next Tier 3 idea before moving on. Do not force a complete eighteen-rune lineup with weak filler.
+Current Tier 3 selected roster:
+- Restoration
+- Efficiency
+- Expansion
+- Rune of Transmutation (Overworld)
+- Rune of Nether Transmutation
+- Rune of End Transmutation
 
-### Current Tier 3
+All earlier added forge candidates (Inscription, Parallel Forging, Striking, Ascendance, Commission and Dispatch) remain rejected. **Vigilance is selected as a general-purpose chunk-loading rune usable anywhere**, outside the forge roster, with its progression/fuel still open.
 
-- **Restoration:** any durability-bearing item in the center, automatic repair using stored XP, more runes increase repair speed.
-- **Efficiency:** the accepted slower XP-discount ramp, with diminishing returns after 50%.
-- **Third slot:** open. The options below are new, unapproved alternatives, not three additions to the selected list.
+Excluding Sky Keystone, selected forge counts are now **3 / 3 / 6 / 1 / 0 / 2** across tiers 1–6: fifteen functional runes. Tier 4 currently has only Batching. The user wants Tier 4 suggestions next. A minimum-three-per-tier lineup retaining the six selected Tier 3 runes would have at least twenty-one functional runes, not the old eighteen-rune estimate. Do not add candidates as accepted just to fill the gaps.
 
-### Candidate: Rune of Offering
+### Expansion — selected operation, socket design still open
 
-Sacrifice an unwanted artifact at the anvil to turn its ancient power into **stored forge XP**. This gives archaeology another resource decision: keep the artifact, recover its Ancient Scrap through the existing routes, or sacrifice it for XP. It ties the forge's main resource directly to archaeological discoveries.
+Expansion increases the forge's actual physical ingredient positions, rather than an arbitrary passive stat. The additional sockets allow recipes with more inputs than the original thirteen-position working surface. Exactly where the sockets appear or whether the Expansion rune itself holds an ingredient is open. Preserve clear item graphics/selection feedback and future Batching support. Do not register sockets from arbitrary unlinked blocks or impose a hidden first-N rune-count cutoff.
 
-XP yields would be authored by artifact type/tier/rarity, not inferred from arbitrary item's crafting cost. Additional Offering runes improve recovery of that authored XP value with diminishing returns. The artifact is consumed, and the stored result obeys available capacity; do not destroy a valuable artifact if the complete yield cannot be accepted. This is an active material sacrifice, not passive XP generation.
+### Transmutation — selected operation, recipes still open
 
-Pricing/yield, eligible artifacts and whether this needs hammering remain open. Direct XP conversion must not receive Master Craftsmanship output bonuses or permit a forge-craft-to-XP profit loop. The concept is not a salvage-material refund operation; it creates a deliberate XP-versus-scrap choice.
+Each dimensional variant enables authored recipes converting **item inputs into item outputs associated with its target dimension**, spending XP through the ordinary forge system. Examples and prices must be selected deliberately; do not enable every item or infer automatic value ratios from rarity or crafting cost.
 
-### Candidate: Rune of Reinforcement
+- Rune of Transmutation: Overworld-target recipes.
+- Rune of Nether Transmutation: Nether-target recipes.
+- Rune of End Transmutation: End-target recipes.
+- All three variants are active at Tier 3, as explicitly selected by the user. They do not require placing the forge in the target dimension unless a future individual recipe deliberately says so.
+- What additional copies improve (conversion cost, ratio, throughput or recipe access) remains open; preserve the user's substantial-investment/no-arbitrary-count-cap direction.
+- Multiple variants may coexist, each enabling its own recipes. Source inputs, catalysts, target lists, discovery requirements and XP are recipe decisions still to discuss.
+- Account for reverse conversions and Master Craftsmanship eligibility when choosing ratios. No direct XP-currency multiplication or unintended item-conversion profit loop.
+- These are rune-enabled item conversions, distinct from the Ruined Ancient Forge's existing alloying job. The new candidates below do not change its current recipes.
 
-Use XP and Ancient Metal to **increase the maximum durability** of a compatible item placed in the center. Restoration repairs current wear; Reinforcement invests in the item's future durability. More installed runes allow stronger reinforcement, with material and XP costs scaling with the actual improvement.
+## Fresh Tier 4 candidates — not approved
 
-Use the ordinary durability bar rather than adding a second charge/shield system. Preserve enchantments and item data. Repeated reinforcement should charge only for a real new improvement and should not also erase existing wear for free. Exact scaling, compatibility and recipe quantities remain open. This proposal adds material costs only to reinforcement; the already-selected Restoration repair remains XP-only.
+These are alternatives to discuss alongside the already-selected Rune of Batching. No candidate has been added to the selected roster and no block behavior is implemented.
 
-This is an equipment-forging upgrade, not the rejected component-swapping Reforging operation. It offers a practical workshop payoff without enchantment-level systems or remote automation.
+| Candidate | Concrete forge function |
+|---|---|
+| Rune of Conjuration | Create selected basic materials directly from stored XP, with recipe-authored costs. Transmutation changes one material into another; Conjuration makes the resource from XP alone. |
+| Rune of Refinement | Combine several lower-tier artifacts into a higher-tier artifact of the same family, using a substantial XP/material investment. |
+| Rune of Adaptation | Allow approved alternative ingredients in a forge recipe, paying an XP premium for substitution instead of requiring the exact normal material. |
+| Rune of Liquefaction | Turn selected solids into fluids directly in the forge basins, using XP: possible examples are ice into water or magma materials into lava. |
+| Rune of Solidification | Use selected basin fluids as crafting inputs to form solid items or blocks, giving the physical pools a material-processing role. |
+| Rune of Invocation | Forge ritual seals for the planned Forgemaster encounter, connecting the workshop to the user's earlier boss idea. |
 
-### Candidate: Rune of Containment
+### Design distinctions and open work
 
-Stabilize the **four ritual fluid basins**: keep their fluids contained and stop unwanted flow/mixing. A stronger payoff would be enabling water-based forge basins in the Nether, so players can use the intended fluid recipes there.
+Conjuration needs a deliberate basic-material list and authored XP prices; it must not silently provide rare archaeological progression items or every modded resource. Refinement offers a rarity-upgrading material sink and needs its own family rules, ratios and relationship to discoveries. It is not approved as a replacement for exploration.
 
-More runes increase the number of basin cells that can be stabilized, up to the actual cells in the structure. These effects apply to the linked forge's designated pools, not arbitrary liquids across the world. Fluid type, recipe matching and actual fluid contents remain meaningful; it does not invent free liquids or bypass recipe requirements.
+Adaptation changes accepted ingredients within a paid recipe. It does not add the previously rejected automatic order-planning network or arbitrary substitution of progression-critical materials.
 
-Which containment properties are included, activation during basin filling, supported mod fluids and behavior when a structure/rune is removed need design before implementation. Do not sell this as a generic world fluid-control rune: its purpose is making the ritual basins practical in an ancient workshop.
+Liquefaction and Solidification would extend recipe data to real fluid insertion/consumption in the designated basins. Current fluid detection alone does not implement these effects. Exact volume accounting, capacity, remaining fluid, mod-fluid support and the two directions' ratios are design work; do not assume a detected source block is an infinite supply. They are related options, and the user may choose one rather than both.
 
-### Preference and unresolved choices
+Invocation specifically refers back to the user's **Forgemaster boss** plan: the forge makes the encounter's seal from materials/XP. Boss timing, seal ingredients, rewards and repeat encounters need separate design. It does not introduce a new mandatory structure-tier gate by itself.
 
-Offering has the strongest direct connection between archaeology and the new XP economy. Reinforcement is the clearest general equipment payoff. Containment is a more specialized physical-structure/dimension option. The user has not selected any of them. Prices and exact stacking values should follow the chosen effect, not precede it.
+Of these candidates, Conjuration and Refinement have direct material/progression payoffs, and Invocation has the strongest connection to the existing boss/workshop vision. All six remain suggestions; choose effects before crafting rune recipes or fixing numerical stacking.
 
 ## Decisions still open
 
-- Which third Tier 3 forge rune to select. Offering, Reinforcement and Containment are alternatives only.
-- Tier 4/5/6 additions remain open after the rejected lineup; Sky Keystone remains excluded from the three-per-tier exercise.
+- Which additional Tier 4 runes to select alongside Batching. The six candidates above are unapproved.
+- Expansion socket placement, ingredient addressing and interaction with expanded recipes/Batching.
+- Transmutation source/target recipes, catalysts, XP costs and extra-copy benefits. Tier 3 for all three variants is settled.
+- Tier 5/6 forge additions, excluding Sky Keystone from the target count.
 - Vigilance's standalone general-purpose design and progression tier, separate from the forge.
 - Numerical tuning, fractional XP accounting and future hammer interactions.
 - Restoration's base repair rate, XP per durability point and recipe; automatic stored-XP operation is accepted in principle.
