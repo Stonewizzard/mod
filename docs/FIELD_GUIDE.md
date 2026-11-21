@@ -44,6 +44,28 @@ The visual direction draws on familiar mod guidebook category browsing, with ori
 - [Grand Runic Canopy](#runic-canopy) — Stations
 - [Ancient Crystal](#ancient-crystal) — Stations
 - [Tier 6: Ancient Convergence](#anvil-convergence) — Stations
+- [Rune of Storage](#forge-rune-storage) — Stations
+- [Rune of Extraction](#forge-rune-extraction) — Stations
+- [Rune of Input](#forge-rune-input) — Stations
+- [Rune of Swift Forging](#forge-rune-swift-forging) — Stations
+- [Rune of Tempering](#forge-rune-tempering) — Stations
+- [Rune of Conduit](#forge-rune-conduit) — Stations
+- [Rune of Restoration](#forge-rune-restoration) — Stations
+- [Rune of Efficiency](#forge-rune-efficiency) — Stations
+- [Rune of Expansion](#forge-rune-expansion) — Stations
+- [Rune of Transmutation](#forge-rune-transmutation) — Stations
+- [Rune of Nether Transmutation](#forge-rune-nether-transmutation) — Stations
+- [Rune of End Transmutation](#forge-rune-end-transmutation) — Stations
+- [Rune of Batching](#forge-rune-batching) — Stations
+- [Rune of Invocation](#forge-rune-invocation) — Stations
+- [Rune of Collection](#forge-rune-collection) — Stations
+- [Rune of Deliberation](#forge-rune-deliberation) — Stations
+- [Rune of Specialization](#forge-rune-specialization) — Stations
+- [Rune of Familiarity](#forge-rune-familiarity) — Stations
+- [Rune of Alternation](#forge-rune-alternation) — Stations
+- [Rune of Master Craftsmanship](#forge-rune-master-craftsmanship) — Stations
+- [Rune of Grand Pattern](#forge-rune-grand-pattern) — Stations
+- [Rune of Mutation](#forge-rune-mutation) — Stations
 
 - All 120 modifiers: generated in the in-game Modifiers category from the same definitions and tuning values used by gameplay. See also [the complete modifier table](PICKAXE_MODIFIERS.md).
 
@@ -604,3 +626,267 @@ Normal End Crystals keep their vanilla behavior. Losing one, mixing glass colors
 Hammer a valid craft on the completed Tier 6 Ancient Anvil. A large energy column blasts down through the glass lens to the anvil, colored by the glass you chose. Existing anvil crafts work for this too.
 
 The column is visual only: no damage, explosions or broken blocks. Invalid crafts and hits rejected by the normal hammer cooldown do not trigger it. No new crafting payoffs are added with this structure.
+
+<a id="forge-rune-storage"></a>
+
+## Rune of Storage
+
+Adds 1,000 stored XP capacity per rune. XP is kept safely if capacity decreases.
+
+Four blank Runestone corners; lapis block at center. Inner ring: four gold ingot.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 1 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-extraction"></a>
+
+## Rune of Extraction
+
+Exports stored XP to pipes. Stand on it to deposit your carried XP; crouch to transfer faster. Despite its name, standing deposits into the bank.
+
+Four blank Runestone corners; dispenser at center. Inner ring: four redstone.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 1 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-input"></a>
+
+## Rune of Input
+
+Imports liquid XP from pipes. Stand on it to withdraw stored XP; crouch to transfer faster.
+
+Four blank Runestone corners; hopper at center. Inner ring: four redstone.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 1 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-swift-forging"></a>
+
+## Rune of Swift Forging
+
+Removes one required hammer swing per rune, down to one. Every rune adds 5% XP per swing, including surplus runes after the one-swing floor.
+
+Four blank Runestone corners; clock at center. Inner ring: four sugar. Outer ring: four quartz.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 2 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-tempering"></a>
+
+## Rune of Tempering
+
+Reduces hammer wear by one percentage point per rune. At 100 runes, forging causes no hammer wear.
+
+Four blank Runestone corners; iron block at center. Inner ring: four ancient ingot. Outer ring: four obsidian.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 2 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-conduit"></a>
+
+## Rune of Conduit
+
+Raises the shared XP import and export rate. Both directions have separate per-anvil budgets, shared across all ports.
+
+Four blank Runestone corners; copper block at center. Outer ring: four redstone.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 2 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-restoration"></a>
+
+## Rune of Restoration
+
+Place any damaged item with durability alone in the center. Stored XP repairs it automatically, preserving its enchantments and other properties. More runes repair faster.
+
+Four blank Runestone corners; anvil at center. Inner ring: four iron block. Outer ring: four ancient ingot.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-efficiency"></a>
+
+## Rune of Efficiency
+
+Reduces XP cost by one percentage point per rune for the first 50 runes; then each additional rune still helps with diminishing returns. No rune-count cap.
+
+Four blank Runestone corners; enchanting table at center. Inner ring: four gold ingot. Outer ring: four ancient ingot.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-expansion"></a>
+
+## Rune of Expansion
+
+Adds a physical ingredient socket on top of each Expansion rune. Right-click to place or retrieve its ingredient. Recipes can declare extra_ingredients beyond the thirteen anvil marks.
+
+Four blank Runestone corners; crafting table at center. Inner ring: four piston. Outer ring: four ancient ingot.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-transmutation"></a>
+
+## Rune of Transmutation
+
+Enables Overworld conversion recipes. Starter conversion: Netherrack at the center becomes Cobblestone.
+
+Four blank Runestone corners; emerald block at center. Inner ring: four amethyst shard. Outer ring: four ancient ingot.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-nether-transmutation"></a>
+
+## Rune of Nether Transmutation
+
+Enables Nether conversion recipes. Starter conversion: Cobblestone at the center becomes Netherrack.
+
+Four blank Runestone corners; gilded blackstone at center. Inner ring: four blaze rod. Outer ring: four wither rose.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-end-transmutation"></a>
+
+## Rune of End Transmutation
+
+Enables End conversion recipes. Starter conversion: Cobblestone at the center becomes End Stone.
+
+Four blank Runestone corners; dragon breath at center. Inner ring: four ender pearl. Outer ring: four shulker shell.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 3 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-batching"></a>
+
+## Rune of Batching
+
+Crouch-right-click any face holding a desired recipe result to set its template; repeat to cycle recipes with that output. Empty-handed crouch-click clears the template. Other clicks and pipes supply matching ingredients. It also pulls from a chest above. Multiple runes share a fair queue and never hammer automatically.
+
+Four blank Runestone corners; hopper at center. Inner ring: four chest. Outer ring: four comparator.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 4 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-invocation"></a>
+
+## Rune of Invocation
+
+Enables crafting Forgemaster Seals. Use a seal on the anvil with clear space seven blocks in front to summon the Forgemaster. Its cores craft the Sky Keystones needed for Tier 5.
+
+Four blank Runestone corners; nether star at center. Inner ring: four ancient ingot. Outer ring: four blaze rod.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 4 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-collection"></a>
+
+## Rune of Collection
+
+Moves finished output into a chest above the rune, or its own buffer for item pipes. Full destinations safely pause collection. Empty-hand right-click retrieves a buffered stack.
+
+Four blank Runestone corners; dropper at center. Inner ring: four hopper. Outer ring: four chest.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 4 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-deliberation"></a>
+
+## Rune of Deliberation
+
+Adds one swing per rune while reducing the total XP for the entire craft. It trades more manual work for a lower total cost.
+
+Four blank Runestone corners; clock at center. Inner ring: four soul sand. Outer ring: four ancient ingot.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 4 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-specialization"></a>
+
+## Rune of Specialization
+
+Crouch-right-click holding a recipe result to specialize this rune in that recipe category. Matching crafts cost less XP; other categories cost more. Empty-handed crouch-click clears it.
+
+Four blank Runestone corners; smithing table at center. Inner ring: four diamond. Outer ring: four ancient ingot.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 5 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-familiarity"></a>
+
+## Rune of Familiarity
+
+Consecutive crafts of the same recipe build an XP discount. Changing recipe resets the streak.
+
+Four blank Runestone corners; writable book at center. Inner ring: four diamond block. Outer ring: four ancient metal block.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 5 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-alternation"></a>
+
+## Rune of Alternation
+
+Consecutive changes of recipe build an XP discount. Repeating the same recipe resets the streak.
+
+Four blank Runestone corners; comparator at center. Inner ring: four emerald block. Outer ring: four netherite ingot.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 5 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-master-craftsmanship"></a>
+
+## Rune of Master Craftsmanship
+
+Each rune adds one percentage point of extra-batch chance on eligible recipes. Above 100%, whole extra batches are guaranteed and the remainder is rolled. Recycling and currency conversions do not receive this bonus by default.
+
+Four blank Runestone corners; nether star at center. Inner ring: four ancient crystal block. Outer ring: four netherite ingot.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 6 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-grand-pattern"></a>
+
+## Rune of Grand Pattern
+
+Place directly under the Tier 6 anvil center. Crouch-click with an empty hand to pack the actual workshop, its inventories, XP, work, fluids and four End Crystals. Place the packed pattern in clear space to move it. External chests and decorative floors are excluded.
+
+Four blank Runestone corners; ender chest at center. Inner ring: four nether star. Outer ring: four ancient crystal block.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 6 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.
+
+<a id="forge-rune-mutation"></a>
+
+## Rune of Mutation
+
+Supported transmutation recipes can produce a rarer replacement output. More runes improve the chance with diminishing returns; this replaces the ordinary result rather than creating a second copy.
+
+Four blank Runestone corners; dragon breath at center. Inner ring: four end crystal. Outer ring: four energized ancient crystal block.
+
+Produces one rune. Hold an Iron Forge Hammer and strike the anvil to craft. XP and work values are provisional.
+
+Replace any full Runestone position in the completed structure. This rune needs Tier 6 or higher to activate. Ordinary full Runestone remains valid in every replaceable position.

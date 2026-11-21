@@ -11,7 +11,7 @@ public final class ForgeRuneVisualQa {
         var level=player.level();
         if(action.equals("rune_gallery")){
             core=new BlockPos(48,player.blockPosition().getY()+8,16);
-            AnvilTierSixTests.prepare(level,core,Direction.NORTH,Blocks.LIGHT_BLUE_STAINED_GLASS,true);
+            AnvilTierSixTests.prepare(level,core,Direction.NORTH,AnvilTierSix.stainedGlass("light_blue"),true);
             AncientAnvilBlockEntity.refresh(level,core,level.getBlockState(core));
             var kinds=ForgeRune.values();for(int i=0;i<kinds.length;i++){
                 int x=i%11,z=i/11;var at=core.offset(x-5,0,-9-z*2);level.setBlock(at,ForgeRunes.BLOCKS.get(kinds[i]).get().defaultBlockState(),3);
