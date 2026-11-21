@@ -266,6 +266,93 @@ public final class ForgeRuneIntegrationTests {
           h,
           be.familiarStreak == streak + 1 && be.alternateStreak == 0,
           "Familiarity increments; repeated craft resets Alternation");
+      set(l, sockets.get(0), ForgeRune.SPECIALIZATION);
+      ForgeRunes.members(be);
+      var specialized = (ForgeRuneBlockEntity) l.getBlockEntity(sockets.get(0));
+      specialized.category = blank.category();
+      check(
+          h,
+          AnvilWork.price(be, blank) < blank.xpPerHit(),
+          "Specialization discounts selected category");
+      specialized.category = "other";
+      check(
+          h,
+          AnvilWork.price(be, blank) > blank.xpPerHit(),
+          "Specialization penalizes other categories");
+      clear(l, sockets);
+      set(l, sockets.get(0), ForgeRune.FAMILIARITY);
+      be.lastCompleted = blank.id().toString();
+      be.familiarStreak = 20;
+      check(
+          h,
+          AnvilWork.price(be, blank) < blank.xpPerHit(),
+          "Familiarity discounts actual matching recipe");
+      be.lastCompleted = "other";
+      check(
+          h,
+          AnvilWork.price(be, blank) == blank.xpPerHit(),
+          "Switching recipe loses Familiarity discount");
+      clear(l, sockets);
+      set(l, sockets.get(0), ForgeRune.ALTERNATION);
+      be.alternateStreak = 20;
+      check(
+          h,
+          AnvilWork.price(be, blank) < blank.xpPerHit(),
+          "Alternation discounts a changed recipe");
+      be.lastCompleted = blank.id().toString();
+      check(
+          h,
+          AnvilWork.price(be, blank) == blank.xpPerHit(),
+          "Repeating removes Alternation discount");
+      clear(l, sockets);
+      var trans =
+          AnvilRecipes.all().stream()
+              .filter(r -> r.id().getPath().equals("transmute_end"))
+              .findFirst()
+              .orElseThrow();
+      load(be, trans);
+      check(h, !trans.matches(be), "Domain conversion requires its selected rune");
+      set(l, sockets.get(0), ForgeRune.END_TRANSMUTATION);
+      check(h, trans.matches(be), "End rune enables the End conversion");
+      for (int i = 1; i <= 100; i++) set(l, sockets.get(i), ForgeRune.MUTATION);
+      int mutations = 0;
+      for (int i = 0; i < 40; i++) {
+        load(be, trans);
+        be.finish(trans);
+        if (be.takeOutput().is(Items.CHORUS_FRUIT)) mutations++;
+      }
+      check(
+          h,
+          mutations > 0 && mutations < 40,
+          "Mutation replaces supported conversion results rather than doubling them");
+      clearInputs(be);
+      clear(l, sockets);
+      set(l, sockets.get(0), ForgeRune.INVOCATION);
+      ForgeRunes.members(be);
+      player.setShiftKeyDown(false);
+      player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ForgeRunes.SEAL.get(), 2));
+      var summonHit = new BlockHitResult(Vec3.atCenterOf(core), Direction.UP, core, false);
+      player
+          .getMainHandItem()
+          .useOn(
+              new UseOnContext(
+                  l, player, InteractionHand.MAIN_HAND, player.getMainHandItem(), summonHit));
+      var bosses = l.getEntitiesOfClass(Forgemaster.class, new AABB(core).inflate(64));
+      check(
+          h,
+          bosses.size() == 1 && player.getMainHandItem().getCount() == 1,
+          "Invocation consumes one seal and summons one real Forgemaster");
+      player
+          .getMainHandItem()
+          .useOn(
+              new UseOnContext(
+                  l, player, InteractionHand.MAIN_HAND, player.getMainHandItem(), summonHit));
+      check(
+          h,
+          player.getMainHandItem().getCount() == 1,
+          "An existing encounter does not consume a second seal");
+      for (var boss : bosses) boss.discard();
+      clear(l, sockets);
       // All relocation data belongs to a single unstackable item; blocked placement is lossless.
       set(l, core.below(), ForgeRune.GRAND_PATTERN);
       ForgeRunes.members(be);

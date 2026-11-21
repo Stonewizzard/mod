@@ -31,7 +31,7 @@ public final class AnvilFoundation {
             ItemStack material=ItemStack.EMPTY;
             for(int i=0;i<player.getInventory().getContainerSize();i++){
                 var stack=player.getInventory().getItem(i);
-                if(!stack.isEmpty()&&stack.getItem() instanceof BlockItem item&&goal.acceptsBlock(item.getBlock())){material=stack;break;}
+                if(!stack.isEmpty()&&stack.getItem() instanceof BlockItem item&&!(item.getBlock() instanceof ForgeRuneBlock)&&goal.acceptsBlock(item.getBlock())){material=stack;break;}
             }
             if(goal.kind()==AnvilGuide.Kind.GLASS){var held=player.getMainHandItem();if(held.getItem() instanceof BlockItem item&&goal.acceptsBlock(item.getBlock()))material=held;}
             if(material.isEmpty())continue;

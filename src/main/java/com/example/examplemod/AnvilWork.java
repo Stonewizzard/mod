@@ -59,10 +59,7 @@ public final class AnvilWork {
         var counts=ForgeRunes.counts(be);
         int swift=counts.getOrDefault(ForgeRune.SWIFT_FORGING,0),deliberation=counts.getOrDefault(ForgeRune.DELIBERATION,0);
         int required=ForgeRuneMath.swings(recipe.work(),swift,deliberation);
-        double price=ForgeRuneMath.hitPrice(recipe.xpPerHit(),recipe.work(),required,swift,counts.getOrDefault(ForgeRune.EFFICIENCY,0),deliberation);
-        for(var rune:ForgeRunes.members(be))if(rune.kind()==ForgeRune.SPECIALIZATION&&!rune.category.isEmpty())price*=rune.category.equals(recipe.category())?1/1.01:1.01;
-        price*=ForgeRuneMath.sequenceDiscount(counts.getOrDefault(ForgeRune.FAMILIARITY,0),be.lastCompleted.equals(recipe.id().toString())?be.familiarStreak:0);
-        price*=ForgeRuneMath.sequenceDiscount(counts.getOrDefault(ForgeRune.ALTERNATION,0),!be.lastCompleted.equals(recipe.id().toString())?be.alternateStreak:0);
+        double price=price(be,recipe);
         String signature=recipe.toString()+counts+ForgeRunes.members(be).stream().map(r->r.category+":"+r.getItem(0)).toList();
         if(!be.planSignature.equals(signature)){be.work=0;be.workRecipe="";be.planSignature=signature;}
         int xp=(int)Math.min(Integer.MAX_VALUE,Math.max(0,Math.ceil(price-be.xpCredit-1e-9)));
@@ -88,6 +85,14 @@ public final class AnvilWork {
             level.sendParticles(ParticleTypes.ENCHANT,center.x,center.y+.2,center.z,14,.2,.1,.2,.05);message(player,"Craft complete - take the result from the center");
         }else{be.sync();message(player,"Forging: "+be.work+" / "+required+(!player.getAbilities().instabuild&&xp>0?" | -"+xp+" XP":""));}
         player.containerMenu.broadcastChanges();return true;
+    }
+    public static double price(AncientAnvilBlockEntity be,AnvilRecipes.Recipe recipe){
+        var counts=ForgeRunes.counts(be);int swift=counts.getOrDefault(ForgeRune.SWIFT_FORGING,0),deliberation=counts.getOrDefault(ForgeRune.DELIBERATION,0);int required=ForgeRuneMath.swings(recipe.work(),swift,deliberation);
+        double price=ForgeRuneMath.hitPrice(recipe.xpPerHit(),recipe.work(),required,swift,counts.getOrDefault(ForgeRune.EFFICIENCY,0),deliberation);
+        for(var rune:ForgeRunes.members(be))if(rune.kind()==ForgeRune.SPECIALIZATION&&!rune.category.isEmpty())price*=rune.category.equals(recipe.category())?1/1.01:1.01;
+        price*=ForgeRuneMath.sequenceDiscount(counts.getOrDefault(ForgeRune.FAMILIARITY,0),be.lastCompleted.equals(recipe.id().toString())?be.familiarStreak:0);
+        price*=ForgeRuneMath.sequenceDiscount(counts.getOrDefault(ForgeRune.ALTERNATION,0),!be.lastCompleted.equals(recipe.id().toString())?be.alternateStreak:0);
+        return price;
     }
     public static void message(Player player,String text){if(player instanceof ServerPlayer server)server.connection.send(new net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket(Component.literal(text)));}
     private AnvilWork(){}

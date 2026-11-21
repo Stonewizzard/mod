@@ -9,7 +9,11 @@ public final class ForgeRuneCrafting {
   public static List<ForgeRuneBlockEntity> expansions(AncientAnvilBlockEntity be) {
     return ForgeRunes.members(be).stream()
         .filter(r -> r.kind() == ForgeRune.EXPANSION)
-        .sorted(Comparator.comparingLong(r -> r.getBlockPos().asLong()))
+        .sorted(
+            Comparator.comparingInt(
+                    (ForgeRuneBlockEntity r) -> r.getBlockPos().getY() - be.getBlockPos().getY())
+                .thenComparingInt(r -> r.getBlockPos().getX() - be.getBlockPos().getX())
+                .thenComparingInt(r -> r.getBlockPos().getZ() - be.getBlockPos().getZ()))
         .toList();
   }
 
@@ -43,7 +47,8 @@ public final class ForgeRuneCrafting {
     if (restore > 0
         && be.inputCount() == 1
         && center.isDamageableItem()
-        && center.getDamageValue() > 0) {
+        && center.getDamageValue() > 0
+        && expansions(be).stream().allMatch(r -> r.getItem(0).isEmpty())) {
       int n = Math.min(center.getDamageValue(), Math.min(restore, be.storedExperience()));
       if (n > 0) {
         be.extractExperience(n, false);

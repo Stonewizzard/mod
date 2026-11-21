@@ -4,6 +4,7 @@ import com.example.examplemod.*;
 import net.minecraft.core.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Blocks;
 
 /** Disposable real-world fixtures; screenshots and interaction still use the native game window. */
 public final class ForgeRuneVisualQa {
