@@ -219,7 +219,11 @@ public final class GrandPatternItem extends Item {
       entity.setShowBottom(t.getBooleanOr("Bottom", true));
       level.addFreshEntity(entity);
     }
-    c.getItemInHand().shrink(1); // Even Creative must move, not copy, stored XP/items/crystals.
+    c.getItemInHand().shrink(1);
+    // Creative's normal item-use wrapper restores the old stack count after useOn returns.
+    // Detach the consumed package from the hand so that wrapper cannot refill it in place.
+    player.setItemInHand(c.getHand(), ItemStack.EMPTY);
+    player.containerMenu.broadcastChanges();
     AnvilWork.message(player, "Workshop restored");
     return InteractionResult.SUCCESS;
   }

@@ -428,11 +428,9 @@ public final class ForgeRuneIntegrationTests {
       l.setBlock(core.below(), Blocks.SHORT_GRASS.defaultBlockState(), 3);
       var plantHit =
           new BlockHitResult(Vec3.atCenterOf(core.below()), Direction.EAST, core.below(), false);
-      player
-          .getMainHandItem()
-          .useOn(
-              new UseOnContext(
-                  l, player, InteractionHand.MAIN_HAND, player.getMainHandItem(), plantHit));
+      player.setGameMode(GameType.CREATIVE);
+      player.gameMode.useItemOn(
+          player, l, player.getMainHandItem(), InteractionHand.MAIN_HAND, plantHit);
       check(
           h,
           player.getMainHandItem().isEmpty()
