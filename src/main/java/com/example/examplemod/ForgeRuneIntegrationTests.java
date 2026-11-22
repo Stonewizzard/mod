@@ -353,6 +353,10 @@ public final class ForgeRuneIntegrationTests {
           "An existing encounter does not consume a second seal");
       for (var boss : bosses) boss.discard();
       clear(l, sockets);
+      // Reproduce placement on the real solid floor, not a synthetic click on removed air.
+      var support = core.below(2);
+      var concrete = BuiltInRegistries.BLOCK.getValue(Identifier.parse("minecraft:white_concrete"));
+      l.setBlock(support, concrete.defaultBlockState(), 3);
       // All relocation data belongs to a single unstackable item; blocked placement is lossless.
       set(l, core.below(), ForgeRune.GRAND_PATTERN);
       ForgeRunes.members(be);
@@ -367,16 +371,46 @@ public final class ForgeRuneIntegrationTests {
           h,
           player.getMainHandItem().is(ForgeRunes.PATTERN.get()) && l.getBlockState(core).isAir(),
           "Grand Pattern packs the real workshop once");
+      var packed = player.getMainHandItem().copy();
       var hit =
-          new BlockHitResult(Vec3.atCenterOf(core.below()), Direction.UP, core.below(), false);
+          new BlockHitResult(Vec3.atCenterOf(support).add(0, .5, 0), Direction.UP, support, false);
       var context =
           new UseOnContext(l, player, InteractionHand.MAIN_HAND, player.getMainHandItem(), hit);
+      var obstacle = core.east(2).below();
+      l.setBlock(obstacle, Blocks.CHEST.defaultBlockState(), 3);
+      var chest =
+          (net.minecraft.world.level.block.entity.ChestBlockEntity) l.getBlockEntity(obstacle);
+      chest.setItem(0, new ItemStack(Items.EMERALD, 7));
+      check(
+          h,
+          player.getMainHandItem().useOn(context) == InteractionResult.FAIL
+              && ItemStack.isSameItemSameComponents(packed, player.getMainHandItem())
+              && l.getBlockState(core).isAir()
+              && chest.getItem(0).getCount() == 7,
+          "Blocked restore preserves packed data, containers and world without partial placement");
+      l.removeBlockEntity(obstacle);
+      l.setBlock(obstacle, Blocks.OBSIDIAN.defaultBlockState(), 3);
+      check(
+          h,
+          player.getMainHandItem().useOn(context) == InteractionResult.FAIL
+              && l.getBlockState(obstacle).is(Blocks.OBSIDIAN),
+          "Unrelated solid builds remain protected");
+      // Existing plain, matching structure blocks are fine; they are retained, not dropped.
+      l.setBlock(obstacle, AncientAnvilContent.RUNESTONE.get().defaultBlockState(), 3);
       player.getMainHandItem().useOn(context);
       check(
           h,
           player.getMainHandItem().isEmpty()
               && l.getBlockEntity(core) instanceof AncientAnvilBlockEntity,
-          "Grand Pattern restores and consumes the packed item");
+          "Grand Pattern restores at its original height from a solid floor click and consumes its"
+              + " item");
+      check(
+          h,
+          l.getBlockState(support).is(concrete)
+              && l.getBlockState(core.below())
+                  .is(ForgeRunes.BLOCKS.get(ForgeRune.GRAND_PATTERN).get()),
+          "Original concrete floor stays intact and Grand Pattern returns directly above the"
+              + " clicked block");
       var restored = (AncientAnvilBlockEntity) l.getBlockEntity(core);
       check(
           h,
@@ -387,6 +421,21 @@ public final class ForgeRuneIntegrationTests {
           h,
           restored.getBlockState().getValue(AncientAnvilBlock.TIER) == 6,
           "Relocated fluids, caps, keystones and real crystals restore Tier 6");
+      ForgeRunes.members(restored);
+      player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+      GrandPatternItem.pack(
+          (ForgeRuneBlockEntity) l.getBlockEntity(core.below()), player, InteractionHand.MAIN_HAND);
+      l.setBlock(core.below(), Blocks.SHORT_GRASS.defaultBlockState(), 3);
+      var plantHit =
+          new BlockHitResult(Vec3.atCenterOf(core.below()), Direction.EAST, core.below(), false);
+      player.setGameMode(GameType.CREATIVE);
+      player.gameMode.useItemOn(
+          player, l, player.getMainHandItem(), InteractionHand.MAIN_HAND, plantHit);
+      check(
+          h,
+          player.getMainHandItem().isEmpty()
+              && l.getBlockEntity(core) instanceof AncientAnvilBlockEntity,
+          "Clicked replaceable plants use their cell instead of shifting the workshop sideways");
       System.out.println(
           "FORGE_RUNE_INTEGRATION_CHECK: PASS: all 22 real ingredient crafts and XP prices,"
               + " modifiers, zero wear, fractional persistence, restoration/components, expanded"

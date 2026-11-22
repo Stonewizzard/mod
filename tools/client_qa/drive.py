@@ -139,6 +139,11 @@ def run():
         click_widget('World Type:',exact=False)
     capture('00-world-setup');click_widget('Create New World')
     wait_for(lambda s:s.get('screen')=='FieldGuideScreen' and s.get('inWorld') and s.get('frames',0)>12,'the in-world book',timeout=180)
+    if os.environ.get('CLIENT_QA_SCOPE')=='grand-pattern':
+        process('xdotool','key','Escape');expect(screen='InGame');native_chat_command('time set noon');command('pattern_fixture');expect(patternPacked=True,patternRestored=False);time.sleep(2);capture('grand-pattern-original-floor')
+        process('xdotool','click','3');expect(patternPacked=False,patternRestored=True,patternXp=1234,patternDiamond=True);command('pattern_overview');time.sleep(3);process('xdotool','key','F1');capture('grand-pattern-restored-same-spot');process('xdotool','key','F1')
+        print('GRAND_PATTERN_NATIVE_PASS: native right-click on original concrete floor restores Tier 6 at correct height with exact XP and stored item',flush=True)
+        (QA/'result.json').write_text(json.dumps({'pass':True,'scope':'grand-pattern'},indent=2));return
     if os.environ.get('CLIENT_QA_SCOPE')=='forge-runes':
         process('xdotool','key','Escape');expect(screen='InGame');native_chat_command('time set noon');command('rune_gallery');time.sleep(4)
         process('xdotool','key','F1');capture('forge-runes-gallery');process('xdotool','key','F1')
