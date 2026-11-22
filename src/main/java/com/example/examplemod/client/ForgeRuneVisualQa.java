@@ -9,14 +9,41 @@ import net.minecraft.world.level.block.Blocks;
 /** Disposable real-world fixtures; screenshots and interaction still use the native game window. */
 public final class ForgeRuneVisualQa {
   private static BlockPos core, gallery;
-  public static BlockPos batchPos;
+  public static BlockPos batchPos, patternCore;
 
   public static void command(ServerPlayer player, String action) {
     var level = player.level();
     player.setGameMode(net.minecraft.world.level.GameType.CREATIVE);
     player.getAbilities().flying = true;
     player.onUpdateAbilities();
-    if (action.equals("rune_gallery")) {
+    if (action.equals("pattern_fixture")) {
+      command(player, "rune_gallery");
+      patternCore = core;
+      var concrete =
+          net.minecraft.core.registries.BuiltInRegistries.BLOCK.getValue(
+              net.minecraft.resources.Identifier.parse("minecraft:white_concrete"));
+      level.setBlock(core.below(2), concrete.defaultBlockState(), 3);
+      level.setBlock(
+          core.below(),
+          ForgeRunes.BLOCKS.get(ForgeRune.GRAND_PATTERN).get().defaultBlockState(),
+          3);
+      var be = (AncientAnvilBlockEntity) level.getBlockEntity(core);
+      ForgeRunes.members(be);
+      be.insertExperience(1234, false);
+      be.placeInput(AnvilSlot.CENTER, new ItemStack(Items.DIAMOND));
+      player.getInventory().clearContent();
+      GrandPatternItem.pack(
+          (ForgeRuneBlockEntity) level.getBlockEntity(core.below()),
+          player,
+          net.minecraft.world.InteractionHand.MAIN_HAND);
+      player.setShiftKeyDown(false);
+      player.getAbilities().flying = true;
+      player.onUpdateAbilities();
+      player.containerMenu.broadcastChanges();
+      player.connection.teleport(core.getX() + .5, core.getY() + 1.5, core.getZ() + .5, 0, 90);
+    } else if (action.equals("pattern_overview")) {
+      player.connection.teleport(core.getX() - 9, core.getY() + 6, core.getZ() - 10, -42, 25);
+    } else if (action.equals("rune_gallery")) {
       core = new BlockPos(48, player.blockPosition().getY() + 8, 16);
       for (int x = -19; x <= 19; x++)
         for (int z = -19; z <= 19; z++)

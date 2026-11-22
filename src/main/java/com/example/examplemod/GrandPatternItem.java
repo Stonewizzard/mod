@@ -11,9 +11,11 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
@@ -120,11 +122,14 @@ public final class GrandPatternItem extends Item {
     var root =
         c.getItemInHand().getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
     if (root.getIntOr("Version", 0) != 1) return InteractionResult.FAIL;
-    var origin = c.getClickedPos().relative(c.getClickedFace());
+    // The item places the Grand Pattern rune (one below the anvil core), not the core.
+    // BlockPlaceContext also targets clicked plants/snow directly, like a normal block item.
+    var origin = new BlockPlaceContext(c).getClickedPos().above();
     var cells = root.getListOrEmpty("Cells");
     if (cells.isEmpty() || cells.size() > 4096) return InteractionResult.FAIL;
     if (!player.getAbilities().mayBuild) return InteractionResult.FAIL;
     var offsets = new HashSet<BlockPos>();
+    var plan = new LinkedHashMap<BlockPos, BlockState>();
     var snapshots = new ArrayList<net.neoforged.neoforge.common.util.BlockSnapshot>();
     for (int i = 0; i < cells.size(); i++) {
       var cell = cells.getCompoundOrEmpty(i);
@@ -133,31 +138,54 @@ public final class GrandPatternItem extends Item {
       if (!offsets.add(delta)
           || Math.abs(delta.getX()) > 32
           || Math.abs(delta.getZ()) > 32
-          || Math.abs(delta.getY()) > 32
-          || !level.hasChunkAt(at)
-          || !level.isInWorldBounds(at)
-          || !level.getWorldBorder().isWithinBounds(at)
-          || !level.mayInteract(player, at)
-          || level.getBlockEntity(at) != null
-          || !level.getBlockState(at).canBeReplaced()) {
-        AnvilWork.message(
-            player, "Restore needs clear, loaded, buildable space for the whole workshop");
+          || Math.abs(delta.getY()) > 32) {
+        AnvilWork.message(player, "This packed workshop has invalid block positions");
         return InteractionResult.FAIL;
       }
-    }
-    for (var delta : offsets)
-      snapshots.add(
-          net.neoforged.neoforge.common.util.BlockSnapshot.create(
-              level.dimension(), level, origin.offset(delta)));
-    // Block data is already validated by the server when creating this unstackable item.
-    for (int i = 0; i < cells.size(); i++) {
-      var cell = cells.getCompoundOrEmpty(i);
-      var at = origin.offset(cell.getIntOr("X", 0), cell.getIntOr("Y", 0), cell.getIntOr("Z", 0));
-      var state =
+      var desired =
           NbtUtils.readBlockState(
               level.registryAccess().lookupOrThrow(Registries.BLOCK),
               cell.getCompoundOrEmpty("State"));
-      level.setBlock(at, state, 2);
+      if (desired.isAir()) continue; // Empty saved cells never erase terrain or require excavation.
+      if (!level.hasChunkAt(at)
+          || !level.isInWorldBounds(at)
+          || !level.getWorldBorder().isWithinBounds(at)
+          || !level.mayInteract(player, at)) {
+        AnvilWork.message(
+            player,
+            "Cannot restore at "
+                + at.getX()
+                + ", "
+                + at.getY()
+                + ", "
+                + at.getZ()
+                + ": outside loaded, buildable space");
+        return InteractionResult.FAIL;
+      }
+      var existing = level.getBlockState(at);
+      if (level.getBlockEntity(at) != null
+          || !existing.canBeReplaced() && !existing.equals(desired)) {
+        AnvilWork.message(
+            player,
+            "Restore blocked by "
+                + existing.getBlock().getName().getString()
+                + " at "
+                + at.getX()
+                + ", "
+                + at.getY()
+                + ", "
+                + at.getZ());
+        return InteractionResult.FAIL;
+      }
+      plan.put(at, desired);
+    }
+    if (plan.isEmpty()) return InteractionResult.FAIL;
+    for (var entry : plan.entrySet()) {
+      var at = entry.getKey();
+      if (level.getBlockState(at).equals(entry.getValue())) continue;
+      snapshots.add(
+          net.neoforged.neoforge.common.util.BlockSnapshot.create(level.dimension(), level, at));
+      level.setBlock(at, entry.getValue(), 2);
     }
     var placeEvent =
         new BlockEvent.EntityMultiPlaceEvent(
