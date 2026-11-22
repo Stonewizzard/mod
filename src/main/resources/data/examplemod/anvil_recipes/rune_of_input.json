@@ -1,0 +1,41 @@
+{
+  "anvil_tier": 1,
+  "hammer_tier": 1,
+  "work": 20,
+  "xp_per_hit": 10,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:hopper"
+    },
+    "north_inner": {
+      "item": "minecraft:redstone"
+    },
+    "east_inner": {
+      "item": "minecraft:redstone"
+    },
+    "south_inner": {
+      "item": "minecraft:redstone"
+    },
+    "west_inner": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_input",
+    "count": 1
+  }
+}

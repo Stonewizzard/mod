@@ -1,0 +1,53 @@
+{
+  "anvil_tier": 3,
+  "hammer_tier": 1,
+  "work": 28,
+  "xp_per_hit": 30,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:gilded_blackstone"
+    },
+    "north_inner": {
+      "item": "minecraft:blaze_rod"
+    },
+    "east_inner": {
+      "item": "minecraft:blaze_rod"
+    },
+    "south_inner": {
+      "item": "minecraft:blaze_rod"
+    },
+    "west_inner": {
+      "item": "minecraft:blaze_rod"
+    },
+    "north_outer": {
+      "item": "minecraft:wither_rose"
+    },
+    "east_outer": {
+      "item": "minecraft:wither_rose"
+    },
+    "south_outer": {
+      "item": "minecraft:wither_rose"
+    },
+    "west_outer": {
+      "item": "minecraft:wither_rose"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_nether_transmutation",
+    "count": 1
+  }
+}

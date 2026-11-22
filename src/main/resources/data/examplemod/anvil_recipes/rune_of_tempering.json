@@ -1,0 +1,53 @@
+{
+  "anvil_tier": 2,
+  "hammer_tier": 1,
+  "work": 24,
+  "xp_per_hit": 20,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:iron_block"
+    },
+    "north_inner": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "east_inner": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "south_inner": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "west_inner": {
+      "item": "examplemod:ancient_ingot"
+    },
+    "north_outer": {
+      "item": "minecraft:obsidian"
+    },
+    "east_outer": {
+      "item": "minecraft:obsidian"
+    },
+    "south_outer": {
+      "item": "minecraft:obsidian"
+    },
+    "west_outer": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_tempering",
+    "count": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "anvil_tier": 3,
+  "requires_rune": "transmutation",
+  "category": "transmutation",
+  "work": 8,
+  "xp_per_hit": 8,
+  "ingredients": {
+    "center": {
+      "item": "minecraft:netherrack"
+    }
+  },
+  "result": {
+    "id": "minecraft:cobblestone",
+    "count": 1
+  },
+  "mutation_result": {
+    "id": "minecraft:amethyst_shard",
+    "count": 1
+  }
+}

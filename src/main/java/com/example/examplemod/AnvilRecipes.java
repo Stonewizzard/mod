@@ -40,7 +40,10 @@ public final class AnvilRecipes extends SimplePreparableReloadListener<List<Anvi
         }
         return Map.copyOf(out);
     }
-    public record Recipe(Identifier id,int anvilTier,int hammerTier,int work,Map<AnvilSlot,Input> inputs,Item resultItem,int resultCount,Map<AnvilBasins.Side,FluidInput> fluids,int xpPerHit){
+    public record Recipe(Identifier id,int anvilTier,int hammerTier,int work,Map<AnvilSlot,Input> inputs,Item resultItem,int resultCount,Map<AnvilBasins.Side,FluidInput> fluids,int xpPerHit,String category,ForgeRune requiredRune,List<Input> extras,Item mutationItem,int mutationCount,boolean bonus){
+        public Recipe(Identifier id,int anvilTier,int hammerTier,int work,Map<AnvilSlot,Input> inputs,Item resultItem,int resultCount,Map<AnvilBasins.Side,FluidInput> fluids,int xpPerHit){this(id,anvilTier,hammerTier,work,inputs,resultItem,resultCount,fluids,xpPerHit,"smithing",null,List.of(),Items.AIR,1,false);}
+        public boolean acceptsIngredient(ItemStack stack){return inputs.values().stream().anyMatch(i->i.accepts(stack.copyWithCount(1)))||extras.stream().anyMatch(i->i.accepts(stack.copyWithCount(1)));}
+        public boolean runesMatch(AncientAnvilBlockEntity be){return requiredRune==null||ForgeRunes.counts(be).getOrDefault(requiredRune,0)>0;}
         public Recipe{if(xpPerHit<0||xpPerHit>MAX_XP_PER_HIT)throw new IllegalArgumentException("Invalid XP cost");}
         public Recipe(Identifier id,int anvilTier,int hammerTier,int work,Map<AnvilSlot,Input> inputs,Item resultItem,int resultCount,Map<AnvilBasins.Side,FluidInput> fluids){this(id,anvilTier,hammerTier,work,inputs,resultItem,resultCount,fluids,DEFAULT_XP_PER_HIT);}
         public boolean fluidsMatch(AncientAnvilBlockEntity be){
@@ -51,8 +54,10 @@ public final class AnvilRecipes extends SimplePreparableReloadListener<List<Anvi
         // 26.3 binds item components after resource preparation. Create stacks only in a live world.
         public ItemStack result(){return new ItemStack(resultItem,resultCount);}
         public boolean matches(AncientAnvilBlockEntity be){
-            if(resultCount>resultItem.getDefaultInstance().getMaxStackSize()||!fluidsMatch(be))return false;
+            if(resultCount>resultItem.getDefaultInstance().getMaxStackSize()||!fluidsMatch(be)||!runesMatch(be))return false;
             for(var slot:AnvilSlot.values()){var input=inputs.get(slot);var stack=be.input(slot);if(input==null?!stack.isEmpty():!input.accepts(stack))return false;}
+            var expansion=ForgeRuneCrafting.expansions(be);if(expansion.size()<extras.size())return false;
+            for(int i=0;i<expansion.size();i++){var stack=expansion.get(i).getItem(0);if(i<extras.size()?!extras.get(i).accepts(stack):!stack.isEmpty())return false;}
             return true;
         }
     }
@@ -79,7 +84,12 @@ public final class AnvilRecipes extends SimplePreparableReloadListener<List<Anvi
             int tier=number(json,"anvil_tier",0),hammer=number(json,"hammer_tier",1),work=number(json,"work",4);
             if(tier<0||tier>6||hammer<1||work<1||work>10000)throw new IllegalArgumentException("Invalid work/tier requirements");
             var fluids=readFluids(json);
-            result.add(new Recipe(id,fluids.isEmpty()?tier:Math.max(2,tier),hammer,work,Map.copyOf(inputs),item,count,fluids,readXpPerHit(json)));
+            var extras=new ArrayList<Input>();if(json.has("extra_ingredients"))for(var v:json.getAsJsonArray("extra_ingredients")){var g=v.getAsJsonObject();if(g.has("item")==g.has("tag"))throw new IllegalArgumentException("Extra ingredient requires item or tag");extras.add(new Input(g.has("item")?Identifier.parse(g.get("item").getAsString()):null,g.has("tag")?TagKey.create(Registries.ITEM,Identifier.parse(g.get("tag").getAsString())):null));}
+            var required=json.has("requires_rune")?ForgeRune.valueOf(json.get("requires_rune").getAsString().toUpperCase(Locale.ROOT)):null;
+            var mutation=json.has("mutation_result")?BuiltInRegistries.ITEM.getValue(Identifier.parse(json.getAsJsonObject("mutation_result").get("id").getAsString())):Items.AIR;
+            int mutationCount=json.has("mutation_result")?number(json.getAsJsonObject("mutation_result"),"count",1):1;
+            if(mutationCount<1||mutationCount>64)throw new IllegalArgumentException("Invalid mutation output");
+            result.add(new Recipe(id,fluids.isEmpty()?tier:Math.max(2,tier),hammer,work,Map.copyOf(inputs),item,count,fluids,readXpPerHit(json),json.has("category")?json.get("category").getAsString():"smithing",required,List.copyOf(extras),mutation,mutationCount,json.has("allow_bonus")&&json.get("allow_bonus").getAsBoolean()));
         }catch(Exception failure){ExampleMod.LOGGER.error("Cannot load anvil recipe {}",entry.getKey(),failure);}
         return List.copyOf(result);
     }

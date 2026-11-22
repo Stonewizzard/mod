@@ -148,6 +148,8 @@ public class ExampleMod {
                 output.accept(AncientAnvilContent.IRON_FORGE_HAMMER.get());
                 output.accept(AncientAnvilContent.RUNESTONE_ITEM.get());
                 output.accept(AncientAnvilContent.CANOPY_KEYSTONE_ITEM.get());
+                ForgeRunes.ITEMS.values().forEach(i->output.accept(i.get()));
+                output.accept(ForgeRunes.CORE.get());output.accept(ForgeRunes.SEAL.get());
                 output.accept(AncientAnvilContent.SCRAP_ITEM.get());
                 output.accept(AncientAnvilContent.INGOT.get());
                 output.accept(AncientAnvilContent.CRYSTAL.get());
@@ -173,6 +175,7 @@ public class ExampleMod {
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener((EntityAttributeCreationEvent event) -> {
             event.put(CRUNCHER.get(), Cruncher.createAttributes().build());
+            event.put(ForgeRunes.FORGEMASTER.get(),Forgemaster.attributes().build());
             event.put(SKULK_PARASITE.get(), SkulkParasite.createAttributes().build());
             event.put(SKULK_ZOMBIE.get(), SkulkZombie.createAttributes().build());
             event.put(SKULK_COW.get(), SkulkCow.createAttributes().build());
@@ -182,12 +185,15 @@ public class ExampleMod {
                         net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                         SkulkParasite::checkSpawnRules,
                         net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent.Operation.REPLACE));
+        ForgeRuneAutomation.FLUIDS.register(modEventBus);ForgeRuneAutomation.TYPES.register(modEventBus);
         ENTITIES.register(modEventBus);
         SkulkStatus.register(modEventBus);
         PickaxeEvents.register();
+        NeoForge.EVENT_BUS.addListener(ForgeRunes::interact);
         modEventBus.addListener(ExcavationPayload::register);
         modEventBus.addListener(ComponentStationPayload::register);
         modEventBus.addListener(AnvilStrikePayload::register);
+        modEventBus.addListener(ForgeRuneAutomation::register);
         modEventBus.addListener(AnvilFoundationPayload::register);
         modEventBus.addListener(AnvilGuidePayload::register);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(AnvilRecipes::register);
@@ -214,6 +220,8 @@ public class ExampleMod {
             modEventBus.addListener(AnvilTierSixTests::register);
             modEventBus.addListener(AnvilSidePlacementTests::register);
             modEventBus.addListener(AnvilSmithingTests::register);
+            modEventBus.addListener(ForgeRuneTests::register);
+            modEventBus.addListener(ForgeRuneIntegrationTests::register);
             modEventBus.addListener(LargeAnvilTests::register);
             modEventBus.addListener(AncientScrapTests::register);
             modEventBus.addListener(FireboxProcessTests::register);
@@ -235,6 +243,7 @@ public class ExampleMod {
         ReconstructionContent.register();
         AncientForgeContent.register();
         AncientAnvilContent.register();
+        ForgeRunes.register();
         AscenderContent.register();
         ComponentStationContent.register();
         FieldGuideContent.register();

@@ -1,0 +1,53 @@
+{
+  "anvil_tier": 6,
+  "hammer_tier": 1,
+  "work": 40,
+  "xp_per_hit": 60,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:dragon_breath"
+    },
+    "north_inner": {
+      "item": "minecraft:end_crystal"
+    },
+    "east_inner": {
+      "item": "minecraft:end_crystal"
+    },
+    "south_inner": {
+      "item": "minecraft:end_crystal"
+    },
+    "west_inner": {
+      "item": "minecraft:end_crystal"
+    },
+    "north_outer": {
+      "item": "examplemod:energized_ancient_crystal_block"
+    },
+    "east_outer": {
+      "item": "examplemod:energized_ancient_crystal_block"
+    },
+    "south_outer": {
+      "item": "examplemod:energized_ancient_crystal_block"
+    },
+    "west_outer": {
+      "item": "examplemod:energized_ancient_crystal_block"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_mutation",
+    "count": 1
+  }
+}

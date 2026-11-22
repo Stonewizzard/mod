@@ -1,0 +1,53 @@
+{
+  "anvil_tier": 4,
+  "hammer_tier": 1,
+  "work": 32,
+  "xp_per_hit": 40,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:hopper"
+    },
+    "north_inner": {
+      "item": "minecraft:chest"
+    },
+    "east_inner": {
+      "item": "minecraft:chest"
+    },
+    "south_inner": {
+      "item": "minecraft:chest"
+    },
+    "west_inner": {
+      "item": "minecraft:chest"
+    },
+    "north_outer": {
+      "item": "minecraft:comparator"
+    },
+    "east_outer": {
+      "item": "minecraft:comparator"
+    },
+    "south_outer": {
+      "item": "minecraft:comparator"
+    },
+    "west_outer": {
+      "item": "minecraft:comparator"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_batching",
+    "count": 1
+  }
+}

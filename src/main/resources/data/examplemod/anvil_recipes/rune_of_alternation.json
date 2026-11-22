@@ -1,0 +1,53 @@
+{
+  "anvil_tier": 5,
+  "hammer_tier": 1,
+  "work": 36,
+  "xp_per_hit": 50,
+  "category": "runes",
+  "allow_bonus": true,
+  "ingredients": {
+    "north_west": {
+      "item": "examplemod:runestone"
+    },
+    "north_east": {
+      "item": "examplemod:runestone"
+    },
+    "south_west": {
+      "item": "examplemod:runestone"
+    },
+    "south_east": {
+      "item": "examplemod:runestone"
+    },
+    "center": {
+      "item": "minecraft:comparator"
+    },
+    "north_inner": {
+      "item": "minecraft:emerald_block"
+    },
+    "east_inner": {
+      "item": "minecraft:emerald_block"
+    },
+    "south_inner": {
+      "item": "minecraft:emerald_block"
+    },
+    "west_inner": {
+      "item": "minecraft:emerald_block"
+    },
+    "north_outer": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "east_outer": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "south_outer": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "west_outer": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "result": {
+    "id": "examplemod:rune_of_alternation",
+    "count": 1
+  }
+}
